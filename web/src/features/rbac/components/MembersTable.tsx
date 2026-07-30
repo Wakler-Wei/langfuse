@@ -38,6 +38,7 @@ import { SettingsTableCard } from "@/src/components/layouts/settings-table-card"
 import useSessionStorage from "@/src/components/useSessionStorage";
 import { useQueryParam, withDefault, StringParam } from "use-query-params";
 import { useEffect } from "react";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export type MembersTableRow = {
   user: {
@@ -64,6 +65,8 @@ export function MembersTable({
   project?: { id: string; name: string };
   showSettingsCard?: boolean;
 }) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   // Create a unique key for this table's pagination state
   const paginationKey = project
     ? `projectMembers_${project.id}_pagination`
@@ -150,7 +153,7 @@ export function MembersTable({
     {
       accessorKey: "user",
       id: "user",
-      header: "Name",
+      header: tAuto("name_709a232"),
       cell: ({ row }) => {
         const { name, image } = row.getValue("user") as MembersTableRow["user"];
         return (
@@ -158,7 +161,7 @@ export function MembersTable({
             <Avatar className="h-7 w-7">
               <AvatarImage
                 src={image ?? undefined}
-                alt={name ?? "User Avatar"}
+                alt={name ?? tAuto("user_avatar_32e4f25")}
               />
               <AvatarFallback>
                 {name
@@ -178,12 +181,12 @@ export function MembersTable({
     {
       accessorKey: "email",
       id: "email",
-      header: "Email",
+      header: tAuto("email_84add5b"),
     },
     {
       accessorKey: "providers",
       id: "providers",
-      header: "SSO Provider",
+      header: tAuto("sso_provider_c7efba7"),
       enableHiding: true,
       cell: ({ row }) => {
         const providers = row.getValue("providers") as string[];
@@ -195,10 +198,11 @@ export function MembersTable({
     {
       accessorKey: "orgRole",
       id: "orgRole",
-      header: "Organization Role",
+      header: tAuto("organization_role_5909c6e"),
       headerTooltip: {
-        description:
-          "The org-role is the default role for this user in this organization and applies to the organization and all its projects.",
+        description: tAuto(
+          "the_org_role_is_the_default_role_for_this_user_in_th_b77e886",
+        ),
         href: "https://langfuse.com/docs/administration/rbac",
       },
       cell: ({ row }) => {
@@ -233,12 +237,14 @@ export function MembersTable({
                     side="right"
                   >
                     <p className="text-xs">
-                      The organization-level role can be edited in the{" "}
+                      {tAutoI18n(
+                        "the_organization_level_role_can_be_edited_in_the_93f4434",
+                      )}{" "}
                       <Link
                         href={`/organization/${orgId}/settings/members`}
                         className="underline"
                       >
-                        organization settings
+                        {tAuto("organization_settings_25c35fd")}{" "}
                       </Link>
                       .
                     </p>
@@ -257,10 +263,11 @@ export function MembersTable({
           {
             accessorKey: "projectRole",
             id: "projectRole",
-            header: "Project Role",
+            header: tAuto("project_role_bef1fa2"),
             headerTooltip: {
-              description:
-                "The role for this user in this specific project. This role overrides the default project role.",
+              description: tAuto(
+                "the_role_for_this_user_in_this_specific_project_this_ee40f33",
+              ),
               href: "https://langfuse.com/docs/administration/rbac",
             },
             cell: ({ row }) => {
@@ -292,7 +299,7 @@ export function MembersTable({
     {
       accessorKey: "createdAt",
       id: "createdAt",
-      header: "Member Since",
+      header: tAuto("member_since_c6647cd"),
       enableHiding: true,
       defaultHidden: true,
       cell: ({ row }) => {
@@ -303,7 +310,7 @@ export function MembersTable({
     {
       accessorKey: "meta",
       id: "meta",
-      header: "Actions",
+      header: tAuto("actions_c3cd636"),
       enableHiding: false,
       cell: ({ row }) => {
         const { orgMembershipId, userId } = row.getValue(
@@ -367,9 +374,11 @@ export function MembersTable({
   if (project ? !hasProjectViewAccess : !hasOrgViewAccess) {
     return (
       <Alert>
-        <AlertTitle>Access Denied</AlertTitle>
+        <AlertTitle>{tAuto("access_denied_1647b9d")}</AlertTitle>
         <AlertDescription>
-          You do not have permission to view members of this organization.
+          {tAuto(
+            "you_do_not_have_permission_to_view_members_of_this_o_eafe380",
+          )}{" "}
         </AlertDescription>
       </Alert>
     );
@@ -480,6 +489,7 @@ const OrgRoleDropdown = ({
   userId: string;
   hasCudAccess: boolean;
 }) => {
+  const tAuto = useAutoTranslations();
   const utils = api.useUtils();
   const session = useSession();
   const mut = api.members.updateOrgMembership.useMutation({
@@ -487,8 +497,8 @@ const OrgRoleDropdown = ({
       utils.members.invalidate();
       if (data.userId === session.data?.user?.id) session.update();
       showSuccessToast({
-        title: "Saved",
-        description: "Organization role updated successfully",
+        title: tAuto("saved_c0ae8f6"),
+        description: tAuto("organization_role_updated_successfully_5ed02b2"),
         duration: 2000,
       });
     },
@@ -540,6 +550,7 @@ const ProjectRoleDropdown = ({
   projectId: string;
   hasCudAccess: boolean;
 }) => {
+  const tAuto = useAutoTranslations();
   const utils = api.useUtils();
   const session = useSession();
   const mut = api.members.updateProjectRole.useMutation({
@@ -547,8 +558,8 @@ const ProjectRoleDropdown = ({
       utils.members.invalidate();
       if (data.userId === session.data?.user?.id) session.update();
       showSuccessToast({
-        title: "Saved",
-        description: "Project role updated successfully",
+        title: tAuto("saved_c0ae8f6"),
+        description: tAuto("project_role_updated_successfully_98e3065"),
         duration: 2000,
       });
     },

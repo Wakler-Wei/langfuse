@@ -30,6 +30,7 @@ import {
   type ProjectMigrationReadiness,
   type ProjectMigrationStatus,
 } from "@/src/features/v4-migration/migrationData";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const V4_DOCS_URL = "https://langfuse.com/docs/v4";
 const SDK_UPGRADE_URL =
@@ -53,11 +54,20 @@ function FaqLink({ href, children }: { href: string; children: ReactNode }) {
 }
 
 function AffectedCell({ count }: { count: MigrationCountState }) {
+  const tAuto = useAutoTranslations();
   if (count.status === "loading") {
-    return <span className="text-foreground-tertiary">Checking…</span>;
+    return (
+      <span className="text-foreground-tertiary">
+        {tAuto("checking_820d600")}
+      </span>
+    );
   }
   if (count.status === "error") {
-    return <span className="text-foreground-tertiary">Unavailable</span>;
+    return (
+      <span className="text-foreground-tertiary">
+        {tAuto("unavailable_2c9c1f7")}
+      </span>
+    );
   }
   if (count.count === 0) {
     return <span className="text-foreground-tertiary">0</span>;
@@ -66,14 +76,15 @@ function AffectedCell({ count }: { count: MigrationCountState }) {
 }
 
 function StatusPill({ readiness }: { readiness: ProjectMigrationReadiness }) {
+  const tAuto = useAutoTranslations();
   const label =
     readiness === "ready"
-      ? "Migrated"
+      ? tAuto("migrated_80ed70f")
       : readiness === "checking"
-        ? "Checking"
+        ? tAuto("checking_97876b8")
         : readiness === "unavailable"
-          ? "Unavailable"
-          : "Action needed";
+          ? tAuto("unavailable_2c9c1f7")
+          : tAuto("action_needed_c923286");
 
   return (
     <span
@@ -114,6 +125,7 @@ function SortableHead({
   orderBy: OrderBy;
   onSort: (column: SortKey) => void;
 }) {
+  const tAuto = useAutoTranslations();
   return (
     <TableHead
       className="group cursor-pointer px-2"
@@ -124,7 +136,7 @@ function SortableHead({
           {label}
         </span>
         {orderBy?.column === column && (
-          <span className="ml-1" title="Sort by this column">
+          <span className="ml-1" title={tAuto("sort_by_this_column_ffda121")}>
             {orderBy.order === "ASC" ? "▲" : "▼"}
           </span>
         )}
@@ -140,6 +152,8 @@ function OrgStatusSection({
   org: V4MigrationOrganization;
   statusByProjectId: Map<string, ProjectMigrationStatus>;
 }) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const capture = usePostHogClientCapture();
   const openMigrationPanel = useOpenV4MigrationPanel();
@@ -258,13 +272,13 @@ function OrgStatusSection({
             <TableHeader>
               <TableRow>
                 <SortableHead
-                  label="Project"
+                  label={tAuto("project_f6f4da8")}
                   column="name"
                   orderBy={orderBy}
                   onSort={handleSort}
                 />
                 <SortableHead
-                  label="Status"
+                  label={tAuto("status_bae7d5b")}
                   column="status"
                   orderBy={orderBy}
                   onSort={handleSort}
@@ -276,25 +290,25 @@ function OrgStatusSection({
                   onSort={handleSort}
                 />
                 <SortableHead
-                  label="Affected Evals"
+                  label={tAuto("affected_evals_c221089")}
                   column="evals"
                   orderBy={orderBy}
                   onSort={handleSort}
                 />
                 <SortableHead
-                  label="Affected APIs"
+                  label={tAuto("affected_apis_f9598f3")}
                   column="apis"
                   orderBy={orderBy}
                   onSort={handleSort}
                 />
                 <SortableHead
-                  label="Affected Exports"
+                  label={tAuto("affected_exports_0a51f06")}
                   column="exports"
                   orderBy={orderBy}
                   onSort={handleSort}
                 />
                 <SortableHead
-                  label="Last trace"
+                  label={tAuto("last_trace_43d698c")}
                   column="lastTrace"
                   orderBy={orderBy}
                   onSort={handleSort}
@@ -333,37 +347,41 @@ function OrgStatusSection({
                     </TableCell>
                     <TableCell density="comfortable">
                       {row.status.sdk.status === "latest" ? (
-                        <span className="text-foreground-tertiary">Latest</span>
+                        <span className="text-foreground-tertiary">
+                          {tAuto("latest_decd7ca")}
+                        </span>
                       ) : row.status.sdk.status === "otel_realtime" ? (
                         <span className="text-foreground-tertiary">
-                          OTel real-time
+                          {tAuto("otel_real_time_c9d51a9")}{" "}
                         </span>
                       ) : row.status.sdk.status === "no_data" ? (
                         <span className="text-foreground-tertiary">
-                          No data detected
+                          {tAuto("no_data_detected_05ecc63")}{" "}
                         </span>
                       ) : row.status.sdk.status === "checking" ? (
                         <span className="text-foreground-tertiary">
-                          Checking…
+                          {tAuto("checking_820d600")}{" "}
                         </span>
                       ) : row.status.sdk.status === "unknown" ? (
                         <span className="text-foreground-tertiary">
-                          Unknown
+                          {tAuto("unknown_bc7819b")}{" "}
                         </span>
                       ) : row.status.sdk.status === "otel_header_required" ? (
                         <span>
-                          {row.status.sdk.delayedOtelIngestionCount} OTel header{" "}
+                          {row.status.sdk.delayedOtelIngestionCount}{" "}
+                          {tAutoI18n("otel_header_90f6083")}{" "}
                           {row.status.sdk.delayedOtelIngestionCount === 1
-                            ? "required"
-                            : "issues"}
+                            ? tAutoI18n("required_1a77d41")
+                            : tAutoI18n("issues_890c540")}
                         </span>
                       ) : row.status.sdk.status === "error" ? (
                         <span className="text-foreground-tertiary">
-                          Unavailable
+                          {tAuto("unavailable_2c9c1f7")}{" "}
                         </span>
                       ) : (
                         <span>
-                          {row.status.sdk.upgradeRequiredCount} outdated
+                          {row.status.sdk.upgradeRequiredCount}{" "}
+                          {tAutoI18n("outdated_b85a517")}{" "}
                         </span>
                       )}
                     </TableCell>
@@ -385,7 +403,8 @@ function OrgStatusSection({
                     </TableCell>
                     <TableCell density="comfortable">
                       <span className="text-dark-blue flex items-center justify-end gap-1 whitespace-nowrap opacity-0 transition-opacity group-hover/row:opacity-100">
-                        Review <ArrowRight className="h-3 w-3 shrink-0" />
+                        {tAuto("review_e29a79f")}{" "}
+                        <ArrowRight className="h-3 w-3 shrink-0" />
                       </span>
                     </TableCell>
                   </TableRow>
@@ -410,6 +429,8 @@ export default function V4MigrationStatusPage() {
 }
 
 function V4MigrationStatusPageContent() {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const session = useSession();
   const handleCopyPrompt = useCopyMigrationPrompt();
 
@@ -431,9 +452,11 @@ function V4MigrationStatusPageContent() {
       q: "Why is this happening?",
       a: (
         <>
-          We rebuilt the tracing and evaluation engine around{" "}
-          <FaqLink href={DATA_MODEL_URL}>observations</FaqLink>. The new engine
-          is real-time and holds up much better at scale.
+          {tAuto("we_rebuilt_the_tracing_and_evaluation_engine_around_bb8eba5")}{" "}
+          <FaqLink href={DATA_MODEL_URL}>
+            {tAuto("observations_1943334")}
+          </FaqLink>
+          . The new engine is real-time and holds up much better at scale.
         </>
       ),
     },
@@ -441,13 +464,19 @@ function V4MigrationStatusPageContent() {
       q: "What's in it for me?",
       a: (
         <>
-          Your{" "}
-          <FaqLink href={OBSERVATIONS_FAQ_URL}>data shows up instantly</FaqLink>
-          , everything loads faster, and you get{" "}
-          <FaqLink href={V4_DOCS_URL}>
-            features we could not build on the old engine
+          {tAuto("your_ba596fd")}{" "}
+          <FaqLink href={OBSERVATIONS_FAQ_URL}>
+            {tAuto("data_shows_up_instantly_4f234e6")}
           </FaqLink>
-          , like full-text search, alerting, and observation-level evals.
+          {tAuto("everything_loads_faster_and_you_get_2131033")}{" "}
+          <FaqLink href={V4_DOCS_URL}>
+            {tAuto(
+              "features_we_could_not_build_on_the_old_engine_ea46178",
+            )}{" "}
+          </FaqLink>
+          {tAuto(
+            "like_full_text_search_alerting_and_observation_level_f40b9bd",
+          )}{" "}
         </>
       ),
     },
@@ -455,11 +484,13 @@ function V4MigrationStatusPageContent() {
       q: "Do I have to do this?",
       a: (
         <>
-          Yes, eventually. The{" "}
-          <FaqLink href={SDK_UPGRADE_URL}>old SDKs</FaqLink>, trace-level evals,
-          and APIs are frozen and stop working{" "}
-          <span className="underline">soon</span>. They keep running until then,
-          but we&apos;re no longer fixing bugs in them.
+          {tAuto("yes_eventually_the_52bb1db")}{" "}
+          <FaqLink href={SDK_UPGRADE_URL}>{tAuto("old_sdks_6f24662")}</FaqLink>
+          {tAuto(
+            "trace_level_evals_and_apis_are_frozen_and_stop_worki_d9d2fc2",
+          )}{" "}
+          <span className="underline">{tAuto("soon_3f934e4")}</span>. They keep
+          running until then, but we&apos;re no longer fixing bugs in them.
         </>
       ),
     },
@@ -473,10 +504,11 @@ function V4MigrationStatusPageContent() {
             onClick={handleCopyPrompt}
             className="text-dark-blue hover:underline"
           >
-            one prompt
+            {tAuto("one_prompt_eaffbaf")}{" "}
           </button>
-          : the agent updates your SDK, repoints your evals, and migrates your
-          API calls, checking with you before it changes anything.
+          {tAuto(
+            "the_agent_updates_your_sdk_repoints_your_evals_and_m_d422932",
+          )}{" "}
         </>
       ),
     },
@@ -484,12 +516,12 @@ function V4MigrationStatusPageContent() {
       q: "What if I do nothing?",
       a: (
         <>
-          <span className="underline">Soon</span>, old SDKs stop sending data,
-          and the{" "}
+          <span className="underline">{tAuto("soon_32d3b26")}</span>
+          {tAuto("old_sdks_stop_sending_data_and_the_49962a9")}{" "}
           <FaqLink href={API_REFERENCE_URL}>
-            deprecated evals and endpoints
+            {tAuto("deprecated_evals_and_endpoints_d9b7829")}{" "}
           </FaqLink>{" "}
-          start returning errors.
+          {tAuto("start_returning_errors_bc16e57")}{" "}
         </>
       ),
     },
@@ -513,23 +545,25 @@ function V4MigrationStatusPageContent() {
   return (
     <ContainerPage
       headerProps={{
-        title: "Migration status",
+        title: tAuto("migration_status_2ab5037"),
       }}
     >
       <div className="flex flex-col gap-6 pt-2 pb-24">
         <Card className="flex flex-wrap items-center justify-between gap-x-6 gap-y-4 p-6">
           <div className="flex min-w-0 flex-col gap-2.5">
             <p className="text-base font-bold">
-              Langfuse v4 is here. Real-time and up to 165× faster
+              {tAuto(
+                "langfuse_v4_is_here_real_time_and_up_to_165_faster_7946608",
+              )}{" "}
             </p>
             <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
               {isChecking ? (
                 <span className="text-muted-foreground text-sm">
-                  Checking project status…
+                  {tAuto("checking_project_status_fe86966")}{" "}
                 </span>
               ) : totalProjects === 0 ? (
                 <span className="text-muted-foreground text-sm">
-                  No active projects
+                  {tAuto("no_active_projects_e6823ec")}{" "}
                 </span>
               ) : (
                 <>
@@ -537,7 +571,8 @@ function V4MigrationStatusPageContent() {
                     {readyProjects}
                   </span>
                   <span className="text-muted-foreground text-sm">
-                    of {totalProjects} projects migrated
+                    {tAutoI18n("of_de04fa0")} {totalProjects}{" "}
+                    {tAutoI18n("projects_migrated_ea238f6")}{" "}
                   </span>
                 </>
               )}

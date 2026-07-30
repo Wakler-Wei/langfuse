@@ -32,6 +32,7 @@ import { Skeleton } from "@/src/components/ui/skeleton";
 import { EditDatasetItemDialog } from "@/src/features/datasets/components/EditDatasetItemDialog";
 import { useDatasetVersion } from "@/src/features/datasets/hooks/useDatasetVersion";
 import { toDatasetSchema } from "@/src/features/datasets/utils/datasetItemUtils";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 export const DatasetItemDetailPage = ({
   activeTab,
   withPadding = true,
@@ -41,6 +42,7 @@ export const DatasetItemDetailPage = ({
   withPadding?: boolean;
   children: ReactNode;
 }) => {
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const projectId = router.query.projectId as string;
   const datasetId = router.query.datasetId as string;
@@ -162,13 +164,17 @@ export const DatasetItemDetailPage = ({
                     <div className="space-y-2">
                       <h4 className="leading-none font-bold">
                         {item.data.status === DatasetStatus.ACTIVE
-                          ? "Archive this item?"
-                          : "Unarchive this item?"}
+                          ? tAuto("archive_this_item_694e199")
+                          : tAuto("unarchive_this_item_d8d8067")}
                       </h4>
                       <p className="text-muted-foreground text-sm">
                         {item.data.status === DatasetStatus.ACTIVE
-                          ? "Archiving an item will exclude it from new dataset runs."
-                          : "Unarchiving an item will include it back in new dataset runs."}
+                          ? tAuto(
+                              "archiving_an_item_will_exclude_it_from_new_dataset_r_63159f5",
+                            )
+                          : tAuto(
+                              "unarchiving_an_item_will_include_it_back_in_new_data_3df2c4a",
+                            )}
                       </p>
                     </div>
                     <Button
@@ -182,10 +188,10 @@ export const DatasetItemDetailPage = ({
                       size="sm"
                     >
                       {mutUpdate.isPending
-                        ? "Processing..."
+                        ? tAuto("processing_272bc02")
                         : item.data.status === DatasetStatus.ACTIVE
-                          ? "Archive"
-                          : "Unarchive"}
+                          ? tAuto("archive_2621c6f")
+                          : tAuto("unarchive_35e71c2")}
                     </Button>
                   </div>
                 </PopoverContent>
@@ -195,7 +201,11 @@ export const DatasetItemDetailPage = ({
               <Button variant="ghost" size="icon-xs" asChild>
                 <Link
                   href={`/project/${projectId}/traces/${item.data.sourceTraceId}`}
-                  title={`View source ${item.data.sourceObservationId ? "observation" : "trace"}`}
+                  title={tAuto("view_source_value0_a78a46b", {
+                    value0: item.data.sourceObservationId
+                      ? "observation"
+                      : "trace",
+                  })}
                 >
                   <ListTree className="h-4 w-4" />
                 </Link>
@@ -240,7 +250,7 @@ export const DatasetItemDetailPage = ({
                   disabled={!hasAccess || isViewingOldVersion || !item.data}
                 >
                   <Pencil className="mr-2 h-4 w-4" />
-                  Edit
+                  {tAuto("edit_5301648")}{" "}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={handleDelete}
@@ -253,7 +263,9 @@ export const DatasetItemDetailPage = ({
                   className="text-destructive"
                 >
                   <Trash2 className="mr-2 h-4 w-4" />
-                  {mutDelete.isPending ? "Deleting..." : "Delete"}
+                  {mutDelete.isPending
+                    ? tAuto("deleting_e16cac6")
+                    : tAuto("delete_f6fdbe4")}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

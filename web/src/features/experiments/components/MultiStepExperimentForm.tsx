@@ -55,6 +55,7 @@ import {
   PROMPT_TOOL_STRUCTURED_OUTPUT_CONFLICT_MESSAGE,
   PromptType,
 } from "@langfuse/shared";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const LegacyExperimentNameValidation = ({
   projectId,
@@ -104,6 +105,8 @@ export const MultiStepExperimentForm = ({
   }) => Promise<void>;
   enableLegacyNameValidation?: boolean;
 }) => {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const capture = usePostHogClientCapture();
   const [activeStep, setActiveStep] = useState("prompt");
   const [selectedPromptName, setSelectedPromptName] = useState<string>(
@@ -124,11 +127,11 @@ export const MultiStepExperimentForm = ({
   );
 
   const steps = [
-    { id: "prompt", label: "Prompt & Model" },
-    { id: "dataset", label: "Dataset" },
-    { id: "evaluators", label: "Evaluators" },
-    { id: "details", label: "Experiment run details" },
-    { id: "review", label: "Review" },
+    { id: "prompt", label: tAuto("prompt_model_ad1a6fc") },
+    { id: "dataset", label: tAuto("dataset_1052689") },
+    { id: "evaluators", label: tAuto("evaluators_03488ee") },
+    { id: "details", label: tAuto("experiment_run_details_adf3a7c") },
+    { id: "review", label: tAuto("review_e29a79f") },
   ];
 
   const hasEvalReadAccess = useHasProjectAccess({
@@ -245,8 +248,8 @@ export const MultiStepExperimentForm = ({
     onSuccess: handleExperimentSuccess ?? (() => {}),
     onError: (error) => {
       showErrorToast(
-        error.message || "Failed to trigger dataset run",
-        "Please try again.",
+        error.message || tAutoI18n("failed_to_trigger_dataset_run_371508f"),
+        tAutoI18n("please_try_again_83a6fd7"),
       );
     },
     onSettled: handleExperimentSettled ?? (() => {}),
@@ -296,7 +299,9 @@ export const MultiStepExperimentForm = ({
     ) {
       showErrorToast(
         PROMPT_TOOL_STRUCTURED_OUTPUT_CONFLICT_MESSAGE,
-        "Disable structured output or choose a prompt without tools.",
+        tAutoI18n(
+          "disable_structured_output_or_choose_a_prompt_without_b69caec",
+        ),
       );
       return;
     }
@@ -470,18 +475,19 @@ export const MultiStepExperimentForm = ({
   return (
     <>
       <DialogHeader>
-        <DialogTitle>Run Experiment</DialogTitle>
+        <DialogTitle>{tAuto("run_experiment_f8f3222")}</DialogTitle>
         <DialogDescription>
-          Run an experiment to evaluate prompts and model configurations against
-          a dataset. See{" "}
+          {tAutoI18n(
+            "run_an_experiment_to_evaluate_prompts_and_model_conf_ff52daf",
+          )}{" "}
           <Link
             href="https://langfuse.com/docs/evaluation/dataset-runs/native-run"
             target="_blank"
             className="underline"
           >
-            documentation
+            {tAuto("documentation_ba2a165")}{" "}
           </Link>{" "}
-          to learn more.
+          {tAutoI18n("to_learn_more_3d1d2de")}{" "}
         </DialogDescription>
       </DialogHeader>
       {enableLegacyNameValidation && (
@@ -586,7 +592,7 @@ export const MultiStepExperimentForm = ({
                 disabled={activeStep === "prompt"}
               >
                 <ChevronLeft className="mr-2 h-4 w-4" />
-                Previous
+                {tAuto("previous_50f9428")}{" "}
               </Button>
 
               <div className="flex gap-2">
@@ -602,7 +608,7 @@ export const MultiStepExperimentForm = ({
                       }
                     }}
                   >
-                    Next
+                    {tAuto("next_bc98198")}{" "}
                     <ChevronRight className="ml-2 h-4 w-4" />
                   </Button>
                 ) : (
@@ -616,7 +622,7 @@ export const MultiStepExperimentForm = ({
                     }
                     loading={form.formState.isSubmitting}
                   >
-                    Run Experiment
+                    {tAuto("run_experiment_f8f3222")}{" "}
                   </Button>
                 )}
               </div>

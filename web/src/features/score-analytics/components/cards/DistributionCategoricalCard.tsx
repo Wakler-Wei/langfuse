@@ -12,6 +12,7 @@ import { ScoreDistributionCategoricalChart } from "../charts/ScoreDistributionCa
 import { getScoreCategoryColors } from "../../lib/color-scales";
 import { SamplingDetailsHoverCard } from "../SamplingDetailsHoverCard";
 import Spinner from "@/src/components/design-system/Spinner/Spinner";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type DistributionTab = "score1" | "score2" | "all" | "matched";
 
@@ -108,6 +109,8 @@ function calculateUnmatchedScore2Distribution(
  * - all tab shows both distributions side by side
  */
 export function DistributionCategoricalCard() {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const { data, isLoading, params, colorMappings } = useScoreAnalytics();
 
   const [activeTab, setActiveTab] = useState<DistributionTab>("all");
@@ -126,11 +129,12 @@ export function DistributionCategoricalCard() {
         categories: distribution.categories ?? [],
         stackedDistribution: undefined,
         score2Categories: undefined,
-        description: `${statistics.score1.total.toLocaleString()} observations${
-          statistics.score1.mode
+        description: tAuto("value0_observations_value1_e1ed21b", {
+          value0: statistics.score1.total.toLocaleString(),
+          value1: statistics.score1.mode
             ? ` | Most frequent: ${statistics.score1.mode.category} (${statistics.score1.mode.count.toLocaleString()})`
-            : ""
-        }`,
+            : "",
+        }),
       };
     }
 
@@ -142,7 +146,10 @@ export function DistributionCategoricalCard() {
           categories: distribution.categories ?? [],
           stackedDistribution: undefined,
           score2Categories: undefined,
-          description: `${score1.name} - ${statistics.score1.total.toLocaleString()} observations`,
+          description: tAuto("value0_value1_observations_4e05118", {
+            value0: score1.name,
+            value1: statistics.score1.total.toLocaleString(),
+          }),
         };
       case "score2":
         return {
@@ -150,7 +157,10 @@ export function DistributionCategoricalCard() {
           categories: distribution.score2Categories ?? [],
           stackedDistribution: undefined,
           score2Categories: undefined,
-          description: `${score2?.name ?? "Score 2"} - ${statistics.score2?.total.toLocaleString()} observations`,
+          description: tAuto("value0_value1_observations_4e05118", {
+            value0: score2?.name ?? "Score 2",
+            value1: statistics.score2?.total.toLocaleString() ?? "",
+          }),
         };
       case "all": {
         // Calculate unmatched score2 items and augment stackedDistribution
@@ -171,7 +181,12 @@ export function DistributionCategoricalCard() {
           categories: distribution.categories ?? [],
           stackedDistribution: augmentedStackedDistribution,
           score2Categories: distribution.score2Categories ?? [],
-          description: `${score1.name} (${statistics.score1.total.toLocaleString()}) vs ${score2?.name} (${statistics.score2?.total.toLocaleString()})`,
+          description: tAuto("value0_value1_vs_value2_value3_9879f5e", {
+            value0: score1.name,
+            value1: statistics.score1.total.toLocaleString(),
+            value2: score2?.name ?? "",
+            value3: statistics.score2?.total.toLocaleString() ?? "",
+          }),
         };
       }
       case "matched":
@@ -180,10 +195,14 @@ export function DistributionCategoricalCard() {
           categories: distribution.categories ?? [],
           stackedDistribution: distribution.stackedDistributionMatched,
           score2Categories: distribution.score2Categories ?? [],
-          description: `${score1.name} vs ${score2?.name} - ${statistics.comparison?.matchedCount.toLocaleString()} matched`,
+          description: tAuto("value0_vs_value1_value2_matched_a4d2fd9", {
+            value0: score1.name,
+            value1: score2?.name ?? "",
+            value2: statistics.comparison?.matchedCount.toLocaleString() ?? "",
+          }),
         };
     }
-  }, [data, activeTab, params]);
+  }, [data, activeTab, params, tAuto]);
 
   // Build color mapping for categorical charts
   const chartColors = useMemo(() => {
@@ -213,8 +232,8 @@ export function DistributionCategoricalCard() {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Distribution</CardTitle>
-          <CardDescription>Loading chart...</CardDescription>
+          <CardTitle>{tAuto("distribution_1d3c457")}</CardTitle>
+          <CardDescription>{tAuto("loading_chart_f9755ad")}</CardDescription>
         </CardHeader>
         <CardContent className="flex h-[340px] flex-col items-center justify-center pl-0">
           <Spinner size="xl" variant="muted" />
@@ -228,11 +247,13 @@ export function DistributionCategoricalCard() {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Distribution</CardTitle>
-          <CardDescription>No data available</CardDescription>
+          <CardTitle>{tAuto("distribution_1d3c457")}</CardTitle>
+          <CardDescription>
+            {tAuto("no_data_available_0cfc430")}
+          </CardDescription>
         </CardHeader>
         <CardContent className="text-muted-foreground flex h-[340px] flex-col items-center justify-center pl-0 text-sm">
-          Select a score to view distribution
+          {tAuto("select_a_score_to_view_distribution_855844c")}{" "}
         </CardContent>
       </Card>
     );
@@ -263,7 +284,7 @@ export function DistributionCategoricalCard() {
     ? score2.name === score1.name
       ? `${score2.source} · ${score2.name}`
       : score2.name
-    : "Score 2";
+    : tAutoI18n("score_2_cbcb6f9");
 
   return (
     <Card>
@@ -272,7 +293,7 @@ export function DistributionCategoricalCard() {
           <div className="flex items-start justify-between">
             <div className="flex-1">
               <CardTitle className="flex items-center gap-2">
-                Distribution
+                {tAutoI18n("distribution_1d3c457")}{" "}
                 {data.samplingMetadata.isSampled && (
                   <SamplingDetailsHoverCard
                     samplingMetadata={data.samplingMetadata}
@@ -304,10 +325,10 @@ export function DistributionCategoricalCard() {
                   {truncateLabel(score2FullLabel)}
                 </TabsTrigger>
                 <TabsTrigger value="all" className="h-5 px-2 text-xs">
-                  all
+                  {tAuto("all_d87c448")}{" "}
                 </TabsTrigger>
                 <TabsTrigger value="matched" className="h-5 px-2 text-xs">
-                  matched
+                  {tAuto("matched_d010685")}{" "}
                 </TabsTrigger>
               </TabsList>
             </Tabs>
@@ -344,7 +365,9 @@ export function DistributionCategoricalCard() {
           />
         ) : (
           <div className="text-muted-foreground flex h-full items-center justify-center text-sm">
-            No distribution data available for the selected time range
+            {tAuto(
+              "no_distribution_data_available_for_the_selected_time_650a163",
+            )}{" "}
           </div>
         )}
       </CardContent>

@@ -6,11 +6,12 @@ import { Button } from "@/src/components/ui/button";
 import { SplashScreen } from "@/src/components/ui/splash-screen";
 import { automationCreateHref } from "@/src/features/automations/components/automationForm";
 import { type ActionTypes } from "@langfuse/shared";
+import { I18nText, useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 /** OnboardingChannel describes one notification-channel CTA shown in step 1 of the splash. */
 type OnboardingChannel = {
   actionType: ActionTypes;
-  label: string;
+  label: React.ReactNode;
   icon: React.ReactNode;
 };
 
@@ -18,18 +19,18 @@ type OnboardingChannel = {
 const channels: OnboardingChannel[] = [
   {
     actionType: "SLACK",
-    label: "Connect Slack",
+    label: <I18nText id="connect_slack_cc7f4b6" />,
     // eslint-disable-next-line @typescript-eslint/no-deprecated -- brand icon retained for parity with MonitorAutomationsPanel.
     icon: <Slack className="h-4 w-4" aria-hidden="true" />,
   },
   {
     actionType: "WEBHOOK",
-    label: "Connect Webhooks",
+    label: <I18nText id="connect_webhooks_0baefce" />,
     icon: <Webhook className="h-4 w-4" aria-hidden="true" />,
   },
   {
     actionType: "GITHUB_DISPATCH",
-    label: "Connect Github Actions",
+    label: <I18nText id="connect_github_actions_3ef2ad5" />,
     // eslint-disable-next-line @typescript-eslint/no-deprecated -- see Slack note above.
     icon: <Github className="h-4 w-4" aria-hidden="true" />,
   },
@@ -43,16 +44,20 @@ export function MonitorsOnboarding({
   projectId: string;
   hasCUDAccess: boolean;
 }) {
+  const tAuto = useAutoTranslations();
   return (
     <div className="mx-auto w-full max-w-xl pt-12">
       <SplashScreen
-        title="Catch issues before they impact your users"
-        description="Get notified when cost, quality, latency, or other key metrics move outside of expected ranges."
+        title={tAuto("catch_issues_before_they_impact_your_users_42e04ed")}
+        description={tAuto(
+          "get_notified_when_cost_quality_latency_or_other_key__5aa3fcc",
+        )}
         steps={[
           {
-            title: "Choose where alerts should go",
-            description:
-              "Send alerts to Slack, Webhooks, or GitHub Actions so your team and your workflows can respond automatically.",
+            title: tAuto("choose_where_alerts_should_go_ff782fd"),
+            description: tAuto(
+              "send_alerts_to_slack_webhooks_or_github_actions_so_y_1118017",
+            ),
             content: (
               <div className="flex flex-col gap-2">
                 {channels.map((channel) => (
@@ -82,9 +87,10 @@ export function MonitorsOnboarding({
             ),
           },
           {
-            title: "Decide what to monitor",
-            description:
-              "Create monitors for sudden cost spikes, quality drops, latency changes, or other important changes.",
+            title: tAuto("decide_what_to_monitor_55cb784"),
+            description: tAuto(
+              "create_monitors_for_sudden_cost_spikes_quality_drops_023e8c6",
+            ),
             content: (
               <ActionButton
                 hasAccess={hasCUDAccess}
@@ -93,7 +99,7 @@ export function MonitorsOnboarding({
                 variant="default"
                 size="lg"
               >
-                Create Monitor
+                {tAuto("create_monitor_9b65cfd")}{" "}
               </ActionButton>
             ),
           },

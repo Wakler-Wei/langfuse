@@ -21,6 +21,8 @@ import type { DatabaseRow } from "@/src/server/api/services/sqlInterface";
 import { DashboardLineTimeSeriesChart } from "@/src/features/dashboard/components/DashboardLineTimeSeriesChart";
 import { useScheduledDashboardExecuteQuery } from "@/src/hooks/useDashboardQueryScheduler";
 import { useMemo } from "react";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
+import { useTranslations } from "next-intl";
 
 export const GenerationLatencyChart = ({
   className,
@@ -45,6 +47,8 @@ export const GenerationLatencyChart = ({
   schedulerId?: string;
   syncId?: string;
 }) => {
+  const tAuto = useAutoTranslations();
+  const tDashboard = useTranslations("Dashboard");
   const {
     allModels,
     selectedModels,
@@ -141,19 +145,19 @@ export const GenerationLatencyChart = ({
           )
         : [];
     return [
-      { tabTitle: "50th Percentile", data: getData("p50_latency") },
-      { tabTitle: "75th Percentile", data: getData("p75_latency") },
-      { tabTitle: "90th Percentile", data: getData("p90_latency") },
-      { tabTitle: "95th Percentile", data: getData("p95_latency") },
-      { tabTitle: "99th Percentile", data: getData("p99_latency") },
+      { tabTitle: tDashboard("percentile50"), data: getData("p50_latency") },
+      { tabTitle: tDashboard("percentile75"), data: getData("p75_latency") },
+      { tabTitle: tDashboard("percentile90"), data: getData("p90_latency") },
+      { tabTitle: tDashboard("percentile95"), data: getData("p95_latency") },
+      { tabTitle: tDashboard("percentile99"), data: getData("p99_latency") },
     ];
-  }, [latencies.data, selectedModels]);
+  }, [latencies.data, selectedModels, tDashboard]);
 
   return (
     <DashboardCard
       className={className}
-      title="Model latencies"
-      description="Latencies (seconds) per LLM generation"
+      title={tAuto("model_latencies_3fc8043")}
+      description={tAuto("latencies_seconds_per_llm_generation_c10a181")}
       isLoading={
         isLoading || (latencies.isPending && selectedModels.length > 0)
       }
@@ -184,7 +188,7 @@ export const GenerationLatencyChart = ({
                   <div className="h-80 w-full shrink-0 grow lg:h-56">
                     <DashboardLineTimeSeriesChart
                       data={item.data}
-                      label="Latency"
+                      label={tAuto("latency_3e39972")}
                       unit="millisecond"
                       syncId={syncId}
                       missingValue="gap"

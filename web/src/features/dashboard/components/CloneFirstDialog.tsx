@@ -15,6 +15,7 @@ import { showSuccessToast } from "@/src/features/notifications/showSuccessToast"
 import { showErrorToast } from "@/src/features/notifications/showErrorToast";
 import { usePostHogClientCapture } from "@/src/features/posthog-analytics/usePostHogClientCapture";
 import { type DashboardPlacement } from "@/src/features/widgets/components/DashboardGrid";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 /**
  * Clone-first flow for Langfuse-managed (read-only) dashboards: any edit
@@ -45,6 +46,8 @@ export function CloneFirstDialog({
   /** Called when the user dismisses without cloning (revert the attempt). */
   onCancel?: () => void;
 }) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const utils = api.useUtils();
   const capture = usePostHogClientCapture();
@@ -78,10 +81,10 @@ export function CloneFirstDialog({
         had_pending_change: Boolean(pendingDefinition),
       });
       showSuccessToast({
-        title: "Editable copy created",
+        title: tAuto("editable_copy_created_0c57616"),
         description: setAsHome
-          ? "The copy is now this project's Home dashboard"
-          : "You are now working on your own copy",
+          ? tAuto("the_copy_is_now_this_project_s_home_dashboard_f50c510")
+          : tAuto("you_are_now_working_on_your_own_copy_7d19db8"),
         duration: 3000,
       });
       onOpenChange(false);
@@ -92,7 +95,7 @@ export function CloneFirstDialog({
       }
     },
     onError: (e) => {
-      showErrorToast("Failed to create copy", e.message);
+      showErrorToast(tAutoI18n("failed_to_create_copy_cbac8d3"), e.message);
     },
   });
 
@@ -124,7 +127,9 @@ export function CloneFirstDialog({
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>Create your editable copy</DialogTitle>
+          <DialogTitle>
+            {tAuto("create_your_editable_copy_c735d73")}
+          </DialogTitle>
         </DialogHeader>
         <DialogBody>
           <div className="text-muted-foreground grid gap-3 py-4 text-sm">
@@ -134,23 +139,30 @@ export function CloneFirstDialog({
               </span>{" "}
               is maintained by Langfuse and can&rsquo;t be edited directly.
               We&rsquo;ll create your own editable copy in this project
-              {pendingDefinition ? " with your change applied" : ""}
-              {setAsHome ? " and show it on your Home page from now on" : ""}.
+              {pendingDefinition
+                ? tAutoI18n("with_your_change_applied_f70d0b9")
+                : ""}
+              {setAsHome
+                ? tAutoI18n("and_show_it_on_your_home_page_from_now_on_1e37d72")
+                : ""}
+              .
             </p>
             <p>
-              Langfuse-maintained tiles on the copy can be rearranged or
-              removed; editing their content will become available in a future
-              release.
+              {tAuto(
+                "langfuse_maintained_tiles_on_the_copy_can_be_rearran_e2a9273",
+              )}{" "}
             </p>
             {existingClone && (
               <div className="bg-muted/50 flex flex-wrap items-center justify-between gap-2 rounded-md border p-3">
                 <span>
-                  You already have a copy:{" "}
+                  {tAutoI18n("you_already_have_a_copy_764e443")}{" "}
                   <span className="text-foreground font-bold">
                     &ldquo;{existingClone.name}&rdquo;
                   </span>
                   {pendingDefinition
-                    ? " — opening it will discard your attempted change"
+                    ? tAutoI18n(
+                        "opening_it_will_discard_your_attempted_change_f9f6b03",
+                      )
                     : ""}
                 </span>
                 <Button
@@ -171,7 +183,7 @@ export function CloneFirstDialog({
                   }}
                 >
                   <ExternalLinkIcon size={14} className="mr-1" />
-                  Open it instead
+                  {tAuto("open_it_instead_d7ff091")}{" "}
                 </Button>
               </div>
             )}
@@ -185,14 +197,14 @@ export function CloneFirstDialog({
               type="button"
               disabled={cloneDashboard.isPending}
             >
-              Cancel
+              {tAuto("cancel_77dfd21")}{" "}
             </Button>
             <Button
               onClick={handleConfirm}
               type="button"
               loading={cloneDashboard.isPending}
             >
-              Create my copy
+              {tAuto("create_my_copy_fda008e")}{" "}
             </Button>
           </div>
         </DialogFooter>

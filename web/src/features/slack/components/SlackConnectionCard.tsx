@@ -13,6 +13,7 @@ import { Alert, AlertDescription } from "@/src/components/ui/alert";
 import { api } from "@/src/utils/api";
 import { SlackConnectButton } from "@/src/features/slack/components/SlackConnectButton";
 import { SlackDisconnectButton } from "@/src/features/slack/components/SlackDisconnectButton";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 /**
  * Props for the SlackConnectionCard component
@@ -50,6 +51,7 @@ export const SlackConnectionCard: React.FC<SlackConnectionCardProps> = ({
   onConnectionChange,
   showConnectButton = true,
 }) => {
+  const tAuto = useAutoTranslations();
   // Get Slack integration status
   const {
     data: integrationStatus,
@@ -77,14 +79,16 @@ export const SlackConnectionCard: React.FC<SlackConnectionCardProps> = ({
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            Slack Connection
+            {tAuto("slack_connection_f4fb414")}{" "}
           </CardTitle>
-          <CardDescription>Checking connection status...</CardDescription>
+          <CardDescription>
+            {tAuto("checking_connection_status_8562917")}
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="text-muted-foreground flex items-center gap-2">
             <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-            <span>Loading...</span>
+            <span>{tAuto("loading_b04ba49")}</span>
           </div>
         </CardContent>
       </Card>
@@ -97,15 +101,19 @@ export const SlackConnectionCard: React.FC<SlackConnectionCardProps> = ({
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            Slack Connection
+            {tAuto("slack_connection_f4fb414")}{" "}
           </CardTitle>
-          <CardDescription>Error loading connection status</CardDescription>
+          <CardDescription>
+            {tAuto("error_loading_connection_status_75660e3")}
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <Alert>
             <AlertCircle className="h-4 w-4" />
             <AlertDescription>
-              Failed to load Slack integration status. Please try again.
+              {tAuto(
+                "failed_to_load_slack_integration_status_please_try_a_363f434",
+              )}{" "}
             </AlertDescription>
           </Alert>
         </CardContent>
@@ -119,10 +127,12 @@ export const SlackConnectionCard: React.FC<SlackConnectionCardProps> = ({
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            Slack Connection
+            {tAuto("slack_connection_f4fb414")}{" "}
           </CardTitle>
           <CardDescription>
-            Connect your Slack workspace to send notifications
+            {tAuto(
+              "connect_your_slack_workspace_to_send_notifications_5521c16",
+            )}{" "}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -135,8 +145,9 @@ export const SlackConnectionCard: React.FC<SlackConnectionCardProps> = ({
 
           <div className="space-y-2">
             <p className="text-muted-foreground text-sm">
-              Connect your Slack workspace to enable real-time notifications for
-              your automations.
+              {tAuto(
+                "connect_your_slack_workspace_to_enable_real_time_not_2ab965a",
+              )}{" "}
             </p>
 
             {showConnectButton && (
@@ -160,28 +171,36 @@ export const SlackConnectionCard: React.FC<SlackConnectionCardProps> = ({
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          Slack Connection
+          {tAuto("slack_connection_f4fb414")}{" "}
         </CardTitle>
-        <CardDescription>Connected to your Slack workspace</CardDescription>
+        <CardDescription>
+          {tAuto("connected_to_your_slack_workspace_5e7d0c6")}
+        </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Connection Status */}
         <div className="flex items-center gap-2">
           <CheckCircle className="h-4 w-4 text-green-500" />
-          <span className="text-sm font-bold">Connected</span>
+          <span className="text-sm font-bold">
+            {tAuto("connected_c2f9b7b")}
+          </span>
         </div>
 
         {/* Team Information */}
         <div className="space-y-2">
           <div className="flex items-center gap-2">
-            <span className="text-sm font-bold">Workspace:</span>
+            <span className="text-sm font-bold">
+              {tAuto("workspace_92b51a9")}
+            </span>
             <Badge variant="secondary" className="text-xs">
               {integrationStatus.teamName}
             </Badge>
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="text-sm font-bold">Team ID:</span>
+            <span className="text-sm font-bold">
+              {tAuto("team_id_20647fb")}
+            </span>
             <Badge variant="outline" className="font-mono text-xs">
               {integrationStatus.teamId}
             </Badge>
@@ -189,7 +208,9 @@ export const SlackConnectionCard: React.FC<SlackConnectionCardProps> = ({
 
           {integrationStatus.botUserId && (
             <div className="flex items-center gap-2">
-              <span className="text-sm font-bold">Bot User:</span>
+              <span className="text-sm font-bold">
+                {tAuto("bot_user_4ecb6c0")}
+              </span>
               <Badge variant="outline" className="font-mono text-xs">
                 {integrationStatus.botUserId}
               </Badge>
@@ -214,7 +235,7 @@ export const SlackConnectionCard: React.FC<SlackConnectionCardProps> = ({
             onClick={() => refetchStatus()}
             disabled={disabled}
           >
-            Refresh Status
+            {tAuto("refresh_status_28a0e95")}{" "}
           </Button>
         </div>
       </CardContent>

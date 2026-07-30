@@ -7,6 +7,7 @@ import {
   AccordionTrigger,
 } from "@/src/components/ui/accordion";
 import { stringifyDatasetItemData } from "../utils/datasetItemUtils";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type DatasetItemDiffViewProps = {
   selectedVersion: DatasetItemDomain;
@@ -17,6 +18,7 @@ export const DatasetItemDiffView = ({
   selectedVersion,
   latestVersion,
 }: DatasetItemDiffViewProps) => {
+  const tAuto = useAutoTranslations();
   return (
     <div className="space-y-4">
       <Accordion
@@ -25,7 +27,7 @@ export const DatasetItemDiffView = ({
         className="w-full"
       >
         <AccordionItem value="input">
-          <AccordionTrigger>Input</AccordionTrigger>
+          <AccordionTrigger>{tAuto("input_b568d47")}</AccordionTrigger>
           <AccordionContent>
             <DiffViewer
               oldString={stringifyDatasetItemData(selectedVersion.input)}
@@ -37,7 +39,9 @@ export const DatasetItemDiffView = ({
         </AccordionItem>
 
         <AccordionItem value="output">
-          <AccordionTrigger>Expected Output</AccordionTrigger>
+          <AccordionTrigger>
+            {tAuto("expected_output_395c41e")}
+          </AccordionTrigger>
           <AccordionContent>
             <DiffViewer
               oldString={stringifyDatasetItemData(
@@ -51,7 +55,7 @@ export const DatasetItemDiffView = ({
         </AccordionItem>
 
         <AccordionItem value="metadata">
-          <AccordionTrigger>Metadata</AccordionTrigger>
+          <AccordionTrigger>{tAuto("metadata_251edc0")}</AccordionTrigger>
           <AccordionContent>
             <DiffViewer
               oldString={stringifyDatasetItemData(selectedVersion.metadata)}

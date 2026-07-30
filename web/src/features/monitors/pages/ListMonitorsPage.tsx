@@ -13,15 +13,20 @@ import { MonitorsTable } from "@/src/features/monitors/components/MonitorsTable"
 import { useHasProjectAccess } from "@/src/features/rbac/utils/checkProjectAccess";
 import useProjectIdFromURL from "@/src/hooks/useProjectIdFromURL";
 import { api } from "@/src/utils/api";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
-/** headerProps are shared by all of the ListMonitorPage headers */
-const headerProps = {
-  title: "Monitors",
-  help: {
-    description:
-      "Monitors notify your team and automated workflows of sudden cost spikes, quality drops, latency changes, and other important changes on the system.",
-  },
-};
+/** Header copy is shared by all of the ListMonitorPage states. */
+function useMonitorHeaderProps() {
+  const tAuto = useAutoTranslations();
+  return {
+    title: tAuto("monitors_08cc506"),
+    help: {
+      description: tAuto(
+        "monitors_notify_your_team_and_automated_workflows_of_f08cb04",
+      ),
+    },
+  };
+}
 
 /** ListMonitorsPage displays the list of monitors for a project, or an onboarding splash when the project has none. */
 export default function ListMonitorsPage() {
@@ -50,10 +55,14 @@ export default function ListMonitorsPage() {
 }
 
 /** EmptyPage is an empty monitor page */
-const EmptyPage = () => <Page headerProps={headerProps}>{null}</Page>;
+const EmptyPage = () => {
+  const headerProps = useMonitorHeaderProps();
+  return <Page headerProps={headerProps}>{null}</Page>;
+};
 
 /** OnboardingPage shows the onboarding message */
 const OnboardingPage = ({ projectId }: { projectId: string }) => {
+  const headerProps = useMonitorHeaderProps();
   /** hasCUDAccess is true if the user has permission to create monitors */
   const hasCUDAccess = useHasProjectAccess({
     projectId,
@@ -69,6 +78,8 @@ const OnboardingPage = ({ projectId }: { projectId: string }) => {
 
 /** MainPage loads and displays the list of monitors  */
 const MainPage = ({ projectId }: { projectId: string }) => {
+  const tAuto = useAutoTranslations();
+  const headerProps = useMonitorHeaderProps();
   /** hasCUDAccess is true if the user has permission to create monitors */
   const hasCUDAccess = useHasProjectAccess({
     projectId,
@@ -113,7 +124,7 @@ const MainPage = ({ projectId }: { projectId: string }) => {
                 href={`/project/${projectId}/monitors/new`}
                 variant="default"
               >
-                New Monitor
+                {tAuto("new_monitor_4bd2799")}{" "}
               </ActionButton>
             </>
           ),

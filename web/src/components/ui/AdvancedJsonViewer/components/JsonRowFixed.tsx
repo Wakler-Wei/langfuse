@@ -8,6 +8,7 @@
 import type { FlatJSONRow, JSONTheme, SearchMatch } from "../types";
 import { ExpandButton } from "./ExpandButton";
 import { LineNumber } from "./LineNumber";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export interface JsonRowFixedProps {
   row: FlatJSONRow;
@@ -40,6 +41,7 @@ export function JsonRowFixed({
   className,
   isToggling = false,
 }: JsonRowFixedProps) {
+  const tAuto = useAutoTranslations();
   // Calculate background based on search match
   const backgroundColor = isCurrentMatch
     ? theme.searchCurrentBackground
@@ -107,8 +109,14 @@ export function JsonRowFixed({
             }}
             title={
               row.isExpandable
-                ? `${matchCount} match${matchCount === 1 ? "" : "es"} in this section`
-                : `${matchCount} match${matchCount === 1 ? "" : "es"} in this value`
+                ? tAuto("value0_match_value1_in_this_section_bcea0c8", {
+                    value0: matchCount,
+                    value1: matchCount === 1 ? "" : "es",
+                  })
+                : tAuto("value0_match_value1_in_this_value_a23ec32", {
+                    value0: matchCount,
+                    value1: matchCount === 1 ? "" : "es",
+                  })
             }
           >
             {currentMatchIndexInRow !== undefined

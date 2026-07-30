@@ -10,6 +10,7 @@ import { TemplateSelector } from "@/src/features/evals/components/template-selec
 import { EvaluatorForm } from "@/src/features/evals/components/evaluator-form";
 import { type EvaluatorsStepProps } from "@/src/features/experiments/types/stepProps";
 import { StepHeader } from "@/src/features/experiments/components/shared/StepHeader";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export const EvaluatorsStep: React.FC<EvaluatorsStepProps> = ({
   projectId,
@@ -17,6 +18,8 @@ export const EvaluatorsStep: React.FC<EvaluatorsStepProps> = ({
   evaluatorState,
   permissions,
 }) => {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const {
     evalTemplates,
     selectedEvaluatorData,
@@ -31,12 +34,14 @@ export const EvaluatorsStep: React.FC<EvaluatorsStepProps> = ({
   return (
     <div className="space-y-6">
       <StepHeader
-        title="Evaluators (Optional)"
-        description="Configure evaluators to automatically score experiment results. You can add multiple evaluators to assess different aspects of your LLM outputs."
+        title={tAuto("evaluators_optional_3f58a16")}
+        description={tAuto(
+          "configure_evaluators_to_automatically_score_experime_5982b5d",
+        )}
       />
 
       <FormItem>
-        <FormLabel>Select Evaluators</FormLabel>
+        <FormLabel>{tAuto("select_evaluators_0e69109")}</FormLabel>
         {hasEvalReadAccess && datasetId ? (
           <TemplateSelector
             projectId={projectId}
@@ -49,8 +54,12 @@ export const EvaluatorsStep: React.FC<EvaluatorsStepProps> = ({
         ) : (
           <p className="text-muted-foreground text-sm">
             {!hasEvalReadAccess
-              ? "You don't have permission to manage evaluators"
-              : "Please select a dataset first to configure evaluators"}
+              ? tAutoI18n(
+                  "you_don_t_have_permission_to_manage_evaluators_3a07426",
+                )
+              : tAutoI18n(
+                  "please_select_a_dataset_first_to_configure_evaluator_76e23d0",
+                )}
           </p>
         )}
         <FormMessage />
@@ -69,8 +78,10 @@ export const EvaluatorsStep: React.FC<EvaluatorsStepProps> = ({
           <DialogContent className="max-h-[90vh] max-w-(--breakpoint-md) overflow-y-auto">
             <DialogHeader>
               <DialogTitle>
-                {selectedEvaluatorData.evaluator.id ? "Edit" : "Configure"}{" "}
-                Evaluator
+                {selectedEvaluatorData.evaluator.id
+                  ? tAutoI18n("edit_5301648")
+                  : tAutoI18n("configure_792c81a")}{" "}
+                {tAutoI18n("evaluator_191ad26")}{" "}
               </DialogTitle>
             </DialogHeader>
             <EvaluatorForm

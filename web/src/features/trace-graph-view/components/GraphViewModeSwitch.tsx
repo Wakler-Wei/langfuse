@@ -3,6 +3,10 @@ import { Combine, Route, type LucideIcon } from "lucide-react";
 
 import { cn } from "@/src/utils/tailwind";
 import { type GraphViewMode } from "../types";
+import {
+  type AutoMessageKey,
+  useAutoTranslations,
+} from "@/src/features/i18n/I18nText";
 
 /**
  * Segmented mode switch overlaid on the graph canvas. Mirrors the Tree/Timeline
@@ -12,20 +16,20 @@ import { type GraphViewMode } from "../types";
 const MODES: {
   mode: GraphViewMode;
   icon: LucideIcon;
-  label: string;
-  title: string;
+  labelKey: AutoMessageKey;
+  titleKey: AutoMessageKey;
 }[] = [
   {
     mode: "aggregated",
     icon: Combine,
-    label: "Aggregated",
-    title: "Repeated steps grouped into one node — the overall shape",
+    labelKey: "aggregated_8309825",
+    titleKey: "repeated_steps_grouped_into_one_node_the_overall_sha_46dae7c",
   },
   {
     mode: "expanded",
     icon: Route,
-    label: "Expanded",
-    title: "Every call as its own node, in the order it ran",
+    labelKey: "expanded_6d17047",
+    titleKey: "every_call_as_its_own_node_in_the_order_it_ran_b0344d3",
   },
 ];
 
@@ -36,16 +40,17 @@ export function GraphViewModeSwitch({
   value: GraphViewMode;
   onChange: (mode: GraphViewMode) => void;
 }) {
+  const tAuto = useAutoTranslations();
   return (
     <div className="bg-background/80 inline-flex h-7 items-center rounded-md border p-0.5 backdrop-blur">
-      {MODES.map(({ mode, icon: Icon, label, title }) => (
+      {MODES.map(({ mode, icon: Icon, labelKey, titleKey }) => (
         <button
           key={mode}
           type="button"
           onClick={() => onChange(mode)}
           aria-pressed={value === mode}
-          aria-label={label}
-          title={title}
+          aria-label={tAuto(labelKey)}
+          title={tAuto(titleKey)}
           className={cn(
             "flex h-6 items-center gap-1.5 rounded-md px-2 text-xs font-bold transition-colors",
             value === mode
@@ -56,7 +61,9 @@ export function GraphViewModeSwitch({
           <Icon className="h-3.5 w-3.5 shrink-0" />
           {/* Collapse to icons on narrow canvases (mirrors the nav header's
               switch) so the pill never collides with the zoom stack. */}
-          <span className="@max-[340px]/graphcanvas:hidden">{label}</span>
+          <span className="@max-[340px]/graphcanvas:hidden">
+            {tAuto(labelKey)}
+          </span>
         </button>
       ))}
     </div>

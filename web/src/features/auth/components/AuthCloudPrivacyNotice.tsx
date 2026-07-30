@@ -1,11 +1,13 @@
 import { env } from "@/src/env.mjs";
 import { useTranslations } from "next-intl";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export function CloudPrivacyNotice({
   action,
 }: {
   action: "signIn" | "signUp";
 }) {
+  const tAuto = useAutoTranslations();
   const t = useTranslations("Auth");
 
   return env.NEXT_PUBLIC_LANGFUSE_CLOUD_REGION !== undefined ? (
@@ -17,7 +19,7 @@ export function CloudPrivacyNotice({
         rel="noopener noreferrer"
         className="italic"
       >
-        ClickHouse General Terms and Conditions
+        {tAuto("clickhouse_general_terms_and_conditions_d6ed967")}{" "}
       </a>
       ,{" "}
       <a
@@ -26,7 +28,7 @@ export function CloudPrivacyNotice({
         rel="noopener noreferrer"
         className="italic"
       >
-        Langfuse Cloud Addendum
+        {tAuto("langfuse_cloud_addendum_780960e")}{" "}
       </a>
       , {t("privacyAnd")}{" "}
       <a
@@ -35,7 +37,7 @@ export function CloudPrivacyNotice({
         rel="noopener noreferrer"
         className="italic"
       >
-        Langfuse Privacy Policy
+        {tAuto("langfuse_privacy_policy_375d303")}{" "}
       </a>
       . {t("privacyConfirmation")}
     </div>

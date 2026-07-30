@@ -23,6 +23,7 @@ import { useState } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/src/components/ui/alert";
 import startCase from "lodash/startCase";
 import { useLangfuseEnvCode } from "@/src/features/public-api/hooks/useLangfuseEnvCode";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type ApiKeyScope = "project" | "organization";
 type ApiKeyEntity = { id: string; note: string | null };
@@ -36,6 +37,8 @@ type ApiKeyCreator = {
 };
 
 export function ApiKeyList(props: { entityId: string; scope: ApiKeyScope }) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const { entityId, scope } = props;
   const envCode = useLangfuseEnvCode();
 
@@ -72,11 +75,14 @@ export function ApiKeyList(props: { entityId: string; scope: ApiKeyScope }) {
   if (!hasAccess) {
     return (
       <div>
-        <Header title="API Keys" />
+        <Header title={tAuto("api_keys_e18ffc8")} />
         <Alert>
-          <AlertTitle>Access Denied</AlertTitle>
+          <AlertTitle>{tAuto("access_denied_1647b9d")}</AlertTitle>
           <AlertDescription>
-            You do not have permission to view API keys for this {scope}.
+            {tAutoI18n(
+              "you_do_not_have_permission_to_view_api_keys_for_this_1380490",
+            )}{" "}
+            {scope}.
           </AlertDescription>
         </Alert>
       </div>
@@ -88,7 +94,9 @@ export function ApiKeyList(props: { entityId: string; scope: ApiKeyScope }) {
       <Header
         title={startCase(`${scope} API keys`)}
         help={{
-          description: `Learn more about ${scope} API keys`,
+          description: tAuto("learn_more_about_value0_api_keys_262e0b9", {
+            value0: scope,
+          }),
           href:
             scope === "project"
               ? "https://langfuse.com/docs/api#authentication"
@@ -106,14 +114,20 @@ export function ApiKeyList(props: { entityId: string; scope: ApiKeyScope }) {
           <TableHeader>
             <TableRow>
               <TableHead className="text-primary hidden md:table-cell">
-                Created
+                {tAuto("created_accf40c")}{" "}
               </TableHead>
               <TableHead className="text-primary hidden md:table-cell">
-                Created By
+                {tAuto("created_by_43de2bc")}{" "}
               </TableHead>
-              <TableHead className="text-primary">Note</TableHead>
-              <TableHead className="text-primary">Public Key</TableHead>
-              <TableHead className="text-primary">Secret Key</TableHead>
+              <TableHead className="text-primary">
+                {tAuto("note_2c924e3")}
+              </TableHead>
+              <TableHead className="text-primary">
+                {tAuto("public_key_590e3d2")}
+              </TableHead>
+              <TableHead className="text-primary">
+                {tAuto("secret_key_2969a18")}
+              </TableHead>
               {/* <TableHead className="text-primary">Last used</TableHead> */}
               <TableHead />
             </TableRow>
@@ -126,7 +140,7 @@ export function ApiKeyList(props: { entityId: string; scope: ApiKeyScope }) {
                   colSpan={6}
                   className="text-center"
                 >
-                  None
+                  {tAuto("none_6eef664")}{" "}
                 </TableCell>
               </TableRow>
             ) : (
@@ -189,6 +203,7 @@ function DeleteApiKeyButton(props: {
   apiKeyId: string;
   scope: ApiKeyScope;
 }) {
+  const tAuto = useAutoTranslations();
   const { entityId, apiKeyId, scope } = props;
   const capture = usePostHogClientCapture();
 
@@ -256,8 +271,10 @@ function DeleteApiKeyButton(props: {
           <TrashIcon className="h-4 w-4" />
         </Button>
       }
-      title="Delete API key"
-      description="Are you sure you want to delete this API key? This action cannot be undone."
+      title={tAuto("delete_api_key_26b63d5")}
+      description={tAuto(
+        "are_you_sure_you_want_to_delete_this_api_key_this_ac_f9b1dce",
+      )}
       confirmLabel="Permanently delete"
       loading={mutDeleteOrgApiKey.isPending || mutDeleteProjectApiKey.isPending}
       onConfirm={handleDelete}
@@ -266,6 +283,7 @@ function DeleteApiKeyButton(props: {
 }
 
 function ApiKeyCreatedBy({ apiKey }: { apiKey: ApiKeyCreator }) {
+  const tAuto = useAutoTranslations();
   if (apiKey.createdByUser) {
     const { name, email } = apiKey.createdByUser;
     return (
@@ -278,7 +296,9 @@ function ApiKeyCreatedBy({ apiKey }: { apiKey: ApiKeyCreator }) {
     return (
       <span
         className="truncate font-mono"
-        title={`Created via API by key ${apiKey.createdByApiKey.publicKey}`}
+        title={tAuto("created_via_api_by_key_value0_1354ab3", {
+          value0: apiKey.createdByApiKey.publicKey,
+        })}
       >
         {apiKey.createdByApiKey.publicKey}
       </span>

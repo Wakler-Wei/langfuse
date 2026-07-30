@@ -5,6 +5,7 @@ import { PaperclipIcon, UploadIcon } from "lucide-react";
 import { useMemo } from "react";
 import { useDropzone } from "react-dropzone";
 import { cn } from "@/src/utils/tailwind";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const renderBytes = (bytes: number) => {
   const units = ["B", "KB", "MB", "GB", "TB", "PB"];
@@ -62,6 +63,7 @@ export const Dropzone = ({
   src,
   variant,
 }: DropzoneProps) => {
+  const tAuto = useAutoTranslations();
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept,
     maxFiles,
@@ -129,7 +131,7 @@ export const Dropzone = ({
   const emptyStateDescription = "Drag and drop or click to upload";
   const panelTitle = src?.length ? contentText : emptyStateTitle;
   const panelDescription = src?.length
-    ? "Drag and drop or click to replace"
+    ? tAuto("drag_and_drop_or_click_to_replace_3ccf6f7")
     : emptyStateDescription;
 
   return (

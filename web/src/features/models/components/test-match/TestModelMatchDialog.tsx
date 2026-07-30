@@ -17,6 +17,7 @@ import { MatchedTierCard } from "./MatchedTierCard";
 import { NoMatchDisplay } from "./NoMatchDisplay";
 import { CheckCircle, SquareArrowOutUpRight } from "lucide-react";
 import Spinner from "@/src/components/design-system/Spinner/Spinner";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type TestModelMatchDialogProps = {
   projectId: string;
@@ -31,6 +32,8 @@ export function TestModelMatchDialog({
   open,
   onOpenChange,
 }: TestModelMatchDialogProps) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const [modelName, setModelName] = useState("");
   const [usageDetails, setUsageDetails] = useState<Record<string, number>>({});
   const [hasSubmitted, setHasSubmitted] = useState(false);
@@ -70,10 +73,11 @@ export function TestModelMatchDialog({
       <DialogContent size="lg" className="min-h-[62vh] overflow-y-auto">
         <form onSubmit={handleSubmit} className="flex flex-1 flex-col">
           <DialogHeader>
-            <DialogTitle>Test Model Match</DialogTitle>
+            <DialogTitle>{tAuto("test_model_match_dfee8dd")}</DialogTitle>
             <DialogDescription className="mt-1">
-              Test which model and pricing tier your ingestion data would match
-              against.
+              {tAuto(
+                "test_which_model_and_pricing_tier_your_ingestion_dat_7b8cdf6",
+              )}{" "}
             </DialogDescription>
           </DialogHeader>
 
@@ -83,12 +87,14 @@ export function TestModelMatchDialog({
               <div className="space-y-6">
                 {/* Model Name Input */}
                 <div className="space-y-2">
-                  <div className="text-sm font-bold">Model Name *</div>
+                  <div className="text-sm font-bold">
+                    {tAuto("model_name_e83a317")}
+                  </div>
                   <div className="text-muted-foreground text-sm">
-                    The model name on your generations.
+                    {tAuto("the_model_name_on_your_generations_c64b764")}{" "}
                   </div>
                   <Input
-                    placeholder="e.g. gpt-4-turbo"
+                    placeholder={tAuto("e_g_gpt_4_turbo_e0faedd")}
                     value={modelName}
                     onChange={(e) => setModelName(e.target.value.trim())}
                     autoFocus
@@ -111,14 +117,14 @@ export function TestModelMatchDialog({
                   onClick={() => onOpenChange(false)}
                   className="flex-1"
                 >
-                  Close
+                  {tAuto("close_bbfa773")}{" "}
                 </Button>
                 <Button
                   type="submit"
                   disabled={!modelName.trim() || isLoading}
                   className="flex-1"
                 >
-                  Test Match
+                  {tAuto("test_match_84073c0")}{" "}
                 </Button>
               </div>
             </div>
@@ -134,13 +140,13 @@ export function TestModelMatchDialog({
                     {isLoading && (
                       <div className="bg-muted/30 text-muted-foreground flex min-h-[300px] items-center justify-center gap-2 rounded-lg border p-6">
                         <Spinner size="md" />
-                        <span>Testing match...</span>
+                        <span>{tAuto("testing_match_af34aaa")}</span>
                       </div>
                     )}
 
                     {error && (
                       <div className="border-destructive/50 bg-destructive/5 text-destructive rounded-lg border p-4 text-sm">
-                        Error: {error.message}
+                        {tAutoI18n("error_787aa16")} {error.message}
                       </div>
                     )}
 
@@ -151,7 +157,7 @@ export function TestModelMatchDialog({
                             <div className="flex items-center gap-2 rounded-lg border border-green-200 bg-green-50 px-4 py-2.5 dark:border-green-900 dark:bg-green-950">
                               <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400" />
                               <span className="text-sm font-bold text-green-900 dark:text-green-100">
-                                Match Found
+                                {tAuto("match_found_85f8e24")}{" "}
                               </span>
                             </div>
                             <MatchedModelCard model={data.model} />
@@ -174,7 +180,7 @@ export function TestModelMatchDialog({
                       href={`/project/${projectId}/settings/models/${data.model.id}?pricingTier=${data.matchedTier.id}`}
                       target="_blank"
                     >
-                      View Model Details
+                      {tAuto("view_model_details_3a070cd")}{" "}
                       <SquareArrowOutUpRight className="ml-2 h-4 w-4" />
                     </Link>
                   </Button>

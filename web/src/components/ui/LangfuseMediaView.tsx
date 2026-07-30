@@ -24,6 +24,7 @@ import {
   Video,
   Volume2,
 } from "lucide-react";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 // Above this, "preview" media falls back to the click-to-open icon instead of
 // rendering inline, so a large file isn't fetched/decoded just by opening a view.
@@ -140,6 +141,7 @@ function FileViewer({
   contentType: MediaContentType;
   defaultExpanded?: boolean;
 }) {
+  const tAuto = useAutoTranslations();
   const mimeType = String(contentType);
   const fileType = mimeType.split("/")[0];
   const isImage = fileType === "image";
@@ -238,8 +240,12 @@ function FileViewer({
             variant="outline"
             size="icon"
             onClick={openInNewTab}
-            aria-label={`Open ${fileName} in new tab`}
-            title={`Open ${fileName} in new tab`}
+            aria-label={tAuto("open_value0_in_new_tab_4b86f31", {
+              value0: fileName,
+            })}
+            title={tAuto("open_value0_in_new_tab_4b86f31", {
+              value0: fileName,
+            })}
             className="shrink-0"
           >
             <ExternalLink className="h-4 w-4" />
@@ -251,8 +257,8 @@ function FileViewer({
           onClick={() => (isPreviewable ? expandPreview() : openInNewTab())}
           aria-label={
             isPreviewable
-              ? `Show ${fileName} inline`
-              : `Open ${fileName} in new tab`
+              ? tAuto("show_value0_inline_ab9998f", { value0: fileName })
+              : tAuto("open_value0_in_new_tab_4b86f31", { value0: fileName })
           }
           aria-expanded={isPreviewable ? isExpanded : undefined}
           title={fileName}
@@ -266,23 +272,25 @@ function FileViewer({
 }
 
 function AudioPlayer({ src }: { src?: string }) {
+  const tAuto = useAutoTranslations();
   if (!src) return null;
 
   return (
     <audio controls className="w-full" preload="metadata">
       <source src={src} />
-      Your browser does not support the audio element.
+      {tAuto("your_browser_does_not_support_the_audio_element_11381f9")}{" "}
     </audio>
   );
 }
 
 function VideoPlayer({ src }: { src?: string }) {
+  const tAuto = useAutoTranslations();
   if (!src) return null;
 
   return (
     <video controls className="w-full" preload="metadata" playsInline>
       <source src={src} />
-      Your browser does not support the video element.
+      {tAuto("your_browser_does_not_support_the_video_element_5d8a82c")}{" "}
     </video>
   );
 }

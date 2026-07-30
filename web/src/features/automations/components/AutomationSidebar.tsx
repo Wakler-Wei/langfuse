@@ -3,6 +3,7 @@ import { api } from "@/src/utils/api";
 import { JobConfigState, type AutomationDomain } from "@langfuse/shared";
 import { cn } from "@/src/utils/tailwind";
 import { StatusBadge } from "@/src/components/ui/StatusBadge/StatusBadge";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 interface AutomationSidebarProps {
   projectId: string;
@@ -15,6 +16,7 @@ export const AutomationSidebar: React.FC<AutomationSidebarProps> = ({
   selectedAutomation,
   onAutomationSelect,
 }) => {
+  const tAuto = useAutoTranslations();
   const { data: automations, isLoading } =
     api.automations.getAutomations.useQuery(
       {
@@ -36,7 +38,7 @@ export const AutomationSidebar: React.FC<AutomationSidebarProps> = ({
         )}
       >
         <div className="text-muted-foreground p-4 text-center text-sm">
-          Loading automations...
+          {tAuto("loading_automations_21843cd")}{" "}
         </div>
       </div>
     );
@@ -51,8 +53,9 @@ export const AutomationSidebar: React.FC<AutomationSidebarProps> = ({
         )}
       >
         <div className="text-muted-foreground p-4 text-center text-sm">
-          No automations configured. Create your first automation to streamline
-          workflows.
+          {tAuto(
+            "no_automations_configured_create_your_first_automati_1f72b9a",
+          )}{" "}
         </div>
       </div>
     );
@@ -106,10 +109,10 @@ export const AutomationSidebar: React.FC<AutomationSidebarProps> = ({
                         </span>
                         {" → "}
                         {automation.action.type === "WEBHOOK"
-                          ? "Webhook"
+                          ? tAuto("webhook_3ac2826")
                           : automation.action.type === "SLACK"
                             ? "Slack"
-                            : "Annotation Queue"}
+                            : tAuto("annotation_queue_216920e")}
                       </p>
                     </div>
                   </div>

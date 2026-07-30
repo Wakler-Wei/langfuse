@@ -3,6 +3,7 @@ import { useHasProjectAccess } from "@/src/features/rbac/utils/checkProjectAcces
 import { AnnotationQueueItemPage } from "@/src/features/annotation-queues/components/AnnotationQueueItemPage";
 import { api } from "@/src/utils/api";
 import Page from "@/src/components/layouts/page";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export const AnnotationQueuesItem = ({
   annotationQueueId,
@@ -13,6 +14,7 @@ export const AnnotationQueuesItem = ({
   projectId: string;
   itemId?: string;
 }) => {
+  const tAuto = useAutoTranslations();
   const hasAccess = useHasProjectAccess({
     projectId,
     scope: "annotationQueues:read",
@@ -39,7 +41,10 @@ export const AnnotationQueuesItem = ({
     <Page
       headerProps={{
         title: itemId
-          ? `${queue.data?.name}: ${itemId}`
+          ? tAuto("value0_value1_0f13dbb", {
+              value0: queue.data?.name ?? "",
+              value1: itemId,
+            })
           : (queue.data?.name ?? annotationQueueId),
         itemType: "QUEUE_ITEM",
         breadcrumb: [

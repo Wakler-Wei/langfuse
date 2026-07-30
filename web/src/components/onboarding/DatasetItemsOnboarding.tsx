@@ -14,6 +14,7 @@ import { NewDatasetItemForm } from "@/src/features/datasets/components/NewDatase
 import { useHasProjectAccess } from "@/src/features/rbac/utils/checkProjectAccess";
 import { usePostHogClientCapture } from "@/src/features/posthog-analytics/usePostHogClientCapture";
 import { cn } from "@/src/utils/tailwind";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 interface DatasetItemEntryPointRowProps {
   icon: React.ReactNode;
@@ -30,6 +31,7 @@ const DatasetItemEntryPointRow = ({
   onClick,
   hasAccess = true,
 }: DatasetItemEntryPointRowProps) => {
+  const tAuto = useAutoTranslations();
   const disabled = !hasAccess;
   return (
     <div
@@ -55,7 +57,9 @@ const DatasetItemEntryPointRow = ({
       }
       title={
         !hasAccess
-          ? "You don't have access to this feature, please contact your administrator"
+          ? tAuto(
+              "you_don_t_have_access_to_this_feature_please_contact_5508896",
+            )
           : undefined
       }
     >
@@ -75,6 +79,7 @@ export const DatasetItemsOnboarding = ({
   projectId: string;
   datasetId: string;
 }) => {
+  const tAuto = useAutoTranslations();
   const capture = usePostHogClientCapture();
   const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
   const [isNewItemDialogOpen, setIsNewItemDialogOpen] = useState(false);
@@ -86,8 +91,10 @@ export const DatasetItemsOnboarding = ({
 
   return (
     <SplashScreen
-      title="Add items to your dataset"
-      description="Datasets are collections of specific edge cases and underrepresented patterns used to evaluate your application."
+      title={tAuto("add_items_to_your_dataset_8ff39ee")}
+      description={tAuto(
+        "datasets_are_collections_of_specific_edge_cases_and__b80952c",
+      )}
     >
       <div className="flex flex-col gap-4">
         <CsvUploadDialog
@@ -99,8 +106,10 @@ export const DatasetItemsOnboarding = ({
           <DialogTrigger asChild disabled={!hasProjectAccess}>
             <DatasetItemEntryPointRow
               icon={<Upload className="h-5 w-5" />}
-              title="Upload CSV"
-              description="Import dataset items from a CSV file"
+              title={tAuto("upload_csv_0b77a04")}
+              description={tAuto(
+                "import_dataset_items_from_a_csv_file_8825710",
+              )}
               onClick={() => {
                 if (hasProjectAccess) {
                   capture("dataset_item:upload_csv_button_click");
@@ -118,8 +127,8 @@ export const DatasetItemsOnboarding = ({
           <DialogTrigger asChild disabled={!hasProjectAccess}>
             <DatasetItemEntryPointRow
               icon={<Braces className="h-5 w-5" />}
-              title="Add Manually"
-              description="Manually input a single item"
+              title={tAuto("add_manually_83d9c9a")}
+              description={tAuto("manually_input_a_single_item_c41729e")}
               onClick={() => {
                 if (hasProjectAccess) {
                   capture("dataset_item:new_form_open");
@@ -130,7 +139,7 @@ export const DatasetItemsOnboarding = ({
           </DialogTrigger>
           <DialogContent size="lg">
             <DialogHeader>
-              <DialogTitle>Create dataset item</DialogTitle>
+              <DialogTitle>{tAuto("create_dataset_item_3aae618")}</DialogTitle>
             </DialogHeader>
             <NewDatasetItemForm
               projectId={projectId}
@@ -147,16 +156,20 @@ export const DatasetItemsOnboarding = ({
         >
           <DatasetItemEntryPointRow
             icon={<Code className="h-5 w-5" />}
-            title="Add via Code"
-            description="Use our Python/TS/JS SDKs or custom API"
+            title={tAuto("add_via_code_bf7c7bf")}
+            description={tAuto(
+              "use_our_python_ts_js_sdks_or_custom_api_98f106e",
+            )}
           />
         </Link>
 
         <Link href={`/project/${projectId}/observations`}>
           <DatasetItemEntryPointRow
             icon={<ListTree className="h-5 w-5" />}
-            title="Select Observations"
-            description="Select observations in the observations table and use a batch action to add them to your dataset"
+            title={tAuto("select_observations_30eee75")}
+            description={tAuto(
+              "select_observations_in_the_observations_table_and_us_10bd8eb",
+            )}
             onClick={() => {
               capture("dataset_item:select_observations_button_click");
             }}

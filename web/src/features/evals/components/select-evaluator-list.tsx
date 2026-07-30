@@ -34,6 +34,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/src/components/ui/breadcrumb";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type SelectEvaluatorListProps = {
   projectId: string;
@@ -42,6 +43,8 @@ type SelectEvaluatorListProps = {
 type CreateEvaluatorStep = "connection" | "define";
 
 export function SelectEvaluatorList({ projectId }: SelectEvaluatorListProps) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const createDialogSessionRef = useRef(0);
   const [isCreateTemplateOpen, setIsCreateTemplateOpen] = useState(false);
@@ -119,7 +122,9 @@ export function SelectEvaluatorList({ projectId }: SelectEvaluatorListProps) {
     <>
       <div className="mb-4 flex max-h-full min-h-0 flex-col gap-5">
         <div className="shrink-0 space-y-2">
-          <h2 className="text-base font-bold">Create from scratch</h2>
+          <h2 className="text-base font-bold">
+            {tAuto("create_from_scratch_03d1805")}
+          </h2>
           <div className="flex flex-wrap gap-3">
             {isCodeEvalEnabled ? (
               <Button
@@ -130,9 +135,11 @@ export function SelectEvaluatorList({ projectId }: SelectEvaluatorListProps) {
               >
                 <Code2 className="h-5 w-5 shrink-0" />
                 <span className="flex flex-col gap-1">
-                  <span className="font-bold">Code evaluator</span>
+                  <span className="font-bold">
+                    {tAuto("code_evaluator_a81ee72")}
+                  </span>
                   <span className="text-muted-foreground text-sm font-normal">
-                    Use code to create Langfuse scores.
+                    {tAuto("use_code_to_create_langfuse_scores_70dd9b8")}{" "}
                   </span>
                 </span>
               </Button>
@@ -147,9 +154,13 @@ export function SelectEvaluatorList({ projectId }: SelectEvaluatorListProps) {
             >
               <Bot className="h-5 w-5 shrink-0" />
               <span className="flex flex-col gap-1">
-                <span className="font-bold">LLM as a judge evaluator</span>
+                <span className="font-bold">
+                  {tAuto("llm_as_a_judge_evaluator_958adf8")}
+                </span>
                 <span className="text-muted-foreground text-sm font-normal">
-                  Use a prompt and model to score traces or observations.
+                  {tAuto(
+                    "use_a_prompt_and_model_to_score_traces_or_observatio_e7733e6",
+                  )}{" "}
                 </span>
               </span>
             </Button>
@@ -157,18 +168,22 @@ export function SelectEvaluatorList({ projectId }: SelectEvaluatorListProps) {
         </div>
 
         <div className="flex max-h-full min-h-0 flex-col gap-2">
-          <h2 className="shrink-0 text-base font-bold">Use existing</h2>
+          <h2 className="shrink-0 text-base font-bold">
+            {tAuto("use_existing_32ff68d")}
+          </h2>
           <Card className="grid max-h-full min-h-0 grid-rows-[minmax(0,1fr)_auto] overflow-y-auto p-3">
             <div className="flex min-h-0 flex-col overflow-hidden">
               {templates.isLoading ? (
                 <Skeleton className="h-full w-full" />
               ) : templates.isError ? (
                 <div className="text-destructive py-8 text-center">
-                  Error: {templates.error.message}
+                  {tAutoI18n("error_787aa16")} {templates.error.message}
                 </div>
               ) : templates.data?.templates.length === 0 ? (
                 <div className="text-muted-foreground py-8 text-center">
-                  No evaluators found. Create a new evaluator to get started.
+                  {tAuto(
+                    "no_evaluators_found_create_a_new_evaluator_to_get_st_7e5185b",
+                  )}{" "}
                 </div>
               ) : (
                 <div className="flex-1 overflow-hidden">
@@ -209,10 +224,12 @@ export function SelectEvaluatorList({ projectId }: SelectEvaluatorListProps) {
           }
         >
           <DialogHeader>
-            <DialogTitle>Create new evaluator</DialogTitle>
+            <DialogTitle>{tAuto("create_new_evaluator_b858633")}</DialogTitle>
             {useLlmCreateWizard ? (
               <DialogDescription>
-                Set up an LLM connection first, then define the evaluator.
+                {tAuto(
+                  "set_up_an_llm_connection_first_then_define_the_evalu_5a69f62",
+                )}{" "}
               </DialogDescription>
             ) : null}
           </DialogHeader>
@@ -293,9 +310,10 @@ function CreateLlmEvaluatorWizard({
   onProviderConfigured: () => void;
   renderEvalTemplateForm: (shouldUseDefaultModel: boolean) => ReactNode;
 }) {
+  const tAuto = useAutoTranslations();
   const steps: Array<{ id: CreateEvaluatorStep; label: string }> = [
-    { id: "connection", label: "Set up LLM connection" },
-    { id: "define", label: "Define evaluator" },
+    { id: "connection", label: tAuto("set_up_llm_connection_a6fd93f") },
+    { id: "define", label: tAuto("define_evaluator_58c5910") },
   ];
   const shouldUseDefaultModel = hasDefaultEvalModel;
 
@@ -346,8 +364,9 @@ function CreateLlmEvaluatorWizard({
         className={cn("space-y-4", activeStep !== "connection" && "hidden")}
       >
         <p className="text-muted-foreground text-sm">
-          LLM-as-a-judge evaluators need an LLM connection for scoring. Set a
-          project default connection now to continue defining the evaluator.
+          {tAuto(
+            "llm_as_a_judge_evaluators_need_an_llm_connection_for_936c346",
+          )}{" "}
         </p>
         <InlineDefaultEvalModelSetup
           projectId={projectId}
@@ -375,6 +394,7 @@ function CreateEvaluatorTemplateForm({
   shouldUseDefaultModel?: boolean;
   onSuccess: (newTemplate?: EvalTemplate) => void;
 }) {
+  const tAuto = useAutoTranslations();
   return (
     <EvalTemplateForm
       projectId={projectId}
@@ -405,8 +425,8 @@ function CreateEvaluatorTemplateForm({
       onFormSuccess={(newTemplate) => {
         onSuccess(newTemplate);
         showSuccessToast({
-          title: "Evaluator created successfully",
-          description: "You can now use this evaluator.",
+          title: tAuto("evaluator_created_successfully_ecc6865"),
+          description: tAuto("you_can_now_use_this_evaluator_537120d"),
         });
       }}
     />

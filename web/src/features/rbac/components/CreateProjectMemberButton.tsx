@@ -40,6 +40,7 @@ import {
 import { useHasProjectAccess } from "@/src/features/rbac/utils/checkProjectAccess";
 import { RoleSelectItem } from "@/src/features/rbac/components/RoleSelectItem";
 import { ActionButton } from "@/src/components/ActionButton";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const formSchema = z.object({
   email: z.string().trim().pipe(z.email()),
@@ -51,6 +52,8 @@ export function CreateProjectMemberButton(props: {
   orgId: string;
   project?: { id: string; name: string };
 }) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const capture = usePostHogClientCapture();
   const [open, setOpen] = useState(false);
   const hasOrgAccess = useHasOrganizationAccess({
@@ -153,15 +156,17 @@ export function CreateProjectMemberButton(props: {
             icon={<PlusIcon className="h-5 w-5" aria-hidden="true" />}
           >
             {hasOnlySingleProjectAccess
-              ? "Add project member"
-              : "Add new member"}
+              ? tAutoI18n("add_project_member_e4904ee")
+              : tAutoI18n("add_new_member_d91c71e")}
           </ActionButton>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
-              Add new member to the{" "}
-              {hasOnlySingleProjectAccess ? "project" : "organization"}
+              {tAutoI18n("add_new_member_to_the_b3552e7")}{" "}
+              {hasOnlySingleProjectAccess
+                ? tAutoI18n("project_98f5414")
+                : tAutoI18n("organization_7cb0602")}
             </DialogTitle>
           </DialogHeader>
           <Form {...form}>
@@ -172,7 +177,7 @@ export function CreateProjectMemberButton(props: {
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Email</FormLabel>
+                      <FormLabel>{tAuto("email_84add5b")}</FormLabel>
                       <FormControl>
                         <Input placeholder="jsdoe@example.com" {...field} />
                       </FormControl>
@@ -186,7 +191,9 @@ export function CreateProjectMemberButton(props: {
                     name="orgRole"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Organization Role</FormLabel>
+                        <FormLabel>
+                          {tAuto("organization_role_5909c6e")}
+                        </FormLabel>
                         <Select
                           defaultValue={field.value}
                           onValueChange={(value) =>
@@ -197,7 +204,11 @@ export function CreateProjectMemberButton(props: {
                         >
                           <FormControl>
                             <SelectTrigger>
-                              <SelectValue placeholder="Select an organization role" />
+                              <SelectValue
+                                placeholder={tAuto(
+                                  "select_an_organization_role_574bb92",
+                                )}
+                              />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
@@ -217,7 +228,7 @@ export function CreateProjectMemberButton(props: {
                     name="projectRole"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Project Role</FormLabel>
+                        <FormLabel>{tAuto("project_role_bef1fa2")}</FormLabel>
                         <Select
                           defaultValue={field.value}
                           onValueChange={(value) =>
@@ -228,7 +239,11 @@ export function CreateProjectMemberButton(props: {
                         >
                           <FormControl>
                             <SelectTrigger>
-                              <SelectValue placeholder="Select a project role" />
+                              <SelectValue
+                                placeholder={tAuto(
+                                  "select_a_project_role_a408ba0",
+                                )}
+                              />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
@@ -249,8 +264,10 @@ export function CreateProjectMemberButton(props: {
                         </Select>
                         {!hasOnlySingleProjectAccess && (
                           <FormDescription>
-                            This project role will override the default role for
-                            this current project ({props.project!.name}).
+                            {tAutoI18n(
+                              "this_project_role_will_override_the_default_role_for_c21a749",
+                            )}
+                            {props.project!.name}).
                           </FormDescription>
                         )}
                         <FormMessage />
@@ -265,7 +282,7 @@ export function CreateProjectMemberButton(props: {
                   className="w-full"
                   loading={form.formState.isSubmitting}
                 >
-                  Grant access
+                  {tAuto("grant_access_6c7847a")}{" "}
                 </Button>
                 <FormMessage />
               </DialogFooter>

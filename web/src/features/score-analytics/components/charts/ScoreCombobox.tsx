@@ -5,6 +5,7 @@ import {
 } from "@/src/components/ui/combobox";
 import { Button } from "@/src/components/ui/button";
 import { X } from "lucide-react";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export interface ScoreOption {
   value: string; // "name-dataType-source"
@@ -32,6 +33,7 @@ export function ScoreCombobox({
   disabled = false,
   className,
 }: ScoreComboboxProps) {
+  const tAuto = useAutoTranslations();
   // 1. Filter options by dataType
   const filteredOptions = useMemo(() => {
     if (!filterByDataType) return options;
@@ -68,10 +70,13 @@ export function ScoreCombobox({
         heading: typeLabels[type],
         options: grouped[type].map((opt) => ({
           value: opt.value,
-          label: `${opt.name} • ${opt.source}`,
+          label: tAuto("value0_value1_f00b006", {
+            value0: opt.name,
+            value1: opt.source,
+          }),
         })),
       }));
-  }, [filteredOptions]);
+  }, [filteredOptions, tAuto]);
 
   const handleClear = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -89,7 +94,7 @@ export function ScoreCombobox({
         onValueChange={handleValueChange}
         options={groupedOptions}
         placeholder={placeholder}
-        searchPlaceholder="Search scores..."
+        searchPlaceholder={tAuto("search_scores_003a035")}
         emptyText="No scores found."
         disabled={disabled}
         className={className}
@@ -100,7 +105,7 @@ export function ScoreCombobox({
           variant="ghost"
           size="icon"
           onClick={handleClear}
-          title="Clear selection"
+          title={tAuto("clear_selection_247fd63")}
           className="h-6 w-6 shrink-0"
         >
           <X className="h-3 w-3" />

@@ -68,6 +68,7 @@ import { DualAnnotationContent } from "@/src/features/scores/components/DualAnno
 import { CollapsibleBadgeRow } from "@/src/components/trace/components/_shared/CollapsibleBadgeRow";
 import { useIsMobile } from "@/src/hooks/use-mobile";
 import { cn } from "@/src/utils/tailwind";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export interface ObservationDetailViewHeaderProps {
   observation: ObservationReturnTypeWithMetadata;
@@ -109,6 +110,7 @@ export const ObservationDetailViewHeader = memo(
     subtreeMetrics,
     treeNodeTotalCost,
   }: ObservationDetailViewHeaderProps) {
+    const tAuto = useAutoTranslations();
     const { isAnnotationMode } = useViewPreferences();
     const isMobile = useIsMobile();
     const { isBetaEnabled: isV4Enabled } = useV4Beta();
@@ -168,7 +170,7 @@ export const ObservationDetailViewHeader = memo(
                   <Button
                     variant="outline"
                     size="icon"
-                    aria-label="More actions"
+                    aria-label={tAuto("more_actions_a1e34f9")}
                     className="ml-auto shrink-0"
                   >
                     <MoreHorizontal className="h-4 w-4" />
@@ -213,7 +215,9 @@ export const ObservationDetailViewHeader = memo(
                               ) : (
                                 <SquarePen className="h-4 w-4" />
                               )}
-                              <span className="text-sm">Annotate</span>
+                              <span className="text-sm">
+                                {tAuto("annotate_4f5f32d")}
+                              </span>
                             </Button>
                           </DrawerTrigger>
                           <DrawerContent className="p-3">
@@ -309,7 +313,7 @@ export const ObservationDetailViewHeader = memo(
                           ) : (
                             <SquarePen className="mr-1.5 h-3.5 w-3.5" />
                           )}
-                          <span>Annotate</span>
+                          <span>{tAuto("annotate_4f5f32d")}</span>
                         </Button>
                       </DrawerTrigger>
                       <DrawerContent className="p-3">

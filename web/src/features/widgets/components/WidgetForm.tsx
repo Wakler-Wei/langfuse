@@ -25,7 +25,7 @@ import {
   mapWidgetUiTableFilterToView,
   partitionWidgetUiTableFiltersToView,
 } from "@/src/features/dashboard/lib/dashboardUiTableToViewMapping";
-import React, { useMemo, useRef } from "react";
+import React, { useCallback, useMemo, useRef } from "react";
 import {
   useController,
   useForm,
@@ -129,6 +129,8 @@ import {
   type WidgetFormValues,
   type WidgetInitialValues,
 } from "./widgetFormSchema";
+import { useAutoText, useAutoTranslations } from "@/src/features/i18n/I18nText";
+import { useLocale } from "next-intl";
 
 // Re-exported from the schema module so co-located tests keep importing it from
 // this file; it now backs the shared normalizeWidgetFormValues healing.
@@ -259,6 +261,10 @@ export function WidgetForm({
   }) => void;
   widgetId?: string;
 }) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
+  const autoText = useAutoText();
+  const locale = useLocale();
   const { isBetaEnabled } = useV4Beta();
   const importInputRef = useRef<HTMLInputElement>(null);
 
@@ -342,7 +348,52 @@ export function WidgetForm({
     baseMinVersion,
     isBetaEnabled,
   });
-  const suggestions = deriveWidgetSuggestions(values);
+  const localizeTerm = useCallback(
+    (term: string) => {
+      const translated = autoText(term);
+      if (translated !== term || locale !== "zh-CN") return translated;
+      return term
+        .split(" ")
+        .map((part) => autoText(part))
+        .join("");
+    },
+    [autoText, locale],
+  );
+  const getLocalizedSuggestions = (formValues: WidgetFormValues) => {
+    const fallback = deriveWidgetSuggestions(formValues);
+    if (locale !== "zh-CN") return fallback;
+
+    const validMetrics = formValues.metrics.filter(
+      (metric) => metric.measure && metric.measure !== "",
+    );
+    const isPivot = formValues.chart.type === "PIVOT_TABLE";
+    const metricLabel = isPivot
+      ? validMetrics
+          .map((metric) =>
+            localizeTerm(
+              formatMetricName(`${metric.aggregation}_${metric.measure}`),
+            ),
+          )
+          .join("、")
+      : formValues.metrics[0]?.measure === "count"
+        ? localizeTerm("Count")
+        : `${localizeTerm(startCase(formValues.metrics[0]?.aggregation ?? "count"))}${localizeTerm(formatMetricName(formValues.metrics[0]?.measure ?? "count"))}`;
+    const dimensions = formValues.dimensions
+      .filter((dimension) => dimension.field && dimension.field !== "none")
+      .map((dimension) => localizeTerm(startCase(dimension.field)))
+      .join("、");
+    const viewLabel = localizeTerm(startCase(formValues.view));
+    const dimensionSuffix = dimensions ? `，按${dimensions}细分` : "";
+    const filterSuffix = formValues.filters.length
+      ? `，包含 ${formValues.filters.length} 个筛选条件`
+      : "";
+
+    return {
+      name: `${metricLabel}（${viewLabel}）`,
+      description: `显示${viewLabel}的${metricLabel}${dimensionSuffix}${filterSuffix}`,
+    };
+  };
+  const suggestions = getLocalizedSuggestions(values);
   const effectiveSort = deriveEffectiveSort(values);
 
   suggestionsRef.current = suggestions;
@@ -564,11 +615,11 @@ export function WidgetForm({
   const singleChartMetrics = useMemo(() => {
     const measures = viewDeclarations[viewVersion][selectedView].measures;
     return Object.entries(measures)
-      .map(([key]) => ({ value: key, label: startCase(key) }))
+      .map(([key]) => ({ value: key, label: localizeTerm(startCase(key)) }))
       .sort((a, b) =>
         a.label.localeCompare(b.label, "en", { sensitivity: "base" }),
       );
-  }, [selectedView, viewVersion]);
+  }, [selectedView, viewVersion, localizeTerm]);
 
   // Available aggregations for a specific pivot metric index (excludes the
   // aggregation/measure pairs already used by other pivot metrics).
@@ -619,7 +670,7 @@ export function WidgetForm({
         );
         return availableAggregationsForMeasure.length > 0;
       })
-      .map(([key]) => ({ value: key, label: startCase(key) }))
+      .map(([key]) => ({ value: key, label: localizeTerm(startCase(key)) }))
       .sort((a, b) =>
         a.label.localeCompare(b.label, "en", { sensitivity: "base" }),
       );
@@ -629,11 +680,11 @@ export function WidgetForm({
     const viewDeclaration = viewDeclarations[viewVersion][selectedView];
     return Object.entries(viewDeclaration.dimensions)
       .filter(([_, dim]) => !dim.uiHidden)
-      .map(([key]) => ({ value: key, label: startCase(key) }))
+      .map(([key]) => ({ value: key, label: localizeTerm(startCase(key)) }))
       .sort((a, b) =>
         a.label.localeCompare(b.label, "en", { sensitivity: "base" }),
       );
-  }, [selectedView, viewVersion]);
+  }, [selectedView, viewVersion, localizeTerm]);
 
   const previewSortState = effectiveSort ?? null;
   const pivotDimensionFields = values.dimensions.map((d) => d.field);
@@ -943,8 +994,10 @@ export function WidgetForm({
 
     const showMalformedImportToast = () =>
       showErrorToast(
-        "Malformed input",
-        "This operation can't be done due to the malformed input",
+        tAutoI18n("malformed_input_f2c35a5"),
+        tAutoI18n(
+          "this_operation_can_t_be_done_due_to_the_malformed_in_12e23df",
+        ),
         "WARNING",
       );
 
@@ -1040,14 +1093,16 @@ export function WidgetForm({
       );
 
       showSuccessToast({
-        title: "Widget uploaded successfully",
-        description: "Widget configuration has been loaded.",
+        title: tAuto("widget_uploaded_successfully_afb4d12"),
+        description: tAuto("widget_configuration_has_been_loaded_60443c7"),
       });
 
       if (result.removedValues || result.removedFilters) {
         showErrorToast(
-          "Widget filters were adjusted",
-          "Some imported filters or filter values were removed because they are not available in this project.",
+          tAutoI18n("widget_filters_were_adjusted_50c8985"),
+          tAutoI18n(
+            "some_imported_filters_or_filter_values_were_removed__34a3858",
+          ),
           "WARNING",
         );
       }
@@ -1058,10 +1113,13 @@ export function WidgetForm({
 
   const onSubmit = form.handleSubmit((submitted) => {
     if (!queryValidation.valid) {
-      showErrorToast("Invalid query", queryValidation.reason);
+      showErrorToast(
+        tAutoI18n("invalid_query_607021b"),
+        queryValidation.reason,
+      );
       return;
     }
-    const s = deriveWidgetSuggestions(submitted);
+    const s = getLocalizedSuggestions(submitted);
     onSave(
       toSavePayload(submitted, {
         suggestedName: s.name,
@@ -1097,7 +1155,7 @@ export function WidgetForm({
         <Card className="flex h-full flex-col">
           <CardHeader>
             <div className="flex items-start justify-between gap-3">
-              <CardTitle>Widget Configuration</CardTitle>
+              <CardTitle>{tAuto("widget_configuration_add4c70")}</CardTitle>
               {!widgetId && isBetaEnabled && (
                 <>
                   <input
@@ -1113,13 +1171,15 @@ export function WidgetForm({
                     onClick={() => importInputRef.current?.click()}
                   >
                     <Upload className="mr-2 h-4 w-4" />
-                    Import
+                    {tAuto("import_d6fbc9d")}{" "}
                   </Button>
                 </>
               )}
             </div>
             <CardDescription>
-              Configure your widget by selecting data and visualization options
+              {tAuto(
+                "configure_your_widget_by_selecting_data_and_visualiz_7282fc0",
+              )}{" "}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4 overflow-y-auto">
@@ -1130,25 +1190,27 @@ export function WidgetForm({
               >
                 <AlertCircle className="h-4 w-4 text-yellow-600 dark:text-yellow-500" />
                 <AlertTitle className="text-yellow-800 dark:text-yellow-400">
-                  Traces view is not available in v4
+                  {tAuto("traces_view_is_not_available_in_v4_12c52e6")}{" "}
                 </AlertTitle>
                 <AlertDescription className="text-yellow-700 dark:text-yellow-500">
-                  This widget uses the traces view which is not supported in v4.
-                  It will continue to use v3 definitions. To use v4, change the
-                  view to observations or scores.
+                  {tAuto(
+                    "this_widget_uses_the_traces_view_which_is_not_suppor_f89fcea",
+                  )}{" "}
                 </AlertDescription>
               </Alert>
             )}
             {/* Data Selection Section */}
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-bold">Data Selection</h3>
+                <h3 className="text-lg font-bold">
+                  {tAuto("data_selection_1c94e4c")}
+                </h3>
                 {viewVersion === "v2" && (
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button variant="outline" size="sm">
                         <Sparkles className="mr-2 h-4 w-4" />
-                        Presets
+                        {tAuto("presets_e709e76")}{" "}
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-64 p-1" align="end">
@@ -1181,7 +1243,9 @@ export function WidgetForm({
               {/* Metrics Selection */}
               <div className="space-y-2">
                 <Label htmlFor="metrics-select">
-                  {chartType === "PIVOT_TABLE" ? "Metrics" : "Metric"}
+                  {chartType === "PIVOT_TABLE"
+                    ? tAutoI18n("metrics_ddf6a1f")
+                    : tAutoI18n("metric_b2bb760")}
                 </Label>
                 {chartType === "PIVOT_TABLE" ? (
                   <PivotMetricsField
@@ -1248,7 +1312,9 @@ export function WidgetForm({
 
             {/* Visualization Section */}
             <div className="mt-6 space-y-4">
-              <h3 className="text-lg font-bold">Visualization</h3>
+              <h3 className="text-lg font-bold">
+                {tAuto("visualization_d175985")}
+              </h3>
 
               <NameField control={form.control} suggestion={suggestions.name} />
               <DescriptionField
@@ -1264,7 +1330,9 @@ export function WidgetForm({
               />
 
               <div className="space-y-2">
-                <Label htmlFor="date-select">Date Range</Label>
+                <Label htmlFor="date-select">
+                  {tAuto("date_range_6bb4b67")}
+                </Label>
                 <DatePickerWithRange
                   dateRange={dateRange}
                   setDateRangeAndOption={(option, range) => {
@@ -1303,7 +1371,7 @@ export function WidgetForm({
               onClick={onSubmit}
               disabled={saveDisabled}
             >
-              Save Widget
+              {tAuto("save_widget_86cbefa")}{" "}
             </Button>
           </CardFooter>
         </Card>
@@ -1324,7 +1392,7 @@ export function WidgetForm({
               <div className="flex h-[300px] items-center justify-center">
                 <Alert variant="destructive" className="max-w-sm">
                   <AlertCircle className="h-4 w-4" />
-                  <AlertTitle>Invalid query</AlertTitle>
+                  <AlertTitle>{tAuto("invalid_query_607021b")}</AlertTitle>
                   <AlertDescription>{queryValidation.reason}</AlertDescription>
                 </Alert>
               </div>
@@ -1416,7 +1484,7 @@ export function WidgetForm({
                   />
                 ) : (
                   <p className="text-muted-foreground">
-                    Waiting for Input / Loading...
+                    {tAuto("waiting_for_input_loading_52faa4e")}{" "}
                   </p>
                 )}
               </div>
@@ -1446,16 +1514,17 @@ function ViewSelect({
   availableViewOptions: typeof views | typeof viewsV2;
   onViewChange: (view: z.infer<typeof views>) => void;
 }) {
+  const tAuto = useAutoTranslations();
   const { field } = useController({ control, name: "view" });
   return (
     <div className="space-y-2">
-      <Label htmlFor="view-select">View</Label>
+      <Label htmlFor="view-select">{tAuto("view_69bd4ef")}</Label>
       <Select
         value={field.value}
         onValueChange={(value) => onViewChange(value as z.infer<typeof views>)}
       >
         <SelectTrigger id="view-select">
-          <SelectValue placeholder="Select a view" />
+          <SelectValue placeholder={tAuto("select_a_view_1a2cc55")} />
         </SelectTrigger>
         <SelectContent>
           {availableViewOptions.options.map((view) => (
@@ -1489,6 +1558,7 @@ function SingleMetricField({
   availableMetrics: { value: string; label: string }[];
   validAggregationsForMeasure: z.infer<typeof metricAggregations>[];
 }) {
+  const tAuto = useAutoTranslations();
   // Owns metrics.0.aggregation; the measure is a cross-slice trigger handled by
   // the parent (onMeasureChange also resolves the chart type).
   const { field: aggField } = useController({
@@ -1511,7 +1581,7 @@ function SingleMetricField({
           aria-invalid={error ? true : undefined}
           aria-describedby={error ? "single-metric-error" : undefined}
         >
-          <SelectValue placeholder="Select metrics" />
+          <SelectValue placeholder={tAuto("select_metrics_385609a")} />
         </SelectTrigger>
         <SelectContent>
           {availableMetrics.map((metric) => {
@@ -1542,7 +1612,7 @@ function SingleMetricField({
             }
           >
             <SelectTrigger id="aggregation-select">
-              <SelectValue placeholder="Select Aggregation" />
+              <SelectValue placeholder={tAuto("select_aggregation_03220c5")} />
             </SelectTrigger>
             <SelectContent>
               {aggregationOptions.map((aggregation) => (
@@ -1587,6 +1657,8 @@ function PivotMetricsField({
     measure: string,
   ) => z.infer<typeof metricAggregations>[];
 }) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   // Owns the entire `metrics` slice — one value in (field.value), one onChange
   // out (field.onChange with a fresh array).
   const { field } = useController({ control, name: "metrics" });
@@ -1650,7 +1722,10 @@ function PivotMetricsField({
           <div key={index} className="space-y-2">
             <div className="flex items-center justify-between">
               <Label htmlFor={`pivot-metric-${index}`}>
-                Metric {index + 1} {index === 0 ? "(Required)" : "(Optional)"}
+                {tAutoI18n("metric_b2bb760")} {index + 1}{" "}
+                {index === 0
+                  ? tAutoI18n("required_c8ed86b")
+                  : tAutoI18n("optional_c53994e")}
               </Label>
               {index > 0 && (
                 <Button
@@ -1683,10 +1758,10 @@ function PivotMetricsField({
                     <SelectValue
                       placeholder={
                         !isEnabled
-                          ? "Select previous metric first"
+                          ? tAuto("select_previous_metric_first_81996c7")
                           : !canEdit
-                            ? "No more measures available"
-                            : "Select measure"
+                            ? tAuto("no_more_measures_available_7a7478a")
+                            : tAuto("select_measure_2d987a8")
                       }
                     />
                   </SelectTrigger>
@@ -1724,7 +1799,9 @@ function PivotMetricsField({
                     }
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select aggregation" />
+                      <SelectValue
+                        placeholder={tAuto("select_aggregation_e656c47")}
+                      />
                     </SelectTrigger>
                     <SelectContent>
                       {aggregationsForIndex.map((aggregation) => (
@@ -1751,7 +1828,7 @@ function PivotMetricsField({
             className="w-full"
           >
             <Plus className="mr-1 h-3 w-3" />
-            Add Metric {metrics.length + 1}
+            {tAutoI18n("add_metric_826ac0c")} {metrics.length + 1}
           </Button>
         )}
       {error && (
@@ -1778,10 +1855,11 @@ function FiltersField({
   unsupportedFilterColumns: string;
   selectedView: z.infer<typeof views>;
 }) {
+  const tAuto = useAutoTranslations();
   const { field } = useController({ control, name: "filters" });
   return (
     <div className="space-y-2">
-      <Label>Filters</Label>
+      <Label>{tAuto("filters_96e5782")}</Label>
       <div className="space-y-2">
         {unsupportedFilters.length > 0 && (
           <Alert
@@ -1790,7 +1868,7 @@ function FiltersField({
           >
             <AlertCircle className="h-4 w-4 text-yellow-600 dark:text-yellow-500" />
             <AlertTitle className="text-yellow-800 dark:text-yellow-400">
-              Unsupported legacy filters
+              {tAuto("unsupported_legacy_filters_dc929a9")}{" "}
             </AlertTitle>
             <AlertDescription className="text-yellow-700 dark:text-yellow-500">
               {`This widget still contains filter columns that are not supported for ${startCase(selectedView)}: ${unsupportedFilterColumns}. Remove them or switch to a compatible view before saving.`}
@@ -1819,12 +1897,15 @@ function BreakdownSelect({
   error?: string;
   availableDimensions: { value: string; label: string }[];
 }) {
+  const tAuto = useAutoTranslations();
   // Owns the entire `dimensions` slice; a non-pivot chart carries at most one.
   const { field } = useController({ control, name: "dimensions" });
   const value = field.value[0]?.field ?? "none";
   return (
     <div className="space-y-2">
-      <Label htmlFor="dimension-select">Breakdown Dimension (Optional)</Label>
+      <Label htmlFor="dimension-select">
+        {tAuto("breakdown_dimension_optional_0b03184")}
+      </Label>
       <Select
         value={value}
         onValueChange={(next) =>
@@ -1836,10 +1917,10 @@ function BreakdownSelect({
           aria-invalid={error ? true : undefined}
           aria-describedby={error ? "breakdown-error" : undefined}
         >
-          <SelectValue placeholder="Select a dimension" />
+          <SelectValue placeholder={tAuto("select_a_dimension_d6bd81b")} />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="none">None</SelectItem>
+          <SelectItem value="none">{tAuto("none_6eef664")}</SelectItem>
           {availableDimensions.map((dimension) => {
             const meta =
               viewDeclarations[ctx.viewVersion][ctx.view]?.dimensions?.[
@@ -1878,6 +1959,8 @@ function PivotDimensionsField({
   error?: string;
   availableDimensions: { value: string; label: string }[];
 }) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const { field } = useController({ control, name: "dimensions" });
   const pivotDimensions = field.value.map((d) => d.field);
 
@@ -1894,10 +1977,14 @@ function PivotDimensionsField({
   return (
     <div className="space-y-4">
       <div>
-        <h4 className="mb-2 text-sm font-bold">Row Dimensions</h4>
+        <h4 className="mb-2 text-sm font-bold">
+          {tAuto("row_dimensions_210a47c")}
+        </h4>
         <p className="text-muted-foreground mb-3 text-xs">
-          Configure up to {MAX_PIVOT_TABLE_DIMENSIONS} dimensions for pivot
-          table rows. Each dimension creates groupings with subtotals.
+          {tAutoI18n("configure_up_to_6703975")} {MAX_PIVOT_TABLE_DIMENSIONS}{" "}
+          {tAutoI18n(
+            "dimensions_for_pivot_table_rows_each_dimension_creat_e7590cd",
+          )}{" "}
         </p>
       </div>
 
@@ -1909,7 +1996,8 @@ function PivotDimensionsField({
         return (
           <div key={index} className="space-y-2">
             <Label htmlFor={`pivot-dimension-${index}`}>
-              Dimension {index + 1} (Optional)
+              {tAutoI18n("dimension_45e147a")} {index + 1}{" "}
+              {tAutoI18n("optional_c53994e")}{" "}
             </Label>
             <Select
               value={currentValue}
@@ -1926,13 +2014,13 @@ function PivotDimensionsField({
                 <SelectValue
                   placeholder={
                     isEnabled
-                      ? "Select a dimension"
-                      : "Select previous dimension first"
+                      ? tAuto("select_a_dimension_d6bd81b")
+                      : tAuto("select_previous_dimension_first_fccc06b")
                   }
                 />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="none">None</SelectItem>
+                <SelectItem value="none">{tAuto("none_6eef664")}</SelectItem>
                 {availableDimensions
                   .filter((d) => !selectedDimensions.includes(d.value))
                   .map((dimension) => {
@@ -1974,6 +2062,7 @@ function PivotSortField({
   effectiveSort: SortField | undefined;
   metricsForSort: { id: string }[];
 }) {
+  const tAuto = useAutoTranslations();
   // Owns chart.sort; the DISPLAY value is always the sanitized effectiveSort so
   // a stale sort column shows as "no default sort" without any write-back.
   const { field } = useController({ control, name: "chart.sort" });
@@ -1983,16 +2072,21 @@ function PivotSortField({
   return (
     <div className="space-y-4">
       <div>
-        <h4 className="mb-2 text-sm font-bold">Default Sort Configuration</h4>
+        <h4 className="mb-2 text-sm font-bold">
+          {tAuto("default_sort_configuration_b89df50")}
+        </h4>
         <p className="text-muted-foreground mb-3 text-xs">
-          Configure the default sort order for the pivot table. This will be
-          applied when the widget is first loaded.
+          {tAuto(
+            "configure_the_default_sort_order_for_the_pivot_table_bd5b1c2",
+          )}{" "}
         </p>
       </div>
 
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label htmlFor="default-sort-column">Sort Column</Label>
+          <Label htmlFor="default-sort-column">
+            {tAuto("sort_column_80cc182")}
+          </Label>
           <Select
             value={column}
             onValueChange={(next) =>
@@ -2000,10 +2094,14 @@ function PivotSortField({
             }
           >
             <SelectTrigger id="default-sort-column">
-              <SelectValue placeholder="Select a column to sort by" />
+              <SelectValue
+                placeholder={tAuto("select_a_column_to_sort_by_2bedd7d")}
+              />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="none">No default sort</SelectItem>
+              <SelectItem value="none">
+                {tAuto("no_default_sort_0c26ba8")}
+              </SelectItem>
               {metricsForSort.map((metric) => (
                 <SelectItem key={metric.id} value={metric.id}>
                   {formatMetricName(metric.id)}
@@ -2014,7 +2112,9 @@ function PivotSortField({
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="default-sort-order">Sort Order</Label>
+          <Label htmlFor="default-sort-order">
+            {tAuto("sort_order_5b5417c")}
+          </Label>
           <Select
             value={order}
             onValueChange={(value: "ASC" | "DESC") =>
@@ -2026,8 +2126,12 @@ function PivotSortField({
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="ASC">Ascending (A-Z)</SelectItem>
-              <SelectItem value="DESC">Descending (Z-A)</SelectItem>
+              <SelectItem value="ASC">
+                {tAuto("ascending_a_z_029bb6e")}
+              </SelectItem>
+              <SelectItem value="DESC">
+                {tAuto("descending_z_a_fb152f6")}
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -2051,10 +2155,11 @@ function NameField({
   control: Control<WidgetFormValues>;
   suggestion: string;
 }) {
+  const tAuto = useAutoTranslations();
   const { field } = useController({ control, name: "name" });
   return (
     <div className="space-y-2">
-      <Label htmlFor="widget-name">Name</Label>
+      <Label htmlFor="widget-name">{tAuto("name_709a232")}</Label>
       <Input
         id="widget-name"
         // A blank/whitespace-only override shows the live suggestion; typing
@@ -2063,7 +2168,7 @@ function NameField({
         // title and toSavePayload, so input, preview, and saved value agree.
         value={effectiveWidgetName(field.value, suggestion)}
         onChange={(e) => field.onChange(e.target.value)}
-        placeholder="Enter widget name"
+        placeholder={tAuto("enter_widget_name_462fe56")}
       />
     </div>
   );
@@ -2076,15 +2181,16 @@ function DescriptionField({
   control: Control<WidgetFormValues>;
   suggestion: string;
 }) {
+  const tAuto = useAutoTranslations();
   const { field } = useController({ control, name: "description" });
   return (
     <div className="space-y-2">
-      <Label htmlFor="widget-description">Description</Label>
+      <Label htmlFor="widget-description">{tAuto("description_55f8ebc")}</Label>
       <Input
         id="widget-description"
         value={effectiveWidgetName(field.value, suggestion)}
         onChange={(e) => field.onChange(e.target.value)}
-        placeholder="Enter widget description"
+        placeholder={tAuto("enter_widget_description_3420922")}
       />
     </div>
   );
@@ -2101,9 +2207,11 @@ function ChartTypeSelect({
   measureSupportsHistogram: boolean;
   error?: string;
 }) {
+  const tAuto = useAutoTranslations();
+  const autoText = useAutoText();
   return (
     <div className="space-y-2">
-      <Label htmlFor="chart-type-select">Chart Type</Label>
+      <Label htmlFor="chart-type-select">{tAuto("chart_type_d8c1079")}</Label>
       <Select
         value={value}
         onValueChange={(next) =>
@@ -2115,24 +2223,24 @@ function ChartTypeSelect({
           aria-invalid={error ? true : undefined}
           aria-describedby={error ? "chart-type-error" : undefined}
         >
-          <SelectValue placeholder="Select a chart type" />
+          <SelectValue placeholder={tAuto("select_a_chart_type_65d5421")} />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
-            <SelectLabel>Time Series</SelectLabel>
+            <SelectLabel>{tAuto("time_series_489a0f7")}</SelectLabel>
             {chartTypes
               .filter((item) => item.group === "time-series")
               .map((chart) => (
                 <SelectItem key={chart.value} value={chart.value}>
                   <div className="flex items-center">
                     {React.createElement(chart.icon, { className: "mr-2 w-4" })}
-                    <span>{chart.name}</span>
+                    <span>{autoText(chart.name)}</span>
                   </div>
                 </SelectItem>
               ))}
           </SelectGroup>
           <SelectGroup>
-            <SelectLabel>Total Value</SelectLabel>
+            <SelectLabel>{tAuto("total_value_4949c4c")}</SelectLabel>
             {chartTypes
               .filter((item) => item.group === "total-value")
               .map((chart) => (
@@ -2145,7 +2253,7 @@ function ChartTypeSelect({
                 >
                   <div className="flex items-center">
                     {React.createElement(chart.icon, { className: "mr-2 w-4" })}
-                    <span>{chart.name}</span>
+                    <span>{autoText(chart.name)}</span>
                   </div>
                 </SelectItem>
               ))}
@@ -2166,10 +2274,13 @@ function HistogramBinsField({
 }: {
   control: Control<WidgetFormValues>;
 }) {
+  const tAuto = useAutoTranslations();
   const { field } = useController({ control, name: "chart.bins" });
   return (
     <div className="space-y-2">
-      <Label htmlFor="histogram-bins">Number of Bins (1-100)</Label>
+      <Label htmlFor="histogram-bins">
+        {tAuto("number_of_bins_1_100_1e8e99a")}
+      </Label>
       <Input
         id="histogram-bins"
         type="number"
@@ -2182,17 +2293,20 @@ function HistogramBinsField({
             field.onChange(value);
           }
         }}
-        placeholder="Enter number of bins (1-100)"
+        placeholder={tAuto("enter_number_of_bins_1_100_27158cd")}
       />
     </div>
   );
 }
 
 function RowLimitField({ control }: { control: Control<WidgetFormValues> }) {
+  const tAuto = useAutoTranslations();
   const { field } = useController({ control, name: "chart.rowLimit" });
   return (
     <div className="space-y-2">
-      <Label htmlFor="row-limit">Breakdown Row Limit (0-1000)</Label>
+      <Label htmlFor="row-limit">
+        {tAuto("breakdown_row_limit_0_1000_06f8f5a")}
+      </Label>
       <Input
         id="row-limit"
         type="number"
@@ -2205,7 +2319,7 @@ function RowLimitField({ control }: { control: Control<WidgetFormValues> }) {
             field.onChange(value);
           }
         }}
-        placeholder="Enter breakdown row limit (0-1000)"
+        placeholder={tAuto("enter_breakdown_row_limit_0_1000_0dce527")}
       />
     </div>
   );

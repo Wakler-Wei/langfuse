@@ -1,5 +1,6 @@
 import { type QueryProgress } from "@/src/hooks/useSSEDashboardQuery";
 import { cn } from "@/src/utils/tailwind";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 function formatRows(n: number): string {
   if (n >= 1_000_000_000) return `${(n / 1_000_000_000).toFixed(1)}B`;
@@ -19,6 +20,7 @@ export function QueryProgressBar({
   className,
   layout = "default",
 }: QueryProgressBarProps) {
+  const tAuto = useAutoTranslations();
   const hasProgress = progress != null;
   const percent = hasProgress
     ? Math.max(0, Math.min(progress.percent * 100, 100))
@@ -30,7 +32,7 @@ export function QueryProgressBar({
     <div className={cn("w-full min-w-0", className)}>
       <div
         role="progressbar"
-        aria-label="Query progress"
+        aria-label={tAuto("query_progress_7a871b2")}
         aria-valuemin={0}
         aria-valuemax={100}
         aria-valuenow={hasProgress ? Math.round(percent) : undefined}
@@ -54,10 +56,15 @@ export function QueryProgressBar({
           )}
         >
           {hasProgress
-            ? `Reading ${formatRows(progress.read_rows)} / ~${formatRows(
-                progress.total_rows_to_read,
-              )} rows`
-            : "Reading query progress..."}
+            ? tAuto("reading_value0_value1_rows_946be06", {
+                value0: String(
+                  (formatRows(progress.read_rows) as unknown) ?? "",
+                ),
+                value1: String(
+                  (formatRows(progress.total_rows_to_read) as unknown) ?? "",
+                ),
+              })
+            : tAuto("reading_query_progress_f6b5c68")}
         </p>
       ) : null}
     </div>

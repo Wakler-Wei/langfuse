@@ -31,6 +31,7 @@ import {
 import { useViewPreferences } from "../contexts/ViewPreferencesContext";
 import { useTraceData } from "../contexts/TraceDataContext";
 import type Decimal from "decimal.js";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 // How many distinct score groups to show inline on a tree/search row before
 // collapsing the rest into a "+N" pill. Keeps dense-score rows compact; the
@@ -56,6 +57,7 @@ export function SpanContent({
   onHover,
   className,
 }: SpanContentProps) {
+  const tAuto = useAutoTranslations();
   const { mergedScores, roots } = useTraceData();
   const {
     showDuration,
@@ -172,8 +174,8 @@ export function SpanContent({
               <span
                 title={
                   node.type === "TRACE"
-                    ? "Total trace duration"
-                    : "Own span duration"
+                    ? tAuto("total_trace_duration_e93b06d")
+                    : tAuto("own_span_duration_4f85ef4")
                 }
                 className={cn(
                   "text-foreground-tertiary text-xs",
@@ -195,7 +197,9 @@ export function SpanContent({
             {/* Subtree wall-clock duration — async descendants outlive the parent span */}
             {shouldRenderSubtreeDuration ? (
               <span
-                title="Subtree wall-clock duration (first start → last end)"
+                title={tAuto(
+                  "subtree_wall_clock_duration_first_start_last_end_e739603",
+                )}
                 className="text-foreground-tertiary text-xs"
               >
                 {"∑ "}
@@ -220,7 +224,7 @@ export function SpanContent({
               <span
                 title={
                   node.children.length > 0 || node.type === "TRACE"
-                    ? "Aggregated cost of all child observations"
+                    ? tAuto("aggregated_cost_of_all_child_observations_5cfc8d4")
                     : undefined
                 }
                 className={cn(

@@ -26,6 +26,7 @@ import { useCsvDragAndDrop } from "@/src/features/datasets/hooks/useCsvDragAndDr
 import { useCsvImport } from "@/src/features/datasets/hooks/useCsvImport";
 import { createPortal } from "react-dom";
 import type { CsvPreviewResult } from "@/src/features/datasets/lib/csv/types";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 // Helper to extract schema keys from object schema
 function extractSchemaKeys(schema: unknown): string[] | null {
@@ -52,6 +53,8 @@ export function PreviewCsvImport({
   setPreview: (preview: CsvPreviewResult | null) => void;
   setOpen?: (open: boolean) => void;
 }) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const capture = usePostHogClientCapture();
 
   // Fetch dataset schema
@@ -245,22 +248,24 @@ export function PreviewCsvImport({
               htmlFor="wrapSingleColumn"
               className="cursor-pointer text-sm font-normal"
             >
-              Force Objects
+              {tAuto("force_objects_e7a4df3")}{" "}
             </Label>
             <Tooltip>
               <TooltipTrigger asChild>
                 <InfoIcon className="text-muted-foreground h-3.5 w-3.5" />
               </TooltipTrigger>
               <TooltipContent className="max-w-[300px]">
-                When a single csv column is mapped to a dataset item field, wrap
-                its value in an object instead of using the raw value. Example:{" "}
-                {`{"columnName": "value"}`} instead of {`"value"`}
+                {tAutoI18n(
+                  "when_a_single_csv_column_is_mapped_to_a_dataset_item_12f2dcd",
+                )}{" "}
+                {`{"columnName": "value"}`} {tAutoI18n("instead_of_cb82821")}{" "}
+                {`"value"`}
               </TooltipContent>
             </Tooltip>
           </div>
         )}
         <Button variant="outline" onClick={handleCancel}>
-          Cancel
+          {tAuto("cancel_77dfd21")}{" "}
         </Button>
         <Button
           disabled={
@@ -270,8 +275,8 @@ export function PreviewCsvImport({
           onClick={handleImport}
         >
           {csvImport.progress.status === "processing"
-            ? "Importing..."
-            : "Import"}
+            ? tAutoI18n("importing_b7353a7")
+            : tAutoI18n("import_d6fbc9d")}
         </Button>
         {csvImport.progress.status === "processing" && (
           <div className="mt-2">

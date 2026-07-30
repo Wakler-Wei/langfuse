@@ -75,6 +75,7 @@ import {
 import { useAnnotationScoreConfigs } from "@/src/features/scores/hooks/useScoreConfigs";
 import { Skeleton } from "@/src/components/ui/skeleton";
 import Spinner from "@/src/components/design-system/Spinner/Spinner";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const CHAR_CUTOFF = 6;
 
@@ -89,6 +90,7 @@ function CommentField({
   loading: boolean;
   onSave: (comment: string | null) => void;
 }) {
+  const tAuto = useAutoTranslations();
   const [localValue, setLocalValue] = useState(savedComment || "");
 
   // Reset local value when saved comment changes (after mutation completes)
@@ -101,7 +103,9 @@ function CommentField({
   return (
     <div className="relative">
       <div className="mb-1 flex items-center justify-between">
-        <FormLabel className="text-sm">Score Comment</FormLabel>
+        <FormLabel className="text-sm">
+          {tAuto("score_comment_b48fca0")}
+        </FormLabel>
         <div className="relative">
           {savedComment && (
             <PopoverClose asChild>
@@ -139,7 +143,7 @@ function CommentField({
                 setLocalValue(savedComment || "");
               }}
             >
-              Discard Changes
+              {tAuto("discard_changes_9fb1097")}{" "}
             </Button>
           </PopoverClose>
           <PopoverClose asChild>
@@ -153,7 +157,7 @@ function CommentField({
                 onSave(localValue);
               }}
             >
-              Save Changes
+              {tAuto("save_changes_fa2984b")}{" "}
             </Button>
           </PopoverClose>
         </div>
@@ -183,9 +187,10 @@ function AnnotateHeader({
   actionButtons: React.ReactNode;
   description: string;
 }) {
+  const tAuto = useAutoTranslations();
   return (
     <Header
-      title="Annotate"
+      title={tAuto("annotate_4f5f32d")}
       help={{
         description,
         href: "https://langfuse.com/docs/evaluation/evaluation-methods/annotation",
@@ -201,7 +206,9 @@ function AnnotateHeader({
             )}
           </div>
           <span className="text-muted-foreground text-xs">
-            {showSaving ? "Saving score data" : "Score data saved"}
+            {showSaving
+              ? tAuto("saving_score_data_0b91488")
+              : tAuto("score_data_saved_c9b16b3")}
           </span>
         </div>,
         actionButtons,
@@ -232,6 +239,7 @@ function InnerAnnotationForm<Target extends ScoreTarget>({
   actionButtons,
   configControl,
 }: InnerAnnotationFormProps<Target>) {
+  const tAuto = useAutoTranslations();
   const capture = usePostHogClientCapture();
   const { configs, allowManualSelection } = configControl;
 
@@ -835,7 +843,7 @@ function InnerAnnotationForm<Target extends ScoreTarget>({
         {allowManualSelection ? (
           <div className="grid grid-flow-col items-center">
             <MultiSelectKeyValues
-              placeholder="Value"
+              placeholder={tAuto("value_8dce170")}
               align="end"
               items="empty scores"
               className="grid grid-cols-[auto_1fr_auto_auto] gap-2"
@@ -852,7 +860,7 @@ function InnerAnnotationForm<Target extends ScoreTarget>({
                 }))}
               controlButtons={
                 <DropdownMenuItemWithSecondaryAction
-                  title="Manage score configs"
+                  title={tAuto("manage_score_configs_3e599c9")}
                   href={`/project/${scoreMetadata.projectId}/settings/scores`}
                   onBeforeAction={() => {
                     capture(
@@ -946,7 +954,9 @@ function InnerAnnotationForm<Target extends ScoreTarget>({
                                 variant="link"
                                 type="button"
                                 size="xs"
-                                title="Add or view score comment"
+                                title={tAuto(
+                                  "add_or_view_score_comment_c091ac8",
+                                )}
                                 // LFE-7628: center the comment icon vertically
                                 // against the score label instead of stretching
                                 // to the full (possibly multi-line) row height,
@@ -1010,7 +1020,9 @@ function InnerAnnotationForm<Target extends ScoreTarget>({
                                         maxLength={TEXT_SCORE_MAX_LENGTH}
                                         className="text-xs"
                                         disabled={isInputDisabled(config)}
-                                        placeholder="Enter free form text..."
+                                        placeholder={tAuto(
+                                          "enter_free_form_text_f378647",
+                                        )}
                                         onBlur={() => handleTextUpsert(index)}
                                       />
                                     </FormControl>
@@ -1081,8 +1093,12 @@ function InnerAnnotationForm<Target extends ScoreTarget>({
                                           value: category.label,
                                           disabled: category.isOutdated,
                                         }))}
-                                        placeholder="Select category"
-                                        searchPlaceholder="Search categories..."
+                                        placeholder={tAuto(
+                                          "select_category_a2a5caf",
+                                        )}
+                                        searchPlaceholder={tAuto(
+                                          "search_categories_1bf5c01",
+                                        )}
                                         emptyText="No category found."
                                       />
                                     </FormControl>
@@ -1177,7 +1193,7 @@ function InnerAnnotationForm<Target extends ScoreTarget>({
                                   variant="link"
                                   type="button"
                                   className="px-0 pl-1"
-                                  title="Delete archived score"
+                                  title={tAuto("delete_archived_score_2aaba0f")}
                                   disabled={isScoreUnsaved(score.id)}
                                 >
                                   <Archive className="h-4 w-4"></Archive>
@@ -1185,11 +1201,12 @@ function InnerAnnotationForm<Target extends ScoreTarget>({
                               </PopoverTrigger>
                               <PopoverContent>
                                 <h2 className="mb-3 font-bold">
-                                  Your score is archived
+                                  {tAuto("your_score_is_archived_059d48e")}{" "}
                                 </h2>
                                 <p className="mb-3 text-sm">
-                                  This action will delete your score
-                                  irreversibly.
+                                  {tAuto(
+                                    "this_action_will_delete_your_score_irreversibly_fca0277",
+                                  )}{" "}
                                 </p>
                                 <div className="flex justify-end space-x-4">
                                   <Button
@@ -1198,7 +1215,7 @@ function InnerAnnotationForm<Target extends ScoreTarget>({
                                     loading={deleteMutation.isPending}
                                     onClick={() => handleDeleteScore(index)}
                                   >
-                                    Delete
+                                    {tAuto("delete_f6fdbe4")}{" "}
                                   </Button>
                                 </div>
                               </PopoverContent>
@@ -1244,7 +1261,7 @@ function InnerAnnotationForm<Target extends ScoreTarget>({
                   <KeyboardShortcut className="h-4 min-w-4 px-1 text-[9px]">
                     ↓
                   </KeyboardShortcut>
-                  move between fields
+                  {tAuto("move_between_fields_44994ea")}{" "}
                 </span>
               )}
               {optionRowCount > 0 && (
@@ -1256,7 +1273,7 @@ function InnerAnnotationForm<Target extends ScoreTarget>({
                   <KeyboardShortcut className="h-4 min-w-4 px-1 text-[9px]">
                     9
                   </KeyboardShortcut>
-                  select option
+                  {tAuto("select_option_33e1769")}{" "}
                 </span>
               )}
               {hasEditableRow && (
@@ -1264,7 +1281,7 @@ function InnerAnnotationForm<Target extends ScoreTarget>({
                   <KeyboardShortcut className="h-4 px-1 text-[9px]">
                     ↵
                   </KeyboardShortcut>
-                  edit field
+                  {tAuto("edit_field_051b94c")}{" "}
                 </span>
               )}
             </div>

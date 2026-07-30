@@ -6,8 +6,10 @@ import { type BackgroundMigration } from "@langfuse/shared";
 import { RetryBackgroundMigration } from "@/src/features/background-migrations/components/retry-background-migration";
 import { StatusBadge } from "@/src/components/ui/StatusBadge/StatusBadge";
 import Page from "@/src/components/layouts/page";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export default function BackgroundMigrationsTable() {
+  const tAuto = useAutoTranslations();
   const backgroundMigrations = api.backgroundMigrations.all.useQuery();
 
   const columns = [
@@ -15,25 +17,25 @@ export default function BackgroundMigrationsTable() {
       accessorKey: "name",
       id: "name",
       enableColumnFilter: false,
-      header: "Name",
+      header: tAuto("name_709a232"),
     },
     {
       accessorKey: "script",
       id: "script",
       enableColumnFilter: false,
-      header: "Script",
+      header: tAuto("script_ee6d6af"),
     },
     {
       accessorKey: "args",
       id: "args",
       enableColumnFilter: false,
-      header: "Args",
+      header: tAuto("args_4bf0024"),
       size: 80,
       cell: (row) => JSON.stringify(row.getValue()),
     },
     {
       id: "status",
-      header: "Status",
+      header: tAuto("status_bae7d5b"),
       size: 80,
       cell: (row) => {
         const failedAt = row.row.original.failedAt;
@@ -56,18 +58,18 @@ export default function BackgroundMigrationsTable() {
       accessorKey: "failedReason",
       id: "failedReason",
       enableColumnFilter: false,
-      header: "Failed Reason",
+      header: tAuto("failed_reason_1c6702c"),
     },
     {
       accessorKey: "state",
       id: "state",
       enableColumnFilter: false,
-      header: "State",
+      header: tAuto("state_a725020"),
       cell: (row) => JSON.stringify(row.getValue()),
     },
     {
       id: "actions",
-      header: "Actions",
+      header: tAuto("actions_c3cd636"),
       size: 65,
       cell: (row) => {
         const name = row.row.original.name;
@@ -85,7 +87,7 @@ export default function BackgroundMigrationsTable() {
   return (
     <Page
       headerProps={{
-        title: "Background Migrations",
+        title: tAuto("background_migrations_d561ddf"),
       }}
     >
       <DataTableToolbar columns={columns} />

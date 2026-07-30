@@ -20,6 +20,7 @@ import {
   BlobStorageIntegrationFileType,
 } from "@langfuse/shared";
 import { type BlobStorageFormControl } from "@/src/features/blobstorage-integration/components/formValues";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 // Frequency, file type, and export mode (with the custom start date when the
 // mode requires one).
@@ -28,6 +29,7 @@ export const ExportScheduleFields = ({
 }: {
   control: BlobStorageFormControl;
 }) => {
+  const tAuto = useAutoTranslations();
   const watchedExportMode = useWatch({ control, name: "exportMode" });
 
   return (
@@ -37,25 +39,34 @@ export const ExportScheduleFields = ({
         name="exportFrequency"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Export Frequency</FormLabel>
+            <FormLabel>{tAuto("export_frequency_df74483")}</FormLabel>
             <FormControl>
               <Select value={field.value} onValueChange={field.onChange}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Select frequency" />
+                  <SelectValue
+                    placeholder={tAuto("select_frequency_a3c8a31")}
+                  />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="every_20_minutes">
-                    Every 20 Minutes
+                    {tAuto("every_20_minutes_22cf93e")}{" "}
                   </SelectItem>
-                  <SelectItem value="hourly">Hourly</SelectItem>
-                  <SelectItem value="daily">Daily</SelectItem>
-                  <SelectItem value="weekly">Weekly</SelectItem>
+                  <SelectItem value="hourly">
+                    {tAuto("hourly_d936254")}
+                  </SelectItem>
+                  <SelectItem value="daily">
+                    {tAuto("daily_728298d")}
+                  </SelectItem>
+                  <SelectItem value="weekly">
+                    {tAuto("weekly_158f3da")}
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </FormControl>
             <FormDescription>
-              How often the data should be exported. Changes are taken into
-              consideration from the next run onwards.
+              {tAuto(
+                "how_often_the_data_should_be_exported_changes_are_ta_f7e9120",
+              )}{" "}
             </FormDescription>
             <FormMessage />
           </FormItem>
@@ -67,14 +78,18 @@ export const ExportScheduleFields = ({
         name="fileType"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>File Type</FormLabel>
+            <FormLabel>{tAuto("file_type_5023c89")}</FormLabel>
             <FormControl>
               <Select value={field.value} onValueChange={field.onChange}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Select file type" />
+                  <SelectValue
+                    placeholder={tAuto("select_file_type_47be048")}
+                  />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="PARQUET">Parquet</SelectItem>
+                  <SelectItem value="PARQUET">
+                    {tAuto("parquet_b6d723c")}
+                  </SelectItem>
                   <SelectItem value="JSONL">JSONL</SelectItem>
                   <SelectItem value="CSV">CSV</SelectItem>
                   <SelectItem value="JSON">JSON</SelectItem>
@@ -83,8 +98,10 @@ export const ExportScheduleFields = ({
             </FormControl>
             <FormDescription>
               {field.value === BlobStorageIntegrationFileType.PARQUET
-                ? "Apache Parquet — a columnar binary format encoded and compressed by ClickHouse. Gzip compression does not apply."
-                : "The file format for exported data."}
+                ? tAuto(
+                    "apache_parquet_a_columnar_binary_format_encoded_and__7760d6b",
+                  )
+                : tAuto("the_file_format_for_exported_data_9d46226")}
             </FormDescription>
             <FormMessage />
           </FormItem>
@@ -96,21 +113,23 @@ export const ExportScheduleFields = ({
         name="exportMode"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Export Mode</FormLabel>
+            <FormLabel>{tAuto("export_mode_642291b")}</FormLabel>
             <FormControl>
               <Select value={field.value} onValueChange={field.onChange}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Select export mode" />
+                  <SelectValue
+                    placeholder={tAuto("select_export_mode_9440b88")}
+                  />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value={BlobStorageExportMode.FULL_HISTORY}>
-                    Full history
+                    {tAuto("full_history_bde98b5")}{" "}
                   </SelectItem>
                   <SelectItem value={BlobStorageExportMode.FROM_TODAY}>
-                    Today
+                    {tAuto("today_24345a1")}{" "}
                   </SelectItem>
                   <SelectItem value={BlobStorageExportMode.FROM_CUSTOM_DATE}>
-                    Custom date
+                    {tAuto("custom_date_a39a910")}{" "}
                   </SelectItem>
                 </SelectContent>
               </Select>
@@ -131,7 +150,7 @@ export const ExportScheduleFields = ({
           name="exportStartDate"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Export Start Date</FormLabel>
+              <FormLabel>{tAuto("export_start_date_dfaa9df")}</FormLabel>
               <FormControl>
                 <Input
                   type="date"
@@ -150,11 +169,13 @@ export const ExportScheduleFields = ({
                       : null;
                     field.onChange(date);
                   }}
-                  placeholder="Select start date"
+                  placeholder={tAuto("select_start_date_d37e453")}
                 />
               </FormControl>
               <FormDescription>
-                Data before this date will not be included in exports
+                {tAuto(
+                  "data_before_this_date_will_not_be_included_in_export_c179cd3",
+                )}{" "}
               </FormDescription>
               <FormMessage />
             </FormItem>

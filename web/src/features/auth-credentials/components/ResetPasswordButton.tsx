@@ -5,6 +5,7 @@ import { useState } from "react";
 import { z } from "zod";
 import { usePostHogClientCapture } from "@/src/features/posthog-analytics/usePostHogClientCapture";
 import { env } from "@/src/env.mjs";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export function RequestResetPasswordEmailButton({
   email,
@@ -17,6 +18,7 @@ export function RequestResetPasswordEmailButton({
   variant?: "default" | "secondary";
   callbackUrl?: string;
 }) {
+  const tAuto = useAutoTranslations();
   const [isEmailSent, setIsEmailSent] = useState(false);
   const [code, setCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -82,7 +84,7 @@ export function RequestResetPasswordEmailButton({
       {isEmailSent ? (
         <div>
           <label htmlFor="otp-code" className="mb-2 block text-sm font-bold">
-            Check your inbox for the code
+            {tAuto("check_your_inbox_for_the_code_be7bc16")}{" "}
           </label>
           <Input
             id="otp-code"
@@ -91,7 +93,7 @@ export function RequestResetPasswordEmailButton({
             maxLength={6}
             value={code}
             onChange={(e) => setCode(e.target.value.trim())}
-            placeholder="One time passcode"
+            placeholder={tAuto("one_time_passcode_b529178")}
             className="mb-8 w-full"
           />
           <Button
@@ -101,7 +103,7 @@ export function RequestResetPasswordEmailButton({
             disabled={!code || code.length !== 6}
             variant={variant}
           >
-            Verify code
+            {tAuto("verify_code_91a22c2")}{" "}
           </Button>
         </div>
       ) : (
@@ -113,8 +115,8 @@ export function RequestResetPasswordEmailButton({
           variant={variant}
         >
           {session.status === "authenticated"
-            ? "Verify email to change password"
-            : "Request password reset"}
+            ? tAuto("verify_email_to_change_password_7aa2514")
+            : tAuto("request_password_reset_beb3676")}
         </Button>
       )}
       {errorMessage && (

@@ -32,6 +32,7 @@ import type {
   BooleanKeyValueFilterEntry,
   StringKeyValueFilterEntry,
 } from "@/src/features/filters/hooks/useSidebarFilterState";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type KeyValueFilterBuilderProps =
   | {
@@ -89,6 +90,7 @@ const BOOLEAN_OPERATOR_LABELS = {
 } as const;
 
 export function KeyValueFilterBuilder(props: KeyValueFilterBuilderProps) {
+  const tAuto = useAutoTranslations();
   const {
     mode,
     keyOptions,
@@ -280,11 +282,13 @@ export function KeyValueFilterBuilder(props: KeyValueFilterBuilderProps) {
                   <PopoverContent className="w-[200px] p-0" align="start">
                     <InputCommand>
                       <InputCommandInput
-                        placeholder="Search keys..."
+                        placeholder={tAuto("search_keys_34acd24")}
                         variant="bottom"
                       />
                       <InputCommandList>
-                        <InputCommandEmpty>No keys found.</InputCommandEmpty>
+                        <InputCommandEmpty>
+                          {tAuto("no_keys_found_8b33081")}
+                        </InputCommandEmpty>
                         <InputCommandGroup>
                           {mergedKeyOptions.map((option) => (
                             <InputCommandItem
@@ -367,14 +371,18 @@ export function KeyValueFilterBuilder(props: KeyValueFilterBuilderProps) {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="any of">any of</SelectItem>
-                    <SelectItem value="none of">none of</SelectItem>
+                    <SelectItem value="any of">
+                      {tAuto("any_of_9c63cc4")}
+                    </SelectItem>
+                    <SelectItem value="none of">
+                      {tAuto("none_of_d61af4f")}
+                    </SelectItem>
                   </SelectContent>
                 </Select>
 
                 {/* Values multi-select */}
                 <MultiSelect
-                  title="Values"
+                  title={tAuto("values_b1564f6")}
                   options={availableValuesForKey.map((v) => ({ value: v }))}
                   values={filter.value as string[]}
                   onValueChange={(values) =>
@@ -411,7 +419,7 @@ export function KeyValueFilterBuilder(props: KeyValueFilterBuilderProps) {
                 {/* Numeric value input */}
                 <Input
                   type="number"
-                  placeholder="Value"
+                  placeholder={tAuto("value_8dce170")}
                   value={(filter as NumericKeyValueFilterEntry).value}
                   onChange={(e) =>
                     handleFilterChange(index, {
@@ -460,11 +468,15 @@ export function KeyValueFilterBuilder(props: KeyValueFilterBuilderProps) {
                   disabled={!filter.key}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Value" />
+                    <SelectValue placeholder={tAuto("value_8dce170")} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="true">true</SelectItem>
-                    <SelectItem value="false">false</SelectItem>
+                    <SelectItem value="true">
+                      {tAuto("true_5ffe533")}
+                    </SelectItem>
+                    <SelectItem value="false">
+                      {tAuto("false_7cb6efb")}
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </>
@@ -496,7 +508,7 @@ export function KeyValueFilterBuilder(props: KeyValueFilterBuilderProps) {
                 {/* String value input */}
                 <Input
                   type="text"
-                  placeholder="Value"
+                  placeholder={tAuto("value_8dce170")}
                   value={filter.value as string}
                   onChange={(e) =>
                     handleFilterChange(index, {
@@ -519,7 +531,7 @@ export function KeyValueFilterBuilder(props: KeyValueFilterBuilderProps) {
         className="w-full"
       >
         <Plus className="mr-2 h-4 w-4" />
-        Add filter
+        {tAuto("add_filter_85425f9")}{" "}
       </Button>
     </div>
   );

@@ -3,6 +3,7 @@ import { showErrorToast } from "@/src/features/notifications/showErrorToast";
 import { api } from "@/src/utils/api";
 import { copyTextToClipboard } from "@/src/utils/clipboard";
 import type { TableViewPresetState } from "@langfuse/shared";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type UseViewMutationsProps = {
   handleSetViewId: (viewId: string | null) => void;
@@ -13,6 +14,7 @@ export const useViewMutations = ({
   handleSetViewId,
   applyViewState,
 }: UseViewMutationsProps) => {
+  const tAuto = useAutoTranslations();
   const utils = api.useUtils();
 
   const createMutation = api.TableViewPresets.create.useMutation({
@@ -30,8 +32,11 @@ export const useViewMutations = ({
       });
       utils.TableViewPresets.getByTableName.invalidate();
       showSuccessToast({
-        title: "View updated",
-        description: `${data.view.name} has been updated to reflect your current table state`,
+        title: tAuto("view_updated_c587dc0"),
+        description: tAuto(
+          "value0_has_been_updated_to_reflect_your_current_tabl_d2a6ec4",
+          { value0: String(data.view.name ?? "") },
+        ),
       });
     },
   });
@@ -57,14 +62,18 @@ export const useViewMutations = ({
         copyTextToClipboard(data)
           .then(() =>
             showSuccessToast({
-              title: "Permalink copied to clipboard",
-              description: "You can now share the permalink with others",
+              title: tAuto("permalink_copied_to_clipboard_50608c4"),
+              description: tAuto(
+                "you_can_now_share_the_permalink_with_others_d8f7432",
+              ),
             }),
           )
           .catch(() =>
             showErrorToast(
-              "Failed to copy permalink",
-              "Could not write to the clipboard. Please copy the link manually.",
+              tAuto("failed_to_copy_permalink_9964fc5"),
+              tAuto(
+                "could_not_write_to_the_clipboard_please_copy_the_lin_50fed68",
+              ),
               "WARNING",
             ),
           );

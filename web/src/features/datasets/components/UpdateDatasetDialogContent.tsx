@@ -5,6 +5,7 @@ import {
 } from "@/src/components/ui/dialog";
 import { DatasetForm } from "@/src/features/datasets/components/DatasetForm";
 import { type Prisma } from "@langfuse/shared";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export interface UpdateDatasetDialogProps {
   projectId: string;
@@ -24,10 +25,11 @@ export function UpdateDatasetDialogContent({
   onFormSuccess,
   ...props
 }: UpdateDatasetDialogContentProps) {
+  const tAuto = useAutoTranslations();
   return (
     <DialogContent className="max-h-[90vh] sm:max-w-2xl md:max-w-3xl">
       <DialogHeader>
-        <DialogTitle>Update dataset</DialogTitle>
+        <DialogTitle>{tAuto("update_dataset_32dfdd9")}</DialogTitle>
       </DialogHeader>
       <DatasetForm
         mode="update"

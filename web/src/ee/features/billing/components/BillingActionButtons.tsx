@@ -9,8 +9,10 @@ import { StripeCustomerPortalButton } from "./StripeCustomerPortalButton";
 import { BillingSwitchPlanDialog } from "./BillingSwitchPlanDialog";
 import { useBillingInformation } from "./useBillingInformation";
 import { StripeCancellationButton } from "./StripeCancellationButton";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export const BillingActionButtons = () => {
+  const tAuto = useAutoTranslations();
   const { organization, hasValidPaymentMethod, isLoading } =
     useBillingInformation();
   const { setOpen } = useSupportDrawer();
@@ -38,11 +40,11 @@ export const BillingActionButtons = () => {
             setOpen(true);
           }}
         >
-          Change plan (via support)
+          {tAuto("change_plan_via_support_4fa91bb")}{" "}
         </Button>
         <Button variant="secondary" asChild>
           <Link href="https://langfuse.com/pricing" target="_blank">
-            Compare plans
+            {tAuto("compare_plans_a4c41c6")}{" "}
           </Link>
         </Button>
       </div>
@@ -59,7 +61,7 @@ export const BillingActionButtons = () => {
           <>
             <StripeCustomerPortalButton
               orgId={organization.id}
-              title="Update Billing Details"
+              title={tAuto("update_billing_details_92e60fe")}
               variant="secondary"
             />
             <StripeCancellationButton
@@ -70,7 +72,7 @@ export const BillingActionButtons = () => {
         )}
         <Button variant="secondary" asChild>
           <Link href="https://langfuse.com/pricing" target="_blank">
-            Compare plans
+            {tAuto("compare_plans_a4c41c6")}{" "}
           </Link>
         </Button>
       </div>
@@ -78,8 +80,9 @@ export const BillingActionButtons = () => {
         !hasValidPaymentMethod &&
         !isLoading && (
           <p className="text-sm text-red-600">
-            You do not have a valid payment method. Please Update Billing
-            Details.
+            {tAuto(
+              "you_do_not_have_a_valid_payment_method_please_update_63916d4",
+            )}{" "}
           </p>
         )}
     </div>

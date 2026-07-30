@@ -5,6 +5,7 @@ import { Combobox } from "@/src/components/ui/combobox";
 import { LangfuseIcon } from "@/src/components/design-system/LangfuseIcon/LangfuseIcon";
 import { Button } from "@/src/components/ui/button";
 import { useHasProjectAccess } from "@/src/features/rbac/utils/checkProjectAccess";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 /**
  * Home's dashboard picker: selecting immediately shows ("peeks") the chosen
@@ -27,6 +28,7 @@ export function HomeDashboardSelect({
   onValueChange: (dashboardId: string) => void;
   currentDashboardName: string;
 }) {
+  const tAuto = useAutoTranslations();
   const hasCUDAccess = useHasProjectAccess({
     projectId,
     scope: "dashboards:CUD",
@@ -73,7 +75,7 @@ export function HomeDashboardSelect({
       <Button
         variant="ghost"
         disabled
-        title="The dashboard shown on this project's home page"
+        title={tAuto("the_dashboard_shown_on_this_project_s_home_page_cdc6fe1")}
         className="text-muted-foreground my-0"
       >
         <LayoutDashboard className="mr-1 h-4 w-4" />
@@ -91,7 +93,7 @@ export function HomeDashboardSelect({
         onValueChange(id);
       }}
       placeholder={currentDashboardName}
-      searchPlaceholder="Search dashboards..."
+      searchPlaceholder={tAuto("search_dashboards_3bd8686")}
       emptyText="No dashboards found"
       className="my-0 w-auto max-w-56"
       name="home-dashboard"

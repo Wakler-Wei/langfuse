@@ -21,6 +21,7 @@ import {
   convertScoreColumnsToAnalyticsData,
   getScoreDataTypeIcon,
 } from "@/src/features/scores/lib/scoreColumns";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export function ScoreAnalytics(props: {
   className?: string;
@@ -35,6 +36,8 @@ export function ScoreAnalytics(props: {
   /** Shared hover-sync group so the per-score line charts join the dashboard crosshair. */
   syncId?: string;
 }) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   // Stale score selections in localStorage are ignored as we only show scores that exist in scoreAnalyticsOptions
   const [selectedDashboardScoreKeys, setSelectedDashboardScoreKeys] =
     useLocalStorage<string[]>(
@@ -66,8 +69,8 @@ export function ScoreAnalytics(props: {
   return (
     <DashboardCard
       className={props.className}
-      title="Scores Analytics"
-      description="Aggregate scores and averages over time"
+      title={tAuto("scores_analytics_9cabbf8")}
+      description={tAuto("aggregate_scores_and_averages_over_time_108d193")}
       isLoading={props.isLoading || scoreKeysAndProps.isPending}
       headerClassName="grid grid-cols-[1fr_auto_auto] items-center"
       headerChildren={
@@ -75,7 +78,7 @@ export function ScoreAnalytics(props: {
         !props.isLoading &&
         Boolean(scoreKeysAndProps.data?.scoreColumns.length) && (
           <MultiSelectKeyValues
-            placeholder="Search score..."
+            placeholder={tAuto("search_score_73c4a3a")}
             onValueChange={(values, changedValueId, selectedValueKeys) => {
               if (values.length === 0) setSelectedDashboardScoreKeys([]);
 
@@ -115,11 +118,15 @@ export function ScoreAnalytics(props: {
                   {/* aggregate */}
                   <div>
                     <div className="text-muted-foreground mb-2 text-sm">
-                      Total aggregate scores
+                      {tAutoI18n("total_aggregate_scores_cb737f9")}{" "}
                       {isNumericDataType(dataType) && (
                         // TODO: v2 histogram aggregates all rows server-side (no 10k cap).
                         // Make this tooltip conditional on metricsVersion.
-                        <DocPopup description="Aggregate of up to 10,000 scores" />
+                        <DocPopup
+                          description={tAuto(
+                            "aggregate_of_up_to_10_000_scores_ad816eb",
+                          )}
+                        />
                       )}
                     </div>
                     {isCategoricalDataType(dataType) && (
@@ -154,8 +161,8 @@ export function ScoreAnalytics(props: {
                   <div>
                     <div className="text-muted-foreground mb-2 text-sm">
                       {isNumericDataType(dataType)
-                        ? "Moving average over time"
-                        : "Scores over time"}
+                        ? tAutoI18n("moving_average_over_time_7dd5daf")
+                        : tAutoI18n("scores_over_time_7ff57fb")}
                     </div>
                     {isCategoricalDataType(dataType) && (
                       <CategoricalScoreChart
@@ -202,7 +209,7 @@ export function ScoreAnalytics(props: {
       ) : Boolean(scoreKeysAndProps.data?.scoreColumns.length) ? (
         <div className="flex min-h-36 w-full flex-1 items-center justify-center rounded-md border">
           <p className="text-muted-foreground">
-            Select a score to view analytics
+            {tAuto("select_a_score_to_view_analytics_f8de9c9")}{" "}
           </p>
         </div>
       ) : (

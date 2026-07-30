@@ -2,6 +2,29 @@ import { cn } from "@/src/utils/tailwind";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { type ParsedUrlQuery } from "querystring";
+import {
+  type AutoMessageKey,
+  useAutoTranslations,
+} from "@/src/features/i18n/I18nText";
+
+const tabLabelMessageKeys: Record<string, AutoMessageKey> = {
+  Analytics: "analytics_25bc962",
+  Charts: "charts_8610e3e",
+  Dashboards: "dashboards_197565b",
+  "Evaluator Library": "evaluator_library_nav_09d67ab",
+  Experiments: "experiments_e8f296b",
+  Item: "item_nav_7d74f63",
+  Items: "items_nav_8b78a60",
+  Metrics: "metrics_nav_19c76f4",
+  Observations: "observations_461ebaa",
+  Outputs: "outputs_nav_290839b",
+  Results: "results_612e12d",
+  "Running Evaluators": "running_evaluators_nav_b651d5f",
+  Scores: "scores_126cb93",
+  Traces: "traces_194e807",
+  Versions: "versions_a239107",
+  Widgets: "widgets_bf8a667",
+};
 
 export type TabDefinition = {
   value: string;
@@ -35,6 +58,7 @@ export const PageTabs = ({
   listClassName,
   scrollable = false,
 }: PageTabsProps) => {
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   return (
     <div className={cn(scrollable && "-mx-1 overflow-x-auto px-1", className)}>
@@ -45,6 +69,8 @@ export const PageTabs = ({
         )}
       >
         {tabs.map((tab) => {
+          const labelKey = tabLabelMessageKeys[tab.label];
+          const label = labelKey ? tAuto(labelKey) : tab.label;
           const tabClassName = cn(
             "hover:bg-muted/50 focus-visible:ring-ring text-muted-foreground font-bold inline-flex h-full items-center justify-center rounded-none border-b-4 border-transparent px-2 py-0.5 text-sm whitespace-nowrap transition-all focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-hidden",
             tab.value === activeTab
@@ -63,7 +89,7 @@ export const PageTabs = ({
                 className={tabClassName}
                 disabled={tab.disabled}
               >
-                {tab.label}
+                {label}
               </button>
             );
           }
@@ -77,7 +103,7 @@ export const PageTabs = ({
               }}
               className={tabClassName}
             >
-              {tab.label}
+              {label}
             </Link>
           );
         })}

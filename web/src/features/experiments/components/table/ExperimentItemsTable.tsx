@@ -64,6 +64,7 @@ import {
 import { DiffLabel } from "@/src/features/datasets/components/DiffLabel";
 import { computeScoreDiffs } from "@/src/features/datasets/lib/computeScoreDiffs";
 import { TablePeekViewExperimentItemDetail } from "@/src/components/table/peek/peek-experiment-item-detail";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const renderExperimentSpecificHeader = (label: string) => (
   <span className="text-muted-foreground">{label}</span>
@@ -249,6 +250,7 @@ export default function ExperimentItemsTable({
   projectId,
   hideControls = false,
 }: ExperimentItemsTableProps) {
+  const tAuto = useAutoTranslations();
   const { setDetailPageList } = useDetailPageLists();
   const [selectedRows, setSelectedRows] = useState<RowSelectionState>({});
   const [showRunEvaluationDialog, setShowRunEvaluationDialog] = useState(false);
@@ -661,7 +663,7 @@ export default function ExperimentItemsTable({
     {
       accessorKey: "itemId",
       id: "itemId",
-      header: "Item ID",
+      header: tAuto("item_id_bf1ebd4"),
       size: 150,
       enableHiding: true,
       cell: ({ row }) => {
@@ -819,7 +821,7 @@ export default function ExperimentItemsTable({
     {
       accessorKey: "input",
       id: "input",
-      header: "Input",
+      header: tAuto("input_b568d47"),
       size: 300,
       enableHiding: true,
       cell: ({ row }) => {
@@ -835,7 +837,7 @@ export default function ExperimentItemsTable({
     {
       accessorKey: "expectedOutput",
       id: "expectedOutput",
-      header: "Expected Output",
+      header: tAuto("expected_output_395c41e"),
       size: 300,
       enableHiding: true,
       cell: ({ row }) => {
@@ -852,7 +854,7 @@ export default function ExperimentItemsTable({
     {
       accessorKey: "output",
       id: "output",
-      header: "Output",
+      header: tAuto("output_4bed336"),
       size: 300,
       enableHiding: true,
       cell: ({ row }) => {
@@ -870,7 +872,7 @@ export default function ExperimentItemsTable({
     },
     {
       accessorKey: "observationScores",
-      header: "Observation Scores",
+      header: tAuto("observation_scores_b5b5535"),
       id: "observationScores",
       enableHiding: true,
       defaultHidden: true,
@@ -883,7 +885,7 @@ export default function ExperimentItemsTable({
     },
     {
       accessorKey: "traceScores",
-      header: "Trace Scores",
+      header: tAuto("trace_scores_991110a"),
       id: "traceScores",
       enableHiding: true,
       defaultHidden: true,
@@ -1049,8 +1051,8 @@ export default function ExperimentItemsTable({
         {
           id: ActionId.ObservationBatchEvaluation,
           type: BatchActionType.Create,
-          label: "Evaluate",
-          description: "Run evaluators on selected items",
+          label: tAuto("evaluate_d713258"),
+          description: tAuto("run_evaluators_on_selected_items_bcefccd"),
           icon: <LightbulbIcon className="h-4 w-4 sm:mr-2" />,
           customDialog: true,
           accessCheck: {
@@ -1169,7 +1171,7 @@ export default function ExperimentItemsTable({
               ) : (
                 <div className="flex flex-1 items-center justify-center">
                   <span className="text-muted-foreground text-sm">
-                    Please select a baseline experiment.
+                    {tAuto("please_select_a_baseline_experiment_7b999c8")}{" "}
                   </span>
                 </div>
               )
@@ -1194,7 +1196,9 @@ export default function ExperimentItemsTable({
                 noResultsMessage={
                   !hasSelectedRuns ? (
                     <span className="text-muted-foreground text-sm">
-                      Please select a baseline experiment.
+                      {tAuto(
+                        "please_select_a_baseline_experiment_7b999c8",
+                      )}{" "}
                     </span>
                   ) : undefined
                 }

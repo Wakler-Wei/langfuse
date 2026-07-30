@@ -22,6 +22,7 @@ import {
 } from "./chat-message-utils";
 import { ThinkingBlock, RedactedThinkingBlock } from "./ThinkingBlock";
 import { type IOPreviewContentMode } from "../IOPreview";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 // View mode for pretty/json toggle
 export type ViewMode = "pretty" | "json";
@@ -53,6 +54,7 @@ export function ChatMessage({
   isOutputMessage,
   contentMode = "all",
 }: ChatMessageProps) {
+  const tAuto = useAutoTranslations();
   const [showTableView, setShowTableView] = useState(false);
 
   const title = getMessageTitle(message);
@@ -71,7 +73,9 @@ export function ChatMessage({
         size="icon-xs"
         onClick={() => setShowTableView((v) => !v)}
         title={
-          showTableView ? "Show formatted view" : "Show passthrough JSON data"
+          showTableView
+            ? tAuto("show_formatted_view_d28dafd")
+            : tAuto("show_passthrough_json_data_c9cce83")
         }
         className="hover:bg-border -mr-2"
       >
@@ -95,7 +99,7 @@ export function ChatMessage({
         </div>
         <div style={{ display: shouldRenderMarkdown ? "none" : "block" }}>
           <PrettyJsonView
-            title="Placeholder"
+            title={tAuto("placeholder_ed212fa")}
             json={message.name || "Unnamed placeholder"}
             currentView={currentView}
           />
@@ -109,7 +113,10 @@ export function ChatMessage({
     return (
       <div className="hover:bg-muted transition-colors">
         <PrettyJsonView
-          title={title || (isOutputMessage ? "Output" : "Input")}
+          title={
+            title ||
+            (isOutputMessage ? tAuto("output_4bed336") : tAuto("input_b568d47"))
+          }
           json={message.json}
           currentView={currentView}
         />
@@ -231,7 +238,10 @@ export function ChatMessage({
     return (
       <div className="hover:bg-muted transition-colors">
         <PrettyJsonView
-          title={title || (isOutputMessage ? "Output" : "Input")}
+          title={
+            title ||
+            (isOutputMessage ? tAuto("output_4bed336") : tAuto("input_b568d47"))
+          }
           json={message}
           currentView={currentView}
         />

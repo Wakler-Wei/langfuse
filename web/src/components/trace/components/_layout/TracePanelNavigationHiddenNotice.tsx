@@ -13,8 +13,11 @@
 import { ObservationLevel } from "@langfuse/shared";
 import { useTraceData } from "../../contexts/TraceDataContext";
 import { useViewPreferences } from "../../contexts/ViewPreferencesContext";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export function TracePanelNavigationHiddenNotice() {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const { hiddenObservationsCount } = useTraceData();
   const { minObservationLevel, setMinObservationLevel } = useViewPreferences();
 
@@ -31,8 +34,9 @@ export function TracePanelNavigationHiddenNotice() {
     <div className="flex shrink-0 items-center justify-end gap-1 border-b px-4 py-1">
       <span className="text-muted-foreground flex flex-col gap-1 text-xs sm:flex-row">
         <p>
-          {hiddenObservationsCount} hidden observations below{" "}
-          {minObservationLevel} level.
+          {hiddenObservationsCount}{" "}
+          {tAutoI18n("hidden_observations_below_ac28693")} {minObservationLevel}{" "}
+          {tAutoI18n("level_acf5be0")}{" "}
         </p>
         <p
           className="cursor-pointer underline"
@@ -45,7 +49,7 @@ export function TracePanelNavigationHiddenNotice() {
             }
           }}
         >
-          Show all
+          {tAuto("show_all_50a279d")}{" "}
         </p>
       </span>
     </div>

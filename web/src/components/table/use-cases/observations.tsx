@@ -105,6 +105,7 @@ import {
   useObservationsTableStore,
 } from "@/src/features/tracing-tables/observations/ObservationsTableStoreProvider";
 import { useObservationsTableView } from "@/src/features/tracing-tables/observations/useObservationsTableView";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export type ObservationsTableRow = {
   // Shown by default
@@ -183,6 +184,7 @@ export default function ObservationsTable({
   limitRows,
   showControlsInPageHeader = false,
 }: ObservationsTableProps) {
+  const tAuto = useAutoTranslations();
   const peekContext = usePeekTableState();
 
   const observationsFilterConfig = useMemo(
@@ -577,8 +579,11 @@ export default function ObservationsTable({
   const addToQueueMutation = api.annotationQueueItems.createMany.useMutation({
     onSuccess: (data) => {
       showSuccessToast({
-        title: "Observations added to queue",
-        description: `Selected observations will be added to queue "${data.queueName}". This may take a minute.`,
+        title: tAuto("observations_added_to_queue_bd02d27"),
+        description: tAuto(
+          "selected_observations_will_be_added_to_queue_value0__c8a57b2",
+          { value0: data.queueName ?? "" },
+        ),
         link: {
           href: `/project/${projectId}/annotation-queues/${data.queueId}`,
           text: `View queue "${data.queueName}"`,
@@ -653,8 +658,10 @@ export default function ObservationsTable({
     {
       id: ActionId.ObservationAddToAnnotationQueue,
       type: BatchActionType.Create,
-      label: "Add to Annotation Queue",
-      description: "Add selected observations to an annotation queue.",
+      label: tAuto("add_to_annotation_queue_adf3e2c"),
+      description: tAuto(
+        "add_selected_observations_to_an_annotation_queue_9149d35",
+      ),
       targetLabel: "Annotation Queue",
       execute: handleAddToAnnotationQueue,
       accessCheck: {
@@ -664,8 +671,8 @@ export default function ObservationsTable({
     {
       id: ActionId.ObservationAddToDataset,
       type: BatchActionType.Create,
-      label: "Add to Dataset",
-      description: "Add selected observations to a dataset",
+      label: tAuto("add_to_dataset_355f66d"),
+      description: tAuto("add_selected_observations_to_a_dataset_bb57cb9"),
       customDialog: true,
       accessCheck: {
         scope: "datasets:CUD",
@@ -680,7 +687,7 @@ export default function ObservationsTable({
     {
       accessorKey: "startTime",
       id: "startTime",
-      header: "Start Time",
+      header: tAuto("start_time_41c1074"),
       size: 150,
       enableHiding: true,
       enableSorting,
@@ -692,7 +699,7 @@ export default function ObservationsTable({
     {
       accessorKey: "type",
       id: "type",
-      header: "Type",
+      header: tAuto("type_3deb745"),
       size: 50,
       loadingCell: <TableIconBadgeLoadingCell />,
       enableSorting,
@@ -708,7 +715,7 @@ export default function ObservationsTable({
     {
       accessorKey: "name",
       id: "name",
-      header: "Name",
+      header: tAuto("name_709a232"),
       size: 150,
       enableSorting,
       cell: ({ row }) => {
@@ -718,7 +725,7 @@ export default function ObservationsTable({
     },
     {
       accessorKey: "input",
-      header: "Input",
+      header: tAuto("input_b568d47"),
       id: "input",
       size: 300,
       loadingCell: () => (
@@ -748,7 +755,7 @@ export default function ObservationsTable({
     {
       accessorKey: "output",
       id: "output",
-      header: "Output",
+      header: tAuto("output_4bed336"),
       size: 300,
       loadingCell: () => (
         <MemoizedIOTableCell
@@ -777,11 +784,12 @@ export default function ObservationsTable({
     {
       accessorKey: "level",
       id: "level",
-      header: "Level",
+      header: tAuto("level_7c7f5d0"),
       size: 100,
       headerTooltip: {
-        description:
-          "You can differentiate the importance of observations with the level attribute to control the verbosity of your traces and highlight errors and warnings.",
+        description: tAuto(
+          "you_can_differentiate_the_importance_of_observations_bb16803",
+        ),
         href: "https://langfuse.com/docs/observability/features/log-levels",
       },
       enableHiding: true,
@@ -803,12 +811,13 @@ export default function ObservationsTable({
     },
     {
       accessorKey: "statusMessage",
-      header: "Status Message",
+      header: tAuto("status_message_54a7e49"),
       id: "statusMessage",
       size: 150,
       headerTooltip: {
-        description:
-          "Use a statusMessage to e.g. provide additional information on a status such as level=ERROR.",
+        description: tAuto(
+          "use_a_statusmessage_to_e_g_provide_additional_inform_1fc7233",
+        ),
         href: "https://langfuse.com/docs/observability/features/log-levels",
       },
       enableHiding: true,
@@ -817,7 +826,7 @@ export default function ObservationsTable({
     {
       accessorKey: "latency",
       id: "latency",
-      header: "Latency",
+      header: tAuto("latency_3e39972"),
       size: 100,
       cell: ({ row }) => {
         const latency: number | undefined = row.getValue("latency");
@@ -830,7 +839,7 @@ export default function ObservationsTable({
     },
     {
       accessorKey: "totalCost",
-      header: "Total Cost",
+      header: tAuto("total_cost_b5d8da4"),
       id: "totalCost",
       size: 120,
       cell: ({ row }) => {
@@ -855,7 +864,7 @@ export default function ObservationsTable({
     {
       accessorKey: "toolDefinitions",
       id: "toolDefinitions",
-      header: "Available Tools",
+      header: tAuto("available_tools_461733c"),
       size: 120,
       enableHiding: true,
       enableSorting,
@@ -870,7 +879,7 @@ export default function ObservationsTable({
     {
       accessorKey: "toolCalls",
       id: "toolCalls",
-      header: "Tool Calls",
+      header: tAuto("tool_calls_55d2eca"),
       size: 100,
       enableHiding: true,
       enableSorting,
@@ -885,7 +894,7 @@ export default function ObservationsTable({
     {
       accessorKey: "timeToFirstToken",
       id: "timeToFirstToken",
-      header: "Time to First Token",
+      header: tAuto("time_to_first_token_e001937"),
       size: 150,
       enableHiding: true,
       enableSorting,
@@ -902,7 +911,7 @@ export default function ObservationsTable({
     },
     {
       accessorKey: "tokens",
-      header: "Tokens",
+      header: tAuto("tokens_c38c6c1"),
       id: "tokens",
       size: 150,
       cell: ({ row }) => {
@@ -932,7 +941,7 @@ export default function ObservationsTable({
     {
       accessorKey: "model",
       id: "model",
-      header: "Model",
+      header: tAuto("model_68c2cc7"),
       size: 150,
       enableHiding: true,
       enableSorting,
@@ -953,9 +962,11 @@ export default function ObservationsTable({
     {
       accessorKey: "promptName",
       id: "promptName",
-      header: "Prompt",
+      header: tAuto("prompt_a817d7e"),
       headerTooltip: {
-        description: "Link to prompt version in Langfuse prompt management.",
+        description: tAuto(
+          "link_to_prompt_version_in_langfuse_prompt_management_f3fa0d5",
+        ),
         href: "https://langfuse.com/docs/prompt-management/get-started",
       },
       size: 200,
@@ -970,7 +981,7 @@ export default function ObservationsTable({
     },
     {
       accessorKey: "environment",
-      header: "Environment",
+      header: tAuto("environment_d443a11"),
       id: "environment",
       size: 150,
       enableHiding: true,
@@ -992,7 +1003,7 @@ export default function ObservationsTable({
     {
       accessorKey: "traceTags",
       id: "traceTags",
-      header: "Trace Tags",
+      header: tAuto("trace_tags_dbf3614"),
       size: 250,
       enableHiding: true,
       loadingCell: <TableTextLoadingCell />,
@@ -1015,7 +1026,7 @@ export default function ObservationsTable({
     },
     {
       accessorKey: "metadata",
-      header: "Metadata",
+      header: tAuto("metadata_251edc0"),
       size: 300,
       loadingCell: () => (
         <MemoizedIOTableCell
@@ -1025,7 +1036,9 @@ export default function ObservationsTable({
         />
       ),
       headerTooltip: {
-        description: "Add metadata to traces to track additional information.",
+        description: tAuto(
+          "add_metadata_to_traces_to_track_additional_informati_8f0aa49",
+        ),
         href: "https://langfuse.com/docs/observability/features/metadata",
       },
       cell: ({ row }) => {
@@ -1046,7 +1059,7 @@ export default function ObservationsTable({
     },
     {
       accessorKey: "scores",
-      header: "Scores",
+      header: tAuto("scores_126cb93"),
       id: "scores",
       enableHiding: true,
       defaultHidden: true,
@@ -1058,7 +1071,7 @@ export default function ObservationsTable({
     {
       accessorKey: "endTime",
       id: "endTime",
-      header: "End Time",
+      header: tAuto("end_time_4c640e9"),
       size: 150,
       enableHiding: true,
       enableSorting,
@@ -1071,7 +1084,7 @@ export default function ObservationsTable({
     {
       accessorKey: "id",
       id: "id",
-      header: "ObservationID",
+      header: tAuto("observationid_1883bcb"),
       size: 100,
       defaultHidden: true,
       enableSorting,
@@ -1088,7 +1101,7 @@ export default function ObservationsTable({
     {
       accessorKey: "traceName",
       id: "traceName",
-      header: "Trace Name",
+      header: tAuto("trace_name_75b86b0"),
       size: 150,
       enableHiding: true,
       enableSorting,
@@ -1097,7 +1110,7 @@ export default function ObservationsTable({
     {
       accessorKey: "traceId",
       id: "traceId",
-      header: "Trace ID",
+      header: tAuto("trace_id_976f74b"),
       size: 100,
       cell: ({ row }) => {
         const value = row.getValue("traceId");
@@ -1112,7 +1125,7 @@ export default function ObservationsTable({
     {
       accessorKey: "modelId",
       id: "modelId",
-      header: "Model ID",
+      header: tAuto("model_id_c7eb22a"),
       size: 100,
       enableHiding: true,
       defaultHidden: true,
@@ -1120,10 +1133,10 @@ export default function ObservationsTable({
     {
       accessorKey: "version",
       id: "version",
-      header: "Version",
+      header: tAuto("version_2da600b"),
       size: 100,
       headerTooltip: {
-        description: "Track changes via the version tag.",
+        description: tAuto("track_changes_via_the_version_tag_bbe1448"),
         href: "https://langfuse.com/docs/experimentation",
       },
       enableHiding: true,
@@ -1132,7 +1145,7 @@ export default function ObservationsTable({
     },
     {
       accessorKey: "usage",
-      header: "Usage",
+      header: tAuto("usage_0bb1864"),
       id: "usage",
       enableHiding: true,
       defaultHidden: true,
@@ -1143,7 +1156,7 @@ export default function ObservationsTable({
         {
           accessorKey: "tokensPerSecond",
           id: "tokensPerSecond",
-          header: "Tokens per second",
+          header: tAuto("tokens_per_second_855cdaa"),
           size: 200,
           cell: ({ row }) => {
             const latency: number | undefined = row.getValue("latency");
@@ -1168,7 +1181,7 @@ export default function ObservationsTable({
         {
           accessorKey: "inputTokens",
           id: "inputTokens",
-          header: "Input Tokens",
+          header: tAuto("input_tokens_8add24d"),
           size: 100,
           loadingCell: <TableTextLoadingCell />,
           enableHiding: true,
@@ -1186,7 +1199,7 @@ export default function ObservationsTable({
         {
           accessorKey: "outputTokens",
           id: "outputTokens",
-          header: "Output Tokens",
+          header: tAuto("output_tokens_878afed"),
           size: 100,
           loadingCell: <TableTextLoadingCell />,
           enableHiding: true,
@@ -1204,7 +1217,7 @@ export default function ObservationsTable({
         {
           accessorKey: "totalTokens",
           id: "totalTokens",
-          header: "Total Tokens",
+          header: tAuto("total_tokens_b662ff2"),
           size: 100,
           loadingCell: <TableTextLoadingCell />,
           enableHiding: true,
@@ -1223,7 +1236,7 @@ export default function ObservationsTable({
     },
     {
       accessorKey: "cost",
-      header: "Cost",
+      header: tAuto("cost_64ae43e"),
       id: "cost",
       enableHiding: true,
       defaultHidden: true,
@@ -1234,7 +1247,7 @@ export default function ObservationsTable({
         {
           accessorKey: "inputCost",
           id: "inputCost",
-          header: "Input Cost",
+          header: tAuto("input_cost_26bd4e9"),
           size: 120,
           loadingCell: <TableTextLoadingCell />,
           cell: ({ row }) => {
@@ -1254,7 +1267,7 @@ export default function ObservationsTable({
         {
           accessorKey: "outputCost",
           id: "outputCost",
-          header: "Output Cost",
+          header: tAuto("output_cost_5b10194"),
           size: 120,
           loadingCell: <TableTextLoadingCell />,
           cell: ({ row }) => {

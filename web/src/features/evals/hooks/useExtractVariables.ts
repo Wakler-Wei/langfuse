@@ -7,6 +7,7 @@ import {
   extractValueFromObjectAsString,
 } from "@langfuse/shared";
 import { useEffect, useState, useRef } from "react";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 /**
  * Helper function to find an observation by name in the trace data
@@ -53,6 +54,7 @@ export function useExtractVariables({
   previewData: PreviewData;
   isLoading: boolean;
 }) {
+  const tAuto = useAutoTranslations();
   const utils = api.useUtils();
   const [extractedVariables, setExtractedVariables] = useState<
     ExtractedVariable[]
@@ -77,10 +79,10 @@ export function useExtractVariables({
     if (!extractionError) return;
     const title =
       extractionError.kind === "jsonPath"
-        ? "Invalid JSONPath in variable mapping"
-        : "Failed to extract variable";
+        ? tAuto("invalid_jsonpath_in_variable_mapping_adfca2e")
+        : tAuto("failed_to_extract_variable_1bab031");
     showErrorToast(title, extractionError.message, "WARNING");
-  }, [extractionError]);
+  }, [extractionError, tAuto]);
 
   useEffect(() => {
     // Return early conditions

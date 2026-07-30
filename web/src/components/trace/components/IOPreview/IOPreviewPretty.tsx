@@ -16,6 +16,7 @@ import {
 } from "./IOPreview";
 import { CorrectedOutputField } from "./components/CorrectedOutputField";
 import { isOnlyJsonMessage } from "./components/chat-message-utils";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 interface JsonInputOutputViewProps {
   parsedInput: unknown;
@@ -50,6 +51,7 @@ function JsonInputOutputView({
   onInputExpansionChange,
   onOutputExpansionChange,
 }: JsonInputOutputViewProps) {
+  const tAuto = useAutoTranslations();
   const showInput = !hideInput && !(hideIfNull && !parsedInput);
   const showOutput = !hideOutput && !(hideIfNull && !parsedOutput);
 
@@ -57,7 +59,7 @@ function JsonInputOutputView({
     <div className="[&_.io-message-content]:px-2 [&_.io-message-header]:px-2">
       {showInput && (
         <PrettyJsonView
-          title="Input"
+          title={tAuto("input_b568d47")}
           json={parsedInput ?? null}
           isLoading={isLoading}
           isParsing={isParsing}
@@ -69,7 +71,7 @@ function JsonInputOutputView({
       )}
       {showOutput && (
         <PrettyJsonView
-          title="Output"
+          title={tAuto("output_4bed336")}
           json={parsedOutput}
           isLoading={isLoading}
           isParsing={isParsing}
@@ -154,6 +156,7 @@ export function IOPreviewPretty({
   contentMode = "all",
   showSystemPrompt,
 }: IOPreviewPrettyProps) {
+  const tAuto = useAutoTranslations();
   // Use pre-parsed data if available (from useParsedObservation hook),
   // otherwise parse with size/depth limits to prevent UI freeze
   // IMPORTANT: Don't parse while isParsing=true to avoid double-parsing with different object references
@@ -325,7 +328,7 @@ export function IOPreviewPretty({
       {showData && shouldShowMetadata && (
         <div className="[&_.io-message-content]:px-2 [&_.io-message-header]:px-2">
           <PrettyJsonView
-            title="Metadata"
+            title={tAuto("metadata_251edc0")}
             json={parsedMetadata}
             isLoading={isLoading}
             isParsing={isParsing}

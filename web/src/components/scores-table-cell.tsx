@@ -18,6 +18,7 @@ import { Skeleton } from "@/src/components/ui/skeleton";
 import React from "react";
 import { copyTextToClipboard } from "@/src/utils/clipboard";
 import { Button } from "@/src/components/ui/button";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const COLOR_MAP = new Map([
   ["True", "bg-light-green p-0.5 text-dark-green"],
@@ -56,6 +57,7 @@ export const ScoresTableCell = ({
   wrap?: boolean;
   hasMetadata?: boolean;
 }) => {
+  const tAuto = useAutoTranslations();
   const projectId = useProjectIdFromURL();
   const [copied, setCopied] = React.useState(false);
 
@@ -96,7 +98,11 @@ export const ScoresTableCell = ({
                   variant="ghost"
                   size="icon-xs"
                   className="hover:bg-accent rounded p-1"
-                  aria-label={copied ? "Copied" : "Copy to clipboard"}
+                  aria-label={
+                    copied
+                      ? tAuto("copied_8e3df45")
+                      : tAuto("copy_to_clipboard_d8f482e")
+                  }
                 >
                   {copied ? (
                     <Check className="h-3 w-3" />

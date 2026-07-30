@@ -8,6 +8,7 @@
 import Link from "next/link";
 import { ExternalLinkIcon } from "lucide-react";
 import { Badge } from "@/src/components/ui/badge";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export function SessionBadge({
   sessionId,
@@ -92,16 +93,31 @@ export function EnvironmentBadge({
 }: {
   environment: string | null;
 }) {
+  const tAuto = useAutoTranslations();
   if (!environment) return null;
-  return <Badge variant="tertiary">Env: {environment}</Badge>;
+  return (
+    <Badge variant="tertiary">
+      {tAuto("env_9b9526d")} {environment}
+    </Badge>
+  );
 }
 
 export function ReleaseBadge({ release }: { release: string | null }) {
+  const tAuto = useAutoTranslations();
   if (!release) return null;
-  return <Badge variant="tertiary">Release: {release}</Badge>;
+  return (
+    <Badge variant="tertiary">
+      {tAuto("release_c720e68")} {release}
+    </Badge>
+  );
 }
 
 export function VersionBadge({ version }: { version: string | null }) {
+  const tAuto = useAutoTranslations();
   if (!version) return null;
-  return <Badge variant="tertiary">Version: {version}</Badge>;
+  return (
+    <Badge variant="tertiary">
+      {tAuto("version_9f49127")} {version}
+    </Badge>
+  );
 }

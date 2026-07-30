@@ -16,6 +16,7 @@ import {
 import { copyTextToClipboard } from "@/src/utils/clipboard";
 import { type ObservationType } from "@langfuse/shared";
 import { WebCalloutMenuItem } from "@/src/features/web-callouts/components/WebCalloutMenuItem";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type IdItem = {
   name: string;
@@ -41,6 +42,8 @@ export function DetailHeaderActionsMenu({
   spanName,
   webCallout,
 }: DetailHeaderActionsMenuProps) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
@@ -68,16 +71,20 @@ export function DetailHeaderActionsMenu({
       })
     : null;
 
-  const filterTypeLabel = observationType ? `type:${observationType}` : null;
+  const filterTypeLabel = observationType
+    ? tAutoI18n("type_value0_1d6b578", {
+        value0: String((observationType as unknown) ?? ""),
+      })
+    : null;
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
-          aria-label="Options"
+          aria-label={tAuto("options_6bf5da9")}
           className="mt-0.5 shrink-0"
           size="icon-xs"
-          title="Options"
+          title={tAuto("options_6bf5da9")}
           variant="ghost"
         >
           <EllipsisVertical className="h-4 w-4" />
@@ -103,7 +110,11 @@ export function DetailHeaderActionsMenu({
                 onSelect={() => router.push(href)}
               >
                 <span className="max-w-[260px] truncate" title={spanName}>
-                  filter by <span className="font-bold">name:{spanName}</span>
+                  {tAuto("filter_by_30e7189")}{" "}
+                  <span className="font-bold">
+                    {tAutoI18n("name_0927875")}
+                    {spanName}
+                  </span>
                 </span>
               </DropdownMenuItem>
             )}
@@ -116,7 +127,8 @@ export function DetailHeaderActionsMenu({
                   className="max-w-[260px] truncate"
                   title={filterTypeLabel}
                 >
-                  filter by <span className="font-bold">{filterTypeLabel}</span>
+                  {tAuto("filter_by_30e7189")}{" "}
+                  <span className="font-bold">{filterTypeLabel}</span>
                 </span>
               </DropdownMenuItem>
             )}
@@ -135,7 +147,7 @@ export function DetailHeaderActionsMenu({
               <CopyIcon className="mr-2 h-4 w-4" />
             )}
             <span className="max-w-[260px] truncate" title={item.id}>
-              Copy {item.name}
+              {tAutoI18n("copy_af74f7c")} {item.name}
             </span>
           </DropdownMenuItem>
         ))}

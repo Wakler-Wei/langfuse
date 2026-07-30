@@ -37,6 +37,7 @@ import {
   PRODUCTION_LABEL,
   PromptLabelSchema,
 } from "@langfuse/shared";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const AddLabelFormSchema = z.object({
   label: PromptLabelSchema,
@@ -49,6 +50,7 @@ export default function ProtectedLabelsSettings({
 }: {
   projectId: string;
 }) {
+  const tAuto = useAutoTranslations();
   const hasAccess = useHasProjectAccess({
     projectId,
     scope: "promptProtectedLabels:CUD",
@@ -108,12 +110,12 @@ export default function ProtectedLabelsSettings({
 
   return (
     <div>
-      <Header title="Protected Prompt Labels" />
+      <Header title={tAuto("protected_prompt_labels_b2fccc6")} />
       <Card className="mb-4 p-3">
         <p className="text-primary mb-4 text-sm">
-          Protected labels can only be modified by users with admin or owner
-          access. This prevents other users from changing or removing these
-          labels from prompts.
+          {tAuto(
+            "protected_labels_can_only_be_modified_by_users_with__ccd3728",
+          )}{" "}
         </p>
         <div className="mb-4 flex flex-wrap gap-2">
           {protectedLabels.map((label) => (
@@ -175,12 +177,16 @@ export default function ProtectedLabelsSettings({
                     <PopoverContent className="w-full p-0">
                       <Command>
                         <CommandInput
-                          placeholder="Search or enter a new label..."
+                          placeholder={tAuto(
+                            "search_or_enter_a_new_label_05096d9",
+                          )}
                           onValueChange={(value) => {
                             field.onChange(value);
                           }}
                         />
-                        <CommandEmpty>No label found</CommandEmpty>
+                        <CommandEmpty>
+                          {tAuto("no_label_found_87bfbb6")}
+                        </CommandEmpty>
                         <CommandGroup>
                           {availableLabels.map((label) => (
                             <CommandItem
@@ -217,7 +223,7 @@ export default function ProtectedLabelsSettings({
               hasAccess={hasAccess}
               hasEntitlement={hasEntitlement}
             >
-              Add
+              {tAuto("add_61cc55a")}{" "}
             </ActionButton>
           </form>
         </Form>

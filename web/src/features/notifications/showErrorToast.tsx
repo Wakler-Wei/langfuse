@@ -12,8 +12,8 @@ const toastWarningStyleProps = {
 };
 
 export const showErrorToast = (
-  error: string,
-  description: string,
+  error: React.ReactNode,
+  description: React.ReactNode,
   type: "WARNING" | "ERROR" = "ERROR",
   path?: string,
 ) => {

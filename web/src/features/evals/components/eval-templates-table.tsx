@@ -59,6 +59,7 @@ import {
   shouldShowEvalTemplate,
 } from "@/src/features/evals/utils/code-eval-template-utils";
 import { SiPython, SiTypescript } from "react-icons/si";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export type EvalsTemplateRow = {
   name: string;
@@ -95,6 +96,7 @@ const TemplateTypeBadge = ({
   type?: EvalTemplateType;
   sourceCodeLanguage?: EvalTemplate["sourceCodeLanguage"];
 }) => {
+  const tAuto = useAutoTranslations();
   if (type === EvalTemplateType.CODE) {
     const label = getCodeEvalLanguageLabel(sourceCodeLanguage);
     const Icon =
@@ -114,7 +116,7 @@ const TemplateTypeBadge = ({
 
   return (
     <Badge className="w-fit gap-1.5" variant="outline-solid">
-      LLM-as-judge
+      {tAuto("llm_as_judge_6eb5542")}{" "}
     </Badge>
   );
 };
@@ -149,6 +151,7 @@ const EvalTemplateRowActionsMenu = ({
   onEdit: () => void;
   onClone: () => void;
 }) => {
+  const tAuto = useAutoTranslations();
   // undefined = never opened: keeps the dialog unmounted for untouched rows,
   // while close (false) keeps it mounted so the exit animation can play.
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>();
@@ -163,16 +166,22 @@ const EvalTemplateRowActionsMenu = ({
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="icon-xs" aria-label="actions">
-            <span className="sr-only relative">Open menu</span>
+          <Button
+            variant="ghost"
+            size="icon-xs"
+            aria-label={tAuto("actions_326b426")}
+          >
+            <span className="sr-only relative">
+              {tAuto("open_menu_197101e")}
+            </span>
             <MoreVertical className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          <DropdownMenuLabel>{tAuto("actions_c3cd636")}</DropdownMenuLabel>
           {showClone ? (
             <DropdownMenuItem
-              aria-label="clone"
+              aria-label={tAuto("clone_5e00723")}
               disabled={!hasAccess}
               onClick={(e) => {
                 e.stopPropagation();
@@ -180,13 +189,13 @@ const EvalTemplateRowActionsMenu = ({
               }}
             >
               <Copy className="mr-2 h-4 w-4" />
-              Clone
+              {tAuto("clone_d8cdb57")}{" "}
             </DropdownMenuItem>
           ) : null}
           {showEditAndDelete ? (
             <>
               <DropdownMenuItem
-                aria-label="edit"
+                aria-label={tAuto("edit_9ead47a")}
                 disabled={!hasAccess}
                 onClick={(e) => {
                   e.stopPropagation();
@@ -194,10 +203,10 @@ const EvalTemplateRowActionsMenu = ({
                 }}
               >
                 <Pen className="mr-2 h-4 w-4" />
-                Edit
+                {tAuto("edit_5301648")}{" "}
               </DropdownMenuItem>
               <DropdownMenuItem
-                aria-label="delete"
+                aria-label={tAuto("delete_9485989")}
                 disabled={!hasTemplateWriteAccess}
                 onClick={(e) => {
                   e.stopPropagation();
@@ -208,7 +217,7 @@ const EvalTemplateRowActionsMenu = ({
                 }}
               >
                 <Trash className="mr-2 h-4 w-4" />
-                Delete
+                {tAuto("delete_f6fdbe4")}{" "}
               </DropdownMenuItem>
             </>
           ) : null}
@@ -239,6 +248,8 @@ export default function EvalsTemplateTable({
 }: {
   projectId: string;
 }) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const codeEvalCapabilities = useIsCodeEvalEnabled();
   const { enabled: isCodeEvalEnabled, supportedSourceCodeLanguages } =
@@ -321,13 +332,17 @@ export default function EvalsTemplateTable({
       setPendingCloneSubmission(null);
       setShowReferenceUpdateDialog(false);
       showSuccessToast({
-        title: "Evaluator cloned successfully",
-        description:
-          "This evaluator is now available and maintained on project level.",
+        title: tAuto("evaluator_cloned_successfully_c4e8364"),
+        description: tAuto(
+          "this_evaluator_is_now_available_and_maintained_on_pr_5228552",
+        ),
       });
     },
     onError: (error) => {
-      showErrorToast("Error cloning evaluator", error.message);
+      showErrorToast(
+        tAutoI18n("error_cloning_evaluator_9869475"),
+        error.message,
+      );
     },
   });
 
@@ -367,7 +382,7 @@ export default function EvalsTemplateTable({
 
   const columns = [
     columnHelper.accessor("name", {
-      header: "Name",
+      header: tAuto("name_709a232"),
       id: "name",
       cell: (row) => {
         const name = row.getValue();
@@ -376,7 +391,7 @@ export default function EvalsTemplateTable({
     }),
     columnHelper.accessor("type", {
       id: "type",
-      header: "Type",
+      header: tAuto("type_3deb745"),
       size: 120,
       cell: ({ row }) => (
         <TemplateTypeBadge
@@ -387,7 +402,7 @@ export default function EvalsTemplateTable({
     }),
     columnHelper.accessor("resultType", {
       id: "resultType",
-      header: "Score Result Type",
+      header: tAuto("score_result_type_20fe753"),
       size: 120,
       cell: (row) => {
         const resultType = row.getValue();
@@ -401,7 +416,7 @@ export default function EvalsTemplateTable({
     }),
     columnHelper.accessor("maintainer", {
       id: "maintainer",
-      header: "Maintainer",
+      header: tAuto("maintainer_597dbcc"),
       size: 150,
       cell: (row) => {
         return (
@@ -415,7 +430,7 @@ export default function EvalsTemplateTable({
       },
     }),
     columnHelper.accessor("latestCreatedAt", {
-      header: "Last Edited",
+      header: tAuto("last_edited_0c79adc"),
       id: "latestCreatedAt",
       size: 80,
       cell: (row) => {
@@ -423,7 +438,7 @@ export default function EvalsTemplateTable({
       },
     }),
     columnHelper.accessor("usageCount", {
-      header: "Usage Count",
+      header: tAuto("usage_count_0cf211b"),
       id: "usageCount",
       enableHiding: true,
       size: 80,
@@ -433,7 +448,7 @@ export default function EvalsTemplateTable({
       },
     }),
     columnHelper.accessor("latestVersion", {
-      header: "Latest Version",
+      header: tAuto("latest_version_2a2e9c3"),
       id: "latestVersion",
       enableHiding: true,
       size: 80,
@@ -442,7 +457,7 @@ export default function EvalsTemplateTable({
       },
     }),
     columnHelper.accessor("id", {
-      header: "Id",
+      header: tAuto("id_474ae52"),
       id: "id",
       size: 100,
       enableHiding: true,
@@ -452,7 +467,7 @@ export default function EvalsTemplateTable({
       },
     }),
     columnHelper.accessor("actions", {
-      header: "Actions",
+      header: tAuto("actions_c3cd636"),
       id: "actions",
       size: 100,
       cell: ({ row }) => {
@@ -467,11 +482,13 @@ export default function EvalsTemplateTable({
             <ActionButton
               variant="outline"
               size="sm"
-              aria-label="apply"
+              aria-label={tAuto("apply_69f45da")}
               disabled={isInvalid}
               title={
                 isInvalid
-                  ? "Evaluator requires project-level evaluation model. Set it up and start running evaluations."
+                  ? tAuto(
+                      "evaluator_requires_project_level_evaluation_model_se_81e6340",
+                    )
                   : undefined
               }
               hasAccess={hasAccess}
@@ -492,7 +509,7 @@ export default function EvalsTemplateTable({
                 }
               }}
             >
-              Use Evaluator
+              {tAuto("use_evaluator_b538833")}{" "}
             </ActionButton>
             {hasMenuItems && id ? (
               <EvalTemplateRowActionsMenu
@@ -636,7 +653,7 @@ export default function EvalsTemplateTable({
           }
         >
           <DialogHeader>
-            <DialogTitle>Edit evaluator</DialogTitle>
+            <DialogTitle>{tAuto("edit_evaluator_83945d9")}</DialogTitle>
           </DialogHeader>
           <EvalTemplateForm
             projectId={projectId}
@@ -648,8 +665,8 @@ export default function EvalsTemplateTable({
               setEditTemplateId(null);
               utils.evals.templateNames.invalidate();
               showSuccessToast({
-                title: "Evaluator updated successfully",
-                description: "You can now use this evaluator.",
+                title: tAuto("evaluator_updated_successfully_890acc5"),
+                description: tAuto("you_can_now_use_this_evaluator_537120d"),
               });
             }}
           />
@@ -673,7 +690,7 @@ export default function EvalsTemplateTable({
           }
         >
           <DialogHeader>
-            <DialogTitle>Clone evaluator</DialogTitle>
+            <DialogTitle>{tAuto("clone_evaluator_824f1b1")}</DialogTitle>
           </DialogHeader>
           <EvalTemplateForm
             projectId={projectId}
@@ -717,9 +734,10 @@ export default function EvalsTemplateTable({
               setPendingCloneSubmission(null);
               utils.evals.templateNames.invalidate();
               showSuccessToast({
-                title: "Evaluator cloned successfully",
-                description:
-                  "This evaluator is now available and maintained on project level. ",
+                title: tAuto("evaluator_cloned_successfully_c4e8364"),
+                description: tAuto(
+                  "this_evaluator_is_now_available_and_maintained_on_pr_5228552",
+                ),
               });
             }}
           />
@@ -738,14 +756,19 @@ export default function EvalsTemplateTable({
       >
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Update running evaluators?</DialogTitle>
+            <DialogTitle>
+              {tAuto("update_running_evaluators_1dae1b4")}
+            </DialogTitle>
             <DialogDescription>
-              Do you want all running evaluators attached to the original
-              Langfuse evaluator to reference your new project-level version?
+              {tAuto(
+                "do_you_want_all_running_evaluators_attached_to_the_o_6ee7880",
+              )}{" "}
               <br />
               <br />
-              <strong>Warning:</strong> This might break workflows if you have
-              changed variables or other critical aspects of the template.
+              <strong>{tAuto("warning_3217f29")}</strong>{" "}
+              {tAuto(
+                "this_might_break_workflows_if_you_have_changed_varia_617fb3d",
+              )}{" "}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -755,14 +778,14 @@ export default function EvalsTemplateTable({
                 submitPendingClone(false);
               }}
             >
-              No, keep as is
+              {tAuto("no_keep_as_is_e82a1bd")}{" "}
             </Button>
             <Button
               onClick={() => {
                 submitPendingClone(true);
               }}
             >
-              Yes, update all references
+              {tAuto("yes_update_all_references_ee31443")}{" "}
             </Button>
           </DialogFooter>
         </DialogContent>

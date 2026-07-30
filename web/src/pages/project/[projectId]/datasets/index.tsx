@@ -8,8 +8,10 @@ import { api } from "@/src/utils/api";
 import { DatasetsOnboarding } from "@/src/components/onboarding/DatasetsOnboarding";
 import { LockIcon, PlusIcon } from "lucide-react";
 import { useQueryParam, StringParam } from "use-query-params";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export default function Datasets() {
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const projectId = router.query.projectId as string;
   const [currentFolderPath] = useQueryParam("folder", StringParam);
@@ -33,10 +35,11 @@ export default function Datasets() {
     return (
       <Page
         headerProps={{
-          title: "Datasets",
+          title: tAuto("datasets_93a7f22"),
           help: {
-            description:
-              "Datasets in Langfuse are a collection of inputs (and expected outputs) of an LLM application. They are used to benchmark new releases before deployment to production. See docs to learn more.",
+            description: tAuto(
+              "datasets_in_langfuse_are_a_collection_of_inputs_and__51ad45c",
+            ),
             href: "https://langfuse.com/docs/evaluation/dataset-runs/datasets",
           },
         }}
@@ -50,10 +53,11 @@ export default function Datasets() {
   return (
     <Page
       headerProps={{
-        title: "Datasets",
+        title: tAuto("datasets_93a7f22"),
         help: {
-          description:
-            "Datasets in Langfuse are a collection of inputs (and expected outputs) of an LLM application. They are used to benchmark new releases before deployment to production. See docs to learn more.",
+          description: tAuto(
+            "datasets_in_langfuse_are_a_collection_of_inputs_and__51ad45c",
+          ),
           href: "https://langfuse.com/docs/evaluation/dataset-runs/datasets",
         },
         actionButtonsRight: (
@@ -73,7 +77,7 @@ export default function Datasets() {
                   onClick={openDialog}
                   variant="default"
                   icon={disabled === undefined ? PlusIcon : LockIcon}
-                  text="New dataset"
+                  text={tAuto("create_dataset_ffd8411")}
                 />
               </DialogTrigger>
             )}

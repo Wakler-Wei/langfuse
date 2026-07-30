@@ -11,6 +11,7 @@ import { type UseFormReturn } from "react-hook-form";
 import { type ActionDomain } from "@langfuse/shared";
 import { ExternalLink } from "lucide-react";
 import Link from "next/link";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 interface GitHubDispatchActionFormProps {
   form: UseFormReturn<any>;
@@ -22,6 +23,8 @@ interface GitHubDispatchActionFormProps {
 export const GitHubDispatchActionForm: React.FC<
   GitHubDispatchActionFormProps
 > = ({ form, disabled }) => {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const displayGitHubToken = form.watch("githubDispatch.displayGitHubToken");
 
   return (
@@ -33,7 +36,7 @@ export const GitHubDispatchActionForm: React.FC<
         render={({ field }) => (
           <FormItem>
             <FormLabel className="flex items-center">
-              Repository Dispatch URL{" "}
+              {tAutoI18n("repository_dispatch_url_9a28dda")}{" "}
               <span className="text-destructive ml-1">*</span>
             </FormLabel>
             <FormControl>
@@ -44,14 +47,15 @@ export const GitHubDispatchActionForm: React.FC<
               />
             </FormControl>
             <FormDescription>
-              GitHub API endpoint for repository dispatch.{" "}
+              {tAutoI18n("github_api_endpoint_for_repository_dispatch_dece469")}{" "}
               <Link
                 href="https://docs.github.com/en/rest/repos/repos#create-a-repository-dispatch-event"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-primary inline-flex items-center hover:underline"
               >
-                Learn more <ExternalLink className="ml-1 h-3 w-3" />
+                {tAuto("learn_more_824d76b")}{" "}
+                <ExternalLink className="ml-1 h-3 w-3" />
               </Link>
             </FormDescription>
             <FormMessage />
@@ -66,20 +70,22 @@ export const GitHubDispatchActionForm: React.FC<
         render={({ field }) => (
           <FormItem>
             <FormLabel className="flex items-center">
-              Event Type <span className="text-destructive ml-1">*</span>
+              {tAuto("event_type_2e1d8fd")}{" "}
+              <span className="text-destructive ml-1">*</span>
             </FormLabel>
             <FormControl>
               <Input
-                placeholder="prompt-update"
+                placeholder={tAuto("prompt_update_593a99e")}
                 disabled={disabled}
                 {...field}
               />
             </FormControl>
             <FormDescription>
-              Event type for GitHub Actions workflow triggers. This will be used
-              in the{" "}
+              {tAutoI18n(
+                "event_type_for_github_actions_workflow_triggers_this_5c392c8",
+              )}{" "}
               <code className="text-xs">on.repository_dispatch.types</code>{" "}
-              filter in your workflow file.
+              {tAutoI18n("filter_in_your_workflow_file_cacdcf9")}{" "}
             </FormDescription>
             <FormMessage />
           </FormItem>
@@ -92,7 +98,7 @@ export const GitHubDispatchActionForm: React.FC<
         render={({ field }) => (
           <FormItem>
             <FormLabel className="flex items-center">
-              GitHub Personal Access Token
+              {tAutoI18n("github_personal_access_token_d883b4e")}{" "}
               {!displayGitHubToken && (
                 <span className="text-destructive ml-1">*</span>
               )}
@@ -100,16 +106,17 @@ export const GitHubDispatchActionForm: React.FC<
             <FormControl>
               <Input
                 type="password"
-                placeholder={displayGitHubToken || "ghp_..."}
+                placeholder={displayGitHubToken || tAuto("ghp_0f6e2b1")}
                 disabled={disabled}
                 {...field}
               />
             </FormControl>
             <FormDescription>
-              GitHub PAT with <code className="text-xs">repo</code> scope for
-              repository dispatch.
+              {tAutoI18n("github_pat_with_717e201")}{" "}
+              <code className="text-xs">repo</code>{" "}
+              {tAutoI18n("scope_for_repository_dispatch_04eaed9")}{" "}
               {displayGitHubToken
-                ? " Leave empty to keep existing token."
+                ? tAutoI18n("leave_empty_to_keep_existing_token_301bae0")
                 : ""}{" "}
               <Link
                 href="https://github.com/settings/tokens/new?scopes=repo&description=Langfuse%20Automation"
@@ -117,7 +124,8 @@ export const GitHubDispatchActionForm: React.FC<
                 rel="noopener noreferrer"
                 className="text-primary inline-flex items-center hover:underline"
               >
-                Create token <ExternalLink className="ml-1 h-3 w-3" />
+                {tAuto("create_token_4b3c8e3")}{" "}
+                <ExternalLink className="ml-1 h-3 w-3" />
               </Link>
             </FormDescription>
             <FormMessage />

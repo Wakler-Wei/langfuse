@@ -5,6 +5,7 @@ import { Badge } from "@/src/components/ui/badge";
 import { Button } from "@/src/components/ui/button";
 import { cn } from "@/src/utils/tailwind";
 import { type FilterState } from "@langfuse/shared";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 /** FilterToggleButton shows / hides the table's sidebar filter panel and exposes the active filter count.
  *  On desktop the sidebar carries its own collapse toggle and collapses to a
@@ -17,6 +18,7 @@ export function FilterToggleButton({
   filterState?: FilterState;
   className?: string;
 }) {
+  const tAuto = useAutoTranslations();
   const { open, setOpen } = useDataTableControls();
   // Count filtered COLUMNS (facets), not raw FilterState entries — one facet
   // can emit several entries (e.g. a numeric range writes >= and <=). Keeps
@@ -32,7 +34,7 @@ export function FilterToggleButton({
       className={cn("flex h-8 items-center gap-2 text-sm", className)}
     >
       <Filter className="h-4 w-4" />
-      <span>Filters</span>
+      <span>{tAuto("filters_96e5782")}</span>
       {activeFacetCount > 0 && (
         <Badge variant="secondary" className="ml-1 h-5 px-1.5 text-xs">
           {activeFacetCount}

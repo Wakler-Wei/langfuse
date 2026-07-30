@@ -3,29 +3,36 @@ import { showErrorToast } from "@/src/features/notifications/showErrorToast";
 import { showSuccessToast } from "@/src/features/notifications/showSuccessToast";
 import { usePostHogClientCapture } from "@/src/features/posthog-analytics/usePostHogClientCapture";
 import { useV4Beta } from "@/src/features/events/hooks/useV4Beta";
-import { V4_PREVIEW_LABEL } from "@/src/features/events/lib/v4PreviewLabel";
 import { api } from "@/src/utils/api";
+import { useTranslations } from "next-intl";
 
 import {
   FeaturePreviewModal,
   type PreviewFlag,
   type PreviewState,
 } from "./FeaturePreviewModal";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type ControlledFeaturePreviewModalProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 };
 
-const PREVIEW_LABEL: Record<PreviewFlag, string> = {
-  modernSession: "Compact Session View",
-  searchBar: "Filter Search Bar",
+const PREVIEW_LABEL_KEY: Record<
+  PreviewFlag,
+  "compactSessionView" | "filterSearchBar"
+> = {
+  modernSession: "compactSessionView",
+  searchBar: "filterSearchBar",
 };
 
 export function ControlledFeaturePreviewModal({
   open,
   onOpenChange,
 }: ControlledFeaturePreviewModalProps) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
+  const tPreview = useTranslations("V4Preview");
   const authSession = useSession();
   const { isBetaEnabled } = useV4Beta();
   const capture = usePostHogClientCapture();
@@ -38,14 +45,20 @@ export function ControlledFeaturePreviewModal({
           isEnabled: variables.enabled,
         });
         showSuccessToast({
-          title: "Feature preview updated",
-          description: `${PREVIEW_LABEL[variables.flag]} preview has been ${
-            variables.enabled ? "enabled" : "disabled"
-          }.`,
+          title: tAuto("feature_preview_updated_d331a56"),
+          description: tAuto("value0_preview_has_been_value1_9966da7", {
+            value0: tPreview(PREVIEW_LABEL_KEY[variables.flag]),
+            value1: variables.enabled
+              ? tPreview("enabled")
+              : tPreview("disabled"),
+          }),
         });
       },
       onError: (error) => {
-        showErrorToast("Failed to update feature preview", error.message);
+        showErrorToast(
+          tAutoI18n("failed_to_update_feature_preview_c52d89e"),
+          error.message,
+        );
       },
     });
 
@@ -61,9 +74,9 @@ export function ControlledFeaturePreviewModal({
         !isBetaEnabled ||
         authSession.data?.environment.enableExperimentalFeatures === true,
       warningReason: !isBetaEnabled
-        ? `Compact Session View is only available on the events-backed session view. Turn on ${V4_PREVIEW_LABEL} to enable it.`
+        ? tPreview("compactSessionRequiresPreview")
         : authSession.data?.environment.enableExperimentalFeatures === true
-          ? "This preview is enabled by LANGFUSE_ENABLE_EXPERIMENTAL_FEATURES, so a per-user opt-out does not disable it."
+          ? tPreview("enabledByEnvironment")
           : undefined,
       onToggle: onToggle("modernSession"),
       isToggling: setFeaturePreviewEnabled.isPending,

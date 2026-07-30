@@ -17,6 +17,7 @@ import { showSuccessToast } from "@/src/features/notifications/showSuccessToast"
 import { EvaluatorSelector } from "@/src/features/evals/components/evaluator-selector";
 import { EvaluatorForm } from "@/src/features/evals/components/evaluator-form";
 import { ChevronLeft } from "lucide-react";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type CreateEvaluatorDialogProps = {
   projectId: string;
@@ -26,6 +27,8 @@ type CreateEvaluatorDialogProps = {
 };
 
 export function CreateEvaluatorDialog(props: CreateEvaluatorDialogProps) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const {
     projectId,
     open,
@@ -58,18 +61,18 @@ export function CreateEvaluatorDialog(props: CreateEvaluatorDialogProps) {
       <DialogContent className="max-h-[90vh] max-w-(--breakpoint-md) pb-0">
         <DialogHeader>
           <DialogTitle>
-            Create Evaluator for batched{" "}
+            {tAutoI18n("create_evaluator_for_batched_dda664b")}{" "}
             {targetObject === EvalTargetObject.EVENT
-              ? "observation"
-              : "experiment"}{" "}
-            runs
+              ? tAutoI18n("observation_7c02c7e")
+              : tAutoI18n("experiment_f45f2bc")}{" "}
+            {tAutoI18n("runs_71b3f0b")}{" "}
           </DialogTitle>
           <DialogDescription>
-            This form creates an evaluator for batched{" "}
+            {tAutoI18n("this_form_creates_an_evaluator_for_batched_c621774")}{" "}
             {targetObject === EvalTargetObject.EVENT
-              ? "observation"
-              : "experiment"}{" "}
-            runs.
+              ? tAutoI18n("observation_7c02c7e")
+              : tAutoI18n("experiment_f45f2bc")}{" "}
+            {tAutoI18n("runs_6853381")}{" "}
           </DialogDescription>
         </DialogHeader>
 
@@ -77,15 +80,18 @@ export function CreateEvaluatorDialog(props: CreateEvaluatorDialogProps) {
           {!templateId ? (
             <div className="space-y-4 px-1 pb-1">
               <p className="text-muted-foreground text-sm">
-                Select an evaluator template to configure.
+                {tAuto(
+                  "select_an_evaluator_template_to_configure_bf97194",
+                )}{" "}
               </p>
               {templatesQuery.isLoading ? (
                 <p className="text-muted-foreground text-sm">
-                  Loading templates...
+                  {tAuto("loading_templates_41e96b9")}{" "}
                 </p>
               ) : templatesQuery.isError ? (
                 <p className="text-destructive text-sm">
-                  Failed to load templates: {templatesQuery.error.message}
+                  {tAutoI18n("failed_to_load_templates_e931bd6")}{" "}
+                  {templatesQuery.error.message}
                 </p>
               ) : (
                 <div className="max-h-[55vh] overflow-y-auto rounded-md border p-2">
@@ -106,7 +112,7 @@ export function CreateEvaluatorDialog(props: CreateEvaluatorDialogProps) {
                 onClick={() => setTemplateId(null)}
               >
                 <ChevronLeft className="mr-1 h-4 w-4" />
-                Back to template selection
+                {tAuto("back_to_template_selection_0658b3e")}{" "}
               </Button>
               <EvaluatorForm
                 useDialog
@@ -124,9 +130,10 @@ export function CreateEvaluatorDialog(props: CreateEvaluatorDialogProps) {
                     targetObject,
                   });
                   showSuccessToast({
-                    title: "Evaluator created",
-                    description:
-                      "Select it in the previous step to run it on selected items.",
+                    title: tAuto("evaluator_created_b0d90cb"),
+                    description: tAuto(
+                      "select_it_in_the_previous_step_to_run_it_on_selected_4b49d7f",
+                    ),
                   });
                 }}
                 preprocessFormValues={(values) => ({

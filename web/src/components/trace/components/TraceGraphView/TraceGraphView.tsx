@@ -14,8 +14,10 @@ import { useViewPreferences } from "../../contexts/ViewPreferencesContext";
 import { usePostHogClientCapture } from "@/src/features/posthog-analytics/usePostHogClientCapture";
 import { useTraceAnalyticsDimensions } from "../../hooks/useTraceAnalyticsDimensions";
 import { useMobileLayoutContextOptional } from "../_layout/TraceLayoutMobile";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export function TraceGraphView() {
+  const tAuto = useAutoTranslations();
   const { agentGraphData, isLoading } = useTraceGraphData();
   const activeObservationIds = useActiveObservationIds();
   const { graphViewMode, setGraphViewMode } = useViewPreferences();
@@ -53,7 +55,9 @@ export function TraceGraphView() {
   if (isLoading) {
     return (
       <div className="flex h-full w-full items-center justify-center">
-        <span className="text-muted-foreground text-sm">Loading graph...</span>
+        <span className="text-muted-foreground text-sm">
+          {tAuto("loading_graph_764564d")}
+        </span>
       </div>
     );
   }

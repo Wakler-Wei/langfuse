@@ -17,6 +17,7 @@ import filterSearchBarDarkIllustration from "../assets/filter-search-bar-dark.sv
 import filterSearchBarLightIllustration from "../assets/filter-search-bar-light.svg";
 import modernSessionDarkIllustration from "../assets/modern-session-dark.svg";
 import modernSessionLightIllustration from "../assets/modern-session-light.svg";
+import { I18nText, useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 /** Flags the Feature Preview modal can toggle. Keep in sync with the
  *  userAccount.setFeaturePreviewEnabled allowlist and available-flags.ts.
@@ -33,9 +34,9 @@ type PreviewIllustration = {
 
 type PreviewRegistryItem = {
   flag: PreviewFlag;
-  title: string;
+  title: React.ReactNode;
   sidebarLabel: string;
-  description: string;
+  description: React.ReactNode;
   details: string;
   feedbackUrl: string;
   illustration: PreviewIllustration;
@@ -56,10 +57,11 @@ export type PreviewState = {
 const PREVIEW_REGISTRY: PreviewRegistryItem[] = [
   {
     flag: "modernSession",
-    title: "Compact Session View",
+    title: <I18nText id="compact_session_view_299ab2a" />,
     sidebarLabel: "Compact Session View",
-    description:
-      "Navigate every trace in a session from one continuous conversation feed, with tools and structured data available on demand.",
+    description: (
+      <I18nText id="navigate_every_trace_in_a_session_from_one_continuou_df0831b" />
+    ),
     details:
       "Compact Session View replaces separate trace cards with a compact minimap and a virtualized feed. Jump between traces, keep the active trace in view, or temporarily show inline tool calls and system prompts.",
     feedbackUrl: "https://github.com/orgs/langfuse/discussions",
@@ -75,10 +77,11 @@ const PREVIEW_REGISTRY: PreviewRegistryItem[] = [
   // Kept for a safe rollback; delete with the rest of the searchBar plumbing.
   {
     flag: "searchBar",
-    title: "Filter Search Bar",
+    title: <I18nText id="filter_search_bar_99c7318" />,
     sidebarLabel: "Filter Search Bar",
-    description:
-      "A keyboard-driven query bar on the Observations and Traces tables — type filters like level:ERROR -env:dev latency:>2 with inline suggestions, alongside the existing filter sidebar.",
+    description: (
+      <I18nText id="a_keyboard_driven_query_bar_on_the_observations_and__6fa9530" />
+    ),
     details:
       "The search bar lets you build and edit filters by typing a compact query language with autocomplete, instead of clicking through the sidebar. It stays in sync with the sidebar (both read and write the same filter state) and supports field filters, comparisons, any-of groups, negation, metadata/score paths, and full-text search across input/output. It is available on the new (v4) Observations and Traces tables.",
     feedbackUrl: "https://github.com/orgs/langfuse/discussions/14196",
@@ -106,6 +109,7 @@ export function FeaturePreviewModal({
   onOpenChange,
   state,
 }: FeaturePreviewModalProps) {
+  const tAuto = useAutoTranslations();
   const items = PREVIEW_REGISTRY.filter((item) => state[item.flag]);
   const [selectedFlag, setSelectedFlag] = useState<PreviewFlag | null>(
     items[0]?.flag ?? null,
@@ -155,10 +159,10 @@ export function FeaturePreviewModal({
                       </span>
                       <span className="text-muted-foreground mt-1 line-clamp-2 block text-xs">
                         {state[item.flag]?.disabled
-                          ? "Unavailable"
+                          ? tAuto("unavailable_2c9c1f7")
                           : state[item.flag]?.enabled
-                            ? "Enabled"
-                            : "Available"}
+                            ? tAuto("enabled_df174a3")
+                            : tAuto("available_7c62a14")}
                       </span>
                     </span>
                   </button>
@@ -190,7 +194,7 @@ export function FeaturePreviewModal({
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        Give feedback
+                        {tAuto("give_feedback_086158f")}{" "}
                       </a>
                     </Button>
                   </div>
@@ -202,7 +206,9 @@ export function FeaturePreviewModal({
                         selectedState.isToggling === true
                       }
                       onCheckedChange={selectedState.onToggle}
-                      aria-label={`Toggle ${selected.title}`}
+                      aria-label={tAuto("toggle_value0_f75a5e6", {
+                        value0: selected.sidebarLabel,
+                      })}
                     />
                   </div>
                 </div>

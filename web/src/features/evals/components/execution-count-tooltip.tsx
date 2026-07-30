@@ -2,6 +2,7 @@ import { type EvalFormType } from "@/src/features/evals/utils/evaluator-form-uti
 import { api } from "@/src/utils/api";
 import { compactNumberFormatter } from "@/src/utils/numbers";
 import { useEvalTargetCount } from "@/src/features/evals/hooks/useEvalTargetCount";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type ExecutionCountTooltipProps = {
   projectId: string;
@@ -14,6 +15,7 @@ export const ExecutionCountTooltip = ({
   item,
   filter,
 }: ExecutionCountTooltipProps) => {
+  const tAuto = useAutoTranslations();
   const globalConfig = api.evals.globalJobConfigs.useQuery({
     projectId,
   });
@@ -38,7 +40,10 @@ export const ExecutionCountTooltip = ({
               : globalConfig.data,
           )
         )}
-        {isTraceTarget ? " traces" : " dataset run items"})
+        {isTraceTarget
+          ? tAuto("traces_b0f4f28")
+          : tAuto("dataset_run_items_08d1d3e")}
+        )
       </span>
     </>
   );

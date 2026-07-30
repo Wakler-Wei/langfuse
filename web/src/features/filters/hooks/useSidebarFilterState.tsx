@@ -54,6 +54,7 @@ import {
 export { resolveCheckboxOperator } from "../lib/sidebar-filter-actions";
 import type { PeekTableStateContextValue } from "@/src/components/table/peek/contexts/PeekTableStateContext";
 import { usePostHogClientCapture } from "@/src/features/posthog-analytics/usePostHogClientCapture";
+import { useAutoText } from "@/src/features/i18n/I18nText";
 
 /**
  * Decodes filters from URL query string and normalizes display names to column IDs.
@@ -918,13 +919,34 @@ export type SidebarFilterPresentationOptions = Pick<
  */
 export function useSidebarFilterPresentation(
   core: SidebarFilterStateCore,
-  config: FilterConfig,
+  sourceConfig: FilterConfig,
   options: Record<
     string,
     (string | SingleValueOption)[] | Record<string, string[]> | undefined
   >,
   presentationOptions: SidebarFilterPresentationOptions = {},
 ) {
+  const translateAutoText = useAutoText();
+  const config = useMemo<FilterConfig>(
+    () => ({
+      ...sourceConfig,
+      facets: sourceConfig.facets.map((facet) => ({
+        ...facet,
+        label: translateAutoText(facet.label),
+        ...(facet.tooltip ? { tooltip: translateAutoText(facet.tooltip) } : {}),
+        ...(facet.disabledReason
+          ? { disabledReason: translateAutoText(facet.disabledReason) }
+          : {}),
+        ...(facet.type === "boolean"
+          ? {
+              trueLabel: translateAutoText(facet.trueLabel ?? "True"),
+              falseLabel: translateAutoText(facet.falseLabel ?? "False"),
+            }
+          : {}),
+      })),
+    }),
+    [sourceConfig, translateAutoText],
+  );
   const { loading, loadingColumns } = presentationOptions;
   const isV4Surface = presentationOptions.isV4 ?? false;
   const capture = usePostHogClientCapture();

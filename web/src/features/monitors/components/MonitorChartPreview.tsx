@@ -22,6 +22,7 @@ import {
 
 import { renderChartSubtitle } from "../helpers/renderMonitorLabels";
 import { getMonitorPreviewRange } from "../helpers/monitorTimeRanges";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 /** MonitorChartPreview renders the live time-series preview with alert/warning threshold bands for a monitor draft. */
 export const MonitorChartPreview = ({
@@ -45,6 +46,7 @@ export const MonitorChartPreview = ({
   alertThreshold: number | null | undefined;
   warningThreshold: number | null | undefined;
 }) => {
+  const tAuto = useAutoTranslations();
   /** bucketRange spans 20 complete window buckets ending at the last floored boundary. */
   const { fromTimestamp, toTimestamp } = useMemo(() => {
     const { from, to } = getMonitorPreviewRange(window, Date.now());
@@ -126,7 +128,7 @@ export const MonitorChartPreview = ({
         value: warningThreshold,
         operator: thresholdOperator,
         color: "yellow" as const,
-        label: "Warning",
+        label: tAuto("warning_e9c4556"),
       });
     }
     if (alertThreshold != null && Number.isFinite(alertThreshold)) {
@@ -134,11 +136,11 @@ export const MonitorChartPreview = ({
         value: alertThreshold,
         operator: thresholdOperator,
         color: "red" as const,
-        label: "Alert",
+        label: tAuto("alert_b969680"),
       });
     }
     return ordered;
-  }, [warningThreshold, alertThreshold, thresholdOperator]);
+  }, [warningThreshold, alertThreshold, thresholdOperator, tAuto]);
 
   // Why: without the measure's unit, cost charts render as raw numbers
   // instead of dollar amounts.
@@ -158,7 +160,9 @@ export const MonitorChartPreview = ({
       <CardContent className="flex h-full flex-col pt-4">
         <div className="mb-4 flex items-center justify-between">
           <div>
-            <h3 className="text-lg font-bold tracking-tight">Live Preview</h3>
+            <h3 className="text-lg font-bold tracking-tight">
+              {tAuto("live_preview_a62da90")}
+            </h3>
             <p className="text-muted-foreground text-sm">
               {renderChartSubtitle({
                 view,

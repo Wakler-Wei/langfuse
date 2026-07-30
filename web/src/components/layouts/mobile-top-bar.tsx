@@ -8,6 +8,7 @@ import { TopbarAccount } from "@/src/components/nav/topbar-account";
 import { InAppAiAgentButton } from "@/src/components/nav/in-app-ai-agent-button";
 import { EnvLabelBadge } from "@/src/components/EnvLabelBadge";
 import { useEnvLabel } from "@/src/hooks/useEnvLabel";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 /**
  * Slim mobile top chrome for the minimal-chrome shell: hamburger · centered
@@ -26,6 +27,7 @@ export const MobileTopBar = ({
   showSidebarTrigger?: boolean;
   leadingControl?: ReactNode;
 }) => {
+  const tAuto = useAutoTranslations();
   const { toggleSidebar } = useSidebar();
   const hasAppSidebar = useHasAppSidebar();
   const envLabel = useEnvLabel();
@@ -40,7 +42,7 @@ export const MobileTopBar = ({
             variant="ghost"
             size="icon"
             className="h-9 w-9"
-            aria-label="Open menu"
+            aria-label={tAuto("open_menu_197101e")}
             onClick={() => toggleSidebar()}
           >
             <Menu className="size-5" />

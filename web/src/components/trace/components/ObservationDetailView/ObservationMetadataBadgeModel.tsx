@@ -7,6 +7,7 @@ import { Badge } from "@/src/components/ui/badge";
 import { ExternalLinkIcon, PlusCircle } from "lucide-react";
 import Link from "next/link";
 import { UpsertModelFormDialog } from "@/src/features/models/components/UpsertModelFormDialog";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export function ModelBadge({
   model,
@@ -19,6 +20,7 @@ export function ModelBadge({
   projectId: string;
   usageDetails: Record<string, number> | undefined;
 }) {
+  const tAuto = useAutoTranslations();
   if (!model) return null;
 
   // Linked model - show link to model settings
@@ -28,7 +30,7 @@ export function ModelBadge({
         <Link
           href={`/project/${projectId}/settings/models/${internalModelId}`}
           className="flex items-center"
-          title="View model details"
+          title={tAuto("view_model_details_8cabf37")}
         >
           <span className="truncate" title={model}>
             {model}

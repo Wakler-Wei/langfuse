@@ -40,6 +40,7 @@ import { type DatasetStepProps } from "@/src/features/experiments/types/stepProp
 import { StepHeader } from "@/src/features/experiments/components/shared/StepHeader";
 import { api } from "@/src/utils/api";
 import { format } from "date-fns";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export const DatasetStep: React.FC<DatasetStepProps> = ({
   projectId,
@@ -47,6 +48,8 @@ export const DatasetStep: React.FC<DatasetStepProps> = ({
   datasetState,
   promptInfo,
 }) => {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const { form } = formState;
   const {
     datasets,
@@ -71,8 +74,10 @@ export const DatasetStep: React.FC<DatasetStepProps> = ({
   return (
     <div className="space-y-6">
       <StepHeader
-        title="Dataset Selection"
-        description="Choose the dataset to run your experiment on. The dataset structure must match the prompt template variables."
+        title={tAuto("dataset_selection_69b3b08")}
+        description={tAuto(
+          "choose_the_dataset_to_run_your_experiment_on_the_dat_2db722e",
+        )}
       />
 
       <FormField
@@ -80,7 +85,7 @@ export const DatasetStep: React.FC<DatasetStepProps> = ({
         name="datasetId"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Dataset</FormLabel>
+            <FormLabel>{tAuto("dataset_1052689")}</FormLabel>
             <div className="flex items-center gap-2">
               <Popover
                 open={datasetPopoverOpen}
@@ -95,7 +100,7 @@ export const DatasetStep: React.FC<DatasetStepProps> = ({
                   >
                     {field.value
                       ? datasets?.find((d) => d.id === field.value)?.name
-                      : "Select a dataset"}
+                      : tAutoI18n("select_a_dataset_c0f85d3")}
                     <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                   </Button>
                 </PopoverTrigger>
@@ -105,12 +110,14 @@ export const DatasetStep: React.FC<DatasetStepProps> = ({
                 >
                   <InputCommand>
                     <InputCommandInput
-                      placeholder="Search datasets..."
+                      placeholder={tAuto("search_datasets_2edc7dc")}
                       className="h-9"
                       variant="bottom"
                     />
                     <InputCommandList>
-                      <InputCommandEmpty>No dataset found.</InputCommandEmpty>
+                      <InputCommandEmpty>
+                        {tAuto("no_dataset_found_48303db")}
+                      </InputCommandEmpty>
                       <InputCommandGroup>
                         {(datasets ?? []).map((dataset) => (
                           <InputCommandItem
@@ -142,26 +149,30 @@ export const DatasetStep: React.FC<DatasetStepProps> = ({
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button variant="outline" className="h-8">
-                      Expected columns
+                      {tAuto("expected_columns_91e61b9")}{" "}
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-80">
                     <div className="space-y-2">
                       <h4 className="leading-none font-bold">
-                        Expected Dataset Structure
+                        {tAuto("expected_dataset_structure_5f93015")}{" "}
                       </h4>
                       <p className="text-muted-foreground text-sm">
-                        Based on prompt {selectedPromptName} v
-                        {selectedPromptVersion}
+                        {tAutoI18n("based_on_prompt_c3dc652")}{" "}
+                        {selectedPromptName} v{selectedPromptVersion}
                       </p>
                       <div className="space-y-1 pt-2">
-                        <p className="text-sm font-bold">Input variables:</p>
+                        <p className="text-sm font-bold">
+                          {tAuto("input_variables_8635a40")}
+                        </p>
                         <ul className="list-inside list-disc text-sm">
                           {expectedColumns.inputVariables.map((variable) => (
                             <li key={variable}>{variable}</li>
                           ))}
                         </ul>
-                        <p className="text-sm font-bold">Expected output:</p>
+                        <p className="text-sm font-bold">
+                          {tAuto("expected_output_93617b0")}
+                        </p>
                         <ul className="list-inside list-disc text-sm">
                           <li>
                             {expectedColumns.outputVariableName} (
@@ -185,7 +196,7 @@ export const DatasetStep: React.FC<DatasetStepProps> = ({
           name="datasetVersion"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Dataset Version (Optional)</FormLabel>
+              <FormLabel>{tAuto("dataset_version_optional_2c53cb4")}</FormLabel>
               <Select
                 onValueChange={(value) => {
                   if (value === "latest") {
@@ -198,26 +209,30 @@ export const DatasetStep: React.FC<DatasetStepProps> = ({
               >
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="Latest version" />
+                    <SelectValue
+                      placeholder={tAuto("latest_version_0f32ae2")}
+                    />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
                   <SelectItem value="latest">
-                    Latest version (default)
+                    {tAuto("latest_version_default_4f9417b")}{" "}
                   </SelectItem>
                   {datasetVersions.map((version) => (
                     <SelectItem
                       key={version.toISOString()}
                       value={version.toISOString()}
                     >
-                      {format(version, "MMM d, yyyy 'at' h:mm a")} (UTC)
+                      {format(version, "MMM d, yyyy 'at' h:mm a")}{" "}
+                      {tAutoI18n("utc_96a114a")}{" "}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
               <FormDescription>
-                Run the experiment using the dataset state at a specific point
-                in time. Defaults to the latest version.
+                {tAuto(
+                  "run_the_experiment_using_the_dataset_state_at_a_spec_3fdda2e",
+                )}{" "}
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -231,7 +246,7 @@ export const DatasetStep: React.FC<DatasetStepProps> = ({
             <Card className="border-dark-yellow bg-light-yellow relative overflow-hidden rounded-md shadow-none group-data-[collapsible=icon]:hidden">
               <CardHeader className="p-2">
                 <CardTitle className="text-dark-yellow flex items-center justify-between text-sm">
-                  <span>Invalid configuration</span>
+                  <span>{tAuto("invalid_configuration_0444e6d")}</span>
                   <Info className="h-4 w-4" />
                 </CardTitle>
                 <CardDescription className="text-foreground">
@@ -244,7 +259,7 @@ export const DatasetStep: React.FC<DatasetStepProps> = ({
             <Card className="border-dark-green bg-light-green relative overflow-hidden rounded-md shadow-none group-data-[collapsible=icon]:hidden">
               <CardHeader className="p-2">
                 <CardTitle className="text-dark-green flex items-center justify-between text-sm">
-                  <span>Valid configuration</span>
+                  <span>{tAuto("valid_configuration_3e69165")}</span>
                   <CircleCheck className="h-4 w-4" />
                 </CardTitle>
                 <div className="text-sm">
@@ -257,13 +272,14 @@ export const DatasetStep: React.FC<DatasetStepProps> = ({
                           <strong>{variable}:</strong> {count} /{" "}
                           {validationResult?.isValid
                             ? validationResult.totalItems
-                            : "unknown"}
+                            : tAutoI18n("unknown_50d8b4a")}
                         </li>
                       ),
                     )}
                   </ul>
-                  Items missing all required variables and placeholders will be
-                  excluded from the dataset run.
+                  {tAuto(
+                    "items_missing_all_required_variables_and_placeholder_f3ae05a",
+                  )}{" "}
                 </div>
               </CardHeader>
             </Card>

@@ -22,10 +22,13 @@ import {
 import { ChevronDown } from "lucide-react";
 import { useEvalCapabilities } from "@/src/features/evals/hooks/useEvalCapabilities";
 import { DEFAULT_OBSERVATION_FILTER_WHEN_REMAPPING } from "@/src/features/evals/utils/evaluator-constants";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type LegacyEvalAction = "keep-active" | "mark-inactive" | "delete";
 
 export default function RemapEvaluatorPage() {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const projectId = router.query.projectId as string;
   const evalConfigId = router.query.evaluator as string;
@@ -62,7 +65,10 @@ export default function RemapEvaluatorPage() {
       router.push(`/project/${projectId}/evals`);
     },
     onError: (err) => {
-      setError(err.message ?? "Failed to update old eval configuration");
+      setError(
+        err.message ??
+          tAutoI18n("failed_to_update_old_eval_configuration_3029103"),
+      );
     },
   });
 
@@ -73,7 +79,10 @@ export default function RemapEvaluatorPage() {
       router.push(`/project/${projectId}/evals`);
     },
     onError: (err) => {
-      setError(err.message ?? "Failed to delete old eval configuration");
+      setError(
+        err.message ??
+          tAutoI18n("failed_to_delete_old_eval_configuration_fbee593"),
+      );
     },
   });
 
@@ -142,7 +151,7 @@ export default function RemapEvaluatorPage() {
       withPadding
       scrollable
       headerProps={{
-        title: "Upgrade Evaluator",
+        title: tAuto("upgrade_evaluator_298c69b"),
         breadcrumb: [
           {
             name: "Running Evaluators",
@@ -154,17 +163,18 @@ export default function RemapEvaluatorPage() {
       <div className="space-y-4">
         <div>
           <p className="text-muted-foreground text-sm">
-            Review your legacy evaluator on the left and configure the new eval
-            settings on the right.{" "}
+            {tAutoI18n(
+              "review_your_legacy_evaluator_on_the_left_and_configu_806cffd",
+            )}{" "}
             <a
               href="https://langfuse.com/faq/all/llm-as-a-judge-migration"
               target="_blank"
               rel="noopener noreferrer"
               className="text-dark-blue font-bold hover:opacity-80"
             >
-              Follow our step-by-step guide
+              {tAuto("follow_our_step_by_step_guide_5d57003")}{" "}
             </a>{" "}
-            to upgrade successfully.
+            {tAutoI18n("to_upgrade_successfully_28930ee")}{" "}
           </p>
           {mappedConfig ? (
             <Alert
@@ -174,8 +184,12 @@ export default function RemapEvaluatorPage() {
               <AlertDescription>
                 <div className="flex flex-col gap-2">
                   {isEventTarget(mappedConfig.targetObject ?? "event")
-                    ? "Running observation-targeting evaluators requires JS SDK ≥ 4.0.0 or Python SDK ≥ 3.0.0."
-                    : "Running observation-targeting evaluators requires JS SDK ≥ 4.4.0 or Python SDK ≥ 3.9.0."}
+                    ? tAutoI18n(
+                        "running_observation_targeting_evaluators_requires_js_a1b7208",
+                      )
+                    : tAutoI18n(
+                        "running_observation_targeting_evaluators_requires_js_b8a0ce1",
+                      )}
                 </div>
               </AlertDescription>
             </Alert>
@@ -191,7 +205,9 @@ export default function RemapEvaluatorPage() {
           ) : !oldConfig || !evalTemplate ? (
             <Alert variant="destructive">
               <AlertDescription>
-                Failed to load eval configuration or template.
+                {tAuto(
+                  "failed_to_load_eval_configuration_or_template_5a2a71c",
+                )}{" "}
               </AlertDescription>
             </Alert>
           ) : (
@@ -200,13 +216,13 @@ export default function RemapEvaluatorPage() {
               <div className="space-y-4 p-3">
                 <div className="flex items-center gap-2 pb-2">
                   <h3 className="text-lg font-bold">
-                    Legacy Configuration{" "}
+                    {tAutoI18n("legacy_configuration_c575874")}{" "}
                     {isTraceTarget(oldConfig.targetObject)
-                      ? "(runs on traces)"
+                      ? tAutoI18n("runs_on_traces_3822122")
                       : ""}
                   </h3>
                   <span className="text-muted-foreground text-xs">
-                    Read-only
+                    {tAuto("read_only_9b19a5a")}{" "}
                   </span>
                 </div>
                 <InnerEvaluatorForm
@@ -230,9 +246,9 @@ export default function RemapEvaluatorPage() {
               {/* RIGHT: Editable new config form */}
               <div className="space-y-4 p-3">
                 <h3 className="pb-2 text-lg font-bold">
-                  New Configuration{" "}
+                  {tAutoI18n("new_configuration_7624cdf")}{" "}
                   {isTraceTarget(oldConfig.targetObject)
-                    ? "(runs on observations)"
+                    ? tAutoI18n("runs_on_observations_dbe8342")
                     : ""}
                 </h3>
                 <InnerEvaluatorForm
@@ -257,10 +273,10 @@ export default function RemapEvaluatorPage() {
                           className="mt-3 rounded-l-md rounded-r-none"
                         >
                           {legacyAction === "keep-active"
-                            ? "Save & keep legacy active"
+                            ? tAutoI18n("save_keep_legacy_active_5edb5d9")
                             : legacyAction === "mark-inactive"
-                              ? "Save & mark legacy inactive"
-                              : "Save & delete legacy"}
+                              ? tAutoI18n("save_mark_legacy_inactive_a1beab0")
+                              : tAutoI18n("save_delete_legacy_5744558")}
                         </Button>
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
@@ -277,19 +293,23 @@ export default function RemapEvaluatorPage() {
                               onClick={() => setLegacyAction("keep-active")}
                             >
                               {legacyAction === "keep-active" && "✓ "}
-                              Save & keep legacy active
+                              {tAutoI18n(
+                                "save_keep_legacy_active_5edb5d9",
+                              )}{" "}
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               onClick={() => setLegacyAction("mark-inactive")}
                             >
                               {legacyAction === "mark-inactive" && "✓ "}
-                              Save & mark legacy inactive
+                              {tAutoI18n(
+                                "save_mark_legacy_inactive_a1beab0",
+                              )}{" "}
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               onClick={() => setLegacyAction("delete")}
                             >
                               {legacyAction === "delete" && "✓ "}
-                              Save & delete legacy
+                              {tAutoI18n("save_delete_legacy_5744558")}{" "}
                             </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>

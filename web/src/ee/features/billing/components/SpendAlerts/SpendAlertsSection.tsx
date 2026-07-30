@@ -5,12 +5,14 @@ import { SpendAlertsTable } from "./SpendAlertsTable";
 import { SpendAlertDialog } from "./SpendAlertDialog";
 import { useHasOrganizationAccess } from "@/src/features/rbac/utils/checkOrganizationAccess";
 import { useHasEntitlement } from "@/src/features/entitlements/hooks";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 interface SpendAlertsSectionProps {
   orgId: string;
 }
 
 export function SpendAlertsSection({ orgId }: SpendAlertsSectionProps) {
+  const tAuto = useAutoTranslations();
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [refetchTrigger, setRefetchTrigger] = useState(0);
 
@@ -34,7 +36,7 @@ export function SpendAlertsSection({ orgId }: SpendAlertsSectionProps) {
       <div className="space-y-2">
         <div className="flex items-center justify-between pt-4">
           <div>
-            <h3 className="font-bold">Spend Alerts</h3>
+            <h3 className="font-bold">{tAuto("spend_alerts_0ff10bb")}</h3>
             <p className="text-muted-foreground max-w-prose text-sm">
               Get notified when your organization&apos;s spending exceeds
               configured thresholds. Alerts may be delayed by up to 90 minutes.
@@ -44,7 +46,7 @@ export function SpendAlertsSection({ orgId }: SpendAlertsSectionProps) {
 
           <Button onClick={() => setIsCreateDialogOpen(true)}>
             <Plus className="mr-2 h-4 w-4" />
-            Create Alert
+            {tAuto("create_alert_2263828")}{" "}
           </Button>
         </div>
 

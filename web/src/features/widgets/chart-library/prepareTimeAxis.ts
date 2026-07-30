@@ -189,6 +189,10 @@ export function prepareTimeAxis(
   maxTicks = 6,
   options: PrepareTimeAxisOptions = {},
 ): TimeAxis {
+  const locale =
+    typeof document === "undefined"
+      ? "en-US"
+      : document.documentElement.lang || "en-US";
   const timestamps: number[] = [];
   for (const value of rawValues) {
     const date = parseChartTimestamp(value);
@@ -290,18 +294,18 @@ export function prepareTimeAxis(
     const date = parseChartTimestamp(raw);
     if (!date) return typeof raw === "string" ? raw : "";
     if (mode === "time") {
-      return date.toLocaleTimeString("en-US", {
+      return date.toLocaleTimeString(locale, {
         hour: "numeric",
         ...(subHour ? { minute: "2-digit" } : {}),
       });
     }
     if (mode === "month") {
-      return date.toLocaleDateString("en-US", {
+      return date.toLocaleDateString(locale, {
         month: "short",
         year: "numeric",
       });
     }
-    return date.toLocaleDateString("en-US", {
+    return date.toLocaleDateString(locale, {
       month: "short",
       day: "numeric",
       ...(crossesYear ? { year: "numeric" } : {}),
@@ -315,7 +319,7 @@ export function prepareTimeAxis(
   const formatTooltip = (raw: unknown): string => {
     const date = parseChartTimestamp(raw);
     if (!date) return typeof raw === "string" ? raw : "";
-    return date.toLocaleString("en-US", {
+    return date.toLocaleString(locale, {
       month: "short",
       day: "numeric",
       year: "numeric",

@@ -25,6 +25,7 @@ import { parseJsonPrioritised } from "@langfuse/shared";
 import { ActionButton } from "@/src/components/ActionButton";
 import { type MetadataDomainClient } from "@/src/utils/clientSideDomainTypes";
 import { type Prisma } from "@langfuse/shared";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 /**
  * Component for creating a new dataset item from an existing object.
@@ -52,6 +53,7 @@ export const NewDatasetItemFromExistingObject = (props: {
    */
   layout?: "toolbar" | "menu";
 }) => {
+  const tAuto = useAutoTranslations();
   const isMenu = props.layout === "menu";
   const normalizePrefillValue = (
     value: Prisma.JsonValue | null,
@@ -101,8 +103,8 @@ export const NewDatasetItemFromExistingObject = (props: {
           variant="outline"
           size={buttonSize === "sm" ? "icon-xs" : "icon"}
           hasAccess={hasAccess}
-          title="Copy item"
-          aria-label="Copy item"
+          title={tAuto("copy_item_abc8f3b")}
+          aria-label={tAuto("copy_item_abc8f3b")}
           onClick={() => {
             setIsFormOpen(true);
           }}
@@ -157,7 +159,7 @@ export const NewDatasetItemFromExistingObject = (props: {
                 }}
               >
                 <PlusIcon size={16} className="mr-2" aria-hidden="true" />
-                Add to more datasets
+                {tAuto("add_to_more_datasets_02d6cf0")}{" "}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -191,9 +193,9 @@ export const NewDatasetItemFromExistingObject = (props: {
             />
           ) : null}
           {isMenu ? (
-            <span className="text-sm">Add to datasets</span>
+            <span className="text-sm">{tAuto("add_to_datasets_f8df40a")}</span>
           ) : (
-            "Add to datasets"
+            tAuto("add_to_datasets_f8df40a")
           )}
           {!hasAccess ? (
             <LockIcon
@@ -206,7 +208,7 @@ export const NewDatasetItemFromExistingObject = (props: {
       <Dialog open={hasAccess && isFormOpen} onOpenChange={setIsFormOpen}>
         <DialogContent className="h-[calc(100vh-5rem)] max-h-none w-[calc(100vw-5rem)] max-w-none">
           <DialogHeader>
-            <DialogTitle>Add item to datasets</DialogTitle>
+            <DialogTitle>{tAuto("add_item_to_datasets_b0c52a5")}</DialogTitle>
           </DialogHeader>
           {isFormOpen && (
             <NewDatasetItemForm

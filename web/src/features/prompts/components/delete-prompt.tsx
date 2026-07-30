@@ -9,8 +9,11 @@ import {
   PopoverTrigger,
 } from "@/src/components/ui/popover";
 import useProjectIdFromURL from "@/src/hooks/useProjectIdFromURL";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export function DeletePrompt({ promptName }: { promptName: string }) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const projectId = useProjectIdFromURL();
   const utils = api.useUtils();
   const [isOpen, setIsOpen] = useState(false);
@@ -36,18 +39,19 @@ export function DeletePrompt({ promptName }: { promptName: string }) {
         </Button>
       </PopoverTrigger>
       <PopoverContent>
-        <h2 className="mb-3 font-bold">Please confirm</h2>
+        <h2 className="mb-3 font-bold">{tAuto("please_confirm_3a799cc")}</h2>
         <p className="mb-3 text-sm">
-          This action permanently deletes this prompt. All requests to fetch
-          prompt{" "}
+          {tAutoI18n(
+            "this_action_permanently_deletes_this_prompt_all_requ_59193c6",
+          )}{" "}
           <code className="bg-muted relative rounded px-[0.3rem] py-[0.2rem] font-mono text-sm font-bold">
             {promptName}
           </code>{" "}
-          will error.
+          {tAutoI18n("will_error_54d053c")}{" "}
         </p>
         {error && (
           <div className="mb-3 rounded border border-red-200 bg-red-50 p-3 text-sm text-red-700">
-            <p className="font-bold">Error:</p>
+            <p className="font-bold">{tAuto("error_787aa16")}</p>
             <p className="whitespace-pre-wrap">{error}</p>
           </div>
         )}
@@ -69,7 +73,7 @@ export function DeletePrompt({ promptName }: { promptName: string }) {
               });
             }}
           >
-            Delete Prompt
+            {tAuto("delete_prompt_4179910")}{" "}
           </Button>
         </div>
       </PopoverContent>

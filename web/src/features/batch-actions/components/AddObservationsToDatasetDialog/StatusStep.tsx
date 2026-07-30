@@ -13,6 +13,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { Check, AlertCircle } from "lucide-react";
 import Spinner from "@/src/components/design-system/Spinner/Spinner";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type StatusStepProps = {
   projectId: string;
@@ -29,6 +30,8 @@ export function StatusStep({
   expectedCount,
   onClose,
 }: StatusStepProps) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const router = useRouter();
 
   // Poll for status updates
@@ -96,15 +99,16 @@ export function StatusStep({
           </p>
           {!isComplete && (
             <p className="text-muted-foreground mt-2 text-sm">
-              You can safely close this dialog. The action is running in the
-              background and you can track its progress in the{" "}
+              {tAutoI18n(
+                "you_can_safely_close_this_dialog_the_action_is_runni_a64fa81",
+              )}{" "}
               <Link
                 href={`/project/${projectId}/settings/batch-actions`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-primary underline hover:no-underline"
               >
-                batch actions table
+                {tAuto("batch_actions_table_bb0d3d8")}{" "}
               </Link>
               .
             </p>
@@ -117,7 +121,9 @@ export function StatusStep({
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle className="text-base">
-                  {isComplete ? "Results" : "Progress"}
+                  {isComplete
+                    ? tAutoI18n("results_612e12d")
+                    : tAutoI18n("progress_1b90271")}
                 </CardTitle>
                 <StatusBadge
                   type={status.data?.status?.toLowerCase() ?? "pending"}
@@ -130,7 +136,8 @@ export function StatusStep({
                   <div className="space-y-2">
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-muted-foreground">
-                        {processedCount} of {totalCount} processed
+                        {processedCount} {tAutoI18n("of_de04fa0")} {totalCount}{" "}
+                        {tAutoI18n("processed_46c7abc")}{" "}
                       </span>
                       <span className="font-bold">{progressPercent}%</span>
                     </div>
@@ -139,11 +146,15 @@ export function StatusStep({
 
                   <div className="bg-muted/50 grid grid-cols-2 gap-4 rounded-lg p-3 text-sm">
                     <div className="flex items-center justify-between">
-                      <span className="text-muted-foreground">Processed</span>
+                      <span className="text-muted-foreground">
+                        {tAuto("processed_8291b24")}
+                      </span>
                       <span className="font-bold">{processedCount}</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-muted-foreground">Failed</span>
+                      <span className="text-muted-foreground">
+                        {tAuto("failed_09fef5d")}
+                      </span>
                       <span
                         className={`font-bold ${failedCount > 0 ? "text-destructive" : ""}`}
                       >
@@ -158,12 +169,14 @@ export function StatusStep({
                 <div className="bg-muted/50 rounded-lg p-4 text-sm">
                   <div className="flex items-center justify-between">
                     <span className="text-muted-foreground">
-                      Successfully processed
+                      {tAuto("successfully_processed_5c5df5a")}{" "}
                     </span>
                     <span className="font-bold">{processedCount}</span>
                   </div>
                   <div className="mt-2 flex items-center justify-between">
-                    <span className="text-muted-foreground">Failed</span>
+                    <span className="text-muted-foreground">
+                      {tAuto("failed_09fef5d")}
+                    </span>
                     <span className="text-destructive font-bold">
                       {failedCount}
                     </span>
@@ -174,7 +187,7 @@ export function StatusStep({
               {status.data?.log && (
                 <div className="border-destructive/50 bg-destructive/5 space-y-2 rounded-lg border p-3">
                   <p className="text-destructive text-xs font-bold">
-                    Error Summary:
+                    {tAuto("error_summary_6feaab9")}{" "}
                   </p>
                   <pre className="text-muted-foreground max-h-32 overflow-auto text-[10px]">
                     {status.data.log}
@@ -193,7 +206,7 @@ export function StatusStep({
               onClick={onClose}
               className={isComplete && hasPartialSuccess ? "flex-1" : "w-full"}
             >
-              Close
+              {tAuto("close_bbfa773")}{" "}
             </Button>
             {isComplete && hasPartialSuccess && (
               <Button
@@ -204,7 +217,7 @@ export function StatusStep({
                   )
                 }
               >
-                Go to Dataset
+                {tAuto("go_to_dataset_e2be18a")}{" "}
               </Button>
             )}
           </div>

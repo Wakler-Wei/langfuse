@@ -31,6 +31,7 @@ import {
 } from "@/src/components/ui/hover-card";
 import { cn } from "@/src/utils/tailwind";
 import Spinner from "@/src/components/design-system/Spinner/Spinner";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export interface LogViewToolbarProps {
   /** Current search query */
@@ -91,6 +92,8 @@ export const LogViewToolbar = memo(function LogViewToolbar({
   showMilliseconds = false,
   onToggleMilliseconds,
 }: LogViewToolbarProps) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const [isCopied, setIsCopied] = useState(false);
 
   const handleCopyClick = () => {
@@ -108,7 +111,7 @@ export const LogViewToolbar = memo(function LogViewToolbar({
         <HoverCard openDelay={200}>
           <HoverCardTrigger asChild>
             <span className="cursor-help rounded bg-yellow-100 px-1.5 py-0.5 text-xs font-bold text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300">
-              Large Trace
+              {tAuto("large_trace_bf44c17")}{" "}
             </span>
           </HoverCardTrigger>
           <HoverCardContent
@@ -116,15 +119,22 @@ export const LogViewToolbar = memo(function LogViewToolbar({
             className="w-72 text-sm"
             sideOffset={8}
           >
-            <p className="font-bold">Optimized for performance</p>
+            <p className="font-bold">
+              {tAuto("optimized_for_performance_aaebd17")}
+            </p>
             <p className="text-muted-foreground mt-1.5">
-              This trace has {observationCount?.toLocaleString() ?? "many"}{" "}
-              observations. To keep things smooth:
+              {tAutoI18n("this_trace_has_657e6cf")}{" "}
+              {observationCount?.toLocaleString() ?? "many"}{" "}
+              {tAutoI18n("observations_to_keep_things_smooth_440111c")}{" "}
             </p>
             <ul className="text-muted-foreground mt-1.5 list-inside list-disc space-y-0.5">
-              <li>Content loads as you scroll</li>
-              <li>JSON view is disabled</li>
-              <li>Download/copy includes I/O for cached observations only</li>
+              <li>{tAuto("content_loads_as_you_scroll_e4e32c4")}</li>
+              <li>{tAuto("json_view_is_disabled_2996d31")}</li>
+              <li>
+                {tAuto(
+                  "download_copy_includes_i_o_for_cached_observations_o_b437159",
+                )}
+              </li>
             </ul>
           </HoverCardContent>
         </HoverCard>
@@ -137,7 +147,7 @@ export const LogViewToolbar = memo(function LogViewToolbar({
         <Command className="flex-1 rounded-none border-0 bg-transparent">
           <CommandInput
             showBorder={false}
-            placeholder="Search observations..."
+            placeholder={tAuto("search_observations_ddc425a")}
             className="h-7 border-0 focus:ring-0"
             value={searchQuery}
             onValueChange={onSearchChange}
@@ -165,8 +175,8 @@ export const LogViewToolbar = memo(function LogViewToolbar({
                   indentDisabled
                     ? undefined
                     : indentEnabled
-                      ? "Hide indentation"
-                      : "Show indentation"
+                      ? tAuto("hide_indentation_2fcdd65")
+                      : tAuto("show_indentation_8557694")
                 }
               >
                 <IndentIncrease className="h-3.5 w-3.5" />
@@ -174,9 +184,13 @@ export const LogViewToolbar = memo(function LogViewToolbar({
             </HoverCardTrigger>
             {indentDisabled && (
               <HoverCardContent className="w-56 text-sm" sideOffset={8}>
-                <p className="font-bold">Indentation unavailable</p>
+                <p className="font-bold">
+                  {tAuto("indentation_unavailable_0f86499")}
+                </p>
                 <p className="text-muted-foreground mt-1">
-                  Disabled for deeply nested trees to maintain readability.
+                  {tAuto(
+                    "disabled_for_deeply_nested_trees_to_maintain_readabi_658098e",
+                  )}{" "}
                 </p>
               </HoverCardContent>
             )}
@@ -193,7 +207,11 @@ export const LogViewToolbar = memo(function LogViewToolbar({
               showMilliseconds && "bg-primary text-primary-foreground",
             )}
             onClick={onToggleMilliseconds}
-            title={showMilliseconds ? "Hide milliseconds" : "Show milliseconds"}
+            title={
+              showMilliseconds
+                ? tAuto("hide_milliseconds_b35f325")
+                : tAuto("show_milliseconds_44fcf9b")
+            }
           >
             <Timer className="h-3.5 w-3.5" />
           </Button>
@@ -224,10 +242,10 @@ export const LogViewToolbar = memo(function LogViewToolbar({
             </TooltipTrigger>
             <TooltipContent>
               {isVirtualized
-                ? "Disabled for large traces"
+                ? tAutoI18n("disabled_for_large_traces_21a31d2")
                 : allRowsExpanded
-                  ? "Collapse all"
-                  : "Expand all"}
+                  ? tAutoI18n("collapse_all_ec89836")
+                  : tAutoI18n("expand_all_2af9d49")}
             </TooltipContent>
           </Tooltip>
         )}
@@ -258,27 +276,29 @@ export const LogViewToolbar = memo(function LogViewToolbar({
                 </TooltipTrigger>
                 <TooltipContent>
                   {isCopyOrDownloadLoading
-                    ? "Loading data..."
+                    ? tAutoI18n("loading_data_982d2e9")
                     : isCopyOrDownloadCacheOnly
-                      ? "Copy as JSON (cache only)"
-                      : "Copy as JSON"}
+                      ? tAutoI18n("copy_as_json_cache_only_6aa4ef5")
+                      : tAutoI18n("copy_as_json_5bc29b2")}
                 </TooltipContent>
               </Tooltip>
             </HoverCardTrigger>
             {isCopyOrDownloadCacheOnly && !isCopyOrDownloadLoading && (
               <HoverCardContent className="w-64 text-sm" sideOffset={8}>
-                <p className="font-bold">Cache-only mode</p>
+                <p className="font-bold">{tAuto("cache_only_mode_0edb31f")}</p>
                 <p className="text-muted-foreground mt-1">
-                  For large traces, only expanded observations include full I/O
-                  data.
+                  {tAuto(
+                    "for_large_traces_only_expanded_observations_include__f148346",
+                  )}{" "}
                 </p>
                 {loadedObservationCount !== undefined &&
                   observationCount !== undefined && (
                     <p className="text-muted-foreground mt-1.5">
                       <span className="font-bold">
-                        {loadedObservationCount} of {observationCount}
+                        {loadedObservationCount} {tAutoI18n("of_de04fa0")}{" "}
+                        {observationCount}
                       </span>{" "}
-                      observations loaded
+                      {tAutoI18n("observations_loaded_7f8463c")}{" "}
                     </p>
                   )}
               </HoverCardContent>
@@ -310,27 +330,29 @@ export const LogViewToolbar = memo(function LogViewToolbar({
                 </TooltipTrigger>
                 <TooltipContent>
                   {isCopyOrDownloadLoading
-                    ? "Loading data..."
+                    ? tAutoI18n("loading_data_982d2e9")
                     : isCopyOrDownloadCacheOnly
-                      ? "Download as JSON (cache only)"
-                      : "Download as JSON"}
+                      ? tAutoI18n("download_as_json_cache_only_c6bb089")
+                      : tAutoI18n("download_as_json_a1d2758")}
                 </TooltipContent>
               </Tooltip>
             </HoverCardTrigger>
             {isCopyOrDownloadCacheOnly && !isCopyOrDownloadLoading && (
               <HoverCardContent className="w-64 text-sm" sideOffset={8}>
-                <p className="font-bold">Cache-only mode</p>
+                <p className="font-bold">{tAuto("cache_only_mode_0edb31f")}</p>
                 <p className="text-muted-foreground mt-1">
-                  For large traces, only expanded observations include full I/O
-                  data.
+                  {tAuto(
+                    "for_large_traces_only_expanded_observations_include__f148346",
+                  )}{" "}
                 </p>
                 {loadedObservationCount !== undefined &&
                   observationCount !== undefined && (
                     <p className="text-muted-foreground mt-1.5">
                       <span className="font-bold">
-                        {loadedObservationCount} of {observationCount}
+                        {loadedObservationCount} {tAutoI18n("of_de04fa0")}{" "}
+                        {observationCount}
                       </span>{" "}
-                      observations loaded
+                      {tAutoI18n("observations_loaded_7f8463c")}{" "}
                     </p>
                   )}
               </HoverCardContent>

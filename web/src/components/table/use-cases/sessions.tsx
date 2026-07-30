@@ -65,6 +65,7 @@ import { TableSelectionManager } from "@/src/features/table/components/TableSele
 import { useScoreColumns } from "@/src/features/scores/hooks/useScoreColumns";
 import { scoreFilters } from "@/src/features/scores/lib/scoreColumns";
 import { BatchExportTableButton } from "@/src/components/BatchExportTableButton";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export type SessionTableRow = {
   id: string;
@@ -105,6 +106,7 @@ export default function SessionsTable({
   isBetaEnabled = false,
   showControlsInPageHeader = false,
 }: SessionTableProps) {
+  const tAuto = useAutoTranslations();
   const sessionsFilterConfig = useMemo(
     () => getSessionFilterConfig(omittedFilter, isBetaEnabled),
     [isBetaEnabled, omittedFilter],
@@ -343,8 +345,11 @@ export default function SessionsTable({
   const addToQueueMutation = api.annotationQueueItems.createMany.useMutation({
     onSuccess: (data) => {
       showSuccessToast({
-        title: "Sessions added to queue",
-        description: `Selected sessions will be added to queue "${data.queueName}". This may take a minute.`,
+        title: tAuto("sessions_added_to_queue_bfc3f16"),
+        description: tAuto(
+          "selected_sessions_will_be_added_to_queue_value0_this_b44b16f",
+          { value0: data.queueName ?? "" },
+        ),
         link: {
           href: `/project/${projectId}/annotation-queues/${data.queueId}`,
           text: `View queue "${data.queueName}"`,
@@ -445,8 +450,10 @@ export default function SessionsTable({
     {
       id: ActionId.SessionAddToAnnotationQueue,
       type: BatchActionType.Create,
-      label: "Add to Annotation Queue",
-      description: "Add selected sessions to an annotation queue.",
+      label: tAuto("add_to_annotation_queue_adf3e2c"),
+      description: tAuto(
+        "add_selected_sessions_to_an_annotation_queue_e1cad35",
+      ),
       targetLabel: "Annotation Queue",
       execute: handleAddToAnnotationQueue,
       accessCheck: {
@@ -502,7 +509,7 @@ export default function SessionsTable({
     {
       accessorKey: "createdAt",
       id: "createdAt",
-      header: "Created At",
+      header: tAuto("created_at_5db1542"),
       size: 150,
       enableHiding: true,
       enableSorting: true,
@@ -514,7 +521,7 @@ export default function SessionsTable({
     {
       accessorKey: "sessionDuration",
       id: "sessionDuration",
-      header: "Duration",
+      header: tAuto("duration_1370004"),
       size: 130,
       enableHiding: true,
       loadingCell: <TableTextLoadingCell />,
@@ -532,7 +539,7 @@ export default function SessionsTable({
     },
     {
       accessorKey: "environment",
-      header: "Environment",
+      header: tAuto("environment_d443a11"),
       id: "environment",
       size: 150,
       enableHiding: true,
@@ -553,7 +560,7 @@ export default function SessionsTable({
     },
     {
       accessorKey: "scores",
-      header: "Scores",
+      header: tAuto("scores_126cb93"),
       id: "scores",
       enableHiding: true,
       defaultHidden: true,
@@ -566,7 +573,7 @@ export default function SessionsTable({
       accessorKey: "userIds",
       enableColumnFilter: !omittedFilter.includes("userIds"),
       id: "userIds",
-      header: "User IDs",
+      header: tAuto("user_ids_2506399"),
       size: 200,
       enableHiding: true,
       loadingCell: <TableTextLoadingCell />,
@@ -591,10 +598,10 @@ export default function SessionsTable({
     {
       accessorKey: "countTraces",
       id: "countTraces",
-      header: "Traces",
+      header: tAuto("traces_194e807"),
       size: 100,
       headerTooltip: {
-        description: "The number of traces in the session.",
+        description: tAuto("the_number_of_traces_in_the_session_6fa6e17"),
       },
       enableHiding: true,
       enableSorting: true,
@@ -611,7 +618,7 @@ export default function SessionsTable({
     {
       accessorKey: "inputCost",
       id: "inputCost",
-      header: "Input Cost",
+      header: tAuto("input_cost_26bd4e9"),
       size: 110,
       enableHiding: true,
       defaultHidden: true,
@@ -630,7 +637,7 @@ export default function SessionsTable({
     {
       accessorKey: "outputCost",
       id: "outputCost",
-      header: "Output Cost",
+      header: tAuto("output_cost_5b10194"),
       size: 110,
       enableHiding: true,
       enableSorting: true,
@@ -649,7 +656,7 @@ export default function SessionsTable({
     {
       accessorKey: "totalCost",
       id: "totalCost",
-      header: "Total Cost",
+      header: tAuto("total_cost_b5d8da4"),
       size: 110,
       enableHiding: true,
       enableSorting: true,
@@ -667,7 +674,7 @@ export default function SessionsTable({
     {
       accessorKey: "inputTokens",
       id: "inputTokens",
-      header: "Input Tokens",
+      header: tAuto("input_tokens_8add24d"),
       size: 110,
       enableHiding: true,
       defaultHidden: true,
@@ -687,7 +694,7 @@ export default function SessionsTable({
     {
       accessorKey: "outputTokens",
       id: "outputTokens",
-      header: "Output Tokens",
+      header: tAuto("output_tokens_878afed"),
       size: 110,
       enableHiding: true,
       defaultHidden: true,
@@ -707,7 +714,7 @@ export default function SessionsTable({
     {
       accessorKey: "totalTokens",
       id: "totalTokens",
-      header: "Total Tokens",
+      header: tAuto("total_tokens_b662ff2"),
       size: 110,
       enableHiding: true,
       defaultHidden: true,
@@ -727,7 +734,7 @@ export default function SessionsTable({
     {
       accessorKey: "usage",
       id: "usage",
-      header: "Usage",
+      header: tAuto("usage_0bb1864"),
       size: 220,
       enableHiding: true,
       enableSorting: true,
@@ -755,7 +762,7 @@ export default function SessionsTable({
     {
       accessorKey: "traceTags",
       id: "traceTags",
-      header: "Trace Tags",
+      header: tAuto("trace_tags_dbf3614"),
       size: 250,
       enableHiding: true,
       defaultHidden: true,
@@ -946,8 +953,9 @@ export default function SessionsTable({
               highlightAllRows={selectAll}
               setRowSelection={setSelectedRows}
               help={{
-                description:
-                  "A session is a collection of related traces, such as a conversation or thread. To begin, add a sessionId to the trace.",
+                description: tAuto(
+                  "a_session_is_a_collection_of_related_traces_such_as__13555a8",
+                ),
                 href: "https://langfuse.com/docs/observability/features/sessions",
               }}
               rowHeight={rowHeight}

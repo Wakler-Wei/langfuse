@@ -26,8 +26,10 @@ import { useQueryOrganization } from "@/src/features/organizations/hooks";
 import { useHasOrganizationAccess } from "@/src/features/rbac/utils/checkOrganizationAccess";
 import { showSuccessToast } from "@/src/features/notifications/showSuccessToast"; // Import success toast function
 import { env } from "@/src/env.mjs";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export function DeleteOrganizationButton() {
+  const tAuto = useAutoTranslations();
   const capture = usePostHogClientCapture();
 
   const organization = useQueryOrganization();
@@ -63,8 +65,10 @@ export function DeleteOrganizationButton() {
       });
       capture("organization_settings:delete_organization");
       showSuccessToast({
-        title: "Organization Deleted",
-        description: "The organization has been successfully deleted.",
+        title: tAuto("organization_deleted_843ddd3"),
+        description: tAuto(
+          "the_organization_has_been_successfully_deleted_e13c5cd",
+        ),
       });
       await new Promise((resolve) => setTimeout(resolve, 5000)); // Delay for 5 seconds
       window.location.href = env.NEXT_PUBLIC_BASE_PATH ?? "/"; // Browser reload to refresh jwt
@@ -77,18 +81,22 @@ export function DeleteOrganizationButton() {
     <Dialog>
       <DialogTrigger asChild>
         <Button variant="destructive-secondary" disabled={!hasAccess}>
-          Delete Organization
+          {tAuto("delete_organization_f3379db")}{" "}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle className="text-lg font-bold">
-            Delete Organization
+            {tAuto("delete_organization_f3379db")}{" "}
           </DialogTitle>
           <DialogDescription>
             {hasProjects
-              ? "You can only delete an organization if it has no projects associated with it. Please delete or transfer all projects first. Deleting projects may take a few minutes."
-              : `To confirm, type "${confirmMessage}" in the input box `}
+              ? tAuto(
+                  "you_can_only_delete_an_organization_if_it_has_no_pro_73c89b0",
+                )
+              : tAuto("to_confirm_type_value0_in_the_input_box_7071144", {
+                  value0: String((confirmMessage as unknown) ?? ""),
+                })}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -117,7 +125,7 @@ export function DeleteOrganizationButton() {
                 disabled={hasProjects}
                 className="w-full"
               >
-                Delete Organization
+                {tAuto("delete_organization_f3379db")}{" "}
               </Button>
             </DialogFooter>
           </form>

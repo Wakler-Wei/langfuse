@@ -51,6 +51,7 @@ import { useSyncMessageSearchMessages } from "@/src/components/ChatMessages/Mess
 import { getFinalModelParams } from "@/src/utils/getFinalModelParams";
 import { STREAMING_PREF_KEY } from "@/src/features/playground/page/storage/keys";
 import { captureUnknownError } from "@/src/utils/captureUnknownError";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type PlaygroundContextType = {
   windowId: string;
@@ -109,6 +110,7 @@ export const PlaygroundProvider: React.FC<PlaygroundProviderProps> = ({
   children,
   windowId,
 }) => {
+  const tAuto = useAutoTranslations();
   const effectiveWindowId = windowId || MULTI_WINDOW_CONFIG.DEFAULT_WINDOW_ID;
   const capture = usePostHogClientCapture();
   const projectId = useProjectIdFromURL();
@@ -470,8 +472,10 @@ export const PlaygroundProvider: React.FC<PlaygroundProviderProps> = ({
         });
       } catch (err) {
         const errorMessage =
-          err instanceof Error ? err.message : "An error occurred";
-        showErrorToast("Error", errorMessage);
+          err instanceof Error
+            ? err.message
+            : tAuto("an_error_occurred_98a5e11");
+        showErrorToast(tAuto("error_7f2f6a1"), errorMessage);
       } finally {
         setIsStreaming(false);
       }
@@ -486,6 +490,8 @@ export const PlaygroundProvider: React.FC<PlaygroundProviderProps> = ({
       setPlaygroundCache,
       structuredOutputSchema,
       projectId,
+      ,
+      tAuto,
     ],
   );
 

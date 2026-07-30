@@ -14,6 +14,7 @@ import type {
   MappingTarget,
 } from "../types";
 import { isJsonPath } from "@langfuse/shared";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type CustomMappingEditorProps = {
   config: CustomMappingConfig;
@@ -28,6 +29,7 @@ export function CustomMappingEditor({
   defaultSourceField,
   observationData,
 }: CustomMappingEditorProps) {
+  const tAuto = useAutoTranslations();
   const handleTypeChange = (type: MappingTarget) => {
     if (type === "root") {
       onChange({
@@ -144,15 +146,17 @@ export function CustomMappingEditor({
   return (
     <div className="bg-muted/30 space-y-2 rounded-md border p-4">
       <div>
-        <Label className="text-sm font-bold">Target</Label>
+        <Label className="text-sm font-bold">{tAuto("target_61ad50a")}</Label>
         <Tabs
           value={config.type}
           onValueChange={(v) => handleTypeChange(v as MappingTarget)}
           className="mt-2"
         >
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="root">Root</TabsTrigger>
-            <TabsTrigger value="keyValueMap">Key-value map</TabsTrigger>
+            <TabsTrigger value="root">{tAuto("root_e96857c")}</TabsTrigger>
+            <TabsTrigger value="keyValueMap">
+              {tAuto("key_value_map_7d04fed")}
+            </TabsTrigger>
           </TabsList>
         </Tabs>
       </div>
@@ -160,7 +164,9 @@ export function CustomMappingEditor({
       {config.type === "root" && (
         <div className="space-y-4">
           <div>
-            <Label className="text-sm font-bold">Source</Label>
+            <Label className="text-sm font-bold">
+              {tAuto("source_6da13ad")}
+            </Label>
             <div className="mt-1">
               <SourceFieldSelector
                 value={config.rootConfig?.sourceField ?? defaultSourceField}
@@ -169,7 +175,9 @@ export function CustomMappingEditor({
             </div>
           </div>
           <div>
-            <Label className="text-sm font-bold">JSONPath</Label>
+            <Label className="text-sm font-bold">
+              {tAuto("jsonpath_3408f94")}
+            </Label>
             <div className="mt-1">
               <JsonPathInput
                 value={config.rootConfig?.jsonPath ?? "$."}
@@ -177,11 +185,11 @@ export function CustomMappingEditor({
                 sourceData={getSourceData(
                   config.rootConfig?.sourceField ?? defaultSourceField,
                 )}
-                placeholder="$.path.to.field"
+                placeholder={tAuto("path_to_field_50844d1")}
               />
             </div>
             <p className="text-muted-foreground p-1 text-xs">
-              Start with $. to use a JSONPath (e.g., $.field)
+              {tAuto("start_with_to_use_a_jsonpath_e_g_field_5e6960f")}{" "}
             </p>
           </div>
         </div>
@@ -189,10 +197,13 @@ export function CustomMappingEditor({
 
       {config.type === "keyValueMap" && (
         <div className="max-h-[35vh] space-y-3 overflow-auto">
-          <Label className="text-sm font-bold">Key-value mappings</Label>
+          <Label className="text-sm font-bold">
+            {tAuto("key_value_mappings_e6a7053")}
+          </Label>
           <p className="text-muted-foreground text-xs">
-            Build an object with custom keys. Values starting with $ are treated
-            as JSONPaths.
+            {tAuto(
+              "build_an_object_with_custom_keys_values_starting_wit_cb70d49",
+            )}{" "}
           </p>
 
           <div className="space-y-3">
@@ -230,7 +241,7 @@ export function CustomMappingEditor({
             className="w-full"
           >
             <Plus className="mr-2 h-4 w-4" />
-            Add field
+            {tAuto("add_field_039c631")}{" "}
           </Button>
         </div>
       )}
@@ -257,6 +268,8 @@ function KeyValueEntryRow({
   canRemove,
   sourceData,
 }: KeyValueEntryRowProps) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const isPath = isJsonPath(entry.value);
   const isSchemaField = entry.fromSchema === true;
   const isRequired = entry.isRequired === true;
@@ -270,16 +283,18 @@ function KeyValueEntryRow({
       <div className="grid grid-cols-[1fr_auto] gap-2">
         <div>
           <Label className="text-muted-foreground text-xs">
-            Key
+            {tAutoI18n("key_c67dd20")}{" "}
             {isRequired && <span className="text-destructive ml-1">*</span>}
             {isSchemaField && (
-              <span className="text-primary ml-2">(from schema)</span>
+              <span className="text-primary ml-2">
+                {tAuto("from_schema_2c51c12")}
+              </span>
             )}
           </Label>
           <Input
             value={entry.key}
             onChange={(e) => onKeyChange(e.target.value)}
-            placeholder="field_name"
+            placeholder={tAuto("field_name_2acf9b4")}
             className="mt-1 h-8"
             readOnly={isSchemaField}
             disabled={isSchemaField}
@@ -295,8 +310,8 @@ function KeyValueEntryRow({
             className="h-8 w-8 p-0"
             title={
               isSchemaField && isRequired
-                ? "Required schema field cannot be removed"
-                : "Remove field"
+                ? tAuto("required_schema_field_cannot_be_removed_0d68d66")
+                : tAuto("remove_field_f4e0360")
             }
           >
             <Trash2
@@ -312,7 +327,9 @@ function KeyValueEntryRow({
 
       <div className="grid grid-cols-[38fr_62fr] gap-2">
         <div>
-          <Label className="text-muted-foreground text-xs">Source</Label>
+          <Label className="text-muted-foreground text-xs">
+            {tAuto("source_6da13ad")}
+          </Label>
           <div className="mt-1">
             <SourceFieldSelector
               value={entry.sourceField}
@@ -323,7 +340,7 @@ function KeyValueEntryRow({
         </div>
         <div>
           <Label className="text-muted-foreground text-xs">
-            Value {!isPath && "(literal)"}
+            {tAutoI18n("value_8dce170")} {!isPath && "(literal)"}
           </Label>
           <div className="mt-1">
             {isPath ? (
@@ -331,20 +348,20 @@ function KeyValueEntryRow({
                 value={entry.value}
                 onChange={onValueChange}
                 sourceData={sourceData}
-                placeholder="$.path"
+                placeholder={tAuto("path_bfbdc39")}
                 className="h-9"
               />
             ) : (
               <Input
                 value={entry.value}
                 onChange={(e) => onValueChange(e.target.value)}
-                placeholder="literal value"
+                placeholder={tAuto("literal_value_24df427")}
                 className="h-9"
               />
             )}
 
             <p className="text-muted-foreground pt-1 text-xs">
-              Start with $. to use a JSONPath (e.g., $.field)
+              {tAuto("start_with_to_use_a_jsonpath_e_g_field_5e6960f")}{" "}
             </p>
           </div>
         </div>

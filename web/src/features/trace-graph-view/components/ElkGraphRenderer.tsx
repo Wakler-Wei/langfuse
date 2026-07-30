@@ -23,6 +23,7 @@ import {
   type GraphLayoutDirection,
 } from "../layout/elkLayout";
 import { GraphNode } from "./GraphNode";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type ElkGraphRendererProps = {
   graph: GraphCanvasData;
@@ -93,6 +94,8 @@ export const ElkGraphRenderer: React.FC<ElkGraphRendererProps> = ({
   layoutDirection = "DOWN",
   onShowExpanded = null,
 }) => {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const containerRef = useRef<HTMLDivElement>(null);
   const worldRef = useRef<HTMLDivElement>(null);
   const transformRef = useRef<Transform>({ x: 0, y: 0, k: 1 });
@@ -323,7 +326,7 @@ export const ElkGraphRenderer: React.FC<ElkGraphRendererProps> = ({
   if (!graph.nodes.length) {
     return (
       <div className="text-muted-foreground flex h-full items-center justify-center text-sm">
-        No graph data available
+        {tAuto("no_graph_data_available_e526207")}{" "}
       </div>
     );
   }
@@ -332,7 +335,7 @@ export const ElkGraphRenderer: React.FC<ElkGraphRendererProps> = ({
     <div
       ref={containerRef}
       role="group"
-      aria-label="Trace agent graph"
+      aria-label={tAuto("trace_agent_graph_415c4c4")}
       className="bg-background/50 relative h-full w-full cursor-grab overflow-hidden active:cursor-grabbing"
       onPointerDown={(e) =>
         (pointerDownPos.current = { x: e.clientX, y: e.clientY })
@@ -341,12 +344,12 @@ export const ElkGraphRenderer: React.FC<ElkGraphRendererProps> = ({
     >
       {!layout && !layoutError && (
         <div className="text-muted-foreground absolute inset-0 flex items-center justify-center text-sm">
-          Laying out graph…
+          {tAuto("laying_out_graph_ea8cf8e")}{" "}
         </div>
       )}
       {layoutError && (
         <div className="text-muted-foreground absolute inset-0 flex flex-col items-center justify-center gap-2 text-sm">
-          <span>Could not lay out the graph.</span>
+          <span>{tAuto("could_not_lay_out_the_graph_b7cd8a7")}</span>
           <Button
             variant="outline"
             size="sm"
@@ -355,7 +358,7 @@ export const ElkGraphRenderer: React.FC<ElkGraphRendererProps> = ({
               setLayoutAttempt((n) => n + 1);
             }}
           >
-            Retry
+            {tAuto("retry_9f5cd8a")}{" "}
           </Button>
         </div>
       )}
@@ -364,14 +367,21 @@ export const ElkGraphRenderer: React.FC<ElkGraphRendererProps> = ({
         // — it would just wedge again. Point the user at the tree/timeline.
         <div className="text-muted-foreground absolute inset-0 flex flex-col items-center justify-center gap-1 px-4 text-center text-sm">
           <span>
-            This graph is too large to lay out
+            {tAutoI18n("this_graph_is_too_large_to_lay_out_89209d0")}{" "}
             {layout.nodeCount != null && layout.edgeCount != null
-              ? ` (${layout.nodeCount.toLocaleString()} nodes, ${layout.edgeCount.toLocaleString()} connections)`
+              ? tAutoI18n("value0_nodes_value1_connections_b776e26", {
+                  value0: String(
+                    (layout.nodeCount.toLocaleString() as unknown) ?? "",
+                  ),
+                  value1: String(
+                    (layout.edgeCount.toLocaleString() as unknown) ?? "",
+                  ),
+                })
               : ""}
             .
           </span>
           <span>
-            Try the{" "}
+            {tAutoI18n("try_the_113c4f1")}{" "}
             {onShowExpanded ? (
               <button
                 type="button"
@@ -381,12 +391,14 @@ export const ElkGraphRenderer: React.FC<ElkGraphRendererProps> = ({
                 }}
                 className="text-primary underline underline-offset-2 hover:opacity-80"
               >
-                expanded graph
+                {tAuto("expanded_graph_d4d447b")}{" "}
               </button>
             ) : (
-              "expanded graph"
+              tAutoI18n("expanded_graph_d4d447b")
             )}
-            , tree, or timeline view to explore this trace.
+            {tAutoI18n(
+              "tree_or_timeline_view_to_explore_this_trace_63deecc",
+            )}{" "}
           </span>
         </div>
       )}
@@ -500,7 +512,7 @@ export const ElkGraphRenderer: React.FC<ElkGraphRendererProps> = ({
           variant="outline"
           size="icon"
           className="bg-background/80 h-7 w-7 backdrop-blur"
-          title="Zoom in"
+          title={tAuto("zoom_in_4fc05f2")}
         >
           <ZoomIn className="h-4 w-4" />
         </Button>
@@ -509,7 +521,7 @@ export const ElkGraphRenderer: React.FC<ElkGraphRendererProps> = ({
           variant="outline"
           size="icon"
           className="bg-background/80 h-7 w-7 backdrop-blur"
-          title="Zoom out"
+          title={tAuto("zoom_out_a4ae4b2")}
         >
           <ZoomOut className="h-4 w-4" />
         </Button>
@@ -518,7 +530,7 @@ export const ElkGraphRenderer: React.FC<ElkGraphRendererProps> = ({
           variant="outline"
           size="icon"
           className="bg-background/80 h-7 w-7 backdrop-blur"
-          title="Fit to view"
+          title={tAuto("fit_to_view_cf22e88")}
         >
           <Maximize className="h-4 w-4" />
         </Button>

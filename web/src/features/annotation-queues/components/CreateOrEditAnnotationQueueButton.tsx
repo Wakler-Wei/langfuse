@@ -47,6 +47,7 @@ import { ChevronDown, ChevronRight } from "lucide-react";
 import { UserAssignmentSection } from "@/src/features/annotation-queues/components/UserAssignmentSection";
 import { showErrorToast } from "@/src/features/notifications/showErrorToast";
 import { getScoreDataTypeIcon } from "@/src/features/scores/lib/scoreColumns";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export const CreateOrEditAnnotationQueueButton = ({
   projectId,
@@ -61,6 +62,8 @@ export const CreateOrEditAnnotationQueueButton = ({
   size?: ButtonProps["size"];
   isTableAction?: boolean;
 }) => {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const [isOpen, setIsOpen] = useState(false);
   const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
   const hasQueueAccess = useHasProjectAccess({
@@ -196,8 +199,10 @@ export const CreateOrEditAnnotationQueueButton = ({
       // capture posthog event
     } catch {
       showErrorToast(
-        "Operation failed",
-        "Failed to create or update queue or assign users. Please try again.",
+        tAutoI18n("operation_failed_c4e6ed9"),
+        tAutoI18n(
+          "failed_to_create_or_update_queue_or_assign_users_ple_721a308",
+        ),
       );
     }
   };
@@ -224,8 +229,8 @@ export const CreateOrEditAnnotationQueueButton = ({
   const triggerButton = isTableAction ? (
     <IconOnlyButton
       icon={<Pen className="h-4 w-4" />}
-      label="Edit"
-      aria-label="edit"
+      label={tAuto("edit_5301648")}
+      aria-label={tAuto("edit_9ead47a")}
       disabledReason={
         hasQueueAccess
           ? undefined
@@ -256,7 +261,7 @@ export const CreateOrEditAnnotationQueueButton = ({
       size={size}
     >
       <span className="ml-1 text-sm font-normal">
-        {queueId ? "Edit" : "New queue"}
+        {queueId ? tAuto("edit_5301648") : tAuto("new_queue_42ad740")}
       </span>
     </ActionButton>
   );
@@ -274,11 +279,16 @@ export const CreateOrEditAnnotationQueueButton = ({
         <DialogContent className="max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
-              {queueId ? "Edit" : "New"} annotation queue
+              {queueId ? tAutoI18n("edit_5301648") : tAutoI18n("new_6403f2b")}{" "}
+              {tAutoI18n("annotation_queue_fd7ac2a")}{" "}
             </DialogTitle>
             <DialogDescription>
-              {queueId ? "Edit" : "Create a new"} queue to manage your
-              annotation workflows.
+              {queueId
+                ? tAutoI18n("edit_5301648")
+                : tAutoI18n("create_a_new_3f66229")}{" "}
+              {tAutoI18n(
+                "queue_to_manage_your_annotation_workflows_46cf2a5",
+              )}{" "}
             </DialogDescription>
           </DialogHeader>
           <Form {...form}>
@@ -289,7 +299,7 @@ export const CreateOrEditAnnotationQueueButton = ({
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Name</FormLabel>
+                      <FormLabel>{tAuto("name_709a232")}</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
@@ -309,11 +319,13 @@ export const CreateOrEditAnnotationQueueButton = ({
                   name="description"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Description (optional)</FormLabel>
+                      <FormLabel>
+                        {tAuto("description_optional_388de6f")}
+                      </FormLabel>
                       <FormControl>
                         <Textarea
                           {...field}
-                          placeholder="Add description..."
+                          placeholder={tAuto("add_description_750c9f7")}
                           className="text-xs focus:ring-0 focus:outline-hidden focus-visible:ring-0 focus-visible:ring-offset-0 active:ring-0"
                         />
                       </FormControl>
@@ -326,14 +338,15 @@ export const CreateOrEditAnnotationQueueButton = ({
                   name="scoreConfigIds"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Score Configs</FormLabel>
+                      <FormLabel>{tAuto("score_configs_c78e87c")}</FormLabel>
                       <FormDescription>
-                        Define which dimensions annotators should score for the
-                        given queue.
+                        {tAuto(
+                          "define_which_dimensions_annotators_should_score_for__1c0e553",
+                        )}{" "}
                       </FormDescription>
                       <FormControl>
                         <MultiSelectKeyValues
-                          placeholder="Value"
+                          placeholder={tAuto("value_8dce170")}
                           align="end"
                           variant="outline"
                           className="grid grid-cols-[auto_1fr_auto_auto] gap-2"
@@ -365,7 +378,7 @@ export const CreateOrEditAnnotationQueueButton = ({
                                 );
                               }}
                               href={`/project/${projectId}/settings/scores`}
-                              title="Manage score configs"
+                              title={tAuto("manage_score_configs_3e599c9")}
                             />
                           }
                         />
@@ -381,7 +394,9 @@ export const CreateOrEditAnnotationQueueButton = ({
                   name="newAssignmentUserIds"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Advanced Settings</FormLabel>
+                      <FormLabel>
+                        {tAuto("advanced_settings_c8fef35")}
+                      </FormLabel>
                       <div className="mt-1 rounded-md border">
                         <Collapsible
                           open={isAdvancedOpen && hasQueueAssignmentsReadAccess}
@@ -406,7 +421,7 @@ export const CreateOrEditAnnotationQueueButton = ({
                                   <ChevronRight className="text-muted-foreground h-4 w-4" />
                                 )}
                                 <span className="text-sm font-bold">
-                                  User Assignment
+                                  {tAuto("user_assignment_40add11")}{" "}
                                 </span>
                               </div>
                             </Button>
@@ -446,8 +461,12 @@ export const CreateOrEditAnnotationQueueButton = ({
                   {createQueueMutation.isPending ||
                   editQueueMutation.isPending ||
                   createQueueAssignmentsMutation.isPending
-                    ? "Processing..."
-                    : `${queueId ? "Save" : "Create"} queue`}
+                    ? tAutoI18n("processing_272bc02")
+                    : tAutoI18n("value0_queue_c4396f6", {
+                        value0: queueId
+                          ? tAuto("save_efc007a")
+                          : tAuto("create_6e157c5"),
+                      })}
                 </Button>
               </DialogFooter>
             </form>

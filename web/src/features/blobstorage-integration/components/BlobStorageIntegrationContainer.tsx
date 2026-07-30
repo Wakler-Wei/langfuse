@@ -14,6 +14,7 @@ import { useLangfuseCloudRegion } from "@/src/features/organizations/hooks";
 import { useQueryProject } from "@/src/features/projects/hooks";
 import { buildBlobStorageFormValues } from "@/src/features/blobstorage-integration/components/formValues";
 import { BlobStorageIntegrationForm } from "@/src/features/blobstorage-integration/components/BlobStorageIntegrationForm";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 // State layer. Owns everything async and entity-scoped: availability
 // derivation, the four mutations, and the entity-action buttons. The form
@@ -35,6 +36,8 @@ export const BlobStorageIntegrationContainer = ({
   isEnrichedExportAvailable: boolean;
   legacyWritesActive: boolean;
 }) => {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const capture = usePostHogClientCapture();
   const { isLangfuseCloud } = useLangfuseCloudRegion();
   const { project } = useQueryProject();
@@ -70,7 +73,10 @@ export const BlobStorageIntegrationContainer = ({
       utils.blobStorageIntegration.invalidate();
     },
     onError: (error) => {
-      showErrorToast("Failed to save integration", error.message);
+      showErrorToast(
+        tAutoI18n("failed_to_save_integration_c36a8fa"),
+        error.message,
+      );
     },
   });
   const mutDelete = api.blobStorageIntegration.delete.useMutation({
@@ -87,11 +93,13 @@ export const BlobStorageIntegrationContainer = ({
     onSuccess: (data) => {
       showSuccessToast({
         title: data.message,
-        description: `Test file: ${data.testFileName}`,
+        description: tAuto("test_file_value0_c89c35a", {
+          value0: data.testFileName,
+        }),
       });
     },
     onError: (error) => {
-      showErrorToast("Validation failed", error.message);
+      showErrorToast(tAutoI18n("validation_failed_08b7b9d"), error.message);
     },
   });
 
@@ -136,18 +144,22 @@ export const BlobStorageIntegrationContainer = ({
         variant="secondary"
         loading={mutValidate.isPending}
         disabled={!config}
-        title="Test your saved configuration by uploading a small test file to your storage"
+        title={tAuto(
+          "test_your_saved_configuration_by_uploading_a_small_t_401d114",
+        )}
         onClick={() => {
           mutValidate.mutate({ projectId });
         }}
       >
-        Validate
+        {tAuto("validate_6752f19")}{" "}
       </Button>
       <Button
         variant="secondary"
         loading={mutRunNow.isPending}
         disabled={!config?.enabled}
-        title="Trigger an immediate export of all data since the last sync"
+        title={tAuto(
+          "trigger_an_immediate_export_of_all_data_since_the_la_b34cc96",
+        )}
         onClick={() => {
           if (
             confirm(
@@ -157,7 +169,7 @@ export const BlobStorageIntegrationContainer = ({
             mutRunNow.mutate({ projectId });
         }}
       >
-        Run Now
+        {tAuto("run_now_4ee85a6")}{" "}
       </Button>
       <Button
         variant="ghost"
@@ -172,7 +184,7 @@ export const BlobStorageIntegrationContainer = ({
             mutDelete.mutate({ projectId });
         }}
       >
-        Reset
+        {tAuto("reset_44c57ab")}{" "}
       </Button>
     </BlobStorageIntegrationForm>
   );

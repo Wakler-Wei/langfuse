@@ -20,8 +20,11 @@ import {
 import { Card } from "@/src/components/ui/card";
 import { LockIcon, ExternalLink } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export default function AIFeatureSwitch() {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const { update: updateSession } = useSession();
   const utils = api.useUtils();
   const { isLangfuseCloud } = useLangfuseCloudRegion();
@@ -118,26 +121,30 @@ export default function AIFeatureSwitch() {
 
   return (
     <div>
-      <Header title="AI Features" />
+      <Header title={tAuto("ai_features_3eedb2f")} />
       <Card className="mb-4 p-3">
         <div className="flex flex-row items-center justify-between">
           <div className="flex flex-col gap-1">
             <h4 className="font-bold">
-              Enable AI powered features for your organization
+              {tAuto(
+                "enable_ai_powered_features_for_your_organization_52d00c0",
+              )}{" "}
             </h4>
             <p className="text-sm">
-              This setting applies to all users and projects. Any data{" "}
-              <i>can</i> be sent to AWS Bedrock within the Langfuse data region.
-              Traces are sent to Langfuse Cloud in your data region. Your data
-              will not be used for training models. Applicable HIPAA, SOC2,
-              GDPR, and ISO 27001 compliance remains intact.{" "}
+              {tAutoI18n(
+                "this_setting_applies_to_all_users_and_projects_any_d_285066f",
+              )}{" "}
+              <i>{tAuto("can_7e9219a")}</i>{" "}
+              {tAutoI18n(
+                "be_sent_to_aws_bedrock_within_the_langfuse_data_regi_6134bf4",
+              )}{" "}
               <a
                 href="https://langfuse.com/security/ai-features"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-primary inline-flex items-center gap-1 hover:underline"
               >
-                More details in the docs here.
+                {tAuto("more_details_in_the_docs_here_55f432f")}{" "}
                 <ExternalLink className="h-3 w-3" />
               </a>
             </p>
@@ -149,7 +156,7 @@ export default function AIFeatureSwitch() {
               disabled={!hasAccess}
             />
             {!hasAccess && (
-              <span title="No access">
+              <span title={tAuto("no_access_63bde5f")}>
                 <LockIcon className="text-muted absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2 transform" />
               </span>
             )}
@@ -159,11 +166,14 @@ export default function AIFeatureSwitch() {
           <div className="mt-4 flex flex-row items-center justify-between border-t pt-4">
             <div className="flex flex-col gap-1">
               <h4 className="font-bold">
-                AI Data Use for Product/Service Improvement
+                {tAuto(
+                  "ai_data_use_for_product_service_improvement_f17a31e",
+                )}{" "}
               </h4>
               <p className="text-sm">
-                Share data about your use of AI with Langfuse for product and
-                service improvement.
+                {tAuto(
+                  "share_data_about_your_use_of_ai_with_langfuse_for_pr_923b4b5",
+                )}{" "}
               </p>
             </div>
             <div className="relative">
@@ -173,7 +183,7 @@ export default function AIFeatureSwitch() {
                 disabled={!hasAccess || updateAITelemetry.isPending}
               />
               {!hasAccess && (
-                <span title="No access">
+                <span title={tAuto("no_access_63bde5f")}>
                   <LockIcon className="text-muted absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2 transform" />
                 </span>
               )}
@@ -192,17 +202,26 @@ export default function AIFeatureSwitch() {
       >
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Confirm AI Features Change</DialogTitle>
+            <DialogTitle>
+              {tAuto("confirm_ai_features_change_45bc67a")}
+            </DialogTitle>
           </DialogHeader>
           <DialogBody>
             <span className="text-sm">
-              You are about to{" "}
+              {tAutoI18n("you_are_about_to_20e7c1f")}{" "}
               <strong>
-                {isAIFeatureSwitchEnabled ? "enable " : "disable"}
+                {isAIFeatureSwitchEnabled
+                  ? tAutoI18n("enable_9905c33")
+                  : tAutoI18n("disable_ccf09e2")}
               </strong>{" "}
-              AI features for your organization. When enabled, any data{"  "}
-              <i>can</i> be sent to AWS Bedrock in your data region for
-              processing.
+              {tAutoI18n(
+                "ai_features_for_your_organization_when_enabled_any_d_b1766da",
+              )}
+              {"  "}
+              <i>{tAuto("can_7e9219a")}</i>{" "}
+              {tAutoI18n(
+                "be_sent_to_aws_bedrock_in_your_data_region_for_proce_955c41f",
+              )}{" "}
               <br />
               <br />{" "}
               <a
@@ -211,12 +230,12 @@ export default function AIFeatureSwitch() {
                 rel="noopener noreferrer"
                 className="text-primary inline-flex items-center gap-1 hover:underline"
               >
-                Learn more in the docs.
+                {tAuto("learn_more_in_the_docs_1b6a582")}{" "}
                 <ExternalLink className="h-3 w-3" />
               </a>
             </span>
             <p className="text-muted-foreground mt-3 text-sm">
-              Are you sure you want to proceed?
+              {tAuto("are_you_sure_you_want_to_proceed_4471388")}{" "}
             </p>
           </DialogBody>
           <DialogFooter>
@@ -227,14 +246,14 @@ export default function AIFeatureSwitch() {
                 disabled={updateAIFeatures.isPending}
                 onClick={handleCancel}
               >
-                Cancel
+                {tAuto("cancel_77dfd21")}{" "}
               </Button>
               <Button
                 type="submit"
                 onClick={handleConfirm}
                 loading={updateAIFeatures.isPending}
               >
-                Confirm
+                {tAuto("confirm_04a2122")}{" "}
               </Button>
             </div>
           </DialogFooter>

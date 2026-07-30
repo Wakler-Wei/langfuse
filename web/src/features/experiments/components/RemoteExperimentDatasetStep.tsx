@@ -26,6 +26,7 @@ import {
 import { Skeleton } from "@/src/components/ui/skeleton";
 import { cn } from "@/src/utils/tailwind";
 import { api } from "@/src/utils/api";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type DatasetOption = {
   id: string;
@@ -43,6 +44,8 @@ export const RemoteExperimentDatasetStep = ({
   onBack: () => void;
   onContinue: (dataset: DatasetOption) => void;
 }) => {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const [datasetPopoverOpen, setDatasetPopoverOpen] = useState(false);
   const [selectedDatasetId, setSelectedDatasetId] = useState(
     initialDatasetId ?? "",
@@ -75,12 +78,13 @@ export const RemoteExperimentDatasetStep = ({
           onClick={onBack}
           className="inline-block self-start"
         >
-          ← Back
+          {tAuto("back_c32ae9f")}{" "}
         </Button>
-        <DialogTitle>Select dataset</DialogTitle>
+        <DialogTitle>{tAuto("select_dataset_acbdec4")}</DialogTitle>
         <DialogDescription>
-          Remote dataset run triggers are attached to a dataset. Choose the
-          dataset before configuring the remote experiment.
+          {tAuto(
+            "remote_dataset_run_triggers_are_attached_to_a_datase_c29dead",
+          )}{" "}
         </DialogDescription>
       </DialogHeader>
 
@@ -89,7 +93,7 @@ export const RemoteExperimentDatasetStep = ({
           <Skeleton className="h-24 w-full" />
         ) : datasets.data && datasets.data.length > 0 ? (
           <div className="space-y-2">
-            <div className="text-sm font-bold">Dataset</div>
+            <div className="text-sm font-bold">{tAuto("dataset_1052689")}</div>
             <Popover
               open={datasetPopoverOpen}
               onOpenChange={setDatasetPopoverOpen}
@@ -111,12 +115,14 @@ export const RemoteExperimentDatasetStep = ({
               >
                 <InputCommand>
                   <InputCommandInput
-                    placeholder="Search datasets..."
+                    placeholder={tAuto("search_datasets_2edc7dc")}
                     className="h-9"
                     variant="bottom"
                   />
                   <InputCommandList>
-                    <InputCommandEmpty>No dataset found.</InputCommandEmpty>
+                    <InputCommandEmpty>
+                      {tAuto("no_dataset_found_48303db")}
+                    </InputCommandEmpty>
                     <InputCommandGroup>
                       {datasets.data.map((dataset) => (
                         <InputCommandItem
@@ -146,9 +152,13 @@ export const RemoteExperimentDatasetStep = ({
           </div>
         ) : (
           <div className="rounded-md border p-4 text-sm">
-            <div className="font-bold">No datasets found</div>
+            <div className="font-bold">
+              {tAuto("no_datasets_found_172a447")}
+            </div>
             <p className="text-muted-foreground mt-1">
-              Create a dataset before setting up a remote experiment trigger.
+              {tAuto(
+                "create_a_dataset_before_setting_up_a_remote_experime_c994cf3",
+              )}{" "}
             </p>
           </div>
         )}
@@ -170,7 +180,7 @@ export const RemoteExperimentDatasetStep = ({
                 <Spinner size="sm" />
               </div>
             ) : null}
-            Continue
+            {tAutoI18n("continue_2e02623")}{" "}
           </Button>
         </div>
       </DialogFooter>

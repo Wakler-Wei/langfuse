@@ -52,6 +52,7 @@ import { useObservationIOLoadedCount } from "./useLogViewObservationIO";
 import { useLogViewPreferences } from "./useLogViewPreferences";
 import { useLogViewDownload } from "./useLogViewDownload";
 import { useLogViewColumns } from "./useLogViewColumns";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export interface TraceLogViewProps {
   traceId: string;
@@ -75,6 +76,7 @@ export const TraceLogView = ({
   projectId,
   currentView = "pretty",
 }: TraceLogViewProps) => {
+  const tAuto = useAutoTranslations();
   const { roots, observations } = useTraceData();
   const { logViewMode, logViewTreeStyle } = useViewPreferences();
   const { formattedExpansion, setFormattedFieldExpansion } = useJsonExpansion();
@@ -292,7 +294,7 @@ export const TraceLogView = ({
       {hasNoObservations && (
         <div className="flex flex-1 items-center justify-center">
           <div className="text-muted-foreground text-sm">
-            No observations in this trace
+            {tAuto("no_observations_in_this_trace_655a031")}{" "}
           </div>
         </div>
       )}

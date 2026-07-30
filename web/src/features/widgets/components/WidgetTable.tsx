@@ -37,6 +37,7 @@ import { getChartTypeDisplayName } from "@/src/features/widgets/chart-library/ut
 import { type DashboardWidgetChartType } from "@langfuse/shared/src/db";
 import { type metricAggregations } from "@langfuse/shared/query";
 import { type z } from "zod";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type WidgetTableRow = {
   id: string;
@@ -56,6 +57,8 @@ function WidgetActionsCell({
   widgetId: string;
   owner: "PROJECT" | "LANGFUSE";
 }) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const projectId = useProjectIdFromURL();
   const utils = api.useUtils();
   const capture = usePostHogClientCapture();
@@ -74,11 +77,16 @@ function WidgetActionsCell({
     onError: (error) => {
       if (error.data?.code === "CONFLICT") {
         showErrorToast(
-          "Widget in use",
-          "Widget is still in use. Please remove it from all dashboards before deleting it.",
+          tAutoI18n("widget_in_use_e34ce15"),
+          tAutoI18n(
+            "widget_is_still_in_use_please_remove_it_from_all_das_57eca0a",
+          ),
         );
       } else {
-        showErrorToast("Failed to delete widget", error.message);
+        showErrorToast(
+          tAutoI18n("failed_to_delete_widget_f6cb757"),
+          error.message,
+        );
       }
     },
   });
@@ -124,8 +132,10 @@ function WidgetActionsCell({
       });
     } catch (error) {
       showErrorToast(
-        "Failed to download widget",
-        error instanceof Error ? error.message : "Unknown error",
+        tAutoI18n("failed_to_download_widget_4113ff8"),
+        error instanceof Error
+          ? error.message
+          : tAutoI18n("unknown_error_e5fd9aa"),
       );
     }
   };
@@ -143,8 +153,10 @@ function WidgetActionsCell({
       });
     } catch (error) {
       showErrorToast(
-        "Failed to copy widget",
-        error instanceof Error ? error.message : "Unknown error",
+        tAutoI18n("failed_to_copy_widget_1691171"),
+        error instanceof Error
+          ? error.message
+          : tAutoI18n("unknown_error_e5fd9aa"),
       );
     }
   };
@@ -168,13 +180,17 @@ function WidgetActionsCell({
       });
       utils.dashboardWidgets.invalidate();
       showSuccessToast({
-        title: "Widget duplicated",
-        description: `Created "${exportSource.name} (Copy)".`,
+        title: tAuto("widget_duplicated_3a75609"),
+        description: tAuto("created_value0_copy_1b213a2", {
+          value0: exportSource.name,
+        }),
       });
     } catch (error) {
       showErrorToast(
-        "Failed to duplicate widget",
-        error instanceof Error ? error.message : "Unknown error",
+        tAutoI18n("failed_to_duplicate_widget_f68f6a1"),
+        error instanceof Error
+          ? error.message
+          : tAutoI18n("unknown_error_e5fd9aa"),
       );
     }
   };
@@ -183,22 +199,26 @@ function WidgetActionsCell({
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="xs" aria-label="Widget actions">
+          <Button
+            variant="ghost"
+            size="xs"
+            aria-label={tAuto("widget_actions_2659cd3")}
+          >
             <MoreVertical className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuItem onClick={handleCopyToClipboard}>
             <Copy className="mr-2 h-4 w-4" />
-            Copy to clipboard
+            {tAuto("copy_to_clipboard_d8f482e")}{" "}
           </DropdownMenuItem>
           <DropdownMenuItem disabled={!hasCUDAccess} onClick={handleDuplicate}>
             <CopyPlus className="mr-2 h-4 w-4" />
-            Duplicate
+            {tAuto("duplicate_972d573")}{" "}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={handleDownloadJson}>
             <FileJson className="mr-2 h-4 w-4" />
-            Download as JSON
+            {tAuto("download_as_json_a1d2758")}{" "}
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
@@ -207,15 +227,17 @@ function WidgetActionsCell({
             className="text-destructive focus:text-destructive"
           >
             <Trash className="mr-2 h-4 w-4" />
-            Delete
+            {tAuto("delete_f6fdbe4")}{" "}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
       <ConfirmDialog
         open={isDeleteDialogOpen}
         onOpenChange={setIsDeleteDialogOpen}
-        title="Delete widget"
-        description="This action permanently deletes this widget. If the widget is currently used in any dashboard, you will need to remove it from those dashboards first."
+        title={tAuto("delete_widget_6306b40")}
+        description={tAuto(
+          "this_action_permanently_deletes_this_widget_if_the_w_28b5f7c",
+        )}
         confirmLabel="Delete Widget"
         loading={mutDeleteWidget.isPending}
         onConfirm={() => {
@@ -232,6 +254,7 @@ function WidgetActionsCell({
 }
 
 export function DashboardWidgetTable() {
+  const tAuto = useAutoTranslations();
   const projectId = useProjectIdFromURL();
   const { setDetailPageList } = useDetailPageLists();
   const router = useRouter();
@@ -275,7 +298,7 @@ export function DashboardWidgetTable() {
   const columnHelper = createColumnHelper<WidgetTableRow>();
   const widgetColumns = [
     columnHelper.accessor("name", {
-      header: "Name",
+      header: tAuto("name_709a232"),
       id: "name",
       enableSorting: true,
       size: 200,
@@ -290,7 +313,7 @@ export function DashboardWidgetTable() {
       },
     }),
     columnHelper.accessor("description", {
-      header: "Description",
+      header: tAuto("description_55f8ebc"),
       id: "description",
       size: 300,
       cell: (row) => {
@@ -298,7 +321,7 @@ export function DashboardWidgetTable() {
       },
     }),
     columnHelper.accessor("view", {
-      header: "View Type",
+      header: tAuto("view_type_f102254"),
       id: "view",
       enableSorting: true,
       size: 100,
@@ -307,7 +330,7 @@ export function DashboardWidgetTable() {
       },
     }),
     columnHelper.accessor("chartType", {
-      header: "Chart Type",
+      header: tAuto("chart_type_d8c1079"),
       id: "chartType",
       enableSorting: true,
       size: 100,
@@ -315,7 +338,7 @@ export function DashboardWidgetTable() {
         getChartTypeDisplayName(row.getValue() as DashboardWidgetChartType),
     }),
     columnHelper.accessor("createdAt", {
-      header: "Created At",
+      header: tAuto("created_at_5db1542"),
       id: "createdAt",
       enableSorting: true,
       size: 150,
@@ -325,7 +348,7 @@ export function DashboardWidgetTable() {
       },
     }),
     columnHelper.accessor("updatedAt", {
-      header: "Updated At",
+      header: tAuto("updated_at_2271427"),
       id: "updatedAt",
       enableSorting: true,
       size: 150,
@@ -336,7 +359,7 @@ export function DashboardWidgetTable() {
     }),
     columnHelper.display({
       id: "actions",
-      header: "Actions",
+      header: tAuto("actions_c3cd636"),
       size: 70,
       cell: (row) => {
         const id = row.row.original.id;

@@ -28,8 +28,10 @@ import { LangfuseIcon } from "@/src/components/design-system/LangfuseIcon/Langfu
 import { DeleteEvalTemplateDialog } from "@/src/features/evals/components/delete-eval-template-dialog";
 import { IconOnlyButton } from "@/src/components/IconOnlyButton";
 import { TrashIcon } from "lucide-react";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export const EvalTemplateDetail = () => {
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const projectId = router.query.projectId as string;
   const templateId = router.query.id as string;
@@ -98,7 +100,7 @@ export const EvalTemplateDetail = () => {
   return (
     <Page
       headerProps={{
-        title: `${template.data?.name ?? ""}`,
+        title: tAuto("value0_677fe3d", { value0: template.data?.name ?? "" }),
         itemType: "EVALUATOR",
         breadcrumb: [
           {
@@ -119,8 +121,8 @@ export const EvalTemplateDetail = () => {
               <>
                 <IconOnlyButton
                   icon={<TrashIcon className="h-4 w-4" />}
-                  label="Delete"
-                  aria-label="delete"
+                  label={tAuto("delete_f6fdbe4")}
+                  aria-label={tAuto("delete_9485989")}
                   variant="outline"
                   size="icon"
                   disabledReason={
@@ -155,7 +157,7 @@ export const EvalTemplateDetail = () => {
       }}
     >
       {allTemplates.isLoading || !allTemplates.data || !template.data ? (
-        <div className="p-3">Loading...</div>
+        <div className="p-3">{tAuto("loading_b04ba49")}</div>
       ) : isEditing ? (
         <div className="overflow-y-auto p-3 pt-1">
           <EvalTemplateForm
@@ -180,7 +182,7 @@ export const EvalTemplateDetail = () => {
           <SidePanel mobileTitle="Change history" id="change-history">
             <SidePanelHeader>
               <SidePanelTitle className="text-base font-bold">
-                Change history
+                {tAuto("change_history_81cca21")}{" "}
               </SidePanelTitle>
             </SidePanelHeader>
             <SidePanelContent>
@@ -232,6 +234,7 @@ export function EvalVersionDropdown(props: {
   defaultOption?: EvalTemplate;
   onSelect?: (template: EvalTemplate) => void;
 }) {
+  const tAuto = useAutoTranslations();
   const capture = usePostHogClientCapture();
   const handleSelect = (value: string) => {
     const selectedTemplate = props.options?.find(
@@ -250,7 +253,7 @@ export function EvalVersionDropdown(props: {
       defaultValue={props.defaultOption ? props.defaultOption.id : undefined}
     >
       <SelectTrigger className="w-[180px]">
-        <SelectValue placeholder="Version" />
+        <SelectValue placeholder={tAuto("version_2da600b")} />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
@@ -276,6 +279,7 @@ export function UpdateTemplate({
   setIsEditing: (isEditing: boolean) => void;
   isCustom: boolean;
 }) {
+  const tAuto = useAutoTranslations();
   const hasAccess = useHasProjectAccess({
     projectId,
     scope: "evalTemplate:CUD",
@@ -292,7 +296,7 @@ export function UpdateTemplate({
       <div className="flex items-center gap-2">
         <LangfuseIcon size={16} />
         <span className="text-muted-foreground text-sm font-bold">
-          View only
+          {tAuto("view_only_5559dd0")}{" "}
         </span>
       </div>
     );
@@ -300,7 +304,7 @@ export function UpdateTemplate({
 
   return (
     <div className="flex items-center gap-2">
-      <span className="text-sm font-bold">Edit mode</span>
+      <span className="text-sm font-bold">{tAuto("edit_mode_26926bf")}</span>
       <Switch
         checked={isEditing}
         onCheckedChange={handlePromptEdit}

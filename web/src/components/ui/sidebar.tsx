@@ -19,6 +19,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/src/components/ui/tooltip";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const SIDEBAR_STORAGE_KEY = "sidebar:state";
 const SIDEBAR_WIDTH = "11.5rem";
@@ -294,6 +295,7 @@ const SidebarTrigger = React.forwardRef<
   React.ComponentRef<typeof Button>,
   React.ComponentProps<typeof Button>
 >(({ className, onClick, ...props }, ref) => {
+  const tAuto = useAutoTranslations();
   const { toggleSidebar } = useSidebar();
 
   return (
@@ -316,7 +318,7 @@ const SidebarTrigger = React.forwardRef<
           desktop (toggles the docked sidebar). */}
       <Menu className="size-5 md:hidden" />
       <PanelLeft className="hidden md:block" />
-      <span className="sr-only">Toggle Sidebar</span>
+      <span className="sr-only">{tAuto("toggle_sidebar_dffc47c")}</span>
     </Button>
   );
 });
@@ -326,16 +328,17 @@ const SidebarRail = React.forwardRef<
   HTMLButtonElement,
   React.ComponentProps<"button">
 >(({ className, ...props }, ref) => {
+  const tAuto = useAutoTranslations();
   const { toggleSidebar } = useSidebar();
 
   return (
     <button
       ref={ref}
       data-sidebar="rail"
-      aria-label="Toggle Sidebar"
+      aria-label={tAuto("toggle_sidebar_dffc47c")}
       tabIndex={-1}
       onClick={toggleSidebar}
-      title="Toggle Sidebar"
+      title={tAuto("toggle_sidebar_dffc47c")}
       className={cn(
         "hover:after:bg-sidebar-border absolute inset-y-0 z-50 hidden w-4 -translate-x-1/2 transition-all ease-linear group-data-[side=left]:-right-4 group-data-[side=right]:left-0 after:absolute after:inset-y-0 after:left-1/2 after:w-[2px] md:flex",
         "cursor-pointer",

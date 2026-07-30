@@ -14,6 +14,7 @@ import {
   TooltipTrigger,
 } from "@/src/components/ui/tooltip";
 import { File } from "lucide-react";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type CsvUploadDialogProps = {
   open: boolean;
@@ -30,6 +31,7 @@ export function CsvUploadDialog({
   datasetId,
   children,
 }: CsvUploadDialogProps) {
+  const tAuto = useAutoTranslations();
   const [preview, setPreview] = useState<CsvPreviewResult | null>(null);
   const [csvFile, setCsvFile] = useState<File | null>(null);
 
@@ -48,7 +50,7 @@ export function CsvUploadDialog({
       <DialogContent className="flex h-[80dvh] max-w-7xl flex-col overflow-hidden">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            Upload CSV
+            {tAuto("upload_csv_0b77a04")}{" "}
             {csvFile && (
               <Tooltip>
                 <TooltipTrigger asChild>

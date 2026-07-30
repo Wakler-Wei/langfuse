@@ -14,6 +14,7 @@ import {
 import { AlertTriangle, ExternalLinkIcon, RefreshCcw } from "lucide-react";
 import Link from "next/link";
 import { Fragment } from "react";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type EvaluatorPausedCalloutProps = {
   projectId: string;
@@ -52,6 +53,8 @@ export function EvaluatorPausedCallout({
   projectId,
   evalConfig,
 }: EvaluatorPausedCalloutProps) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const utils = api.useUtils();
   const calloutId = `eval-config-paused-${evalConfig.id}`;
 
@@ -59,12 +62,12 @@ export function EvaluatorPausedCallout({
     onSuccess: async () => {
       await utils.evals.invalidate();
       showSuccessToast({
-        title: "Evaluator reactivated",
-        description: "The evaluator is active again.",
+        title: tAuto("evaluator_reactivated_1161ca8"),
+        description: tAuto("the_evaluator_is_active_again_7092537"),
       });
     },
     onError: (error) => {
-      showErrorToast("Reactivation failed", error.message);
+      showErrorToast(tAutoI18n("reactivation_failed_80d01ae"), error.message);
     },
   });
 
@@ -102,7 +105,7 @@ export function EvaluatorPausedCallout({
 
         <div className="min-w-0 flex-1">
           <h3 className="text-foreground text-base leading-5 font-bold">
-            Evaluator paused
+            {tAuto("evaluator_paused_88b37b9")}{" "}
           </h3>
 
           <div className="text-muted-foreground mt-1 flex flex-wrap items-center gap-2 text-sm leading-5">
@@ -113,7 +116,7 @@ export function EvaluatorPausedCallout({
               <Fragment>
                 <span className="bg-border h-1 w-1 rounded-full" />
                 <span title={blockedAt.toLocaleString()}>
-                  Paused {blockedAtLabel}
+                  {tAutoI18n("paused_c7dfb6f")} {blockedAtLabel}
                 </span>
               </Fragment>
             ) : null}
@@ -151,7 +154,7 @@ export function EvaluatorPausedCallout({
               className="h-8 px-3"
             >
               <RefreshCcw className="mr-1.5 h-3.5 w-3.5" />
-              Reactivate
+              {tAuto("reactivate_cd28a17")}{" "}
             </Button>
           </div>
         </div>

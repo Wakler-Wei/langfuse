@@ -9,6 +9,8 @@ This feature owns product UI locale selection and translation catalogs.
 - `LocaleSwitcher.tsx`: standalone selector for unauthenticated surfaces.
 - `useLocaleSwitcher.ts`: locale navigation, persistence, and analytics.
 - `messages/*.json`: English source catalog and Simplified Chinese catalog.
+- `messages/auto.*.json`: mechanically extracted static JSX text. Prefer
+  semantic feature keys for new or substantially edited components.
 
 ## Conventions
 
@@ -24,6 +26,6 @@ This feature owns product UI locale selection and translation catalogs.
 - Use `next-intl` formatters for locale-sensitive dates, numbers, lists, and
   relative time in newly migrated code.
 
-The catalogs are currently loaded at the app shell because the initial two
-catalogs are small. Split messages by feature before catalog growth becomes a
-meaningful client-bundle cost.
+The catalogs are loaded at the app shell. Static JSX messages are kept in a
+separate generated namespace so they can be split into feature bundles without
+changing semantic feature catalogs.

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ChevronRight } from "lucide-react";
 import { cn } from "@/src/utils/tailwind";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 interface ThinkingBlockProps {
   content: string;
@@ -13,6 +14,7 @@ export function ThinkingBlock({
   summary,
   defaultExpanded = false,
 }: ThinkingBlockProps) {
+  const tAuto = useAutoTranslations();
   const [expanded, setExpanded] = useState(defaultExpanded);
   const displayContent = summary || content;
 
@@ -30,7 +32,7 @@ export function ThinkingBlock({
             expanded && "rotate-90",
           )}
         />
-        <span className="text-xs font-bold">Thinking</span>
+        <span className="text-xs font-bold">{tAuto("thinking_d08d8da")}</span>
         {!expanded && (
           <span className="line-clamp-1 text-xs italic">{displayContent}</span>
         )}
@@ -55,6 +57,7 @@ export function RedactedThinkingBlock({
   data,
   defaultExpanded = false,
 }: RedactedThinkingBlockProps) {
+  const tAuto = useAutoTranslations();
   const [expanded, setExpanded] = useState(defaultExpanded);
 
   return (
@@ -71,9 +74,13 @@ export function RedactedThinkingBlock({
             expanded && "rotate-90",
           )}
         />
-        <span className="text-xs font-bold">Thinking (redacted)</span>
+        <span className="text-xs font-bold">
+          {tAuto("thinking_redacted_2caf2d7")}
+        </span>
         {!expanded && (
-          <span className="text-xs italic">[Encrypted thinking data]</span>
+          <span className="text-xs italic">
+            {tAuto("encrypted_thinking_data_27a0f67")}
+          </span>
         )}
       </button>
 

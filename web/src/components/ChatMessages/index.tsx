@@ -44,6 +44,8 @@ import {
 } from "@dnd-kit/sortable";
 import { isString } from "@/src/utils/types";
 import { useOptionalPlaygroundContext } from "@/src/features/playground/page/context";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
+import { useTranslations } from "next-intl";
 
 type ChatMessagesProps = MessagesContext;
 export const ChatMessages: React.FC<ChatMessagesProps> = (props) => {
@@ -188,6 +190,8 @@ const AddMessageButton: React.FC<AddMessageButtonProps> = ({
   addMessage,
   scrollToMessage,
 }) => {
+  const tAuto = useAutoTranslations();
+  const t = useTranslations("Playground");
   // Tracks whether the role dropdown is closing because a menu item was
   // selected (vs. Escape / click-outside). Only then do we suppress Radix's
   // focus-return to the trigger, so our scrollToMessage can focus the new
@@ -292,7 +296,7 @@ const AddMessageButton: React.FC<AddMessageButtonProps> = ({
           onClick={addRegularMessage}
         >
           <PlusCircleIcon size={14} className="mr-2" />
-          <p>Message</p>
+          <p>{tAuto("message_68f4145")}</p>
         </Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -323,27 +327,27 @@ const AddMessageButton: React.FC<AddMessageButtonProps> = ({
             <DropdownMenuItem
               onClick={() => addMessageWithRole(ChatMessageRole.User)}
             >
-              User Message
+              {tAuto("user_message_d19353a")}{" "}
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => addMessageWithRole(ChatMessageRole.Assistant)}
             >
-              Assistant Message
+              {tAuto("assistant_message_821bfdd")}{" "}
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => addMessageWithRole(ChatMessageRole.System)}
             >
-              System Message
+              {tAuto("system_message_13b706b")}{" "}
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => addMessageWithRole(ChatMessageRole.Developer)}
             >
-              Developer Message
+              {tAuto("developer_message_29cd892")}{" "}
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => addMessageWithRole(ChatMessageRole.Tool)}
             >
-              Tool Message
+              {tAuto("tool_message_8db898a")}{" "}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -358,15 +362,11 @@ const AddMessageButton: React.FC<AddMessageButtonProps> = ({
               onClick={addPlaceholderMessage}
             >
               <PlusCircleIcon size={14} className="mr-2" />
-              <p>Placeholder</p>
+              <p>{tAuto("placeholder_ed212fa")}</p>
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p className="text-xs">
-              Adds a placeholder to inject message pairs, e.g. a message history
-              (with &quot;role&quot;, &quot;content&quot; pairs) when compiling
-              the message in the SDK.
-            </p>
+            <p className="text-xs">{t("placeholderHelp")}</p>
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>

@@ -4,6 +4,7 @@ import {
   type DatasetSchema,
 } from "../utils/datasetItemUtils";
 import { DatasetItemFields } from "@/src/features/datasets/components/DatasetItemFields";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type DatasetItemViewModeContentProps = {
   item: DatasetItemDomain | null;
@@ -20,17 +21,26 @@ export const DatasetItemViewModeContent = ({
   isLoading,
   dataset,
 }: DatasetItemViewModeContentProps) => {
+  const tAuto = useAutoTranslations();
   if (isLoading) {
-    return <div className="text-muted-foreground text-sm">Loading...</div>;
+    return (
+      <div className="text-muted-foreground text-sm">
+        {tAuto("loading_b04ba49")}
+      </div>
+    );
   }
 
   if (item === null) {
     return (
       <div className="flex flex-col items-center justify-center p-12 text-center">
         <div className="text-muted-foreground">
-          <p className="text-lg font-bold">Dataset item not found</p>
+          <p className="text-lg font-bold">
+            {tAuto("dataset_item_not_found_48533f3")}
+          </p>
           <p className="mt-2 text-sm">
-            This dataset item does not exist or has been deleted.
+            {tAuto(
+              "this_dataset_item_does_not_exist_or_has_been_deleted_c2be705",
+            )}{" "}
           </p>
         </div>
       </div>

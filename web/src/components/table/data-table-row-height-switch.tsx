@@ -11,12 +11,20 @@ import {
 import useLocalStorage from "@/src/components/useLocalStorage";
 import { usePostHogClientCapture } from "@/src/features/posthog-analytics/usePostHogClientCapture";
 import { Rows3, Rows2, Rows4 } from "lucide-react";
+import {
+  type AutoMessageKey,
+  useAutoTranslations,
+} from "@/src/features/i18n/I18nText";
 
 const heightOptions = [
-  { id: "s", label: "Small", icon: <Rows4 /> },
-  { id: "m", label: "Medium", icon: <Rows3 /> },
-  { id: "l", label: "Large", icon: <Rows2 /> },
+  { id: "s", labelKey: "small_c74fd97", icon: <Rows4 /> },
+  { id: "m", labelKey: "medium_d404968", icon: <Rows3 /> },
+  { id: "l", labelKey: "large_738fd1d", icon: <Rows2 /> },
 ] as const;
+
+type HeightOption = (typeof heightOptions)[number] & {
+  labelKey: AutoMessageKey;
+};
 
 const defaultHeights: Record<RowHeight, string> = {
   s: "h-7", // after removing the container around IO, we want the row height a bit more than 6
@@ -54,34 +62,41 @@ export const DataTableRowHeightSwitch = ({
   rowHeight: RowHeight;
   setRowHeight: (e: RowHeight) => void;
 }) => {
+  const tAuto = useAutoTranslations();
   const capture = usePostHogClientCapture();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="icon" title="Row height">
+        <Button
+          variant="outline"
+          size="icon"
+          title={tAuto("row_height_0c1073d")}
+        >
           <Rows3 className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuPortal>
         <DropdownMenuContent>
-          <DropdownMenuLabel>Row height</DropdownMenuLabel>
+          <DropdownMenuLabel>{tAuto("row_height_0c1073d")}</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          {heightOptions.map(({ id, label }) => (
-            <DropdownMenuCheckboxItem
-              key={id}
-              checked={rowHeight === id}
-              onClick={(e) => {
-                // Prevent closing the dropdown menu to allow the user to adjust their selection
-                e.preventDefault();
-                capture("table:row_height_switch_select", {
-                  rowHeight: id,
-                });
-                setRowHeight(id);
-              }}
-            >
-              {label}
-            </DropdownMenuCheckboxItem>
-          ))}
+          {(heightOptions as readonly HeightOption[]).map(
+            ({ id, labelKey }) => (
+              <DropdownMenuCheckboxItem
+                key={id}
+                checked={rowHeight === id}
+                onClick={(e) => {
+                  // Prevent closing the dropdown menu to allow the user to adjust their selection
+                  e.preventDefault();
+                  capture("table:row_height_switch_select", {
+                    rowHeight: id,
+                  });
+                  setRowHeight(id);
+                }}
+              >
+                {tAuto(labelKey)}
+              </DropdownMenuCheckboxItem>
+            ),
+          )}
         </DropdownMenuContent>
       </DropdownMenuPortal>
     </DropdownMenu>

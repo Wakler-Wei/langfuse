@@ -20,6 +20,7 @@ import {
 import { BlobStorageIntegrationType } from "@langfuse/shared";
 import { useLangfuseCloudRegion } from "@/src/features/organizations/hooks";
 import { type BlobStorageFormControl } from "@/src/features/blobstorage-integration/components/formValues";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 // Provider selection plus the connection fields whose labels and visibility
 // depend on it: bucket/container, endpoint, region, path style, credentials,
@@ -29,6 +30,7 @@ export const StorageProviderFields = ({
 }: {
   control: BlobStorageFormControl;
 }) => {
+  const tAuto = useAutoTranslations();
   const { isLangfuseCloud } = useLangfuseCloudRegion();
   // Check if this is a self-hosted instance (no cloud region set)
   const isSelfHosted = !isLangfuseCloud;
@@ -42,25 +44,25 @@ export const StorageProviderFields = ({
         name="type"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Storage Provider</FormLabel>
+            <FormLabel>{tAuto("storage_provider_cc4c92d")}</FormLabel>
             <FormControl>
               <Select value={field.value} onValueChange={field.onChange}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Select provider" />
+                  <SelectValue placeholder={tAuto("select_provider_c7a9e8e")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="S3">AWS S3</SelectItem>
+                  <SelectItem value="S3">{tAuto("aws_s3_d14c093")}</SelectItem>
                   <SelectItem value="S3_COMPATIBLE">
-                    S3 Compatible Storage
+                    {tAuto("s3_compatible_storage_adc7801")}{" "}
                   </SelectItem>
                   <SelectItem value="AZURE_BLOB_STORAGE">
-                    Azure Blob Storage
+                    {tAuto("azure_blob_storage_32c5383")}{" "}
                   </SelectItem>
                 </SelectContent>
               </Select>
             </FormControl>
             <FormDescription>
-              Choose your cloud storage provider
+              {tAuto("choose_your_cloud_storage_provider_ec2863e")}{" "}
             </FormDescription>
             <FormMessage />
           </FormItem>
@@ -74,16 +76,18 @@ export const StorageProviderFields = ({
           <FormItem>
             <FormLabel>
               {integrationType === "AZURE_BLOB_STORAGE"
-                ? "Container Name"
-                : "Bucket Name"}
+                ? tAuto("container_name_5ccc984")
+                : tAuto("bucket_name_04ba7bb")}
             </FormLabel>
             <FormControl>
               <Input {...field} />
             </FormControl>
             <FormDescription>
               {integrationType === "AZURE_BLOB_STORAGE"
-                ? "Azure container name (3-63 chars, lowercase letters, numbers, and hyphens only)"
-                : "The S3 bucket name"}
+                ? tAuto(
+                    "azure_container_name_3_63_chars_lowercase_letters_nu_a0708e9",
+                  )
+                : tAuto("the_s3_bucket_name_413f3b8")}
             </FormDescription>
             <FormMessage />
           </FormItem>
@@ -97,7 +101,7 @@ export const StorageProviderFields = ({
           name="endpoint"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Endpoint URL</FormLabel>
+              <FormLabel>{tAuto("endpoint_url_65aaaa4")}</FormLabel>
               <FormControl>
                 <Input {...field} value={field.value || ""} />
               </FormControl>
@@ -119,14 +123,14 @@ export const StorageProviderFields = ({
           name="region"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Region</FormLabel>
+              <FormLabel>{tAuto("region_0f21717")}</FormLabel>
               <FormControl>
                 <Input {...field} />
               </FormControl>
               <FormDescription>
                 {integrationType === "S3"
-                  ? "AWS region (e.g., us-east-1)"
-                  : "S3 compatible storage region"}
+                  ? tAuto("aws_region_e_g_us_east_1_c73f8cd")
+                  : tAuto("s3_compatible_storage_region_ad34ed2")}
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -141,7 +145,7 @@ export const StorageProviderFields = ({
           name="forcePathStyle"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Force Path Style</FormLabel>
+              <FormLabel>{tAuto("force_path_style_6638dd2")}</FormLabel>
               <FormControl>
                 <div className="mt-1 ml-4">
                   <Switch
@@ -151,7 +155,9 @@ export const StorageProviderFields = ({
                 </div>
               </FormControl>
               <FormDescription>
-                Enable for MinIO and some other S3 compatible providers
+                {tAuto(
+                  "enable_for_minio_and_some_other_s3_compatible_provid_cf08709",
+                )}{" "}
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -166,13 +172,16 @@ export const StorageProviderFields = ({
           <FormItem>
             <FormLabel>
               {integrationType === "AZURE_BLOB_STORAGE"
-                ? "Storage Account Name"
+                ? tAuto("storage_account_name_a6ed9d3")
                 : integrationType === "S3"
-                  ? "AWS Access Key ID"
-                  : "Access Key ID"}
+                  ? tAuto("aws_access_key_id_800021b")
+                  : tAuto("access_key_id_5d85075")}
               {/* Show optional indicator for S3 types on self-hosted instances with entitlement */}
               {isSelfHosted && integrationType === "S3" && (
-                <span className="text-muted-foreground"> (optional)</span>
+                <span className="text-muted-foreground">
+                  {" "}
+                  {tAuto("optional_b16c7ac")}
+                </span>
               )}
             </FormLabel>
             <FormControl>
@@ -180,12 +189,14 @@ export const StorageProviderFields = ({
             </FormControl>
             <FormDescription>
               {integrationType === "AZURE_BLOB_STORAGE"
-                ? "Your Azure storage account name"
+                ? tAuto("your_azure_storage_account_name_ff31fc0")
                 : integrationType === "S3"
                   ? isSelfHosted
-                    ? "Your AWS IAM user access key ID. Leave empty to use host credentials (IAM roles, instance profiles, etc.)"
-                    : "Your AWS IAM user access key ID"
-                  : "Access key for your S3-compatible storage"}
+                    ? tAuto(
+                        "your_aws_iam_user_access_key_id_leave_empty_to_use_h_871f973",
+                      )
+                    : tAuto("your_aws_iam_user_access_key_id_67ddfe8")
+                  : tAuto("access_key_for_your_s3_compatible_storage_9ec6091")}
             </FormDescription>
             <FormMessage />
           </FormItem>
@@ -199,13 +210,16 @@ export const StorageProviderFields = ({
           <FormItem>
             <FormLabel>
               {integrationType === "AZURE_BLOB_STORAGE"
-                ? "Storage Account Key"
+                ? tAuto("storage_account_key_4ffa4c4")
                 : integrationType === "S3"
-                  ? "AWS Secret Access Key"
-                  : "Secret Access Key"}
+                  ? tAuto("aws_secret_access_key_8b9bdfe")
+                  : tAuto("secret_access_key_c67584c")}
               {/* Show optional indicator for S3 types on self-hosted instances with entitlement */}
               {isSelfHosted && integrationType === "S3" && (
-                <span className="text-muted-foreground"> (optional)</span>
+                <span className="text-muted-foreground">
+                  {" "}
+                  {tAuto("optional_b16c7ac")}
+                </span>
               )}
             </FormLabel>
             <FormControl>
@@ -217,12 +231,14 @@ export const StorageProviderFields = ({
             </FormControl>
             <FormDescription>
               {integrationType === "AZURE_BLOB_STORAGE"
-                ? "Your Azure storage account access key"
+                ? tAuto("your_azure_storage_account_access_key_8f1ba3a")
                 : integrationType === "S3"
                   ? isSelfHosted
-                    ? "Your AWS IAM user secret access key. Leave empty to use host credentials (IAM roles, instance profiles, etc.)"
-                    : "Your AWS IAM user secret access key"
-                  : "Secret key for your S3-compatible storage"}
+                    ? tAuto(
+                        "your_aws_iam_user_secret_access_key_leave_empty_to_u_3990a03",
+                      )
+                    : tAuto("your_aws_iam_user_secret_access_key_db229aa")
+                  : tAuto("secret_key_for_your_s3_compatible_storage_7ebc1cb")}
             </FormDescription>
             <FormMessage />
           </FormItem>
@@ -234,16 +250,22 @@ export const StorageProviderFields = ({
         name="prefix"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Export Prefix</FormLabel>
+            <FormLabel>{tAuto("export_prefix_614d096")}</FormLabel>
             <FormControl>
               <Input {...field} />
             </FormControl>
             <FormDescription>
               {integrationType === "AZURE_BLOB_STORAGE"
-                ? 'Optional prefix path for exported files in your Azure container (e.g., "langfuse-exports/")'
+                ? tAuto(
+                    "optional_prefix_path_for_exported_files_in_your_azur_b86b4d0",
+                  )
                 : integrationType === "S3"
-                  ? 'Optional prefix path for exported files in your S3 bucket (e.g., "langfuse-exports/")'
-                  : 'Optional prefix path for exported files (e.g., "langfuse-exports/")'}
+                  ? tAuto(
+                      "optional_prefix_path_for_exported_files_in_your_s3_b_5bfb526",
+                    )
+                  : tAuto(
+                      "optional_prefix_path_for_exported_files_e_g_langfuse_c87bf26",
+                    )}
             </FormDescription>
             <FormMessage />
           </FormItem>

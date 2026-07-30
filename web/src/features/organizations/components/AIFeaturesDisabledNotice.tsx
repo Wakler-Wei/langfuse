@@ -3,6 +3,7 @@ import { ExternalLink } from "lucide-react";
 
 import { Button } from "@/src/components/ui/button";
 import { useHasOrganizationAccess } from "@/src/features/rbac/utils/checkOrganizationAccess";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export function openAIFeaturesSettings(organizationId: string) {
   window.open(
@@ -19,6 +20,7 @@ export function AIFeaturesDisabledNotice({
   organizationId: string | undefined;
   children: ReactNode;
 }) {
+  const tAuto = useAutoTranslations();
   const canUpdateOrgSettings = useHasOrganizationAccess({
     organizationId,
     scope: "organization:update",
@@ -29,7 +31,9 @@ export function AIFeaturesDisabledNotice({
       <p className="text-muted-foreground text-sm">
         {children}
         {!canUpdateOrgSettings
-          ? " Ask your organization administrator to enable AI features in organization settings."
+          ? tAuto(
+              "ask_your_organization_administrator_to_enable_ai_fea_1833ee1",
+            )
           : null}
       </p>
       {canUpdateOrgSettings && organizationId ? (
@@ -39,7 +43,7 @@ export function AIFeaturesDisabledNotice({
           size="sm"
           className="w-fit"
         >
-          Enable in Organization Settings
+          {tAuto("enable_in_organization_settings_1b81e85")}{" "}
           <ExternalLink className="ml-2 h-4 w-4" />
         </Button>
       ) : null}

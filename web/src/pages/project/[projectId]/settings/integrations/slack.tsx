@@ -19,8 +19,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/src/components/ui/card";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export default function SlackIntegrationSettings() {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const projectId = router.query.projectId as string;
 
@@ -92,7 +95,7 @@ export default function SlackIntegrationSettings() {
   return (
     <ContainerPage
       headerProps={{
-        title: "Slack Integration",
+        title: tAuto("slack_integration_ffa88a6"),
         breadcrumb: [
           { name: "Settings", href: `/project/${projectId}/settings` },
         ],
@@ -109,22 +112,26 @@ export default function SlackIntegrationSettings() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                Test Integration
+                {tAuto("test_integration_ea49b56")}{" "}
               </CardTitle>
               <CardDescription>
-                Test your Slack integration by sending a message to a channel.
+                {tAuto(
+                  "test_your_slack_integration_by_sending_a_message_to__5e0f76c",
+                )}{" "}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <h4 className="mb-2 text-sm font-bold">Select Test Channel</h4>
+                <h4 className="mb-2 text-sm font-bold">
+                  {tAuto("select_test_channel_069fe32")}
+                </h4>
                 <div className="max-w-md">
                   <ChannelSelector
                     projectId={projectId}
                     selectedChannelId={selectedChannel?.id}
                     selectedChannel={selectedChannel}
                     onChannelSelect={setSelectedChannel}
-                    placeholder="Choose a channel to test"
+                    placeholder={tAuto("choose_a_channel_to_test_8e73ce6")}
                     showRefreshButton={true}
                   />
                 </div>
@@ -134,32 +141,44 @@ export default function SlackIntegrationSettings() {
                 <div className="space-y-4 border-t pt-4">
                   <div>
                     <h4 className="mb-3 text-sm font-bold">
-                      Channel Information
+                      {tAuto("channel_information_f5c4abd")}{" "}
                     </h4>
                     <div className="grid gap-4 md:grid-cols-2">
                       <div>
-                        <p className="text-sm font-bold">Channel Name</p>
+                        <p className="text-sm font-bold">
+                          {tAuto("channel_name_d5eb68f")}
+                        </p>
                         <p className="text-muted-foreground text-sm">
                           #{selectedChannel.name}
                         </p>
                       </div>
                       <div>
-                        <p className="text-sm font-bold">Channel Type</p>
+                        <p className="text-sm font-bold">
+                          {tAuto("channel_type_0dbd38b")}
+                        </p>
                         {isManualEntry ? (
                           <span className="text-muted-foreground text-xs">
-                            Available after sending a test message
+                            {tAuto(
+                              "available_after_sending_a_test_message_f60d11f",
+                            )}{" "}
                           </span>
                         ) : (
                           <Badge variant="outline" className="text-xs">
-                            {selectedChannel.isPrivate ? "Private" : "Public"}
+                            {selectedChannel.isPrivate
+                              ? tAutoI18n("private_237dfa0")
+                              : tAutoI18n("public_dc5eb70")}
                           </Badge>
                         )}
                       </div>
                       <div>
-                        <p className="text-sm font-bold">Channel ID</p>
+                        <p className="text-sm font-bold">
+                          {tAuto("channel_id_a4370f9")}
+                        </p>
                         {isManualEntry ? (
                           <span className="text-muted-foreground text-xs">
-                            Available after sending a test message
+                            {tAuto(
+                              "available_after_sending_a_test_message_f60d11f",
+                            )}{" "}
                           </span>
                         ) : (
                           <p className="text-muted-foreground font-mono text-sm">
@@ -196,12 +215,13 @@ export default function SlackIntegrationSettings() {
 
               {!selectedChannel && (
                 <div className="text-muted-foreground text-sm">
-                  Select a channel above to view its details and test message
-                  delivery. For private channels, invite the app first with{" "}
+                  {tAutoI18n(
+                    "select_a_channel_above_to_view_its_details_and_test__13b6234",
+                  )}{" "}
                   <code className="bg-muted rounded px-1 py-0.5">
                     /invite @Langfuse
                   </code>{" "}
-                  in that channel.
+                  {tAutoI18n("in_that_channel_127a727")}{" "}
                 </div>
               )}
             </CardContent>

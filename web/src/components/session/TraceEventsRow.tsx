@@ -18,6 +18,7 @@ import {
   hasRenderableConversationMessages,
   isOnlyJsonMessage,
 } from "@/src/components/trace/components/IOPreview/components/chat-message-utils";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export type TraceEventsSurface = "card" | "modern";
 
@@ -165,27 +166,36 @@ const openSessionViewMenu = () => {
  * card. It is purely informational: to see the trace's content the user
  * switches the view above — there is no per-card state.
  */
-const ViewMismatchNotice = ({ viewLabel }: { viewLabel: string | null }) => (
-  <div className="flex flex-col items-start gap-1.5 rounded-md border border-dashed border-amber-500/50 bg-amber-500/5 p-3">
-    <div className="flex items-center gap-2 text-xs font-bold text-amber-700 dark:text-amber-500">
-      <FilterX className="h-3.5 w-3.5 shrink-0" />
-      {viewLabel
-        ? `No observation matches the "${viewLabel}" view in this trace`
-        : "No observation matches the current filter in this trace"}
+const ViewMismatchNotice = ({ viewLabel }: { viewLabel: string | null }) => {
+  const tAuto = useAutoTranslations();
+
+  return (
+    <div className="flex flex-col items-start gap-1.5 rounded-md border border-dashed border-amber-500/50 bg-amber-500/5 p-3">
+      <div className="flex items-center gap-2 text-xs font-bold text-amber-700 dark:text-amber-500">
+        <FilterX className="h-3.5 w-3.5 shrink-0" />
+        {viewLabel
+          ? tAuto(
+              "no_observation_matches_the_value0_view_in_this_trace_a8d1ee7",
+              { value0: viewLabel },
+            )
+          : tAuto(
+              "no_observation_matches_the_current_filter_in_this_tr_3ba7f29",
+            )}
+      </div>
+      <p className="text-muted-foreground text-xs">
+        {tAuto("content_hidden_by_current_view_8f4a1b2")}{" "}
+        <button
+          type="button"
+          onClick={openSessionViewMenu}
+          className="text-primary underline underline-offset-2 hover:no-underline"
+        >
+          {tAuto("switch_the_view_88c12de")}{" "}
+        </button>{" "}
+        {tAuto("to_see_it_43a8d0c")}
+      </p>
     </div>
-    <p className="text-muted-foreground text-xs">
-      Its content is hidden by the current view, not missing.{" "}
-      <button
-        type="button"
-        onClick={openSessionViewMenu}
-        className="text-primary underline underline-offset-2 hover:no-underline"
-      >
-        Switch the view
-      </button>{" "}
-      to see it.
-    </p>
-  </div>
-);
+  );
+};
 
 export const TraceEventsSkeleton = () => {
   return (
@@ -264,6 +274,8 @@ export const TraceEventsRow = React.memo(
     showSystemPrompt?: boolean;
     isActive?: boolean;
   }) => {
+    const tAutoI18n = useAutoTranslations();
+    const tAuto = useAutoTranslations();
     const observationsQuery =
       api.sessions.observationsForTraceFromEvents.useQuery(
         {
@@ -407,14 +419,17 @@ export const TraceEventsRow = React.memo(
               <div className="bg-background/95 sticky top-0 z-10 -mx-6 mb-5 flex min-w-0 items-center justify-between gap-3 px-6 py-3 backdrop-blur">
                 <button
                   type="button"
-                  aria-label={`Open trace ${trace.name ?? "Trace"} (${trace.id})`}
+                  aria-label={tAuto("open_trace_value0_value1_f101c17", {
+                    value0: trace.name ?? "Trace",
+                    value1: trace.id,
+                  })}
                   className="group focus-visible:ring-ring flex min-w-0 items-center gap-2 rounded-sm text-left focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
                   onClick={() => openPeek(trace.id, trace)}
                 >
                   <ItemBadge type="TRACE" isSmall />
                   <span
                     className="truncate text-sm font-bold"
-                    title={trace.name ?? "Trace"}
+                    title={trace.name ?? tAuto("trace_2f38169")}
                   >
                     {trace.name ?? "Trace"}
                   </span>
@@ -434,7 +449,7 @@ export const TraceEventsRow = React.memo(
               <JsonSkeleton className="h-full w-full" numRows={8} />
             ) : observationsQuery.isError ? (
               <div className="text-destructive p-2 text-xs">
-                Failed to load observations.
+                {tAuto("failed_to_load_observations_d5b2f32")}{" "}
               </div>
             ) : visibleObservations && visibleObservations.length > 0 ? (
               <div className="flex flex-col gap-4">
@@ -483,16 +498,17 @@ export const TraceEventsRow = React.memo(
                 })}
                 {hasMoreObservations && (
                   <p className="text-muted-foreground text-xs">
-                    Only the first {SESSION_CARD_OBSERVATIONS_NOTICE_COUNT}{" "}
-                    observations are shown here.{" "}
+                    {tAutoI18n("only_the_first_ca52028")}{" "}
+                    {SESSION_CARD_OBSERVATIONS_NOTICE_COUNT}{" "}
+                    {tAutoI18n("observations_are_shown_here_728107c")}{" "}
                     <button
                       type="button"
                       onClick={() => openPeek(trace.id, trace)}
                       className="text-primary underline underline-offset-2 hover:no-underline"
                     >
-                      Open the trace
+                      {tAuto("open_the_trace_6d42017")}{" "}
                     </button>{" "}
-                    to see all of them.
+                    {tAutoI18n("to_see_all_of_them_e41309c")}{" "}
                   </p>
                 )}
               </div>
@@ -501,7 +517,7 @@ export const TraceEventsRow = React.memo(
               filterState.length === 0 ? (
               // No filter and the trace genuinely has no observations.
               <div className="text-muted-foreground p-2 text-xs">
-                This trace has no observations.
+                {tAuto("this_trace_has_no_observations_f4d63d5")}{" "}
               </div>
             ) : (
               // The selected view/filter matched nothing (or hid the only
@@ -546,7 +562,7 @@ export const TraceEventsRow = React.memo(
                   />
                 </div>
                 <div className="flex-1">
-                  <p className="mb-1 font-bold">Scores</p>
+                  <p className="mb-1 font-bold">{tAuto("scores_126cb93")}</p>
                   <div className="flex flex-wrap content-start items-start gap-1">
                     <GroupedScoreBadges scores={trace.scores} />
                   </div>

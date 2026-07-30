@@ -39,6 +39,7 @@ import { TraceAnnotationProcessor } from "./processors/TraceAnnotationProcessor"
 import { SessionAnnotationProcessor } from "./processors/SessionAnnotationProcessor";
 import { ObjectNotFoundCard } from "@/src/components/ui/object-not-found-card";
 import { useSession } from "next-auth/react";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 // A single row in the keyboard-shortcuts cheatsheet: label on the left, one or
 // more <KeyboardShortcut> glyphs (passed as children) on the right.
@@ -57,6 +58,8 @@ export const AnnotationQueueItemPage: React.FC<{
   projectId: string;
   queryItemId?: string;
 }> = ({ annotationQueueId, projectId, queryItemId }) => {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const { status: sessionStatus } = useSession();
   const sessionLoaded = sessionStatus !== "loading";
@@ -367,7 +370,7 @@ export const AnnotationQueueItemPage: React.FC<{
   }
 
   if (!relevantItem && !(itemId && seenItemIds.includes(itemId))) {
-    return <div>No more items left to annotate!</div>;
+    return <div>{tAuto("no_more_items_left_to_annotate_d9e2bd3")}</div>;
   }
 
   const renderContent = () => {
@@ -386,7 +389,8 @@ export const AnnotationQueueItemPage: React.FC<{
         <Card className="flex h-full w-full flex-col items-center justify-center overflow-hidden border-none">
           <SearchXIcon className="text-muted-foreground mb-2 h-8 w-8" />
           <span className="text-muted-foreground max-w-96 text-sm text-wrap">
-            Item has been <strong>deleted from annotation queue</strong>.
+            {tAuto("item_has_been_16f6ab9")}{" "}
+            <strong>{tAuto("deleted_from_annotation_queue_33c8369")}</strong>.
             Previously added scores and underlying reference trace are
             unaffected by this action.
           </span>
@@ -442,14 +446,14 @@ export const AnnotationQueueItemPage: React.FC<{
                     shortcutPulse === "back" &&
                       "border-primary/60 bg-accent/60 ring-primary/20 ring-2",
                   )}
-                  aria-label="Previous item"
+                  aria-label={tAuto("previous_item_ffc0423")}
                 >
                   <ArrowLeft className="h-4 w-4" />
                   <KeyboardShortcut>←</KeyboardShortcut>
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
-                <span>Previous item</span>
+                <span>{tAuto("previous_item_ffc0423")}</span>
                 <KeyboardShortcut className="ml-2">←</KeyboardShortcut>
               </TooltipContent>
             </Tooltip>
@@ -459,22 +463,22 @@ export const AnnotationQueueItemPage: React.FC<{
                 className="h-4 px-1 text-[9px]"
                 keys={[modLabel, "↵"]}
               />
-              complete + next ·
+              {tAuto("complete_next_968d0b4")}{" "}
               <KeyboardShortcut className="h-4 min-w-4 px-1 text-[9px]">
                 →
               </KeyboardShortcut>
-              skip
+              {tAuto("skip_c7e1681")}{" "}
             </span>
             <button
               type="button"
               onClick={() => setShowShortcuts(true)}
               className="text-muted-foreground hover:text-foreground hidden items-center gap-1 text-[11px] transition-colors lg:flex"
-              aria-label="Show keyboard shortcuts"
+              aria-label={tAuto("show_keyboard_shortcuts_9855e66")}
             >
               <KeyboardShortcut className="h-4 min-w-4 px-1 text-[9px]">
                 ?
               </KeyboardShortcut>
-              shortcuts
+              {tAuto("shortcuts_784d745")}{" "}
             </button>
           </div>
         )}
@@ -493,14 +497,14 @@ export const AnnotationQueueItemPage: React.FC<{
                       "border-primary/60 bg-accent/60 ring-primary/20 ring-2",
                   )}
                   variant="outline"
-                  aria-label="Skip to next item"
+                  aria-label={tAuto("skip_to_next_item_fa9a819")}
                 >
                   <ArrowRight className="h-4 w-4" />
                   <KeyboardShortcut>→</KeyboardShortcut>
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
-                <span>Skip to next item</span>
+                <span>{tAuto("skip_to_next_item_fa9a819")}</span>
                 <KeyboardShortcut className="ml-2">→</KeyboardShortcut>
               </TooltipContent>
             </Tooltip>
@@ -522,7 +526,7 @@ export const AnnotationQueueItemPage: React.FC<{
                       objectData.isError
                     }
                   >
-                    <span>Mark Completed</span>
+                    <span>{tAuto("mark_completed_40376f7")}</span>
                     {!isSingleItem && (
                       <KeyboardShortcut
                         className="bg-primary-foreground/20 text-primary-foreground border-primary-foreground/30"
@@ -534,8 +538,8 @@ export const AnnotationQueueItemPage: React.FC<{
                 <TooltipContent>
                   <span>
                     {isSingleItem
-                      ? "Mark completed"
-                      : "Mark completed + go to next item"}
+                      ? tAutoI18n("mark_completed_e5c3876")
+                      : tAutoI18n("mark_completed_go_to_next_item_7a47594")}
                   </span>
                   {!isSingleItem && (
                     <KeyboardShortcut className="ml-2" keys={[modLabel, "↵"]} />
@@ -544,7 +548,7 @@ export const AnnotationQueueItemPage: React.FC<{
               </Tooltip>
             ) : (
               <div className="border-dark-green bg-light-green inline-flex h-9 w-full items-center justify-center rounded-md border px-8 text-sm font-bold">
-                Completed
+                {tAuto("completed_1798b3b")}{" "}
               </div>
             ))}
         </div>
@@ -554,57 +558,65 @@ export const AnnotationQueueItemPage: React.FC<{
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-base">
               <Keyboard className="h-4 w-4" />
-              Keyboard shortcuts
+              {tAuto("keyboard_shortcuts_2666954")}{" "}
             </DialogTitle>
           </DialogHeader>
           <DialogBody className="gap-4 py-3">
             <div>
               <p className="text-muted-foreground mb-1 text-xs font-bold tracking-wide uppercase">
-                Navigate
+                {tAuto("navigate_1eee3af")}{" "}
               </p>
-              <ShortcutRow label="Complete & go to next item">
+              <ShortcutRow label={tAuto("complete_go_to_next_item_bdcdcee")}>
                 <KeyboardShortcut keys={[modLabel, "↵"]} />
               </ShortcutRow>
-              <ShortcutRow label="Skip to next item">
+              <ShortcutRow label={tAuto("skip_to_next_item_fa9a819")}>
                 <KeyboardShortcut>→</KeyboardShortcut>
               </ShortcutRow>
-              <ShortcutRow label="Previous item">
+              <ShortcutRow label={tAuto("previous_item_ffc0423")}>
                 <KeyboardShortcut>←</KeyboardShortcut>
               </ShortcutRow>
             </div>
             <div>
               <p className="text-muted-foreground mb-1 text-xs font-bold tracking-wide uppercase">
-                Score the item
+                {tAuto("score_the_item_47a7d4b")}{" "}
               </p>
-              <ShortcutRow label="Move between score fields">
+              <ShortcutRow label={tAuto("move_between_score_fields_ecd6823")}>
                 <KeyboardShortcut>↑</KeyboardShortcut>
                 <KeyboardShortcut>↓</KeyboardShortcut>
               </ShortcutRow>
-              <ShortcutRow label="Select an option on the focused field">
+              <ShortcutRow
+                label={tAuto("select_an_option_on_the_focused_field_3df3c8d")}
+              >
                 <KeyboardShortcut>1</KeyboardShortcut>
                 <span className="text-muted-foreground text-xs">–</span>
                 <KeyboardShortcut>9</KeyboardShortcut>
               </ShortcutRow>
-              <ShortcutRow label="Edit a field / open a dropdown">
+              <ShortcutRow
+                label={tAuto("edit_a_field_open_a_dropdown_2c0a543")}
+              >
                 <KeyboardShortcut>↵</KeyboardShortcut>
               </ShortcutRow>
-              <ShortcutRow label="Commit a number / leave a text field">
-                <KeyboardShortcut>Esc</KeyboardShortcut>
+              <ShortcutRow
+                label={tAuto("commit_a_number_leave_a_text_field_a28ad35")}
+              >
+                <KeyboardShortcut>{tAuto("esc_1f7a4f9")}</KeyboardShortcut>
                 <span className="text-muted-foreground text-xs">/</span>
                 <KeyboardShortcut>Tab</KeyboardShortcut>
               </ShortcutRow>
             </div>
             <p className="text-muted-foreground border-t pt-3 text-xs">
-              Bare{" "}
+              {tAutoI18n("bare_9701d08")}{" "}
               <KeyboardShortcut className="h-4 px-1 text-[9px]">
                 ↵
               </KeyboardShortcut>{" "}
-              inside a text field (e.g. Feedback) inserts a new line — use{" "}
+              {tAutoI18n(
+                "inside_a_text_field_e_g_feedback_inserts_a_new_line__55c8b79",
+              )}{" "}
               <KeyboardShortcut
                 className="h-4 px-1 text-[9px]"
                 keys={[modLabel, "↵"]}
               />{" "}
-              to complete.
+              {tAutoI18n("to_complete_099166f")}{" "}
             </p>
           </DialogBody>
         </DialogContent>

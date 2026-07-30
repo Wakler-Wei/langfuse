@@ -16,12 +16,14 @@ import {
 import { cn } from "@/src/utils/tailwind";
 import { api } from "@/src/utils/api";
 import type { DatasetSelectStepProps } from "./types";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export function DatasetSelectStep({
   projectId,
   dataset,
   onDatasetSelect,
 }: DatasetSelectStepProps) {
+  const tAuto = useAutoTranslations();
   const [open, setOpen] = useState(false);
 
   // Fetch all datasets
@@ -32,9 +34,11 @@ export function DatasetSelectStep({
   return (
     <div className="space-y-6 p-6">
       <div>
-        <h3 className="text-lg font-bold">Select Dataset</h3>
+        <h3 className="text-lg font-bold">{tAuto("select_dataset_795c91c")}</h3>
         <p className="text-muted-foreground text-sm">
-          Choose an existing dataset to add your observations to
+          {tAuto(
+            "choose_an_existing_dataset_to_add_your_observations__d56e939",
+          )}{" "}
         </p>
       </div>
 
@@ -52,8 +56,8 @@ export function DatasetSelectStep({
         </PopoverTrigger>
         <PopoverContent className="w-[500px] p-0" align="start">
           <Command>
-            <CommandInput placeholder="Search datasets..." />
-            <CommandEmpty>No dataset found.</CommandEmpty>
+            <CommandInput placeholder={tAuto("search_datasets_2edc7dc")} />
+            <CommandEmpty>{tAuto("no_dataset_found_48303db")}</CommandEmpty>
             <CommandGroup className="max-h-[300px] overflow-auto">
               {datasets.data?.map((d) => (
                 <CommandItem

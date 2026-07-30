@@ -52,18 +52,21 @@ import {
   TableIconButtonLoadingCell,
   TableTextLoadingCell,
 } from "@/src/components/table/loading-cells";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 function DeprecatedChipCell() {
+  const tAuto = useAutoTranslations();
   return (
     <div className="flex items-center gap-1.5">
       <span className="bg-light-yellow text-dark-yellow inline-flex w-fit shrink-0 items-center rounded-full px-2 py-0.5 text-xs font-bold whitespace-nowrap">
-        Deprecated
+        {tAuto("deprecated_527600b")}{" "}
       </span>
     </div>
   );
 }
 
 export default function EvaluatorTable({ projectId }: { projectId: string }) {
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const { setDetailPageList } = useDetailPageLists();
   const [paginationState, setPaginationState] = usePaginationState(0, 50, {
@@ -138,7 +141,7 @@ export default function EvaluatorTable({ projectId }: { projectId: string }) {
   const columns = [
     columnHelper.accessor("scoreName", {
       id: "scoreName",
-      header: "Generated Score Name",
+      header: tAuto("generated_score_name_d10cd7a"),
       size: 200,
       cell: (row) => {
         const scoreName = row.getValue();
@@ -146,7 +149,7 @@ export default function EvaluatorTable({ projectId }: { projectId: string }) {
       },
     }),
     columnHelper.accessor("status", {
-      header: "Status",
+      header: tAuto("status_bae7d5b"),
       id: "status",
       size: 80,
       loadingCell: <TableBadgeLoadingCell />,
@@ -160,7 +163,7 @@ export default function EvaluatorTable({ projectId }: { projectId: string }) {
       },
     }),
     columnHelper.accessor("totalCost", {
-      header: "Total Cost (7d)",
+      header: tAuto("total_cost_7d_6e6bfed"),
       id: "totalCost",
       size: 120,
       cell: (row) => {
@@ -176,7 +179,7 @@ export default function EvaluatorTable({ projectId }: { projectId: string }) {
       },
     }),
     columnHelper.accessor("result", {
-      header: "Result",
+      header: tAuto("result_5faa59d"),
       id: "result",
       size: 150,
       cell: (row) => {
@@ -190,7 +193,7 @@ export default function EvaluatorTable({ projectId }: { projectId: string }) {
       },
     }),
     columnHelper.accessor("logs", {
-      header: "Logs",
+      header: tAuto("logs_126dd3b"),
       id: "logs",
       size: 150,
       loadingCell: <Skeleton className="h-6 w-16 rounded-md" />,
@@ -199,7 +202,7 @@ export default function EvaluatorTable({ projectId }: { projectId: string }) {
         return (
           <Button
             variant="outline"
-            aria-label="view-logs"
+            aria-label={tAuto("view_logs_a34f5d5")}
             size="sm"
             onClick={(e) => {
               e.stopPropagation();
@@ -209,14 +212,14 @@ export default function EvaluatorTable({ projectId }: { projectId: string }) {
             }}
           >
             <ExternalLinkIcon className="mr-1 h-3 w-3" />
-            View
+            {tAuto("view_69bd4ef")}{" "}
           </Button>
         );
       },
     }),
     columnHelper.accessor("template", {
       id: "template",
-      header: "Referenced Evaluator",
+      header: tAuto("referenced_evaluator_c932f89"),
       size: 200,
       loadingCell: (
         <div className="flex items-center gap-2">
@@ -239,19 +242,19 @@ export default function EvaluatorTable({ projectId }: { projectId: string }) {
     }),
     columnHelper.accessor("createdAt", {
       id: "createdAt",
-      header: "Created At",
+      header: tAuto("created_at_5db1542"),
       enableSorting: true,
       size: 150,
     }),
     columnHelper.accessor("updatedAt", {
       id: "updatedAt",
-      header: "Updated At",
+      header: tAuto("updated_at_2271427"),
       enableSorting: true,
       size: 150,
     }),
     columnHelper.accessor("isLegacy", {
       id: "isLegacy",
-      header: "Eval Version",
+      header: tAuto("eval_version_4d7755e"),
       size: 180,
       enableHiding: true,
       loadingCell: <TableBadgeLoadingCell />,
@@ -265,20 +268,20 @@ export default function EvaluatorTable({ projectId }: { projectId: string }) {
     }),
     columnHelper.accessor("target", {
       id: "target",
-      header: "Runs on",
+      header: tAuto("runs_on_5703321"),
       size: 150,
       enableHiding: true,
       cell: (row) => {
         const targetObject = row.getValue();
         const renderText = isEventTarget(targetObject)
-          ? "observations"
+          ? tAuto("observations_1943334")
           : targetObject;
         return <span className="text-muted-foreground">{renderText}</span>;
       },
     }),
     columnHelper.accessor("filter", {
       id: "filter",
-      header: "Filter",
+      header: tAuto("filter_d7decf1"),
       size: 200,
       enableHiding: true,
       cell: (row) => {
@@ -307,7 +310,7 @@ export default function EvaluatorTable({ projectId }: { projectId: string }) {
       },
     }),
     columnHelper.accessor("id", {
-      header: "Id",
+      header: tAuto("id_474ae52"),
       id: "id",
       size: 100,
       enableHiding: true,
@@ -317,7 +320,7 @@ export default function EvaluatorTable({ projectId }: { projectId: string }) {
       },
     }),
     columnHelper.accessor("actions", {
-      header: "Actions",
+      header: tAuto("actions_c3cd636"),
       id: "actions",
       size: 100,
       loadingCell: <TableIconButtonLoadingCell />,
@@ -328,8 +331,8 @@ export default function EvaluatorTable({ projectId }: { projectId: string }) {
             <IconOnlyButton
               key={id}
               icon={<Pen className="h-4 w-4" />}
-              label="Edit"
-              aria-label="edit"
+              label={tAuto("edit_5301648")}
+              aria-label={tAuto("edit_9ead47a")}
               disabledReason={
                 !hasAccess
                   ? "You don't have permission to edit this evaluator."
@@ -343,7 +346,7 @@ export default function EvaluatorTable({ projectId }: { projectId: string }) {
               }}
             />
             <DeleteEvalConfigButton
-              aria-label="delete"
+              aria-label={tAuto("delete_9485989")}
               itemId={id}
               projectId={projectId}
               isTableAction
@@ -351,7 +354,7 @@ export default function EvaluatorTable({ projectId }: { projectId: string }) {
               icon
               variant="ghost"
               size="icon-xs"
-              title="Delete"
+              title={tAuto("delete_f6fdbe4")}
             />
           </div>
         );
@@ -452,7 +455,7 @@ export default function EvaluatorTable({ projectId }: { projectId: string }) {
       >
         <DialogContent className="max-h-[90vh] max-w-(--breakpoint-xl) overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Edit configuration</DialogTitle>
+            <DialogTitle>{tAuto("edit_configuration_8139ad1")}</DialogTitle>
           </DialogHeader>
           {existingEvaluator.isLoading ? (
             <div className="flex items-center justify-center p-4">
@@ -479,9 +482,10 @@ export default function EvaluatorTable({ projectId }: { projectId: string }) {
                 setEditConfigId(null);
                 utils.evals.allConfigs.invalidate();
                 showSuccessToast({
-                  title: "Evaluator updated successfully",
-                  description:
-                    "Changes will automatically be reflected future evaluator runs",
+                  title: tAuto("evaluator_updated_successfully_890acc5"),
+                  description: tAuto(
+                    "changes_will_automatically_be_reflected_future_evalu_fed9b34",
+                  ),
                 });
               }}
             />

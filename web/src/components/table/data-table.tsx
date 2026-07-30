@@ -56,6 +56,7 @@ import {
   useTableRowIsSelected,
   useTableSelectAll,
 } from "@/src/components/table/table-selection-store";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 interface DataTableProps<TData, TValue> {
   columns: LangfuseColumnDef<TData, TValue>[];
@@ -222,6 +223,7 @@ export function DataTable<TData extends object, TValue>({
   topAlignCells = false,
   cellPadding = "compact",
 }: DataTableProps<TData, TValue>) {
+  const tAuto = useAutoTranslations();
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const rowheighttw = getRowHeightTailwindClass(rowHeight, customRowHeights);
   const capture = usePostHogClientCapture();
@@ -520,7 +522,10 @@ export function DataTable<TData extends object, TValue>({
                               />
                             )}
                             {orderBy?.column === columnDef.id
-                              ? renderOrderingIndicator(orderBy)
+                              ? renderOrderingIndicator(
+                                  orderBy,
+                                  tAuto("sort_by_this_column_ffda121"),
+                                )
                               : null}
 
                             <div
@@ -614,11 +619,14 @@ export function DataTable<TData extends object, TValue>({
   );
 }
 
-function renderOrderingIndicator(orderBy?: OrderByState) {
+function renderOrderingIndicator(
+  orderBy: OrderByState | undefined,
+  descendingTitle: string,
+) {
   if (!orderBy) return null;
   if (orderBy.order === "ASC") return <span className="ml-1">▲</span>;
   return (
-    <span className="ml-1" title="Sort by this column">
+    <span className="ml-1" title={descendingTitle}>
       ▼
     </span>
   );
@@ -718,6 +726,7 @@ function TableBodyComponent<TData>({
   cellPadding = "compact",
   tableSnapshot: _tableSnapshot,
 }: TableBodyComponentProps<TData>) {
+  const tAuto = useAutoTranslations();
   const visibleColumns = table.getVisibleLeafColumns();
   const rowModelRows = table.getRowModel().rows;
   const tableState = table.getState();
@@ -873,7 +882,7 @@ function TableBodyComponent<TData>({
             <div className="pointer-events-none absolute left-[50%] flex -translate-x-1/2 -translate-y-1/2 items-center justify-center text-center">
               {noResultsMessage ?? (
                 <>
-                  No results.{" "}
+                  {tAuto("no_results_0035403")}{" "}
                   {help && (
                     <DocPopup description={help.description} href={help.href} />
                   )}

@@ -9,6 +9,7 @@ import {
 } from "@/src/components/ui/popover";
 import { api } from "@/src/utils/api";
 import useProjectIdFromURL from "@/src/hooks/useProjectIdFromURL";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export interface MediaButtonGroupProps {
   media: MediaReturnType[];
@@ -26,12 +27,13 @@ interface GroupedMedia {
  * AudioPlayer - Renders HTML5 audio player with controls
  */
 function AudioPlayer({ src }: { src?: string }) {
+  const tAuto = useAutoTranslations();
   if (!src) return null;
 
   return (
     <audio controls className="w-full" preload="metadata">
       <source src={src} />
-      Your browser does not support the audio element.
+      {tAuto("your_browser_does_not_support_the_audio_element_11381f9")}{" "}
     </audio>
   );
 }
@@ -40,12 +42,13 @@ function AudioPlayer({ src }: { src?: string }) {
  * VideoPlayer - Renders HTML5 video player with controls
  */
 function VideoPlayer({ src }: { src?: string }) {
+  const tAuto = useAutoTranslations();
   if (!src) return null;
 
   return (
     <video controls className="w-full" preload="metadata" playsInline>
       <source src={src} />
-      Your browser does not support the video element.
+      {tAuto("your_browser_does_not_support_the_video_element_5d8a82c")}{" "}
     </video>
   );
 }
@@ -54,6 +57,7 @@ function VideoPlayer({ src }: { src?: string }) {
  * ImagePreview - Renders 96x96px image that opens in new tab when clicked
  */
 function ImagePreview({ src }: { src?: string }) {
+  const tAuto = useAutoTranslations();
   if (!src) return null;
 
   const openInNewTab = () => {
@@ -64,12 +68,12 @@ function ImagePreview({ src }: { src?: string }) {
     <button
       onClick={openInNewTab}
       className="bg-muted h-24 w-24 overflow-hidden rounded-md border transition-opacity hover:opacity-80"
-      aria-label="Open image in new tab"
+      aria-label={tAuto("open_image_in_new_tab_fd587a8")}
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={src}
-        alt="Media preview"
+        alt={tAuto("media_preview_8436a13")}
         className="h-full w-full object-cover"
       />
     </button>
@@ -121,6 +125,7 @@ function MediaPreview({ mediaItem }: { mediaItem: MediaReturnType }) {
  * Shows popover on hover; click to keep it open.
  */
 export function MediaButtonGroup({ media }: MediaButtonGroupProps) {
+  const tAuto = useAutoTranslations();
   const [openCategory, setOpenCategory] = useState<MediaCategory | null>(null);
   const [clickedCategory, setClickedCategory] = useState<MediaCategory | null>(
     null,
@@ -197,9 +202,11 @@ export function MediaButtonGroup({ media }: MediaButtonGroupProps) {
           <PopoverTrigger asChild>
             <button
               className="hover:bg-accent relative flex h-6 w-6 items-center justify-center rounded"
-              title={`${group.items.length} ${group.category} file${
-                group.items.length > 1 ? "s" : ""
-              }`}
+              title={tAuto("value0_value1_file_value2_aef71b9", {
+                value0: group.items.length,
+                value1: group.category,
+                value2: group.items.length > 1 ? "s" : "",
+              })}
               onMouseEnter={() => {
                 // Clear any pending close timeout
                 if (closeTimeoutRef.current) {

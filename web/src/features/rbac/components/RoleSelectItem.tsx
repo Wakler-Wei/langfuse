@@ -15,6 +15,7 @@ import {
   orgNoneRoleComment,
 } from "@/src/features/rbac/constants/organizationAccessRights";
 import { orderedRoles } from "@/src/features/rbac/constants/orderedRoles";
+import { I18nText, useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export const RoleSelectItem = ({
   role,
@@ -23,6 +24,8 @@ export const RoleSelectItem = ({
   role: Role;
   isProjectRole?: boolean;
 }) => {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const isProjectNoneRole = role === Role.NONE && isProjectRole;
   const isOrgNoneRole = role === Role.NONE && !isProjectRole;
   const orgScopes = reduceScopesToListItems(organizationRoleAccessRights, role);
@@ -34,7 +37,7 @@ export const RoleSelectItem = ({
         <SelectItem value={role} className="max-w-56">
           <span>
             {formatRole(role)}
-            {isProjectNoneRole ? " (keep default role)" : ""}
+            {isProjectNoneRole ? tAutoI18n("keep_default_role_e4f81c2") : ""}
           </span>
         </SelectItem>
       </HoverCardTrigger>
@@ -46,15 +49,23 @@ export const RoleSelectItem = ({
             <div className="text-xs">{orgNoneRoleComment}</div>
           ) : (
             <>
-              <div className="font-bold">Role: {formatRole(role)}</div>
-              <p className="mt-2 text-xs font-bold">Organization Scopes</p>
+              <div className="font-bold">
+                {tAutoI18n("role_61e4c27")} {formatRole(role)}
+              </div>
+              <p className="mt-2 text-xs font-bold">
+                {tAuto("organization_scopes_302e50c")}
+              </p>
               <ul className="list-inside list-disc text-xs">{orgScopes}</ul>
-              <p className="mt-2 text-xs font-bold">Project Scopes</p>
+              <p className="mt-2 text-xs font-bold">
+                {tAuto("project_scopes_6442881")}
+              </p>
               <ul className="list-inside list-disc text-xs">{projectScopes}</ul>
               <p className="mt-2 border-t pt-2 text-xs">
-                Note:{" "}
-                <span className="text-muted-foreground">Muted scopes</span> are
-                inherited from lower role.
+                {tAutoI18n("note_83423c1")}{" "}
+                <span className="text-muted-foreground">
+                  {tAuto("muted_scopes_a7bf14e")}
+                </span>{" "}
+                {tAutoI18n("are_inherited_from_lower_role_6dc94c0")}{" "}
               </p>
             </>
           )}
@@ -111,7 +122,9 @@ const reduceScopesToListItems = (
       })}
     </>
   ) : (
-    <li>None</li>
+    <li>
+      <I18nText id="none_6eef664" />
+    </li>
   );
 };
 

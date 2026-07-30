@@ -67,6 +67,7 @@ import {
   type ExperimentsTableStore,
 } from "@/src/features/experiments/store/experimentsTableStore";
 import { useExperimentsTableSelectionSync } from "@/src/features/experiments/hooks/useExperimentsTableSelectionSync";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 /**
  * LFE-10460: the metadata column's default position moved from last to right
@@ -106,6 +107,7 @@ function ExperimentsMultiSelectActionMenu({
   projectId: string;
   store: ExperimentsTableStore;
 }) {
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const [showRunEvaluationDialog, setShowRunEvaluationDialog] = useState(false);
   // Page-scoped and in table order, so the first id is the topmost selected
@@ -174,8 +176,8 @@ function ExperimentsMultiSelectActionMenu({
     {
       id: ActionId.ExperimentCompare,
       type: BatchActionType.Create,
-      label: "Compare",
-      description: "Compare selected experiments",
+      label: tAuto("compare_8d105cf"),
+      description: tAuto("compare_selected_experiments_7322bcb"),
       icon: <GitCompareArrows className="h-4 w-4 sm:mr-2" />,
       customDialog: true,
       disabled: tooManySelected,
@@ -191,8 +193,10 @@ function ExperimentsMultiSelectActionMenu({
           {
             id: ActionId.ObservationBatchEvaluation,
             type: BatchActionType.Create,
-            label: "Run Evaluator",
-            description: "Run evaluators on selected experiments",
+            label: tAuto("run_evaluator_a852acc"),
+            description: tAuto(
+              "run_evaluators_on_selected_experiments_5ebe484",
+            ),
             icon: <LightbulbIcon className="h-4 w-4 sm:mr-2" />,
             customDialog: true,
             accessCheck: {
@@ -244,6 +248,7 @@ export default function ExperimentsTable({
   sessionFilterContextId,
   showControlsInPageHeader = false,
 }: ExperimentsTableProps) {
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const filterConfig = useMemo(
     () =>
@@ -592,7 +597,9 @@ export default function ExperimentsTable({
       size: 100,
       enableHiding: true,
       headerTooltip: {
-        description: "Average duration of the root span per experiment item.",
+        description: tAuto(
+          "average_duration_of_the_root_span_per_experiment_ite_c63558b",
+        ),
       },
       cell: ({ row }) => {
         const value: number | undefined = row.getValue("latencyAvg");
@@ -614,7 +621,7 @@ export default function ExperimentsTable({
     },
     {
       accessorKey: "traceItemScores",
-      header: "Trace Item Scores",
+      header: tAuto("trace_item_scores_e8a9ee8"),
       id: "traceItemScores",
       enableHiding: true,
       defaultHidden: true,
@@ -627,7 +634,7 @@ export default function ExperimentsTable({
     },
     {
       accessorKey: "observationItemScores",
-      header: "Observation Item Scores",
+      header: tAuto("observation_item_scores_cbebd11"),
       id: "observationItemScores",
       enableHiding: true,
       defaultHidden: true,
@@ -640,7 +647,7 @@ export default function ExperimentsTable({
     },
     {
       accessorKey: "experimentScores",
-      header: "Experiment-Level Scores",
+      header: tAuto("experiment_level_scores_de86f61"),
       id: "experimentScores",
       enableHiding: true,
       defaultHidden: true,
@@ -781,7 +788,9 @@ export default function ExperimentsTable({
               <AccordionItem value="charts" className="border-t">
                 <AccordionTrigger className="px-3 pt-2 pb-1 hover:no-underline">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-bold">Charts</span>
+                    <span className="text-sm font-bold">
+                      {tAuto("charts_8610e3e")}
+                    </span>
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="max-h-[40dvh] overflow-x-auto px-3 pt-1 pb-1">

@@ -10,6 +10,7 @@ import { SessionTraceActionButtons } from "@/src/components/session/SessionTrace
 import { type EventSessionTrace } from "@/src/components/session/sessionDetailPageTypes";
 import { cn } from "@/src/utils/tailwind";
 import { usdFormatter } from "@/src/utils/numbers";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const MODERN_SESSION_OVERSCAN = 5;
 
@@ -47,6 +48,8 @@ const ModernSessionMinimapItem = React.memo(
     openPeek: OpenPeek;
     onSelect: (index: number) => void;
   }) => {
+    const tAutoI18n = useAutoTranslations();
+    const tAuto = useAutoTranslations();
     const observationCount = trace.observationCount ?? 0;
     const observationLabel = `${observationCount} observation${observationCount === 1 ? "" : "s"}`;
 
@@ -72,7 +75,7 @@ const ModernSessionMinimapItem = React.memo(
             <ItemBadge type="TRACE" isSmall />
             <span
               className="min-w-0 flex-1 truncate text-xs font-bold"
-              title={trace.name ?? "Trace"}
+              title={trace.name ?? tAuto("trace_2f38169")}
             >
               {trace.name ?? "Trace"}
             </span>
@@ -90,9 +93,11 @@ const ModernSessionMinimapItem = React.memo(
             <span>{observationLabel}</span>
             <span>·</span>
             {trace.scores.length > 0 ? (
-              <span>{trace.scores.length} scores</span>
+              <span>
+                {trace.scores.length} {tAutoI18n("scores_b534c5b")}
+              </span>
             ) : (
-              <span>no scores</span>
+              <span>{tAuto("no_scores_fb90108")}</span>
             )}
           </span>
           {isActive && trace.scores.length > 0 ? (
@@ -143,6 +148,8 @@ const ModernSessionMinimap = React.memo(
     onSelect: (index: number) => void;
     totalCost: number;
   }) => {
+    const tAutoI18n = useAutoTranslations();
+    const tAuto = useAutoTranslations();
     const minimapRef = useRef<HTMLDivElement>(null);
     const virtualizer = useVirtualizer({
       count: traces.length,
@@ -156,15 +163,15 @@ const ModernSessionMinimap = React.memo(
       <div
         ref={minimapRef}
         role="complementary"
-        aria-label="Session traces"
+        aria-label={tAuto("session_traces_cda8b68")}
         className="bg-muted/10 min-h-0 overflow-y-auto border-r"
       >
         <div className="bg-background sticky top-0 z-10 flex items-center justify-between gap-2 border-b px-3 py-2">
           <span className="text-muted-foreground text-xs font-bold tracking-wide uppercase">
-            Traces · {traces.length}
+            {tAutoI18n("traces_736633e")} {traces.length}
           </span>
           <span className="text-muted-foreground text-xs font-bold">
-            Total cost · {usdFormatter(totalCost, 2)}
+            {tAutoI18n("total_cost_02deacd")} {usdFormatter(totalCost, 2)}
           </span>
         </div>
         <div

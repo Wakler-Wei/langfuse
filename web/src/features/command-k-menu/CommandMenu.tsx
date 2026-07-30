@@ -20,6 +20,8 @@ import { useAccountSettingsPages } from "@/src/pages/account/settings";
 import { useQueryProjectOrOrganization } from "@/src/features/projects/hooks";
 import { api } from "@/src/utils/api";
 import { type NavigationItem } from "@/src/components/layouts/utilities/routes";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
+import { getPlainTextFromReactNode } from "@/src/utils/react-node-plain-text";
 
 function MainNavigationGroup({
   navItems,
@@ -91,6 +93,7 @@ function ProjectsGroup({ onNavigate }: { onNavigate: () => void }) {
 }
 
 function DashboardsGroup({ onNavigate }: { onNavigate: () => void }) {
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const capture = usePostHogClientCapture();
   const { project } = useQueryProjectOrOrganization();
@@ -134,7 +137,9 @@ function DashboardsGroup({ onNavigate }: { onNavigate: () => void }) {
               router.push(url);
               capture("cmd_k_menu:navigated", {
                 type: "dashboard",
-                title: `Dashboard > ${dashboard.name}`,
+                title: tAuto("dashboard_value0_94ab295", {
+                  value0: dashboard.name,
+                }),
                 url: url,
               });
               onNavigate();
@@ -149,6 +154,7 @@ function DashboardsGroup({ onNavigate }: { onNavigate: () => void }) {
 }
 
 function ProjectSettingsGroup({ onNavigate }: { onNavigate: () => void }) {
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const capture = usePostHogClientCapture();
   const settingsPages = useProjectSettingsPages();
@@ -156,11 +162,15 @@ function ProjectSettingsGroup({ onNavigate }: { onNavigate: () => void }) {
 
   const projectSettingsItems = settingsPages
     .filter((page) => page.show !== false && !("href" in page))
-    .map((page) => ({
-      title: `Project Settings > ${page.title}`,
-      url: `/project/${project?.id}/settings${page.slug === "index" ? "" : `/${page.slug}`}`,
-      keywords: page.cmdKKeywords || [],
-    }));
+    .map((page) => {
+      const pageTitle = getPlainTextFromReactNode(page.title) ?? page.slug;
+
+      return {
+        title: tAuto("project_settings_value0_9d086cb", { value0: pageTitle }),
+        url: `/project/${project?.id}/settings${page.slug === "index" ? "" : `/${page.slug}`}`,
+        keywords: page.cmdKKeywords || [],
+      };
+    });
 
   if (projectSettingsItems.length === 0) return null;
 
@@ -192,6 +202,7 @@ function ProjectSettingsGroup({ onNavigate }: { onNavigate: () => void }) {
 }
 
 function OrganizationSettingsGroup({ onNavigate }: { onNavigate: () => void }) {
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const capture = usePostHogClientCapture();
   const orgSettingsPages = useOrganizationSettingsPages();
@@ -199,11 +210,17 @@ function OrganizationSettingsGroup({ onNavigate }: { onNavigate: () => void }) {
 
   const orgSettingsItems = orgSettingsPages
     .filter((page) => page.show !== false && !("href" in page))
-    .map((page) => ({
-      title: `Organization Settings > ${page.title}`,
-      url: `/organization/${organization?.id}/settings${page.slug === "index" ? "" : `/${page.slug}`}`,
-      keywords: page.cmdKKeywords || [],
-    }));
+    .map((page) => {
+      const pageTitle = getPlainTextFromReactNode(page.title) ?? page.slug;
+
+      return {
+        title: tAuto("organization_settings_value0_2f07dd4", {
+          value0: pageTitle,
+        }),
+        url: `/organization/${organization?.id}/settings${page.slug === "index" ? "" : `/${page.slug}`}`,
+        keywords: page.cmdKKeywords || [],
+      };
+    });
 
   if (orgSettingsItems.length === 0) return null;
 
@@ -235,12 +252,13 @@ function OrganizationSettingsGroup({ onNavigate }: { onNavigate: () => void }) {
 }
 
 function AccountSettingsGroup({ onNavigate }: { onNavigate: () => void }) {
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const capture = usePostHogClientCapture();
   const accountSettingsPages = useAccountSettingsPages();
 
   const accountSettingsItems = accountSettingsPages.map((page) => ({
-    title: `Account Settings > ${page.title}`,
+    title: tAuto("account_settings_value0_30e19cf", { value0: page.title }),
     url: `/account/settings${page.slug === "index" ? "" : `/${page.slug}`}`,
     keywords: page.cmdKKeywords || [],
   }));
@@ -279,6 +297,7 @@ function CommandMenuComponent({
 }: {
   mainNavigation: NavigationItem[];
 }) {
+  const tAuto = useAutoTranslations();
   const { open, setOpen } = useCommandMenu();
   const capture = usePostHogClientCapture();
 
@@ -297,7 +316,10 @@ function CommandMenuComponent({
       if (item.items) {
         // if the item has children, return the children and not the parent
         return item.items.map((child) => ({
-          title: `${item.title} > ${child.title}`,
+          title: tAuto("value0_value1_ebf1a24", {
+            value0: item.title,
+            value1: child.title,
+          }),
           url: child.url,
         }));
       }
@@ -346,12 +368,12 @@ function CommandMenuComponent({
       }}
     >
       <CommandInput
-        placeholder="Type a command or search..."
+        placeholder={tAuto("type_a_command_or_search_af38143")}
         className="border-none focus:border-none focus:ring-0 focus:ring-transparent focus:outline-hidden"
         onValueChange={debouncedSearchChange}
       />
       <CommandList>
-        <CommandEmpty>No results found.</CommandEmpty>
+        <CommandEmpty>{tAuto("no_results_found_e9cc6d0")}</CommandEmpty>
         <MainNavigationGroup navItems={navItems} onNavigate={handleNavigate} />
         <ProjectsGroup onNavigate={handleNavigate} />
         <DashboardsGroup onNavigate={handleNavigate} />
@@ -406,6 +428,7 @@ export const CommandMenu = memo(
 );
 
 export const useNavigationItems = () => {
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const session = useSession();
 
@@ -444,7 +467,10 @@ export const useNavigationItems = () => {
         })
         .flatMap((org) =>
           org.projects.map((proj) => ({
-            title: `${org.name} > ${proj.name}`,
+            title: tAuto("value0_value1_ebf1a24", {
+              value0: org.name,
+              value1: proj.name,
+            }),
             url: getProjectPath(proj.id),
             active: router.query.projectId === proj.id,
             keywords: [

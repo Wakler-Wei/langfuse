@@ -10,6 +10,7 @@ import { TriangleAlertIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { AnnotationForm } from "@/src/features/scores/components/AnnotationForm";
 import { type WithStringifiedMetadata } from "@/src/utils/clientSideDomainTypes";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 interface AnnotationDrawerSectionProps {
   item: AnnotationQueueItem & {
@@ -25,6 +26,8 @@ interface AnnotationDrawerSectionProps {
 export const AnnotationDrawerSection: React.FC<
   AnnotationDrawerSectionProps
 > = ({ item, scoreTarget, scores, configs, environment }) => {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const session = useSession();
 
   const isLockedByOtherUser = item.lockedByUserId !== session.data?.user?.id;
@@ -54,7 +57,8 @@ export const AnnotationDrawerSection: React.FC<
             <div className="border-dark-red bg-light-red flex items-center justify-center rounded-sm border p-1">
               <TriangleAlertIcon className="text-dark-red mr-1 h-4 w-4" />
               <span className="text-dark-red text-xs">
-                Currently edited by {item.lockedByUser.name}
+                {tAutoI18n("currently_edited_by_853f949")}{" "}
+                {item.lockedByUser.name}
               </span>
             </div>
           ) : undefined
@@ -62,8 +66,9 @@ export const AnnotationDrawerSection: React.FC<
       />
       {hasNonAnnotationScores && (
         <div className="text-muted-foreground mt-4 text-xs">
-          API and eval scores visible when toggling on the detailed view. Add
-          manual annotations above.
+          {tAuto(
+            "api_and_eval_scores_visible_when_toggling_on_the_det_a8a07bd",
+          )}{" "}
         </div>
       )}
     </Card>

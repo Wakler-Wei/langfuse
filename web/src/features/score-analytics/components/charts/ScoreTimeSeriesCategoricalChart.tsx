@@ -14,6 +14,7 @@ import {
 import { formatChartTimestamp } from "../../lib/chart-formatters";
 import { ScoreChartTooltip } from "../../lib/ScoreChartTooltip";
 import { ScoreChartLegendContent } from "./ScoreChartLegendContent";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export interface CategoricalTimeSeriesChartProps {
   data: Array<{
@@ -41,6 +42,7 @@ export function ScoreTimeSeriesCategoricalChart({
   timeRange,
   colors,
 }: CategoricalTimeSeriesChartProps) {
+  const tAuto = useAutoTranslations();
   // Transform categorical data into pivot format for Recharts
   const { chartData, categories } = useMemo(() => {
     // Group by timestamp and collect all categories
@@ -131,7 +133,7 @@ export function ScoreTimeSeriesCategoricalChart({
   if (chartData.length === 0 || categories.length === 0) {
     return (
       <div className="text-muted-foreground flex h-[200px] items-center justify-center text-sm">
-        No time series data available
+        {tAuto("no_time_series_data_available_164202e")}{" "}
       </div>
     );
   }
@@ -144,7 +146,9 @@ export function ScoreTimeSeriesCategoricalChart({
   if (!hasAnyData) {
     return (
       <div className="text-muted-foreground flex h-[200px] items-center justify-center text-sm">
-        No data points available for the selected time range
+        {tAuto(
+          "no_data_points_available_for_the_selected_time_range_16dafd2",
+        )}{" "}
       </div>
     );
   }

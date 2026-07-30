@@ -60,6 +60,7 @@ import {
   performToolSideEffects,
   shouldPerformToolSideEffects,
 } from "@/src/features/in-app-agent/components/utils/side-effects";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const SELECTED_CONVERSATION_STORAGE_KEY_PREFIX =
   "langfuse:in-app-ai-agent-selected-conversation";
@@ -271,6 +272,7 @@ function InAppAiAgentProviderInner({
   open,
   setOpen,
 }: InAppAiAgentProviderInnerProps) {
+  const tAuto = useAutoTranslations();
   const utils = api.useUtils();
   const capture = usePostHogClientCapture();
   const session = useSession();
@@ -425,13 +427,18 @@ function InAppAiAgentProviderInner({
 
     fetchNextConversationsPage().catch((error) => {
       const errorMessage = getAgentErrorMessage(error);
-      showErrorToast("Failed to load conversations", errorMessage);
+      showErrorToast(
+        tAuto("failed_to_load_conversations_4436fc9"),
+        errorMessage,
+      );
       console.error("Failed to load in-app agent conversations", error);
     });
   }, [
     fetchNextConversationsPage,
     hasMoreConversations,
     isLoadingMoreConversations,
+    ,
+    tAuto,
   ]);
   const invalidateConversations = useCallback(
     () => utils.inAppAgent.listConversations.invalidate({ projectId }),
@@ -444,12 +451,12 @@ function InAppAiAgentProviderInner({
     }
 
     const errorMessage = getAgentErrorMessage(conversationListQuery.error);
-    showErrorToast("Failed to load conversations", errorMessage);
+    showErrorToast(tAuto("failed_to_load_conversations_4436fc9"), errorMessage);
     console.error("Failed to load in-app agent conversations", {
       error: conversationListQuery.error,
       projectId,
     });
-  }, [conversationListQuery.error, projectId]);
+  }, [conversationListQuery.error, projectId, tAuto]);
 
   const isSelectedConversationHydrating =
     Boolean(selectedConversationId) &&
@@ -883,7 +890,10 @@ function InAppAiAgentProviderInner({
         ]);
       } catch (error) {
         const errorMessage = getAgentErrorMessage(error);
-        showErrorToast("Failed to delete conversation", errorMessage);
+        showErrorToast(
+          tAuto("failed_to_delete_conversation_61f9456"),
+          errorMessage,
+        );
         console.error("Failed to delete in-app agent conversation", error);
         throw error;
       }
@@ -898,6 +908,8 @@ function InAppAiAgentProviderInner({
       setSelectedConversationId,
       utils.inAppAgent.getConversation,
       utils.inAppAgent.listConversations,
+      ,
+      tAuto,
     ],
   );
 
@@ -1057,7 +1069,7 @@ function InAppAiAgentProviderInner({
         });
       } catch (error) {
         const errorMessage = getAgentErrorMessage(error);
-        showErrorToast("Failed to save feedback", errorMessage);
+        showErrorToast(tAuto("failed_to_save_feedback_a91367b"), errorMessage);
         console.error("Failed to save in-app agent feedback", error);
         throw error;
       }
@@ -1067,6 +1079,8 @@ function InAppAiAgentProviderInner({
       projectId,
       selectedConversationId,
       setFeedbackByConversationId,
+      ,
+      tAuto,
     ],
   );
 
@@ -1126,8 +1140,8 @@ function InAppAiAgentProviderInner({
       const agent = agentRef.current;
       if (!agent || agent.threadId !== selectedConversationId) {
         showErrorToast(
-          "Failed to resume tool call",
-          "The interrupted assistant run is no longer available.",
+          tAuto("failed_to_resume_tool_call_00535d8"),
+          tAuto("the_interrupted_assistant_run_is_no_longer_available_ef273f4"),
         );
         return;
       }
@@ -1207,6 +1221,8 @@ function InAppAiAgentProviderInner({
       selectedConversationId,
       selectedConversationIsWriteLocked,
       updatePendingToolApprovals,
+      ,
+      tAuto,
     ],
   );
 

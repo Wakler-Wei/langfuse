@@ -5,8 +5,10 @@ import { TablePeekView } from "@/src/components/table/peek";
 import { ExperimentPeekFooter } from "@/src/features/experiments/components/ExperimentPeekFooter";
 import { useExperimentPeekNavigation } from "@/src/features/experiments/hooks/useExperimentPeekNavigation";
 import { parseTraceTimestampFromQuery } from "@/src/utils/parseTraceTimestampFromQuery";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const PeekViewExperimentItemDetail = ({ projectId }: { projectId: string }) => {
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const peekId = router.query.peek as string | undefined;
   const timestamp = parseTraceTimestampFromQuery(router.query.timestamp);
@@ -24,7 +26,9 @@ const PeekViewExperimentItemDetail = ({ projectId }: { projectId: string }) => {
     return (
       <div className="flex h-full items-center justify-center p-4">
         <span className="text-muted-foreground text-sm">
-          No run for this item in the selected experiment
+          {tAuto(
+            "no_run_for_this_item_in_the_selected_experiment_75f08cf",
+          )}{" "}
         </span>
       </div>
     );
@@ -43,6 +47,7 @@ export const TablePeekViewExperimentItemDetail = (
     projectId: string;
   },
 ) => {
+  const tAuto = useAutoTranslations();
   const { projectId } = props;
   const router = useRouter();
   const peekId = router.query.peek as string | undefined;
@@ -51,7 +56,11 @@ export const TablePeekViewExperimentItemDetail = (
   return (
     <TablePeekView
       {...props}
-      title={peekId ? `Experiment Item: ${peekId}` : undefined}
+      title={
+        peekId
+          ? tAuto("experiment_item_value0_84ee01d", { value0: peekId })
+          : undefined
+      }
       footer={
         canSwitch ? <ExperimentPeekFooter projectId={projectId} /> : undefined
       }

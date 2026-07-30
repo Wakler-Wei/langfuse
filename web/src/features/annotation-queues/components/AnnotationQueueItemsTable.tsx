@@ -37,6 +37,7 @@ import { Checkbox } from "@/src/components/design-system/Checkbox/Checkbox";
 import { useHasProjectAccess } from "@/src/features/rbac/utils/checkProjectAccess";
 import { StatusBadge } from "@/src/components/ui/StatusBadge/StatusBadge";
 import TableIdOrName from "@/src/components/table/table-id";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const QueueItemTableMultiSelectAction = ({
   selectedItemIds,
@@ -47,6 +48,8 @@ const QueueItemTableMultiSelectAction = ({
   projectId: string;
   onDeleteSuccess: () => void;
 }) => {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const utils = api.useUtils();
   const [open, setOpen] = useState(false);
 
@@ -66,7 +69,8 @@ const QueueItemTableMultiSelectAction = ({
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button disabled={selectedItemIds.length < 1}>
-            Actions ({selectedItemIds.length} selected)
+            {tAutoI18n("actions_b0889f2")}
+            {selectedItemIds.length} {tAutoI18n("selected_23f30de")}{" "}
             <ChevronDown className="h-5 w-5" />
           </Button>
         </DropdownMenuTrigger>
@@ -78,7 +82,7 @@ const QueueItemTableMultiSelectAction = ({
             }}
           >
             <Trash className="mr-2 h-4 w-4" />
-            <span>Delete</span>
+            <span>{tAuto("delete_f6fdbe4")}</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -92,11 +96,15 @@ const QueueItemTableMultiSelectAction = ({
       >
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Delete queue items</DialogTitle>
+            <DialogTitle>{tAuto("delete_queue_items_be2b81d")}</DialogTitle>
             <DialogDescription>
-              This action cannot be undone and removes the selected annotation
-              queue item(s), but
-              <strong> does not delete associated scores.</strong>
+              {tAuto(
+                "this_action_cannot_be_undone_and_removes_the_selecte_ff445b3",
+              )}{" "}
+              <strong>
+                {" "}
+                {tAuto("does_not_delete_associated_scores_dfa647c")}
+              </strong>
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="sm:justify-start">
@@ -116,7 +124,8 @@ const QueueItemTableMultiSelectAction = ({
                   });
               }}
             >
-              Delete {selectedItemIds.length} item(s)
+              {tAutoI18n("delete_f6fdbe4")} {selectedItemIds.length}{" "}
+              {tAutoI18n("item_s_c0e2ec8")}{" "}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -164,6 +173,7 @@ export function AnnotationQueueItemsTable({
   projectId: string;
   queueId: string;
 }) {
+  const tAuto = useAutoTranslations();
   const [paginationState, setPaginationState] = useQueryParams({
     pageIndex: withDefault(NumberParam, 0),
     pageSize: withDefault(NumberParam, 50),
@@ -202,7 +212,7 @@ export function AnnotationQueueItemsTable({
                   setSelectedRows({});
                 }
               }}
-              aria-label="Select all"
+              aria-label={tAuto("select_all_913afff")}
               variant="muted"
             />
           </div>
@@ -214,7 +224,7 @@ export function AnnotationQueueItemsTable({
             <Checkbox
               checked={row.getIsSelected()}
               onCheckedChange={(value) => row.toggleSelected(!!value)}
-              aria-label="Select row"
+              aria-label={tAuto("select_row_80eff36")}
               variant="muted"
             />
           </span>
@@ -223,7 +233,7 @@ export function AnnotationQueueItemsTable({
     },
     {
       accessorKey: "id",
-      header: "Id",
+      header: tAuto("id_474ae52"),
       id: "id",
       size: 70,
       isFixedPosition: true,
@@ -239,7 +249,7 @@ export function AnnotationQueueItemsTable({
     },
     {
       accessorKey: "objectType",
-      header: "Type",
+      header: tAuto("type_3deb745"),
       id: "objectType",
       size: 50,
       cell: ({ row }) => {
@@ -250,10 +260,11 @@ export function AnnotationQueueItemsTable({
     },
     {
       accessorKey: "source",
-      header: "Source",
+      header: tAuto("source_6da13ad"),
       headerTooltip: {
-        description:
-          "Link to the source trace, observation or session based on which this item was added",
+        description: tAuto(
+          "link_to_the_source_trace_observation_or_session_base_1d53814",
+        ),
       },
       id: "source",
       size: 50,
@@ -293,7 +304,7 @@ export function AnnotationQueueItemsTable({
     },
     {
       accessorKey: "sourceId",
-      header: "Source ID",
+      header: tAuto("source_id_6c6c269"),
       id: "sourceId",
       size: 50,
       cell: ({ row }) => {
@@ -305,7 +316,7 @@ export function AnnotationQueueItemsTable({
     },
     {
       accessorKey: "status",
-      header: "Status",
+      header: tAuto("status_bae7d5b"),
       id: "status",
       size: 60,
       cell: ({ row }) => {
@@ -315,7 +326,7 @@ export function AnnotationQueueItemsTable({
     },
     {
       accessorKey: "completedAt",
-      header: "Completed At",
+      header: tAuto("completed_at_e076b16"),
       id: "completedAt",
       defaultHidden: true,
       enableHiding: true,
@@ -323,7 +334,7 @@ export function AnnotationQueueItemsTable({
     },
     {
       accessorKey: "annotatorUser",
-      header: "Completed by",
+      header: tAuto("completed_by_7d74e76"),
       id: "annotatorUser",
       enableHiding: true,
       size: 80,
@@ -338,7 +349,7 @@ export function AnnotationQueueItemsTable({
             <Avatar className="h-7 w-7">
               <AvatarImage
                 src={image ?? undefined}
-                alt={userName ?? "User Avatar"}
+                alt={userName ?? tAuto("user_avatar_32e4f25")}
               />
               <AvatarFallback>
                 {userName
@@ -462,8 +473,9 @@ export function AnnotationQueueItemsTable({
                 }
         }
         help={{
-          description:
-            "Add traces and/or observations to your annotation queue to have them annotated by your team across predefined dimensions.",
+          description: tAuto(
+            "add_traces_and_or_observations_to_your_annotation_qu_1a95359",
+          ),
           href: "https://langfuse.com/docs/evaluation/evaluation-methods/annotation-queues",
         }}
         pagination={{

@@ -7,6 +7,7 @@ import { TierPriceEditor } from "./TierPriceEditor";
 import { TierPrefillButtons } from "./TierPrefillButtons";
 import type { UseFormReturn, UseFieldArrayReturn } from "react-hook-form";
 import type { FormUpsertModel } from "../../validation";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type PricingSectionProps = {
   fields: UseFieldArrayReturn<FormUpsertModel, "pricingTiers">["fields"];
@@ -23,6 +24,7 @@ export function PricingSection({
   remove,
   addTier,
 }: PricingSectionProps) {
+  const tAuto = useAutoTranslations();
   const hasMultipleTiers = fields.length > 1;
   const defaultTierIndex = fields.findIndex((f) => f.isDefault);
 
@@ -31,10 +33,11 @@ export function PricingSection({
     return (
       <div className="space-y-4">
         <div>
-          <FormLabel>Prices</FormLabel>
+          <FormLabel>{tAuto("prices_3f6ef31")}</FormLabel>
           <FormDescription>
-            Set prices per usage type for this model. Usage types must exactly
-            match the keys of the ingested usage details.
+            {tAuto(
+              "set_prices_per_usage_type_for_this_model_usage_types_e937c64",
+            )}{" "}
           </FormDescription>
         </div>
 
@@ -47,7 +50,7 @@ export function PricingSection({
 
         <Button type="button" variant="ghost" onClick={addTier}>
           <PlusCircle className="mr-2 h-4 w-4" />
-          Add Custom Pricing Tier
+          {tAuto("add_custom_pricing_tier_8f4ba3b")}{" "}
         </Button>
       </div>
     );
@@ -57,10 +60,11 @@ export function PricingSection({
   return (
     <div className="space-y-4">
       <div>
-        <FormLabel>Pricing Tiers</FormLabel>
+        <FormLabel>{tAuto("pricing_tiers_3359253")}</FormLabel>
         <FormDescription>
-          Define pricing rules evaluated in priority order. Tiers are checked
-          from top to bottom until conditions match.
+          {tAuto(
+            "define_pricing_rules_evaluated_in_priority_order_tie_192edac",
+          )}{" "}
         </FormDescription>
       </div>
 
@@ -83,7 +87,7 @@ export function PricingSection({
 
       <Button type="button" variant="outline" onClick={addTier}>
         <PlusCircle className="mr-2 h-4 w-4" />
-        Add Custom Tier
+        {tAuto("add_custom_tier_52663ff")}{" "}
       </Button>
     </div>
   );

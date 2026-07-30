@@ -10,11 +10,13 @@ import { cn } from "@/src/utils/tailwind";
 import { env } from "@/src/env.mjs";
 import { hasOrganizationAccess } from "@/src/features/rbac/utils/checkOrganizationAccess";
 import { cva } from "class-variance-authority";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const PAYMENT_BANNER_ID = "payment-banner";
 const PAYMENT_BANNER_ORDER = 10;
 
 export function PaymentBanner() {
+  const tAuto = useAutoTranslations();
   const session = useSession();
   const { organization } = useQueryProjectOrOrganization();
   const isCloudBilling = useIsCloudBillingAvailable();
@@ -96,7 +98,9 @@ export function PaymentBanner() {
       <div className="flex items-center gap-3">
         <AlertCircle className="h-4 w-4 shrink-0" />
         <div className="flex flex-col gap-0.5 sm:flex-row sm:items-center sm:gap-2">
-          <span className="text-sm font-bold">Billing Issue:</span>
+          <span className="text-sm font-bold">
+            {tAuto("billing_issue_077f811")}
+          </span>
           <span className="text-sm">
             {`We have problems collecting subscription payment for your organization '${organization.name}'. Please update your payment information to continue using Langfuse.`}
           </span>
@@ -109,7 +113,7 @@ export function PaymentBanner() {
             href={`${basePath}/organization/${organization.id}/settings/billing`}
           >
             <CreditCard className="mr-2 h-4 w-4" />
-            Update Payment
+            {tAuto("update_payment_8ff1897")}{" "}
           </Link>
         </Button>
       </div>

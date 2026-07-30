@@ -1,4 +1,5 @@
 import { AlertCircle } from "lucide-react";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type DatasetError = {
   datasetId: string;
@@ -18,6 +19,7 @@ type DatasetItemFieldSchemaErrorsProps = {
 export const DatasetItemFieldSchemaErrors: React.FC<
   DatasetItemFieldSchemaErrorsProps
 > = ({ errors, showDatasetName = false }) => {
+  const tAuto = useAutoTranslations();
   if (errors.length === 0) return null;
 
   return (
@@ -26,7 +28,7 @@ export const DatasetItemFieldSchemaErrors: React.FC<
         <AlertCircle className="text-destructive mt-0.5 h-4 w-4" />
         <div className="flex-1 space-y-2">
           <p className="text-destructive text-sm font-bold">
-            Schema validation failed
+            {tAuto("schema_validation_failed_86a0c17")}{" "}
           </p>
           {errors.map((error, idx) => (
             <div key={`${error.datasetId}-${idx}`} className="space-y-1">

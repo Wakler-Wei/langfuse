@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { captureException } from "@sentry/nextjs";
 import { stripBasePath } from "@/src/utils/redirect";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export const ErrorPage = ({
   title = "Error",
@@ -24,6 +25,7 @@ export const ErrorPage = ({
         onClick: () => void;
       };
 }) => {
+  const tAuto = useAutoTranslations();
   const session = useSession();
   const router = useRouter();
   const newTargetPath = stripBasePath(router.asPath || "/");
@@ -43,7 +45,7 @@ export const ErrorPage = ({
           <Button
             onClick={() => router.push(`/auth/sign-in${targetPathQuery}`)}
           >
-            Sign In
+            {tAuto("sign_in_f8492cc")}{" "}
           </Button>
         ) : null}
         {additionalButton ? (

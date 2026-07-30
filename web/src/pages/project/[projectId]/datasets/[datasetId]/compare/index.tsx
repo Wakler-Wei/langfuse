@@ -27,8 +27,10 @@ import { AnnotationPanel } from "@/src/features/datasets/components/AnnotationPa
 import { useExperimentAccess } from "@/src/features/experiments/hooks/useExperimentAccess";
 import { toExperimentsResultsUrl } from "@/src/features/experiments/utils/experimentUrlTranslation";
 import Spinner from "@/src/components/design-system/Spinner/Spinner";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 function DatasetCompareLegacy() {
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const capture = usePostHogClientCapture();
   const projectId = router.query.projectId as string;
@@ -94,7 +96,9 @@ function DatasetCompareLegacy() {
   return (
     <Page
       headerProps={{
-        title: `Compare runs: ${dataset.data?.name ?? datasetId}`,
+        title: tAuto("compare_runs_value0_a734718", {
+          value0: dataset.data?.name ?? datasetId,
+        }),
         breadcrumb: [
           {
             name: "Datasets",
@@ -110,7 +114,7 @@ function DatasetCompareLegacy() {
           },
         ],
         help: {
-          description: "Compare your dataset runs side by side",
+          description: tAuto("compare_your_dataset_runs_side_by_side_803d88e"),
         },
         tabsProps: {
           tabs: getDatasetRunCompareTabs(projectId, datasetId),
@@ -130,7 +134,9 @@ function DatasetCompareLegacy() {
                   onClick={() => capture("dataset_run:new_form_open")}
                 >
                   <FlaskConical className="h-4 w-4" />
-                  <span className="ml-2 hidden md:block">New experiment</span>
+                  <span className="ml-2 hidden md:block">
+                    {tAuto("new_experiment_5ad252f")}
+                  </span>
                 </Button>
               </DialogTrigger>
               <DialogContent className="max-h-[90vh] overflow-y-auto">
@@ -148,9 +154,9 @@ function DatasetCompareLegacy() {
             </Dialog>
             <MultiSelectKeyValues
               key="select-runs"
-              title="Experiments"
+              title={tAuto("experiments_e8f296b")}
               showSelectedValueStrings={false}
-              placeholder="Select runs to compare"
+              placeholder={tAuto("select_runs_to_compare_6327250")}
               className="w-fit"
               variant="outline"
               hideClearButton
@@ -220,7 +226,7 @@ function DatasetCompareLegacy() {
             ) : (
               <div className="flex items-center justify-center p-4">
                 <span className="text-muted-foreground text-sm">
-                  Loading annotation data...
+                  {tAuto("loading_annotation_data_0c7250a")}{" "}
                 </span>
               </div>
             )}

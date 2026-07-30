@@ -18,6 +18,7 @@ import {
   ChartTypePicker,
   MetricSelect,
 } from "./ConfigControls";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 /**
  * The "Take B" chart-view layout (the direction Nikita picked): a maximized
@@ -52,6 +53,7 @@ export const ChartViewPanel = React.memo(function ChartViewPanel({
    *  here instead of relying on a host. */
   className?: string;
 }) {
+  const tAuto = useAutoTranslations();
   const [open, setOpen] = useState(true);
 
   const onMetric = useCallback(
@@ -110,38 +112,42 @@ export const ChartViewPanel = React.memo(function ChartViewPanel({
       {open ? (
         <div className="flex w-full flex-col gap-3 overflow-y-auto border-t p-3 md:w-72 md:shrink-0 md:border-t-0 md:border-l">
           <div className="flex items-center justify-between">
-            <span className="text-sm font-bold">Visualize</span>
+            <span className="text-sm font-bold">
+              {tAuto("visualize_20fe12b")}
+            </span>
             <Button
               variant="ghost"
               size="icon-xs"
-              aria-label="Collapse panel"
+              aria-label={tAuto("collapse_panel_02d7f3c")}
               onClick={() => setOpen(false)}
             >
               <ChevronRight className="h-4 w-4" />
             </Button>
           </div>
-          <PanelField label="Chart type">
+          <PanelField label={tAuto("chart_type_25590b0")}>
             <ChartTypePicker
               value={config.chartType}
               onChange={onChartType}
               showLabels
             />
           </PanelField>
-          <PanelField label="Metric">
+          <PanelField label={tAuto("metric_b2bb760")}>
             <MetricSelect value={config.metric} onChange={onMetric} />
           </PanelField>
-          <PanelField label="Aggregation">
+          <PanelField label={tAuto("aggregation_b9ba037")}>
             <AggregationSelect
               metric={config.metric}
               value={config.aggregation}
               onChange={onAggregation}
             />
           </PanelField>
-          <PanelField label="Breakdown">
+          <PanelField label={tAuto("breakdown_fd91b3c")}>
             <BreakdownSelect value={config.breakdown} onChange={onBreakdown} />
           </PanelField>
           {granularitySlot ? (
-            <PanelField label="Granularity">{granularitySlot}</PanelField>
+            <PanelField label={tAuto("granularity_dab817f")}>
+              {granularitySlot}
+            </PanelField>
           ) : null}
         </div>
       ) : (
@@ -149,7 +155,7 @@ export const ChartViewPanel = React.memo(function ChartViewPanel({
           <Button
             variant="ghost"
             size="icon-xs"
-            aria-label="Expand panel"
+            aria-label={tAuto("expand_panel_83bc974")}
             onClick={() => setOpen(true)}
           >
             <ChevronLeft className="h-4 w-4" />

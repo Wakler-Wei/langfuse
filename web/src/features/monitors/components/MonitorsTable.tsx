@@ -38,6 +38,7 @@ import {
 } from "@langfuse/shared/monitors";
 
 import { MonitorSeverityBadge } from "./MonitorSeverityBadge";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 /** monitorsRefetchInterval keeps the list's severity and paused state current without a manual reload. */
 const monitorsRefetchInterval = 5_000;
@@ -54,6 +55,8 @@ type MonitorsOrderBy = RouterInputs["monitors"]["all"]["orderBy"];
 
 /** MonitorsTable renders the project's monitors as a sortable, filterable, paginated table with row navigation to the edit page. */
 export function MonitorsTable() {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const projectId = useProjectIdFromURL() ?? "";
   const utils = api.useUtils();
@@ -71,15 +74,20 @@ export function MonitorsTable() {
       await utils.monitors.invalidate();
       showSuccessToast({
         title:
-          variables.status === "PAUSED" ? "Monitor paused" : "Monitor resumed",
+          variables.status === "PAUSED"
+            ? tAuto("monitor_paused_34e7611")
+            : tAuto("monitor_resumed_a7f2704"),
         description:
           variables.status === "PAUSED"
-            ? "Evaluations are halted until you resume."
-            : "Evaluations have resumed.",
+            ? tAuto("evaluations_are_halted_until_you_resume_55605fc")
+            : tAuto("evaluations_have_resumed_8388914"),
       });
     },
     onError: (e) =>
-      showErrorToast("Failed to update monitor status", e.message),
+      showErrorToast(
+        tAutoI18n("failed_to_update_monitor_status_3e8c902"),
+        e.message,
+      ),
   });
 
   /** paginationState is the bound page index + size, defaulting to 50 per page and synced to the `pageIndex`/`pageSize` URL params. */
@@ -160,7 +168,7 @@ export function MonitorsTable() {
   const columns: LangfuseColumnDef<MonitorRow>[] = [
     {
       accessorKey: "severity",
-      header: "Severity",
+      header: tAuto("severity_de314fa"),
       id: "severity",
       enableSorting: true,
       enableResizing: false,
@@ -174,7 +182,7 @@ export function MonitorsTable() {
     },
     {
       accessorKey: "name",
-      header: "Name",
+      header: tAuto("name_709a232"),
       id: "name",
       enableSorting: true,
       enableResizing: false,
@@ -194,7 +202,7 @@ export function MonitorsTable() {
       ? [
           {
             accessorKey: "tags",
-            header: "Tags",
+            header: tAuto("tags_848eed0"),
             id: "tags",
             enableSorting: false,
             enableResizing: false,
@@ -221,7 +229,7 @@ export function MonitorsTable() {
       : []),
     {
       accessorKey: "actions",
-      header: "Actions",
+      header: tAuto("actions_c3cd636"),
       id: "actions",
       enableSorting: false,
       enableResizing: false,
@@ -302,6 +310,7 @@ function MonitorRowActions({
   /** onToggleStatus flips the monitor between ACTIVE and PAUSED. */
   onToggleStatus: () => void;
 }) {
+  const tAuto = useAutoTranslations();
   const isPaused = monitor.status === "PAUSED";
 
   const editButton = (
@@ -310,8 +319,8 @@ function MonitorRowActions({
       variant="ghost"
       size={collapsed ? "default" : "icon"}
       disabled={!hasCUDAccess}
-      aria-label="Edit monitor"
-      title="Edit"
+      aria-label={tAuto("edit_monitor_9f0a5b7")}
+      title={tAuto("edit_5301648")}
       className={cn(!collapsed && rowActionIconColors)}
     >
       <Link
@@ -319,7 +328,9 @@ function MonitorRowActions({
         onClick={(e) => e.stopPropagation()}
       >
         <SquarePen className="h-4 w-4" aria-hidden="true" />
-        {collapsed ? <span className="ml-2">Edit</span> : null}
+        {collapsed ? (
+          <span className="ml-2">{tAuto("edit_5301648")}</span>
+        ) : null}
       </Link>
     </Button>
   );
@@ -329,8 +340,12 @@ function MonitorRowActions({
       variant="ghost"
       size={collapsed ? "default" : "icon"}
       disabled={!hasCUDAccess || isStatusPending}
-      aria-label={isPaused ? "Resume monitor" : "Pause monitor"}
-      title={isPaused ? "Resume" : "Pause"}
+      aria-label={
+        isPaused
+          ? tAuto("resume_monitor_25964cf")
+          : tAuto("pause_monitor_2748f1d")
+      }
+      title={isPaused ? tAuto("resume_b3bd0b5") : tAuto("pause_781961b")}
       className={cn(!collapsed && rowActionIconColors)}
       onClick={(e) => {
         e.stopPropagation();
@@ -343,7 +358,9 @@ function MonitorRowActions({
         <PauseCircle className="h-4.5 w-4.5" aria-hidden="true" />
       )}
       {collapsed ? (
-        <span className="ml-2">{isPaused ? "Resume" : "Pause"}</span>
+        <span className="ml-2">
+          {isPaused ? tAuto("resume_b3bd0b5") : tAuto("pause_781961b")}
+        </span>
       ) : null}
     </Button>
   );
@@ -355,7 +372,7 @@ function MonitorRowActions({
       isTableAction
       icon={!collapsed}
       variant="ghost"
-      title="Delete"
+      title={tAuto("delete_f6fdbe4")}
       className={cn(!collapsed && rowActionIconColors)}
     />
   );
@@ -365,7 +382,11 @@ function MonitorRowActions({
       <div onClick={(e) => e.stopPropagation()}>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button size="xs" variant="ghost" aria-label="Monitor actions">
+            <Button
+              size="xs"
+              variant="ghost"
+              aria-label={tAuto("monitor_actions_bbc6aa0")}
+            >
               <MoreVertical className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>

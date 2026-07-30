@@ -22,6 +22,7 @@ import {
 } from "@/src/components/ui/popover";
 import { Label } from "@/src/components/ui/label";
 import { Input } from "@/src/components/ui/input";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type DefaultEvalModelSuccessMessage = {
   title: string;
@@ -108,10 +109,15 @@ function DefaultEvalModelFields({
   setup: ReturnType<typeof useDefaultEvalModelSetup>;
   errorClassName?: string;
 }) {
+  const tAuto = useAutoTranslations();
   return (
     <>
       <ModelParameters
-        customHeader={<p className="leading-none font-bold">LLM connection</p>}
+        customHeader={
+          <p className="leading-none font-bold">
+            {tAuto("llm_connection_41c51e0")}
+          </p>
+        }
         modelParams={setup.modelParams}
         availableModels={setup.availableModels}
         providerModelCombinations={setup.providerModelCombinations}
@@ -121,11 +127,12 @@ function DefaultEvalModelFields({
         formDisabled={!setup.hasWriteAccess}
       />
       <p className="text-muted-foreground text-xs">
-        Select a model which supports function calling.
+        {tAuto("select_a_model_which_supports_function_calling_ec6ae4f")}{" "}
       </p>
       {setup.formError ? (
         <p className={errorClassName}>
-          <span className="font-bold">Error:</span> {setup.formError}
+          <span className="font-bold">{tAuto("error_787aa16")}</span>{" "}
+          {setup.formError}
         </p>
       ) : null}
     </>
@@ -139,6 +146,7 @@ export function DefaultEvalModelSetup({
   projectId: string;
   onSuccess?: () => void;
 }) {
+  const tAuto = useAutoTranslations();
   const [isEditing, setIsEditing] = useState(false);
   const setup = useDefaultEvalModelSetup({
     projectId,
@@ -147,8 +155,10 @@ export function DefaultEvalModelSetup({
       onSuccess?.();
     },
     successMessage: {
-      title: "Default evaluation model updated",
-      description: "All running evaluators will use the new model.",
+      title: tAuto("default_evaluation_model_updated_8151ad8"),
+      description: tAuto(
+        "all_running_evaluators_will_use_the_new_model_2050ee0",
+      ),
     },
   });
 
@@ -161,22 +171,23 @@ export function DefaultEvalModelSetup({
       <Card className="mt-3 flex flex-col gap-6">
         <CardContent>
           <p className="my-2 text-lg font-bold">
-            Set up LLM connection to use for evaluations
+            {tAuto("set_up_llm_connection_to_use_for_evaluations_40dac74")}{" "}
           </p>
           <ManageDefaultEvalModel
             projectId={projectId}
             variant="color-coded"
             setUpMessage={
               <>
-                LLM-as-a-judge evaluations require an LLM connection for
-                scoring. You can also specify a custom model for each evaluator.{" "}
+                {tAuto(
+                  "llm_as_a_judge_evaluations_require_an_llm_connection_405d781",
+                )}{" "}
                 <a
                   href="https://langfuse.com/docs/evaluation/evaluation-methods/llm-as-a-judge#how-llm-as-a-judge-works"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="underline"
                 >
-                  Learn more.
+                  {tAuto("learn_more_2a5c6a3")}{" "}
                 </a>
               </>
             }
@@ -211,7 +222,9 @@ export function DefaultEvalModelSetup({
               }}
             >
               <Pencil className="mr-2 h-4 w-4" />
-              {setup.selectedModel ? "Edit" : "Set up"}
+              {setup.selectedModel
+                ? tAuto("edit_5301648")
+                : tAuto("set_up_a5041fd")}
             </Button>
           </DialogTrigger>
           <DialogContent className="px-3 py-10">
@@ -219,7 +232,7 @@ export function DefaultEvalModelSetup({
               <DefaultEvalModelFields setup={setup} />
               <div className="mt-2 flex justify-end gap-2">
                 <Button variant="outline" onClick={() => setIsEditing(false)}>
-                  Cancel
+                  {tAuto("cancel_77dfd21")}{" "}
                 </Button>
                 {setup.selectedModel ? (
                   <UpdateButton
@@ -234,7 +247,7 @@ export function DefaultEvalModelSetup({
                     }
                     onClick={setup.executeUpsertMutation}
                   >
-                    Save
+                    {tAuto("save_efc007a")}{" "}
                   </Button>
                 )}
               </div>
@@ -255,12 +268,15 @@ export function InlineDefaultEvalModelSetup({
   onSuccess?: () => void;
   submitLabel?: string;
 }) {
+  const tAuto = useAutoTranslations();
   const setup = useDefaultEvalModelSetup({
     projectId,
     onSuccess,
     successMessage: {
-      title: "Default evaluation model set",
-      description: "LLM-as-a-judge evaluators can now use this model.",
+      title: tAuto("default_evaluation_model_set_343ffac"),
+      description: tAuto(
+        "llm_as_a_judge_evaluators_can_now_use_this_model_4c2c868",
+      ),
     },
   });
 
@@ -298,6 +314,7 @@ function UpdateButton({
   isLoading: boolean;
   executeUpsertMutation: () => void;
 }) {
+  const tAuto = useAutoTranslations();
   const [confirmationInput, setConfirmationInput] = useState("");
   const hasWriteAccess = useHasProjectAccess({
     projectId,
@@ -315,18 +332,18 @@ function UpdateButton({
             e.stopPropagation();
           }}
         >
-          Update
+          {tAuto("update_fb91e24")}{" "}
         </Button>
       </PopoverTrigger>
       <PopoverContent
         onClick={(e) => e.stopPropagation()}
         className="w-fit max-w-[500px]"
       >
-        <h2 className="mb-3 font-bold">Please confirm</h2>
+        <h2 className="mb-3 font-bold">{tAuto("please_confirm_3a799cc")}</h2>
         <p className="mb-3 text-sm">
-          Updating the default model will impact any currently running
-          evaluators that use it. Please confirm that you want to proceed with
-          this change.
+          {tAuto(
+            "updating_the_default_model_will_impact_any_currently_fdcf20e",
+          )}{" "}
         </p>
         <div className="mb-4 grid w-full gap-1.5">
           <Label htmlFor="update-confirmation">
@@ -350,7 +367,7 @@ function UpdateButton({
               executeUpsertMutation();
             }}
           >
-            Confirm
+            {tAuto("confirm_04a2122")}{" "}
           </Button>
         </div>
       </PopoverContent>

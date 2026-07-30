@@ -6,6 +6,7 @@ import Head from "next/head";
 import NextErrorComponent, { type ErrorProps } from "next/error";
 import type { NextPageContext } from "next";
 import { CrashModal } from "@/src/components/CrashModal/CrashModal";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type LangfuseErrorPageProps = ErrorProps & {
   sentryEventId?: string;
@@ -26,6 +27,7 @@ const ErrorPage = ({
   statusCode,
   title,
 }: LangfuseErrorPageProps) => {
+  const tAuto = useAutoTranslations();
   const resolvedTitle =
     title ??
     (statusCode ? statusTitles[statusCode] : undefined) ??
@@ -33,13 +35,13 @@ const ErrorPage = ({
 
   const description = statusCode
     ? `${resolvedTitle}.`
-    : `Application error: a client-side exception has occurred${
-        hostname ? ` while loading ${hostname}` : ""
-      } (see the browser console for more information).`;
+    : tAuto("application_error_a_client_side_exception_has_occurr_45fc248", {
+        value0: hostname ? ` while loading ${hostname}` : "",
+      });
 
   const documentTitle = statusCode
     ? `${statusCode}: ${resolvedTitle}`
-    : "Application error: a client-side exception has occurred";
+    : tAuto("application_error_a_client_side_exception_has_occurr_ab30eb0");
 
   return (
     <>

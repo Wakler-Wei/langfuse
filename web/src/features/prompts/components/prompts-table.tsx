@@ -29,6 +29,7 @@ import { useFolderPagination } from "@/src/features/folders/hooks/useFolderPagin
 import { buildFullPath } from "@/src/features/folders/utils";
 import { FolderBreadcrumb } from "@/src/features/folders/components/FolderBreadcrumb";
 import { FolderBreadcrumbLink } from "@/src/features/folders/components/FolderBreadcrumbLink";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type PromptTableRow = {
   id: string;
@@ -61,6 +62,7 @@ function createRow(
 }
 
 export function PromptTable() {
+  const tAuto = useAutoTranslations();
   const projectId = useProjectIdFromURL() ?? "";
   const { setDetailPageList } = useDetailPageLists();
   const promptMetricsTimeWindow = useMemo(() => {
@@ -269,7 +271,7 @@ export function PromptTable() {
   const promptColumns: LangfuseColumnDef<PromptTableRow>[] = [
     {
       accessorKey: "name",
-      header: "Name",
+      header: tAuto("name_709a232"),
       id: "name",
       enableSorting: true,
       size: 250,
@@ -297,7 +299,7 @@ export function PromptTable() {
     },
     {
       accessorKey: "version",
-      header: "Versions",
+      header: tAuto("versions_a239107"),
       id: "version",
       enableSorting: true,
       size: 70,
@@ -308,14 +310,14 @@ export function PromptTable() {
     },
     {
       accessorKey: "type",
-      header: "Type",
+      header: tAuto("type_3deb745"),
       id: "type",
       enableSorting: true,
       size: 60,
     },
     {
       accessorKey: "createdAt",
-      header: "Latest Version Created At",
+      header: tAuto("latest_version_created_at_b08f02f"),
       id: "createdAt",
       enableSorting: true,
       size: 200,
@@ -327,7 +329,7 @@ export function PromptTable() {
     },
     {
       accessorKey: "numberOfObservations",
-      header: "Number of Observations (7d)",
+      header: tAuto("number_of_observations_7d_55a345c"),
       id: "numberOfObservations",
       size: 170,
       cell: ({ getValue, row }) => {
@@ -351,7 +353,7 @@ export function PromptTable() {
     },
     {
       accessorKey: "tags",
-      header: "Tags",
+      header: tAuto("tags_848eed0"),
       id: "tags",
       enableSorting: true,
       size: 120,
@@ -382,7 +384,7 @@ export function PromptTable() {
     {
       accessorKey: "id",
       id: "actions",
-      header: "Actions",
+      header: tAuto("actions_c3cd636"),
       size: 70,
       enableSorting: false,
       cell: ({ row }) => {

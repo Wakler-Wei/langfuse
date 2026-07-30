@@ -43,6 +43,7 @@ import { useRouter } from "next/router";
 
 import { showSuccessToast } from "@/src/features/notifications/showSuccessToast";
 import { PricingSection } from "./pricing-tiers/PricingSection";
+import { I18nText, useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type UpsertModelDialogProps =
   | {
@@ -67,6 +68,7 @@ export const UpsertModelFormDialog = (({
   children,
   ...props
 }: UpsertModelDialogProps) => {
+  const tAuto = useAutoTranslations();
   const capture = usePostHogClientCapture();
   const router = useRouter();
   const [formError, setFormError] = useState<string | null>(null);
@@ -199,12 +201,22 @@ export const UpsertModelFormDialog = (({
 
   const upsertModelMutation = api.models.upsert.useMutation({
     onSuccess: (upsertedModel) => {
+      const actionLabel =
+        props.action === "edit"
+          ? tAuto("updated_f2f8570")
+          : tAuto("created_accf40c");
       utils.models.invalidate();
       form.reset();
       setOpen(false);
       showSuccessToast({
-        title: `Model ${props.action === "edit" ? "updated" : "created"}`,
-        description: `The model '${upsertedModel.modelName}' has been successfully ${props.action === "edit" ? "updated" : "created"}. New generations will use these model prices.`,
+        title: tAuto("model_value0_9783660", { value0: actionLabel }),
+        description: tAuto(
+          "the_model_value0_has_been_successfully_value1_new_ge_6576437",
+          {
+            value0: upsertedModel.modelName,
+            value1: actionLabel,
+          },
+        ),
       });
       router.push(
         `/project/${props.projectId}/settings/models/${upsertedModel.id}`,
@@ -283,8 +295,8 @@ export const UpsertModelFormDialog = (({
         className={props.className}
         title={
           props.action === "create"
-            ? "Create model definition"
-            : "Edit model definition"
+            ? tAuto("create_model_definition_1538306")
+            : tAuto("edit_model_definition_be6c3fa")
         }
       >
         {children}
@@ -293,17 +305,17 @@ export const UpsertModelFormDialog = (({
         <DialogHeader>
           <DialogTitle>
             {props.action === "create"
-              ? "Create Model"
+              ? tAuto("create_model_c36fd3e")
               : props.action === "clone"
-                ? "Clone Model"
-                : "Edit Model"}
+                ? tAuto("clone_model_0d22231")
+                : tAuto("edit_model_c1a2355")}
           </DialogTitle>
           {props.action === "edit" && (
             <DialogDescription>{props.modelData.modelName}</DialogDescription>
           )}
           {props.action === "create" && (
             <DialogDescription>
-              Create a new model configuration to track generation costs.
+              <I18nText id="create_a_new_model_configuration_to_track_generation_2101f79" />{" "}
             </DialogDescription>
           )}
         </DialogHeader>
@@ -319,11 +331,11 @@ export const UpsertModelFormDialog = (({
                 disabled={props.action === "edit"}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Model Name</FormLabel>
+                    <FormLabel>
+                      <I18nText id="model_name_78a99e3" />
+                    </FormLabel>
                     <FormDescription>
-                      The name of the model. This will be used to reference the
-                      model in the API. You can track price changes of models by
-                      using the same name and match pattern.
+                      <I18nText id="the_name_of_the_model_this_will_be_used_to_reference_60619ea" />{" "}
                     </FormDescription>
                     <FormControl>
                       <Input {...field} />
@@ -337,12 +349,11 @@ export const UpsertModelFormDialog = (({
                 name="matchPattern"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Match pattern</FormLabel>
+                    <FormLabel>
+                      <I18nText id="match_pattern_009b58a" />
+                    </FormLabel>
                     <FormDescription>
-                      Regular expression (Postgres syntax) to match ingested
-                      generations (model attribute) to this model definition.
-                      For an exact, case-insensitive match to a model name, use
-                      the expression: (?i)^(modelname)$
+                      <I18nText id="regular_expression_postgres_syntax_to_match_ingested_5c8e79b" />{" "}
                     </FormDescription>
                     <FormControl>
                       <Input {...field} />
@@ -365,7 +376,9 @@ export const UpsertModelFormDialog = (({
                 name="tokenizerId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Tokenizer</FormLabel>
+                    <FormLabel>
+                      <I18nText id="tokenizer_0c8bdf6" />
+                    </FormLabel>
                     <Select
                       onValueChange={(tokenizerId) => {
                         field.onChange(tokenizerId);
@@ -377,7 +390,9 @@ export const UpsertModelFormDialog = (({
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select a unit" />
+                          <SelectValue
+                            placeholder={tAuto("select_a_unit_15e9b09")}
+                          />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -389,16 +404,13 @@ export const UpsertModelFormDialog = (({
                       </SelectContent>
                     </Select>
                     <FormDescription>
-                      Optionally, Langfuse can tokenize the input and output of
-                      a generation if no unit counts are ingested. This is
-                      useful for e.g. streamed OpenAI completions. For details
-                      on the supported tokenizers, see the{" "}
+                      {tAuto("optional_tokenization_description_95d144c")}{" "}
                       <Link
                         href="https://langfuse.com/docs/model-usage-and-cost"
                         className="underline"
                         target="_blank"
                       >
-                        docs
+                        <I18nText id="docs_71ab8b6" />{" "}
                       </Link>
                       .
                     </FormDescription>
@@ -412,23 +424,24 @@ export const UpsertModelFormDialog = (({
                   name="tokenizerConfig"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Tokenizer Config</FormLabel>
+                      <FormLabel>
+                        <I18nText id="tokenizer_config_b376441" />
+                      </FormLabel>
                       <CodeMirrorEditor
                         mode="json"
                         value={field.value ?? "{}"}
                         onChange={field.onChange}
                       />
                       <FormDescription>
-                        The config for the tokenizer. Required for openai. See
-                        the{" "}
+                        {tAuto("tokenizer_config_description_73715a9")}{" "}
                         <Link
                           href="https://langfuse.com/docs/model-usage-and-cost"
                           className="underline"
                           target="_blank"
                         >
-                          docs
+                          <I18nText id="docs_71ab8b6" />{" "}
                         </Link>{" "}
-                        for details.
+                        {tAuto("for_details_4b4a6dc")}
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -443,17 +456,20 @@ export const UpsertModelFormDialog = (({
                 variant="outline"
                 onClick={() => setOpen(false)}
               >
-                Cancel
+                <I18nText id="cancel_77dfd21" />{" "}
               </Button>
 
               <Button type="submit" loading={upsertModelMutation.isPending}>
-                Submit
+                <I18nText id="submit_2dacf65" />{" "}
               </Button>
             </DialogFooter>
           </form>
           {formError ? (
             <p className="text-destructive my-2 text-center text-sm font-bold">
-              <span className="font-bold">Error:</span> {formError}
+              <span className="font-bold">
+                <I18nText id="error_787aa16" />
+              </span>{" "}
+              {formError}
             </p>
           ) : null}
         </Form>

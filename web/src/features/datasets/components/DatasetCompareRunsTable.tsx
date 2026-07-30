@@ -29,6 +29,7 @@ import { type Prisma } from "@langfuse/shared";
 import { type EnrichedDatasetRunItem } from "@langfuse/shared/src/server";
 import { usePeekNavigation } from "@/src/components/table/peek/hooks/usePeekNavigation";
 import { TablePeekViewTraceDetail } from "@/src/components/table/peek/peek-trace-detail";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export type DatasetCompareRunRowData = {
   id: string;
@@ -44,6 +45,7 @@ function DatasetCompareRunsTableInternal(props: {
   datasetId: string;
   runIds: string[];
 }) {
+  const tAuto = useAutoTranslations();
   const { toggleField, isFieldSelected } = useDatasetCompareFields();
   const [isFieldsDropdownOpen, setIsFieldsDropdownOpen] = useState(false);
   const {
@@ -138,7 +140,7 @@ function DatasetCompareRunsTableInternal(props: {
   const columns: LangfuseColumnDef<DatasetCompareRunRowData>[] = [
     {
       accessorKey: "id",
-      header: "Item id",
+      header: tAuto("item_id_acb87e9"),
       id: "id",
       size: 90,
       enableHiding: true,
@@ -155,7 +157,7 @@ function DatasetCompareRunsTableInternal(props: {
     },
     {
       accessorKey: "input",
-      header: "Input",
+      header: tAuto("input_b568d47"),
       id: "input",
       size: 200,
       enableHiding: true,
@@ -172,7 +174,7 @@ function DatasetCompareRunsTableInternal(props: {
     },
     {
       accessorKey: "expectedOutput",
-      header: "Expected Output",
+      header: tAuto("expected_output_395c41e"),
       id: "expectedOutput",
       size: 200,
       enableHiding: true,
@@ -192,7 +194,7 @@ function DatasetCompareRunsTableInternal(props: {
     },
     {
       accessorKey: "metadata",
-      header: "Metadata",
+      header: tAuto("metadata_251edc0"),
       id: "metadata",
       size: 200,
       enableHiding: true,
@@ -205,7 +207,10 @@ function DatasetCompareRunsTableInternal(props: {
       },
     },
     {
-      ...getDatasetRunAggregateColumnProps(cellsLoading),
+      ...getDatasetRunAggregateColumnProps(
+        cellsLoading,
+        tAuto("experiments_e8f296b"),
+      ),
       columns: runAggregateColumns,
     },
   ];
@@ -238,7 +243,7 @@ function DatasetCompareRunsTableInternal(props: {
                 onClick={() => setIsFieldsDropdownOpen(!isFieldsDropdownOpen)}
               >
                 <LayoutList className="mr-2 h-4 w-4" />
-                <span>Fields</span>
+                <span>{tAuto("fields_e8b6852")}</span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
@@ -248,19 +253,19 @@ function DatasetCompareRunsTableInternal(props: {
                 checked={isFieldSelected("output")}
                 onCheckedChange={() => toggleField("output")}
               >
-                Output
+                {tAuto("output_4bed336")}{" "}
               </DropdownMenuCheckboxItem>
               <DropdownMenuCheckboxItem
                 checked={isFieldSelected("scores")}
                 onCheckedChange={() => toggleField("scores")}
               >
-                Scores
+                {tAuto("scores_126cb93")}{" "}
               </DropdownMenuCheckboxItem>
               <DropdownMenuCheckboxItem
                 checked={isFieldSelected("resourceMetrics")}
                 onCheckedChange={() => toggleField("resourceMetrics")}
               >
-                Latency and cost
+                {tAuto("latency_and_cost_865b210")}{" "}
               </DropdownMenuCheckboxItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -306,9 +311,15 @@ function DatasetCompareRunsTableInternal(props: {
         noResultsMessage={
           hasActiveRunFilters ? (
             <div className="text-muted-foreground flex flex-col items-center gap-1 text-sm">
-              <span>No dataset run items match the current filters.</span>
+              <span>
+                {tAuto(
+                  "no_dataset_run_items_match_the_current_filters_6514e5a",
+                )}
+              </span>
               <span className="text-xs">
-                Adjust or clear filters to compare items again.
+                {tAuto(
+                  "adjust_or_clear_filters_to_compare_items_again_b44f9f3",
+                )}{" "}
               </span>
             </div>
           ) : undefined

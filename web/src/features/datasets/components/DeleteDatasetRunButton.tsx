@@ -6,6 +6,7 @@ import { usePostHogClientCapture } from "@/src/features/posthog-analytics/usePos
 import { api } from "@/src/utils/api";
 import React, { useState } from "react";
 import { useRouter } from "next/router";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export const DeleteDatasetRunButton = ({
   projectId,
@@ -18,6 +19,7 @@ export const DeleteDatasetRunButton = ({
   redirectUrl?: string;
   datasetId: string;
 }) => {
+  const tAuto = useAutoTranslations();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const capture = usePostHogClientCapture();
   const hasAccess = useHasProjectAccess({
@@ -41,7 +43,7 @@ export const DeleteDatasetRunButton = ({
     >
       <div className="flex w-full flex-row items-center gap-1">
         <Trash className="h-4 w-4" />
-        <span className="text-sm font-normal">Delete</span>
+        <span className="text-sm font-normal">{tAuto("delete_f6fdbe4")}</span>
       </div>
     </Button>
   );
@@ -51,8 +53,10 @@ export const DeleteDatasetRunButton = ({
       open={isDialogOpen}
       onOpenChange={setIsDialogOpen}
       trigger={button}
-      title="Please confirm"
-      description="This action cannot be undone. Traces linked to this run must be deleted manually."
+      title={tAuto("please_confirm_3a799cc")}
+      description={tAuto(
+        "this_action_cannot_be_undone_traces_linked_to_this_r_0f64843",
+      )}
       confirmLabel="Delete Dataset Run"
       loading={mutDelete.isPending}
       onConfirm={async () => {

@@ -12,6 +12,7 @@ import { type RouterInput } from "@/src/utils/types";
 import { useEffect, useState } from "react";
 import { usePostHogClientCapture } from "@/src/features/posthog-analytics/usePostHogClientCapture";
 import { trpcErrorToast } from "@/src/utils/trpcErrorToast";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export function StarToggle({
   value,
@@ -32,11 +33,14 @@ export function StarToggle({
   /** When set, wrap the icon button in a hover tooltip announcing the state. */
   tooltip?: boolean;
 }) {
+  const tAuto = useAutoTranslations();
   // Single source of truth for the accessible name, the menu label, AND the
   // tooltip — all derived from `value`, so an optimistic flip updates the icon
   // and every text surface together, and a screen reader always hears the real
   // state in both the toolbar and the menu (LFE-10535).
-  const stateLabel = value ? "Remove bookmark" : "Bookmark";
+  const stateLabel = value
+    ? tAuto("remove_bookmark_7da7207")
+    : tAuto("bookmark_441da1b");
 
   const button = (
     <Button

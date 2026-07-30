@@ -19,6 +19,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/src/components/ui/tooltip";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 function SchemaKeyDropZone({
   schemaKey,
@@ -175,11 +176,12 @@ export function MappingCard({
   onToggleDirectMappingForInput,
   onToggleDirectMappingForExpectedOutput,
 }: MappingCardProps) {
+  const tAuto = useAutoTranslations();
   return (
     <Card className="flex h-full flex-col overflow-hidden">
       <CardHeader className="shrink-0 border-b p-3">
         <CardTitle className="text-base font-bold">
-          Map to Dataset Items
+          {tAuto("map_to_dataset_items_19c358d")}{" "}
         </CardTitle>
       </CardHeader>
       <CardContent className="min-h-0 flex-1 space-y-4 overflow-y-auto p-3">
@@ -187,7 +189,7 @@ export function MappingCard({
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <h3 className="text-muted-foreground text-sm font-bold tracking-wide">
-              Input
+              {tAuto("input_b568d47")}{" "}
             </h3>
             {inputSchemaKeys && inputSchemaKeys.length > 0 && (
               <div className="flex items-center gap-1.5">
@@ -203,7 +205,7 @@ export function MappingCard({
                   htmlFor="direct-mapping-input"
                   className="text-muted-foreground cursor-pointer text-xs font-normal"
                 >
-                  Direct Mapping
+                  {tAuto("direct_mapping_f4caeb6")}{" "}
                 </Label>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -211,8 +213,12 @@ export function MappingCard({
                   </TooltipTrigger>
                   <TooltipContent className="max-w-[250px]" side="left">
                     {useDirectMappingForInput
-                      ? "Map entire CSV columns directly to the input field."
-                      : "Map CSV columns to individual schema fields."}
+                      ? tAuto(
+                          "map_entire_csv_columns_directly_to_the_input_field_7fdb56c",
+                        )
+                      : tAuto(
+                          "map_csv_columns_to_individual_schema_fields_da5a1a5",
+                        )}
                   </TooltipContent>
                 </Tooltip>
               </div>
@@ -245,7 +251,7 @@ export function MappingCard({
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <h3 className="text-muted-foreground text-sm font-bold tracking-wide">
-              Expected Output
+              {tAuto("expected_output_395c41e")}{" "}
             </h3>
             {expectedOutputSchemaKeys &&
               expectedOutputSchemaKeys.length > 0 && (
@@ -262,7 +268,7 @@ export function MappingCard({
                     htmlFor="direct-mapping-expected"
                     className="text-muted-foreground cursor-pointer text-xs font-normal"
                   >
-                    Direct mapping
+                    {tAuto("direct_mapping_12dca7b")}{" "}
                   </Label>
                   <Tooltip>
                     <TooltipTrigger asChild>
@@ -270,8 +276,12 @@ export function MappingCard({
                     </TooltipTrigger>
                     <TooltipContent className="max-w-[250px]" side="left">
                       {useDirectMappingForExpectedOutput
-                        ? "Map entire CSV columns directly to the expected output field."
-                        : "Map CSV columns to individual schema fields."}
+                        ? tAuto(
+                            "map_entire_csv_columns_directly_to_the_expected_outp_a6a2f44",
+                          )
+                        : tAuto(
+                            "map_csv_columns_to_individual_schema_fields_da5a1a5",
+                          )}
                     </TooltipContent>
                   </Tooltip>
                 </div>
@@ -303,7 +313,7 @@ export function MappingCard({
         {/* METADATA SECTION */}
         <div className="space-y-2">
           <h3 className="text-muted-foreground text-sm font-bold tracking-wide">
-            Metadata
+            {tAuto("metadata_251edc0")}{" "}
           </h3>
           <FreeformDropZone
             id="metadata"

@@ -59,6 +59,7 @@ import { useDesktopLayoutContextOptional } from "../_layout/TraceLayoutDesktop";
 import { useMobileLayoutContextOptional } from "../_layout/TraceLayoutMobile";
 import { type TreeNode } from "../../lib/types";
 import { cn } from "@/src/utils/tailwind";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 // Width of the left name gutter. Resizable; these bound it. Kept slim so the
 // waterfall (the point of the timeline) gets the central space.
@@ -227,6 +228,7 @@ function useTimelinePlayhead({
 }
 
 export function TraceTimeline() {
+  const tAuto = useAutoTranslations();
   const {
     roots,
     serverScores: scores,
@@ -557,8 +559,8 @@ export function TraceTimeline() {
           className="bg-background text-muted-foreground flex shrink-0 items-center pl-2 text-xs font-bold"
           style={{ width: `${gutterWidth}px` }}
         >
-          <span className="truncate" title="Name">
-            Name
+          <span className="truncate" title={tAuto("name_709a232")}>
+            {tAuto("name_709a232")}{" "}
           </span>
         </div>
         <div className="bg-border-contrast/60 w-px shrink-0" />
@@ -583,7 +585,7 @@ export function TraceTimeline() {
                 ref={playheadHandleRef}
                 role="slider"
                 tabIndex={0}
-                aria-label="Playhead position"
+                aria-label={tAuto("playhead_position_1197b28")}
                 aria-valuemin={0}
                 aria-valuemax={Number(traceDuration.toFixed(2))}
                 aria-valuenow={Number(getPlayheadSec().toFixed(2))}
@@ -664,7 +666,7 @@ export function TraceTimeline() {
           <div
             role="separator"
             aria-orientation="vertical"
-            aria-label="Resize name column"
+            aria-label={tAuto("resize_name_column_d742811")}
             onPointerDown={startGutterResize}
             className={cn(
               "hover:bg-primary/40 active:bg-primary/40 absolute inset-y-0 left-1/2 z-20 w-2",

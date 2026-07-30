@@ -27,17 +27,19 @@ import Link from "next/link";
 import { useIsCodeEvalEnabled } from "@/src/features/evals/hooks/useIsCodeEvalEnabled";
 import { shouldShowEvalTemplate } from "@/src/features/evals/utils/code-eval-template-utils";
 import { SiPython, SiTypescript } from "react-icons/si";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const CodeTemplateLanguageIcon = ({
   sourceCodeLanguage,
 }: {
   sourceCodeLanguage: EvalTemplate["sourceCodeLanguage"];
 }) => {
+  const tAuto = useAutoTranslations();
   const language =
     sourceCodeLanguage === EvalTemplateSourceCodeLanguage.TYPESCRIPT
-      ? { Icon: SiTypescript, title: "TypeScript" }
+      ? { Icon: SiTypescript, title: tAuto("typescript_d4a86cb") }
       : sourceCodeLanguage === EvalTemplateSourceCodeLanguage.PYTHON
-        ? { Icon: SiPython, title: "Python" }
+        ? { Icon: SiPython, title: tAuto("python_6e36048") }
         : null;
 
   if (!language) return null;
@@ -69,11 +71,14 @@ const TemplatePreviewTooltipContent = ({
 }: {
   template: EvalTemplate;
 }) => {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   if (template.type === EvalTemplateType.CODE) {
     return (
       <>
         <p className="mb-1 font-bold">
-          {getCodeTemplateLanguageTitle(template.sourceCodeLanguage)} source
+          {getCodeTemplateLanguageTitle(template.sourceCodeLanguage)}{" "}
+          {tAutoI18n("source_828d338")}{" "}
         </p>
         <pre className="text-muted-foreground text-xs wrap-break-word whitespace-pre-wrap">
           {template.sourceCode}
@@ -84,7 +89,7 @@ const TemplatePreviewTooltipContent = ({
 
   return (
     <>
-      <p className="mb-1 font-bold">Evaluation prompt</p>
+      <p className="mb-1 font-bold">{tAuto("evaluation_prompt_c7d67c0")}</p>
       <pre className="text-muted-foreground text-xs wrap-break-word whitespace-pre-wrap">
         {template.prompt}
       </pre>
@@ -111,6 +116,7 @@ export function EvaluatorSelector({
   showMissingProviderWarning = true,
   onTemplateSelect,
 }: EvaluatorSelectorProps) {
+  const tAuto = useAutoTranslations();
   const [search, setSearch] = useState("");
   const codeEvalCapabilities = useIsCodeEvalEnabled();
   const visibleEvalTemplates = evalTemplates.filter((template) =>
@@ -147,7 +153,7 @@ export function EvaluatorSelector({
   return (
     <InputCommand className="flex h-full flex-col border-none">
       <InputCommandInput
-        placeholder="Search evaluators..."
+        placeholder={tAuto("search_evaluators_f35afa0")}
         className="h-9 px-0"
         value={search}
         onValueChange={setSearch}
@@ -155,7 +161,9 @@ export function EvaluatorSelector({
       />
       <InputCommandList className="max-h-full flex-1 overflow-y-auto">
         {!hasResults && (
-          <InputCommandEmpty>No evaluator found.</InputCommandEmpty>
+          <InputCommandEmpty>
+            {tAuto("no_evaluator_found_6e01b4e")}
+          </InputCommandEmpty>
         )}
 
         {filteredTemplates.custom.length > 0 && (
@@ -205,14 +213,18 @@ export function EvaluatorSelector({
                           <AlertCircle className="ml-1 h-4 w-4 text-yellow-500" />
                         </TooltipTrigger>
                         <TooltipContent className="max-h-[50dvh] overflow-y-auto text-sm break-normal whitespace-normal">
-                          <p>Requires project-level evaluation model</p>
+                          <p>
+                            {tAuto(
+                              "requires_project_level_evaluation_model_02089a7",
+                            )}
+                          </p>
                           <Link
                             href={`/project/${projectId}/evals/default-model`}
                             className="mt-2 block text-blue-600 hover:underline"
                             target="_blank"
                             rel="noopener noreferrer"
                           >
-                            Configure default model
+                            {tAuto("configure_default_model_1bfe101")}{" "}
                           </Link>
                         </TooltipContent>
                       </Tooltip>
@@ -276,14 +288,18 @@ export function EvaluatorSelector({
                           <AlertCircle className="ml-1 h-4 w-4 text-yellow-500" />
                         </TooltipTrigger>
                         <TooltipContent className="max-h-[50dvh] overflow-y-auto text-sm break-normal whitespace-normal">
-                          <p>Requires project-level evaluation model</p>
+                          <p>
+                            {tAuto(
+                              "requires_project_level_evaluation_model_02089a7",
+                            )}
+                          </p>
                           <Link
                             href={`/project/${projectId}/evals/default-model`}
                             className="mt-2 block text-blue-600 hover:underline"
                             target="_blank"
                             rel="noopener noreferrer"
                           >
-                            Configure default model
+                            {tAuto("configure_default_model_1bfe101")}{" "}
                           </Link>
                         </TooltipContent>
                       </Tooltip>

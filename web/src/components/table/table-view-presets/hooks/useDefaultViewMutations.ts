@@ -2,6 +2,7 @@ import { api } from "@/src/utils/api";
 import { showSuccessToast } from "@/src/features/notifications/showSuccessToast";
 import { showErrorToast } from "@/src/features/notifications/showErrorToast";
 import { type DefaultViewScope } from "@langfuse/shared/src/server";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 interface UseDefaultViewMutationsProps {
   tableName: string;
@@ -12,6 +13,7 @@ export function useDefaultViewMutations({
   tableName,
   projectId,
 }: UseDefaultViewMutationsProps) {
+  const tAuto = useAutoTranslations();
   const utils = api.useUtils();
 
   const setAsDefault = api.TableViewPresets.setAsDefault.useMutation({
@@ -24,14 +26,19 @@ export function useDefaultViewMutations({
         projectId,
         viewName: tableName,
       });
-      const scopeLabel = variables.scope === "user" ? "your" : "project";
+      const scopeLabel =
+        variables.scope === "user"
+          ? tAuto("your_4dc7374")
+          : tAuto("project_98f5414");
       showSuccessToast({
-        title: "Default view set",
-        description: `Set as ${scopeLabel} default`,
+        title: tAuto("default_view_set_b881ea9"),
+        description: tAuto("set_as_value0_default_7c46ec8", {
+          value0: String(scopeLabel ?? ""),
+        }),
       });
     },
     onError: (error) => {
-      showErrorToast("Failed to set default", error.message);
+      showErrorToast(tAuto("failed_to_set_default_f65fd74"), error.message);
     },
   });
 
@@ -45,14 +52,19 @@ export function useDefaultViewMutations({
         projectId,
         viewName: tableName,
       });
-      const scopeLabel = variables.scope === "user" ? "Your" : "Project";
+      const scopeLabel =
+        variables.scope === "user"
+          ? tAuto("your_ba596fd")
+          : tAuto("project_f6f4da8");
       showSuccessToast({
-        title: "Default cleared",
-        description: `${scopeLabel} default view cleared`,
+        title: tAuto("default_cleared_445bb31"),
+        description: tAuto("value0_default_view_cleared_f6b7165", {
+          value0: String(scopeLabel ?? ""),
+        }),
       });
     },
     onError: (error) => {
-      showErrorToast("Failed to clear default", error.message);
+      showErrorToast(tAuto("failed_to_clear_default_8af3375"), error.message);
     },
   });
 

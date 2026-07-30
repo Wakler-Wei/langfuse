@@ -1,3 +1,4 @@
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 type Accuracy = "day" | "hour" | "minute" | "second" | "millisecond";
 
 export const formatLocalIsoDate = (
@@ -42,6 +43,7 @@ export const LocalIsoDate = ({
   accuracy?: Accuracy;
   className?: string;
 }) => {
+  const tAuto = useAutoTranslations();
   if (!(date instanceof Date) || isNaN(date.getTime())) {
     return null;
   }
@@ -50,7 +52,10 @@ export const LocalIsoDate = ({
   const utcDateString = formatLocalIsoDate(date, true, "millisecond");
 
   return (
-    <span title={`UTC: ${utcDateString}`} className={className}>
+    <span
+      title={tAuto("utc_value0_efb8680", { value0: utcDateString })}
+      className={className}
+    >
       {localDateString}
     </span>
   );

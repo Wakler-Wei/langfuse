@@ -37,6 +37,7 @@ import { LLMApiKeyComponent } from "./LLMApiKeyComponent";
 import { FormDescription } from "@/src/components/ui/form";
 import { CodeMirrorEditor } from "../editor";
 import { Switch } from "@/src/components/design-system/Switch/Switch";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export type ModelParamsContext = {
   modelParams: UIModelParams;
@@ -68,6 +69,8 @@ export const ModelParameters: React.FC<ModelParamsContext> = ({
   layout = "vertical",
   isEmbedded = false,
 }) => {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const projectId = useProjectIdFromURL();
   const [modelSettingsOpen, setModelSettingsOpen] = useState(false);
   const [modelSettingsUsed, setModelSettingsUsed] = useState(false);
@@ -103,10 +106,12 @@ export const ModelParameters: React.FC<ModelParamsContext> = ({
           customHeader
         ) : (
           <div className="flex items-center justify-between">
-            <p className="font-bold">Model</p>
+            <p className="font-bold">{tAuto("model_68c2cc7")}</p>
           </div>
         )}
-        <p className="text-xs">No LLM API key set in project. </p>
+        <p className="text-xs">
+          {tAuto("no_llm_api_key_set_in_project_3f1eb4d")}{" "}
+        </p>
         <CreateLLMApiKeyDialog
           open={createLlmApiKeyDialogOpen}
           setOpen={setCreateLlmApiKeyDialogOpen}
@@ -137,14 +142,16 @@ export const ModelParameters: React.FC<ModelParamsContext> = ({
         sideOffset={5}
       >
         <div className="mb-3">
-          <h4 className="mb-1 text-sm font-bold">Model Advanced Settings</h4>
+          <h4 className="mb-1 text-sm font-bold">
+            {tAuto("model_advanced_settings_e705941")}
+          </h4>
           <p className="text-muted-foreground text-xs">
-            Configure advanced parameters for your model.
+            {tAuto("configure_advanced_parameters_for_your_model_d5bd02a")}{" "}
           </p>
         </div>
         <div className="space-y-4">
           <ModelParamsSlider
-            title="Temperature"
+            title={tAuto("temperature_0a9062a")}
             modelParamsKey="temperature"
             formDisabled={formDisabled}
             enabled={modelParams.temperature.enabled}
@@ -153,11 +160,13 @@ export const ModelParameters: React.FC<ModelParamsContext> = ({
             min={0}
             max={modelParams.maxTemperature.value}
             step={0.01}
-            tooltip="The sampling temperature. Higher values will make the output more random, while lower values will make it more focused and deterministic."
+            tooltip={tAuto(
+              "the_sampling_temperature_higher_values_will_make_the_496e400",
+            )}
             updateModelParam={updateModelParamValue}
           />
           <ModelParamsSlider
-            title="Output token limit"
+            title={tAuto("output_token_limit_6469b22")}
             modelParamsKey="max_tokens"
             formDisabled={formDisabled}
             enabled={modelParams.max_tokens.enabled}
@@ -166,11 +175,13 @@ export const ModelParameters: React.FC<ModelParamsContext> = ({
             min={1}
             max={16384}
             step={1}
-            tooltip="The maximum number of tokens that can be generated in the chat completion."
+            tooltip={tAuto(
+              "the_maximum_number_of_tokens_that_can_be_generated_i_fcbb8be",
+            )}
             updateModelParam={updateModelParamValue}
           />
           <ModelParamsSlider
-            title="Top P"
+            title={tAuto("top_p_c65ea3b")}
             modelParamsKey="top_p"
             formDisabled={formDisabled}
             enabled={modelParams.top_p.enabled}
@@ -179,13 +190,15 @@ export const ModelParameters: React.FC<ModelParamsContext> = ({
             min={0}
             max={1}
             step={0.01}
-            tooltip="An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered. We generally recommend altering this or temperature but not both."
+            tooltip={tAuto(
+              "an_alternative_to_sampling_with_temperature_called_n_0fa1bda",
+            )}
             updateModelParam={updateModelParamValue}
           />
           {modelParams.adapter.value === LLMAdapter.VertexAI &&
             modelParams.maxReasoningTokens && (
               <ModelParamsSlider
-                title="Max. Reasoning Tokens"
+                title={tAuto("max_reasoning_tokens_a2738da")}
                 modelParamsKey="maxReasoningTokens"
                 formDisabled={formDisabled}
                 enabled={modelParams.maxReasoningTokens.enabled}
@@ -194,7 +207,9 @@ export const ModelParameters: React.FC<ModelParamsContext> = ({
                 min={-1}
                 max={24576}
                 step={1}
-                tooltip="Maximum tokens for model thinking/reasoning. Set to -1 for default (auto) thinking, 0 to disable. Only supported on Gemini 2.5+ models."
+                tooltip={tAuto(
+                  "maximum_tokens_for_model_thinking_reasoning_set_to_1_cbb40a5",
+                )}
                 updateModelParam={updateModelParamValue}
               />
             )}
@@ -276,15 +291,16 @@ export const ModelParameters: React.FC<ModelParamsContext> = ({
 
         {modelParams.model.value?.startsWith("o1-") ? (
           <p className="text-dark-yellow mt-1 text-xs">
-            For {modelParams.model.value}, the system message and the
-            temperature, max_tokens and top_p setting are not supported while it
-            is in beta.{" "}
+            {tAutoI18n("for_f788060")} {modelParams.model.value}
+            {tAutoI18n(
+              "the_system_message_and_the_temperature_max_tokens_an_d8c0c5f",
+            )}{" "}
             <a
               href="https://platform.openai.com/docs/guides/reasoning/beta-limitations"
               target="_blank"
               rel="noreferrer noopener"
             >
-              More info ↗
+              {tAuto("more_info_32b9ed6")}{" "}
             </a>
           </p>
         ) : null}
@@ -299,7 +315,11 @@ export const ModelParameters: React.FC<ModelParamsContext> = ({
     >
       {!isEmbedded ? (
         <div className="flex items-center justify-between">
-          {customHeader ? customHeader : <p className="font-bold">Model</p>}
+          {customHeader ? (
+            customHeader
+          ) : (
+            <p className="font-bold">{tAuto("model_68c2cc7")}</p>
+          )}
           {SettingsButton}
         </div>
       ) : customHeader ? (
@@ -314,7 +334,7 @@ export const ModelParameters: React.FC<ModelParamsContext> = ({
       <div className="space-y-4">
         <div className="space-y-3">
           <ModelParamsSelect
-            title="Provider"
+            title={tAuto("provider_7ceee3f")}
             modelParamsKey="provider"
             disabled={formDisabled}
             value={modelParams.provider.value}
@@ -323,7 +343,7 @@ export const ModelParameters: React.FC<ModelParamsContext> = ({
             layout="vertical"
           />
           <ModelParamsSelect
-            title="Model name"
+            title={tAuto("model_name_5ebb976")}
             modelParamsKey="model"
             disabled={formDisabled}
             value={modelParams.model.value}
@@ -485,6 +505,7 @@ const ModelParamsSlider = ({
   enabled,
   formDisabled,
 }: ModelParamsSliderProps) => {
+  const tAuto = useAutoTranslations();
   return (
     <div className="space-y-3" title={tooltip}>
       <div className="flex flex-row">
@@ -514,7 +535,9 @@ const ModelParamsSlider = ({
           />
           {setModelParamEnabled ? (
             <Switch
-              title={`Control sending the ${title} parameter`}
+              title={tAuto("control_sending_the_value0_parameter_033af27", {
+                value0: title,
+              })}
               disabled={formDisabled}
               checked={enabled}
               onCheckedChange={(checked) => {
@@ -553,6 +576,7 @@ const ProviderOptionsInput = ({
   enabled,
   formDisabled,
 }: ProviderOptionsInputProps) => {
+  const tAuto = useAutoTranslations();
   const [inputValue, setInputValue] = useState<string>(
     value ? JSON.stringify(value, null, 2) : "{}",
   );
@@ -568,7 +592,7 @@ const ProviderOptionsInput = ({
               (!enabled || formDisabled) && "text-muted-foreground",
             )}
           >
-            Additional options
+            {tAuto("additional_options_bd2f4e0")}{" "}
           </span>
           <Tooltip>
             <TooltipTrigger>
@@ -583,7 +607,9 @@ const ProviderOptionsInput = ({
         <div className="flex flex-row space-x-3">
           {setModelParamEnabled ? (
             <Switch
-              title="Control sending the additional options parameter"
+              title={tAuto(
+                "control_sending_the_additional_options_parameter_7e40a1f",
+              )}
               disabled={formDisabled}
               checked={enabled}
               onCheckedChange={(checked) => {
@@ -606,7 +632,7 @@ const ProviderOptionsInput = ({
                 updateModelParam("providerOptions", parsed);
                 setError(null);
               } catch {
-                setError("Invalid JSON Object");
+                setError(tAuto("invalid_json_object_bf0184f"));
               }
             }}
             editable={enabled && !formDisabled}
@@ -680,6 +706,7 @@ function useAddLlmConnectionSelect() {
  * off to the coordinator, which closes the dropdown before opening the dialog.
  */
 function AddLlmConnectionSelectAction({ onOpen }: { onOpen: () => void }) {
+  const tAuto = useAutoTranslations();
   const projectId = useProjectIdFromURL();
   const hasAccess = useHasProjectAccess({
     projectId,
@@ -693,7 +720,7 @@ function AddLlmConnectionSelectAction({ onOpen }: { onOpen: () => void }) {
       <SelectSeparator />
       <Button type="button" variant="secondary" onClick={onOpen}>
         <PlusIcon className="mr-1.5 -ml-0.5 h-5 w-5" aria-hidden="true" />
-        Add LLM Connection
+        {tAuto("add_llm_connection_b7077f0")}{" "}
       </Button>
     </>
   );

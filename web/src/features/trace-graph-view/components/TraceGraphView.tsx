@@ -23,6 +23,7 @@ import {
   LANGGRAPH_START_NODE_NAME,
   LANGGRAPH_END_NODE_NAME,
 } from "../types";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type TraceGraphViewProps = {
   agentGraphData: AgentGraphDataResponse[];
@@ -50,6 +51,7 @@ export const TraceGraphView: React.FC<TraceGraphViewProps> = ({
   onViewModeChange,
   onObservationSelect,
 }) => {
+  const tAuto = useAutoTranslations();
   const [selectedNodeName, setSelectedNodeName] = useState<string | null>(null);
   const [currentObservationId, setCurrentObservationId] = useQueryParam(
     "observation",
@@ -323,8 +325,9 @@ export const TraceGraphView: React.FC<TraceGraphViewProps> = ({
     <div className="@container/graphcanvas relative h-full w-full">
       {limitExceeded ? (
         <div className="text-muted-foreground flex h-full items-center justify-center px-4 text-center text-sm">
-          This trace branches too widely for the expanded graph — use the
-          aggregated view.
+          {tAuto(
+            "this_trace_branches_too_widely_for_the_expanded_grap_fefcc71",
+          )}{" "}
         </div>
       ) : (
         <ElkGraphRenderer

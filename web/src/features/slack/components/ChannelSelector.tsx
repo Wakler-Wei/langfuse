@@ -19,6 +19,7 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 import { api } from "@/src/utils/api";
 import { env } from "@/src/env.mjs";
 import { type SlackChannel } from "@langfuse/shared/src/server";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export type { SlackChannel };
 
@@ -139,6 +140,8 @@ export const ChannelSelector: React.FC<ChannelSelectorProps> = ({
   filterChannels,
   showRefreshButton = true,
 }) => {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const [open, setOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -285,7 +288,7 @@ export const ChannelSelector: React.FC<ChannelSelectorProps> = ({
           <PopoverContent className="w-full p-0" align="start">
             <Command shouldFilter={false}>
               <CommandInput
-                placeholder="Search channels..."
+                placeholder={tAuto("search_channels_8e0232a")}
                 value={searchValue}
                 onValueChange={setSearchValue}
               />
@@ -310,7 +313,9 @@ export const ChannelSelector: React.FC<ChannelSelectorProps> = ({
                 {!isLoadingChannels &&
                   !canUseTypedName &&
                   filteredChannels.length === 0 && (
-                    <CommandEmpty>No channels available.</CommandEmpty>
+                    <CommandEmpty>
+                      {tAuto("no_channels_available_230a28b")}
+                    </CommandEmpty>
                   )}
                 <CommandGroup
                   className="p-0"
@@ -350,10 +355,13 @@ export const ChannelSelector: React.FC<ChannelSelectorProps> = ({
                       <RefreshCw className="h-4 w-4 animate-spin" />
                       <span
                         className="flex-1 truncate"
-                        title="Loading Slack channels. This can take a while for large workspaces."
+                        title={tAuto(
+                          "loading_slack_channels_this_can_take_a_while_for_lar_23899cc",
+                        )}
                       >
-                        Loading Slack channels. This can take a while for large
-                        workspaces.
+                        {tAuto(
+                          "loading_slack_channels_this_can_take_a_while_for_lar_23899cc",
+                        )}{" "}
                       </span>
                     </CommandItem>
                   </CommandGroup>
@@ -380,7 +388,8 @@ export const ChannelSelector: React.FC<ChannelSelectorProps> = ({
       {/* Channel stats */}
       {channelsData?.channels && !isLoadingChannels ? (
         <div className="text-muted-foreground text-xs">
-          {filteredChannels.length} of {channelsData.channels.length} channels
+          {filteredChannels.length} {tAutoI18n("of_de04fa0")}{" "}
+          {channelsData.channels.length} {tAutoI18n("channels_3536f72")}{" "}
           {memberOnly && " (member only)"}
         </div>
       ) : null}
@@ -388,8 +397,9 @@ export const ChannelSelector: React.FC<ChannelSelectorProps> = ({
       {error && (
         <Alert>
           <AlertDescription>
-            Failed to load channels. You can still enter a channel name
-            manually, or check your Slack connection and try again.
+            {tAuto(
+              "failed_to_load_channels_you_can_still_enter_a_channe_af3a782",
+            )}{" "}
           </AlertDescription>
         </Alert>
       )}
@@ -399,7 +409,9 @@ export const ChannelSelector: React.FC<ChannelSelectorProps> = ({
         <Alert>
           <AlertTriangle className="h-4 w-4" />
           <AlertDescription>
-            Private channels are not visible. To access private channels,{" "}
+            {tAutoI18n(
+              "private_channels_are_not_visible_to_access_private_c_39480cf",
+            )}{" "}
             <button
               type="button"
               className="font-bold underline"
@@ -411,9 +423,9 @@ export const ChannelSelector: React.FC<ChannelSelectorProps> = ({
                 )
               }
             >
-              re-authenticate your Slack integration
+              {tAuto("re_authenticate_your_slack_integration_22c0485")}{" "}
             </button>{" "}
-            to grant the required permissions.
+            {tAutoI18n("to_grant_the_required_permissions_b46ea51")}{" "}
           </AlertDescription>
         </Alert>
       )}

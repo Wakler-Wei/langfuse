@@ -22,6 +22,7 @@ import { useExperimentNames } from "@/src/features/experiments/hooks/useExperime
 import { cn } from "@/src/utils/tailwind";
 import { type ReactNode } from "react";
 import { type DataTablePeekViewProps } from "@/src/components/table/peek";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 // Grid view row heights (matching DatasetCompareRunsTable)
 const GRID_VIEW_ROW_HEIGHTS = {
@@ -78,6 +79,7 @@ export const ExperimentGridView = ({
   setRowSelection,
   highlightAllRows,
 }: ExperimentGridViewProps) => {
+  const tAuto = useAutoTranslations();
   // Build all experiment IDs (baseline first)
   const allExperimentIds = useMemo(
     () => [baselineExperimentId, ...comparisonExperimentIds],
@@ -113,7 +115,7 @@ export const ExperimentGridView = ({
                 size="sm"
                 className={cn("shrink-0 font-bold", colorStyles?.badgeClass)}
               >
-                {isBaseline ? "Baseline" : "Comp"}
+                {isBaseline ? tAuto("baseline_e6ab798") : tAuto("comp_9250ab1")}
               </Badge>
             )}
           </div>
@@ -174,6 +176,7 @@ export const ExperimentGridView = ({
     traceScoreOrder,
     columnVisibility,
     useExperimentColors,
+    tAuto,
   ]);
 
   // Build all columns: Select, Input, Expected Output, then experiment columns
@@ -184,7 +187,7 @@ export const ExperimentGridView = ({
       {
         accessorKey: "input",
         id: "input",
-        header: "Input",
+        header: tAuto("input_b568d47"),
         size: 200,
         cell: ({ row }) => (
           <MemoizedIOTableCell
@@ -198,7 +201,7 @@ export const ExperimentGridView = ({
       {
         accessorKey: "expectedOutput",
         id: "expectedOutput",
-        header: "Expected Output",
+        header: tAuto("expected_output_395c41e"),
         size: 200,
         cell: ({ row }) => (
           <MemoizedIOTableCell
@@ -212,7 +215,7 @@ export const ExperimentGridView = ({
       },
       ...experimentColumns,
     ],
-    [experimentColumns, isLoading, selectActionColumn],
+    [experimentColumns, isLoading, selectActionColumn, tAuto],
   );
 
   return (

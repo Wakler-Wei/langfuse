@@ -8,6 +8,7 @@ import { Label } from "@/src/components/ui/label";
 import { showErrorToast } from "@/src/features/notifications/showErrorToast";
 import { showSuccessToast } from "@/src/features/notifications/showSuccessToast";
 import { api } from "@/src/utils/api";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type ReferencingEvaluator = {
   id: string;
@@ -59,19 +60,26 @@ export function DeleteEvalTemplateDialog({
   // instantly while the usage query is in flight.
   initialUsageCount?: number;
 }) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const utils = api.useUtils();
   const [confirmationInput, setConfirmationInput] = useState("");
 
   const templateMutation = api.evals.deleteEvalTemplate.useMutation({
     onSuccess: () => {
       showSuccessToast({
-        title: "Evaluator deleted",
-        description: `Evaluator "${templateName}" was deleted.`,
+        title: tAuto("evaluator_deleted_d34655d"),
+        description: tAuto("evaluator_value0_was_deleted_efcc1c5", {
+          value0: templateName,
+        }),
       });
       utils.evals.invalidate();
     },
     onError: (error) =>
-      showErrorToast("Failed to delete evaluator", error.message),
+      showErrorToast(
+        tAutoI18n("failed_to_delete_evaluator_a82c5f8"),
+        error.message,
+      ),
   });
 
   // Once deletion starts, the usage query must go inactive so post-delete
@@ -113,11 +121,20 @@ export function DeleteEvalTemplateDialog({
       open={open}
       onOpenChange={handleOpenChange}
       size="lg"
-      title={isBlocked ? "Cannot delete" : "Please confirm"}
+      title={
+        isBlocked
+          ? tAuto("cannot_delete_dd685c8")
+          : tAuto("please_confirm_3a799cc")
+      }
       description={
         isBlocked
-          ? `This evaluator is used by ${usageCount} running evaluator${usageCount === 1 ? "" : "s"}. Delete those running evaluators first.`
-          : "This action cannot be undone. It permanently deletes all versions of this evaluator. Scores already produced by it will not be deleted."
+          ? tAuto(
+              "this_evaluator_is_used_by_value0_running_evaluator_v_355d4ce",
+              { value0: usageCount, value1: usageCount === 1 ? "" : "s" },
+            )
+          : tAuto(
+              "this_action_cannot_be_undone_it_permanently_deletes__d397301",
+            )
       }
       confirmLabel="Delete evaluator"
       loading={templateMutation.isPending}

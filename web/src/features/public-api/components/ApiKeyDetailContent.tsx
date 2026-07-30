@@ -3,6 +3,7 @@ import { CodeView } from "@/src/components/ui/CodeJsonViewer";
 import { Label } from "@/src/components/ui/label";
 import { getLangfuseEnvCode } from "@/src/features/public-api/hooks/useLangfuseEnvCode";
 import { cn } from "@/src/utils/tailwind";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type ApiKeyScope = "project" | "organization";
 
@@ -26,6 +27,8 @@ function encodeMcpCredential(publicKey: string, secretKey: string) {
 }
 
 export function ApiKeyDetailContent(props: ApiKeyDetailContentProps) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const { scope, secretKey, publicKey, baseUrl, className, showMcpSection } =
     props;
   const envCode = getLangfuseEnvCode(baseUrl, { secretKey, publicKey });
@@ -34,15 +37,17 @@ export function ApiKeyDetailContent(props: ApiKeyDetailContentProps) {
   return (
     <div className={cn("space-y-6", className)}>
       <div>
-        <SubHeader title="Secret Key" />
+        <SubHeader title={tAuto("secret_key_2969a18")} />
         <div className="text-muted-foreground text-sm">
-          This key can only be viewed once. You can always create new keys in
-          the {scope} settings.
+          {tAutoI18n(
+            "this_key_can_only_be_viewed_once_you_can_always_crea_daaab02",
+          )}{" "}
+          {scope} {tAutoI18n("settings_4fd2f8c")}{" "}
         </div>
         <CodeView content={secretKey} className="mt-2" />
       </div>
       <div>
-        <SubHeader title="Public Key" />
+        <SubHeader title={tAuto("public_key_590e3d2")} />
         <CodeView content={publicKey} className="mt-2" />
       </div>
       <div>
@@ -53,22 +58,23 @@ export function ApiKeyDetailContent(props: ApiKeyDetailContentProps) {
         <>
           <hr />
           <div>
-            <SubHeader title="Using with MCP" />
+            <SubHeader title={tAuto("using_with_mcp_a574848")} />
             <p className="text-muted-foreground text-sm">
-              For a detailed guide on how to use this API key to connect to the
-              Langfuse MCP server, see the{" "}
+              {tAutoI18n(
+                "for_a_detailed_guide_on_how_to_use_this_api_key_to_c_a8c8488",
+              )}{" "}
               <a
                 href="https://langfuse.com/docs/api-and-data-platform/features/mcp-server"
                 target="_blank"
                 rel="noreferrer"
                 className="text-foreground underline"
               >
-                MCP setup docs
+                {tAuto("mcp_setup_docs_12ce74e")}{" "}
               </a>
               .
             </p>
             <div className="mt-4">
-              <Label>Header</Label>
+              <Label>{tAuto("header_31341c6")}</Label>
               <CodeView
                 content={`Authorization: Basic ${mcpCredential}`}
                 className="mt-2"

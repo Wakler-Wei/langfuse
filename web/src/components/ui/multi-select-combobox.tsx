@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Input } from "@/src/components/ui/input";
 import { Button } from "@/src/components/ui/button";
 import { Search, X, MoreHorizontal } from "lucide-react";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 interface MultiSelectComboboxProps<T> {
   selectedItems: T[];
@@ -42,6 +43,7 @@ export function MultiSelectCombobox<T>({
   showSelectedItemsInInput = true,
   dropdownClassName,
 }: MultiSelectComboboxProps<T>) {
+  const tAuto = useAutoTranslations();
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [previousResults, setPreviousResults] = useState<T[]>([]);
@@ -215,7 +217,9 @@ export function MultiSelectCombobox<T>({
                   <MoreHorizontal className="h-4 w-4" />
                   <div className="min-w-0 flex-1">
                     <p className="text-xs italic">
-                      More results available, refine your search
+                      {tAuto(
+                        "more_results_available_refine_your_search_764d47d",
+                      )}{" "}
                     </p>
                   </div>
                 </div>
@@ -224,8 +228,10 @@ export function MultiSelectCombobox<T>({
           ) : (
             <div className="bg-background text-muted-foreground absolute top-0 z-10 w-full rounded-md border py-6 text-center text-xs shadow-md">
               {searchQuery
-                ? `No results found for "${searchQuery}"`
-                : "No results available"}
+                ? tAuto("no_results_found_for_value0_2b8d7ec", {
+                    value0: String((searchQuery as unknown) ?? ""),
+                  })
+                : tAuto("no_results_available_1502f02")}
             </div>
           )}
         </div>

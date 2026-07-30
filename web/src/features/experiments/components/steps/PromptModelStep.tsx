@@ -40,6 +40,7 @@ import { cn } from "@/src/utils/tailwind";
 import { type PromptModelStepProps } from "@/src/features/experiments/types/stepProps";
 import { StepHeader } from "@/src/features/experiments/components/shared/StepHeader";
 import { TruncatedLabels } from "@/src/components/TruncatedLabels";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export const PromptModelStep: React.FC<PromptModelStepProps> = ({
   projectId,
@@ -48,6 +49,8 @@ export const PromptModelStep: React.FC<PromptModelStepProps> = ({
   modelState,
   structuredOutputState,
 }) => {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const { form } = formState;
   const {
     promptsByName,
@@ -114,8 +117,10 @@ export const PromptModelStep: React.FC<PromptModelStepProps> = ({
   return (
     <div className="space-y-6">
       <StepHeader
-        title="Prompt & Model Configuration"
-        description="Select the prompt version and configure the model parameters for your experiment."
+        title={tAuto("prompt_model_configuration_fa391fa")}
+        description={tAuto(
+          "select_the_prompt_version_and_configure_the_model_pa_d5d662e",
+        )}
       />
 
       <FormField
@@ -123,7 +128,7 @@ export const PromptModelStep: React.FC<PromptModelStepProps> = ({
         name="promptId"
         render={() => (
           <FormItem>
-            <FormLabel>Prompt</FormLabel>
+            <FormLabel>{tAuto("prompt_a817d7e")}</FormLabel>
             <div className="mb-2 flex gap-2">
               <Popover open={open} onOpenChange={setOpen}>
                 <PopoverTrigger asChild>
@@ -143,12 +148,14 @@ export const PromptModelStep: React.FC<PromptModelStepProps> = ({
                 >
                   <InputCommand>
                     <InputCommandInput
-                      placeholder="Search prompts..."
+                      placeholder={tAuto("search_prompts_dc12297")}
                       className="h-9"
                       variant="bottom"
                     />
                     <InputCommandList>
-                      <InputCommandEmpty>No prompt found.</InputCommandEmpty>
+                      <InputCommandEmpty>
+                        {tAuto("no_prompt_found_feee636")}
+                      </InputCommandEmpty>
                       <InputCommandGroup>
                         {promptsByName &&
                           Object.entries(promptsByName).map(
@@ -192,8 +199,12 @@ export const PromptModelStep: React.FC<PromptModelStepProps> = ({
                     className="w-1/3 justify-between px-2 font-normal"
                   >
                     {selectedPromptVersion
-                      ? `Version ${selectedPromptVersion}`
-                      : "Version"}
+                      ? tAutoI18n("version_value0_3d17004", {
+                          value0: String(
+                            (selectedPromptVersion as unknown) ?? "",
+                          ),
+                        })
+                      : tAutoI18n("version_2da600b")}
                     <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                   </Button>
                 </PopoverTrigger>
@@ -203,11 +214,13 @@ export const PromptModelStep: React.FC<PromptModelStepProps> = ({
                 >
                   <InputCommand>
                     <InputCommandInput
-                      placeholder="Search versions..."
+                      placeholder={tAuto("search_versions_060c520")}
                       className="h-9"
                     />
                     <InputCommandList>
-                      <InputCommandEmpty>No version found.</InputCommandEmpty>
+                      <InputCommandEmpty>
+                        {tAuto("no_version_found_a5c9f42")}
+                      </InputCommandEmpty>
                       <InputCommandGroup className="overflow-y-auto">
                         {promptsByName &&
                         selectedPromptName &&
@@ -223,7 +236,8 @@ export const PromptModelStep: React.FC<PromptModelStepProps> = ({
                             >
                               <div className="flex min-w-0 flex-1 items-center gap-2">
                                 <span className="shrink-0">
-                                  Version {prompt.version}
+                                  {tAutoI18n("version_2da600b")}{" "}
+                                  {prompt.version}
                                 </span>
                                 {prompt.labels.length > 0 && (
                                   <TruncatedLabels
@@ -245,7 +259,7 @@ export const PromptModelStep: React.FC<PromptModelStepProps> = ({
                           ))
                         ) : (
                           <InputCommandItem disabled>
-                            No versions available
+                            {tAuto("no_versions_available_a4ec98f")}{" "}
                           </InputCommandItem>
                         )}
                       </InputCommandGroup>
@@ -257,8 +271,9 @@ export const PromptModelStep: React.FC<PromptModelStepProps> = ({
             {selectedPromptToolConfig.status === "invalid" && (
               <p className="text-dark-yellow flex items-center gap-1.5 text-sm">
                 <TriangleAlert className="h-4 w-4 shrink-0" />
-                Invalid tool config detected on this prompt version. Its tools
-                will be ignored when running the experiment.
+                {tAuto(
+                  "invalid_tool_config_detected_on_this_prompt_version__9155e73",
+                )}{" "}
               </p>
             )}
             <FormMessage />
@@ -272,7 +287,7 @@ export const PromptModelStep: React.FC<PromptModelStepProps> = ({
         render={() => (
           <FormItem>
             <ModelParameters
-              customHeader={<FormLabel>Model</FormLabel>}
+              customHeader={<FormLabel>{tAuto("model_68c2cc7")}</FormLabel>}
               {...{
                 modelParams,
                 availableModels,
@@ -304,7 +319,9 @@ export const PromptModelStep: React.FC<PromptModelStepProps> = ({
         render={({ field }) => (
           <FormItem>
             <div className="flex items-center justify-between">
-              <FormLabel>Structured output (optional)</FormLabel>
+              <FormLabel>
+                {tAuto("structured_output_optional_fcf7ef0")}
+              </FormLabel>
               <Switch
                 checked={structuredOutputEnabled}
                 onCheckedChange={handleToggleStructuredOutput}
@@ -336,13 +353,13 @@ export const PromptModelStep: React.FC<PromptModelStepProps> = ({
                       >
                         <InputCommand>
                           <InputCommandInput
-                            placeholder="Search schemas..."
+                            placeholder={tAuto("search_schemas_dc32102")}
                             className="h-9"
                             variant="bottom"
                           />
                           <InputCommandList>
                             <InputCommandEmpty>
-                              No schema found.
+                              {tAuto("no_schema_found_c21d816")}{" "}
                             </InputCommandEmpty>
                             <InputCommandGroup>
                               {savedSchemas.data.map((schema) => (
@@ -412,7 +429,7 @@ export const PromptModelStep: React.FC<PromptModelStepProps> = ({
                   >
                     <Button variant="outline" className="w-full">
                       <PlusIcon className="mr-2 h-4 w-4" />
-                      Add schema
+                      {tAuto("add_schema_864ee5e")}{" "}
                     </Button>
                   </CreateOrEditLLMSchemaDialog>
                 )}
@@ -427,8 +444,12 @@ export const PromptModelStep: React.FC<PromptModelStepProps> = ({
               {hasToolStructuredOutputConflict
                 ? PROMPT_TOOL_STRUCTURED_OUTPUT_CONFLICT_MESSAGE
                 : structuredOutputEnabled
-                  ? "Configure the schema for structured LLM outputs"
-                  : "Enable to enforce a specific output format"}
+                  ? tAutoI18n(
+                      "configure_the_schema_for_structured_llm_outputs_c100a3c",
+                    )
+                  : tAutoI18n(
+                      "enable_to_enforce_a_specific_output_format_9a3e75b",
+                    )}
             </CardDescription>
             <FormMessage />
           </FormItem>

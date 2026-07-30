@@ -18,8 +18,10 @@ import { api } from "@/src/utils/api";
 import { Alert, AlertDescription, AlertTitle } from "@/src/components/ui/alert";
 import { CreateLLMApiKeyDialog } from "./CreateLLMApiKeyDialog";
 import { UpdateLLMApiKeyDialog } from "./UpdateLLMApiKeyDialog";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export function LlmApiKeyList(props: { projectId: string }) {
+  const tAuto = useAutoTranslations();
   const [editingKeyId, setEditingKeyId] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
 
@@ -44,11 +46,13 @@ export function LlmApiKeyList(props: { projectId: string }) {
   if (!hasAccess) {
     return (
       <div>
-        <Header title="LLM Connections" />
+        <Header title={tAuto("llm_connections_96dfc0b")} />
         <Alert>
-          <AlertTitle>Access Denied</AlertTitle>
+          <AlertTitle>{tAuto("access_denied_1647b9d")}</AlertTitle>
           <AlertDescription>
-            You do not have permission to view LLM API keys for this project.
+            {tAuto(
+              "you_do_not_have_permission_to_view_llm_api_keys_for__ff8ce77",
+            )}{" "}
           </AlertDescription>
         </Alert>
       </div>
@@ -57,27 +61,32 @@ export function LlmApiKeyList(props: { projectId: string }) {
 
   return (
     <div id="llm-api-keys">
-      <Header title="LLM Connections" />
+      <Header title={tAuto("llm_connections_96dfc0b")} />
       <p className="mb-4 text-sm">
-        Connect your LLM services to enable evaluations and playground features.
-        Your provider will charge based on usage.
+        {tAuto(
+          "connect_your_llm_services_to_enable_evaluations_and__139900e",
+        )}{" "}
       </p>
       <Card className="mb-4 overflow-auto">
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead className="text-primary md:table-cell">
-                Provider
+                {tAuto("provider_7ceee3f")}{" "}
               </TableHead>
               <TableHead className="text-primary md:table-cell">
-                Adapter
+                {tAuto("adapter_e6b4616")}{" "}
               </TableHead>
               <TableHead className="text-primary md:table-cell">
-                Base URL
+                {tAuto("base_url_1dbd61f")}{" "}
               </TableHead>
-              <TableHead className="text-primary">API Key</TableHead>
+              <TableHead className="text-primary">
+                {tAuto("api_key_47acd20")}
+              </TableHead>
               {hasExtraHeaderKeys ? (
-                <TableHead className="text-primary">Extra headers</TableHead>
+                <TableHead className="text-primary">
+                  {tAuto("extra_headers_229b310")}
+                </TableHead>
               ) : null}
               <TableHead />
             </TableRow>
@@ -90,7 +99,7 @@ export function LlmApiKeyList(props: { projectId: string }) {
                   colSpan={6}
                   className="text-center"
                 >
-                  None
+                  {tAuto("none_6eef664")}{" "}
                 </TableCell>
               </TableRow>
             ) : (
@@ -157,6 +166,7 @@ export function LlmApiKeyList(props: { projectId: string }) {
 
 // show dialog to let user confirm that this is a destructive action
 function DeleteApiKeyButton(props: { projectId: string; apiKeyId: string }) {
+  const tAuto = useAutoTranslations();
   const capture = usePostHogClientCapture();
   const hasAccess = useHasProjectAccess({
     projectId: props.projectId,
@@ -180,8 +190,10 @@ function DeleteApiKeyButton(props: { projectId: string; apiKeyId: string }) {
           <TrashIcon className="h-4 w-4" />
         </Button>
       }
-      title="Delete LLM Connection"
-      description="Are you sure you want to delete this connection? This action cannot be undone."
+      title={tAuto("delete_llm_connection_e311052")}
+      description={tAuto(
+        "are_you_sure_you_want_to_delete_this_connection_this_176b09f",
+      )}
       confirmLabel="Permanently delete"
       loading={mutDeleteApiKey.isPending}
       onConfirm={() => {

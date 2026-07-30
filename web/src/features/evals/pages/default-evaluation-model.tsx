@@ -3,8 +3,10 @@ import { useRouter } from "next/router";
 import { useHasProjectAccess } from "@/src/features/rbac/utils/checkProjectAccess";
 import { SupportOrUpgradePage } from "@/src/ee/features/billing/components/SupportOrUpgradePage";
 import { DefaultEvalModelSetup } from "@/src/features/evals/components/default-eval-model-setup";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export default function DefaultEvaluationModelPage() {
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const projectId = router.query.projectId as string;
 
@@ -21,9 +23,11 @@ export default function DefaultEvaluationModelPage() {
     <Page
       withPadding
       headerProps={{
-        title: "Default Evaluation Model",
+        title: tAuto("default_evaluation_model_55a35b0"),
         help: {
-          description: "Configure a default evaluation model for your project.",
+          description: tAuto(
+            "configure_a_default_evaluation_model_for_your_projec_8d53b6d",
+          ),
           href: "https://langfuse.com/docs/evaluation/evaluation-methods/llm-as-a-judge",
         },
         breadcrumb: [

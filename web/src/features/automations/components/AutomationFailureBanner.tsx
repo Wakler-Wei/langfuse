@@ -3,6 +3,7 @@ import { AlertTriangle, X } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import { Alert, AlertDescription } from "@/src/components/ui/alert";
 import { api } from "@/src/utils/api";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 interface AutomationFailureBannerProps {
   projectId: string;
@@ -12,6 +13,8 @@ interface AutomationFailureBannerProps {
 export const AutomationFailureBanner: React.FC<
   AutomationFailureBannerProps
 > = ({ projectId, automationId }) => {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const [dismissed, setDismissed] = React.useState(false);
 
   const { data: failureData } =
@@ -30,12 +33,16 @@ export const AutomationFailureBanner: React.FC<
       <AlertDescription className="flex items-center justify-between">
         <div className="flex-1">
           <strong>
-            This automation was automatically disabled due to at least{" "}
-            {failureData.count} consecutive webhook failures.
+            {tAutoI18n(
+              "this_automation_was_automatically_disabled_due_to_at_2c86080",
+            )}{" "}
+            {failureData.count}{" "}
+            {tAutoI18n("consecutive_webhook_failures_4b75902")}{" "}
           </strong>
           <div className="mt-2 text-sm">
-            Check the execution history below, fix any issues with your webhook
-            endpoint, then reactivate the automation.
+            {tAuto(
+              "check_the_execution_history_below_fix_any_issues_wit_121c2ae",
+            )}{" "}
           </div>
         </div>
         <Button

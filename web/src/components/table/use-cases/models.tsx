@@ -31,6 +31,7 @@ import { TestModelMatchButton } from "@/src/features/models/components/test-matc
 import { ActionButton } from "@/src/components/ActionButton";
 import { useHasProjectAccess } from "@/src/features/rbac/utils/checkProjectAccess";
 import { SettingsTableCard } from "@/src/components/layouts/settings-table-card";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export type ModelTableRow = {
   modelId: string;
@@ -61,6 +62,8 @@ const modelConfigDescriptions = {
 } as const;
 
 export default function ModelTable({ projectId }: { projectId: string }) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const [paginationState, setPaginationState] = usePaginationState(0, 50, {
     page: "pageIndex",
@@ -109,7 +112,7 @@ export default function ModelTable({ projectId }: { projectId: string }) {
     {
       accessorKey: "modelName",
       id: "modelName",
-      header: "Model Name",
+      header: tAuto("model_name_78a99e3"),
       headerTooltip: {
         description: modelConfigDescriptions.modelName,
       },
@@ -128,7 +131,7 @@ export default function ModelTable({ projectId }: { projectId: string }) {
     {
       accessorKey: "maintainer",
       id: "maintainer",
-      header: "Maintainer",
+      header: tAuto("maintainer_597dbcc"),
       headerTooltip: {
         description: modelConfigDescriptions.maintainer,
       },
@@ -146,7 +149,9 @@ export default function ModelTable({ projectId }: { projectId: string }) {
                 )}
               </TooltipTrigger>
               <TooltipContent>
-                {isLangfuse ? "Langfuse maintained" : "User maintained"}
+                {isLangfuse
+                  ? tAutoI18n("langfuse_maintained_fbbe6a0")
+                  : tAutoI18n("user_maintained_b0844ac")}
               </TooltipContent>
             </Tooltip>
           </div>
@@ -159,7 +164,7 @@ export default function ModelTable({ projectId }: { projectId: string }) {
       headerTooltip: {
         description: modelConfigDescriptions.matchPattern,
       },
-      header: "Match Pattern",
+      header: tAuto("match_pattern_152036e"),
       size: 200,
       cell: ({ row }) => {
         const value: string = row.getValue("matchPattern");
@@ -177,7 +182,9 @@ export default function ModelTable({ projectId }: { projectId: string }) {
       header: () => {
         return (
           <div className="flex items-center gap-2">
-            <span>Prices {priceUnit}</span>
+            <span>
+              {tAutoI18n("prices_3f6ef31")} {priceUnit}
+            </span>
             <PriceUnitSelector />
           </div>
         );
@@ -201,7 +208,7 @@ export default function ModelTable({ projectId }: { projectId: string }) {
     {
       accessorKey: "tokenizerId",
       id: "tokenizerId",
-      header: "Tokenizer",
+      header: tAuto("tokenizer_0c8bdf6"),
       headerTooltip: {
         description: modelConfigDescriptions.tokenizerId,
       },
@@ -211,7 +218,7 @@ export default function ModelTable({ projectId }: { projectId: string }) {
     {
       accessorKey: "config",
       id: "config",
-      header: "Tokenizer Configuration",
+      header: tAuto("tokenizer_configuration_a023070"),
       headerTooltip: {
         description: modelConfigDescriptions.config,
       },
@@ -228,7 +235,7 @@ export default function ModelTable({ projectId }: { projectId: string }) {
     {
       accessorKey: "lastUsed",
       id: "lastUsed",
-      header: "Last used",
+      header: tAuto("last_used_f1109d3"),
       headerTooltip: {
         description: modelConfigDescriptions.lastUsed,
       },
@@ -242,7 +249,7 @@ export default function ModelTable({ projectId }: { projectId: string }) {
     },
     {
       accessorKey: "actions",
-      header: "Actions",
+      header: tAuto("actions_c3cd636"),
       size: 120,
       cell: ({ row }) => {
         return row.original.maintainer !== "Langfuse" ? (
@@ -323,7 +330,7 @@ export default function ModelTable({ projectId }: { projectId: string }) {
                 hasAccess={hasWriteAccess}
                 trackingEventName="models:new_form_open"
               >
-                Add Model Definition
+                {tAuto("add_model_definition_b415ea6")}{" "}
               </ActionButton>
             </UpsertModelFormDialog>
           </>

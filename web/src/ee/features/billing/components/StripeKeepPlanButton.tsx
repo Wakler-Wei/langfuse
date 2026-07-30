@@ -13,6 +13,7 @@ import {
 import { api } from "@/src/utils/api";
 import { toast } from "sonner";
 import { nanoid } from "nanoid";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export const StripeKeepPlanButton = ({
   orgId,
@@ -25,11 +26,12 @@ export const StripeKeepPlanButton = ({
   onProcessing: (id: string | null) => void;
   processing: boolean;
 }) => {
+  const tAuto = useAutoTranslations();
   const [_opId, setOpId] = useState<string | null>(null);
 
   const clearSchedule = api.cloudBilling.clearPlanSwitchSchedule.useMutation({
     onSuccess: () => {
-      toast.success("Kept current plan");
+      toast.success(tAuto("kept_current_plan_8aae731"));
       onProcessing(null);
       setOpId(null);
       setTimeout(() => window.location.reload(), 500);
@@ -37,7 +39,7 @@ export const StripeKeepPlanButton = ({
     onError: () => {
       onProcessing(null);
       setOpId(null);
-      toast.error("Failed to keep current plan");
+      toast.error(tAuto("failed_to_keep_current_plan_2148b61"));
     },
   });
 
@@ -47,30 +49,30 @@ export const StripeKeepPlanButton = ({
     <Dialog>
       <DialogTrigger asChild>
         <Button className="w-full" variant="default">
-          Keep Plan
+          {tAuto("keep_plan_66463af")}{" "}
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle className="text-lg">
-            Confirm Keeping Current Plan
+            {tAuto("confirm_keeping_current_plan_cc0abd2")}{" "}
           </DialogTitle>
         </DialogHeader>
         <DialogBody className="text-sm">
           <p>
-            You have a scheduled plan change on your current subscription.
-            Keeping your current plan will remove that schedule and you will
-            remain on your existing plan.
+            {tAuto(
+              "you_have_a_scheduled_plan_change_on_your_current_sub_1296cf3",
+            )}{" "}
           </p>
           <p>
-            Your features and pricing will stay as-is; usage continues to be
-            billed under your current plan. Do you want to keep your current
-            plan and cancel the scheduled change?
+            {tAuto(
+              "your_features_and_pricing_will_stay_as_is_usage_cont_f2e1633",
+            )}{" "}
           </p>
         </DialogBody>
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="secondary">Go Back</Button>
+            <Button variant="secondary">{tAuto("go_back_f03e2d0")}</Button>
           </DialogClose>
           <Button
             variant="default"
@@ -86,7 +88,7 @@ export const StripeKeepPlanButton = ({
             }}
             disabled={processing}
           >
-            {processing ? "Keeping…" : "Confirm Keep Plan"}
+            {processing ? tAuto("keeping_8ae5242") : tAuto("confirm_keep_plan_d0b5052")}
           </Button>
         </DialogFooter>
       </DialogContent>

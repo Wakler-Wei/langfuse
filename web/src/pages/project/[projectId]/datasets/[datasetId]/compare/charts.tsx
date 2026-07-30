@@ -43,8 +43,10 @@ import {
 import { NoDataOrLoading } from "@/src/components/NoDataOrLoading";
 import { useExperimentAccess } from "@/src/features/experiments/hooks/useExperimentAccess";
 import { toExperimentsResultsUrl } from "@/src/features/experiments/utils/experimentUrlTranslation";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 function DatasetCompareChartsLegacy() {
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const capture = usePostHogClientCapture();
   const projectId = router.query.projectId as string;
@@ -88,7 +90,9 @@ function DatasetCompareChartsLegacy() {
   return (
     <Page
       headerProps={{
-        title: `Compare experiments: ${dataset.data?.name ?? datasetId}`,
+        title: tAuto("compare_experiments_value0_6768d7e", {
+          value0: dataset.data?.name ?? datasetId,
+        }),
         tabsProps: {
           tabs: getDatasetRunCompareTabs(projectId, datasetId),
           activeTab: DATASET_RUN_COMPARE_TABS.CHARTS,
@@ -108,7 +112,7 @@ function DatasetCompareChartsLegacy() {
           },
         ],
         help: {
-          description: "Compare your experiments side by side",
+          description: tAuto("compare_your_experiments_side_by_side_aa1a0aa"),
         },
         actionButtonsRight: (
           <>
@@ -124,7 +128,9 @@ function DatasetCompareChartsLegacy() {
                   onClick={() => capture("dataset_run:new_form_open")}
                 >
                   <FlaskConical className="h-4 w-4" />
-                  <span className="ml-2 hidden md:block">New experiment</span>
+                  <span className="ml-2 hidden md:block">
+                    {tAuto("new_experiment_5ad252f")}
+                  </span>
                 </Button>
               </DialogTrigger>
               <DialogContent className="max-h-[90vh] overflow-y-auto">
@@ -142,9 +148,9 @@ function DatasetCompareChartsLegacy() {
             </Dialog>
             <MultiSelectKeyValues
               key="select-runs"
-              title="Experiments"
+              title={tAuto("experiments_e8f296b")}
               showSelectedValueStrings={false}
-              placeholder="Select runs to compare"
+              placeholder={tAuto("select_runs_to_compare_6327250")}
               className="w-fit"
               variant="outline"
               hideClearButton
@@ -264,8 +270,12 @@ function DatasetCompareChartsLegacy() {
             ) : (
               <span className="text-muted-foreground -mt-2 text-sm">
                 {Boolean(chartDataMap?.size)
-                  ? "All charts hidden. Enable them in the Charts dropdown."
-                  : "Select more than one run to generate charts."}
+                  ? tAuto(
+                      "all_charts_hidden_enable_them_in_the_charts_dropdown_2462dcb",
+                    )
+                  : tAuto(
+                      "select_more_than_one_run_to_generate_charts_8c3c254",
+                    )}
               </span>
             )}
           </div>
@@ -281,14 +291,14 @@ function DatasetCompareChartsLegacy() {
           <SidePanelContent className="overflow-y-auto p-1">
             <div className="w-full space-y-4">
               <div>
-                <SubHeaderLabel title="Description" />
+                <SubHeaderLabel title={tAuto("description_55f8ebc")} />
                 <span className="text-muted-foreground text-sm">
                   {dataset.data?.description ?? "No description"}
                 </span>
               </div>
               {dataset.data?.metadata && (
                 <div>
-                  <SubHeaderLabel title="Metadata" />
+                  <SubHeaderLabel title={tAuto("metadata_251edc0")} />
                   <MarkdownJsonView content={dataset.data?.metadata} />
                 </div>
               )}

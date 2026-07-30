@@ -5,6 +5,7 @@ import {
   type ProjectMigrationStatus,
 } from "@/src/features/v4-migration/migrationData";
 import { useOpenV4MigrationPanel } from "@/src/features/v4-migration/hooks/useOpenV4MigrationPanel";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export function V4MigrationProjectChip({
   project,
@@ -13,6 +14,7 @@ export function V4MigrationProjectChip({
   project: V4MigrationTargetProject;
   status: ProjectMigrationStatus | undefined;
 }) {
+  const tAuto = useAutoTranslations();
   const openMigrationPanel = useOpenV4MigrationPanel();
   const capture = usePostHogClientCapture();
 
@@ -23,10 +25,10 @@ export function V4MigrationProjectChip({
 
   const label =
     readiness === "checking"
-      ? "Checking"
+      ? tAuto("checking_97876b8")
       : readiness === "unavailable"
-        ? "Check status"
-        : "Update";
+        ? tAuto("check_status_07adf97")
+        : tAuto("update_fb91e24");
 
   const handleClick = () => {
     capture("v4_migration:project_chip_clicked");

@@ -23,6 +23,7 @@ import {
   type JsonPathMissInfo,
   type JsonPathErrorInfo,
 } from "@langfuse/shared";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type MappingPreviewPanelProps = {
   fieldLabel: string;
@@ -48,6 +49,8 @@ export function MappingPreviewPanel({
   schema,
   onValidationChange,
 }: MappingPreviewPanelProps) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const hasSchema = schema !== null && schema !== undefined;
 
   // Compute source data to display
@@ -191,9 +194,9 @@ export function MappingPreviewPanel({
     return (
       <div className="space-y-4">
         <div>
-          <h3 className="text-sm font-bold">Preview</h3>
+          <h3 className="text-sm font-bold">{tAuto("preview_f1fbb2b")}</h3>
           <p className="text-muted-foreground text-xs">
-            Sample from first observation
+            {tAuto("sample_from_first_observation_0a9ebdc")}{" "}
           </p>
         </div>
         <Skeleton className="h-32 w-full" />
@@ -206,14 +209,14 @@ export function MappingPreviewPanel({
     return (
       <div className="space-y-4">
         <div>
-          <h3 className="text-sm font-bold">Preview</h3>
+          <h3 className="text-sm font-bold">{tAuto("preview_f1fbb2b")}</h3>
           <p className="text-muted-foreground text-xs">
-            Sample from first observation
+            {tAuto("sample_from_first_observation_0a9ebdc")}{" "}
           </p>
         </div>
         <div className="bg-muted/30 flex h-64 items-center justify-center rounded-md border p-4">
           <p className="text-muted-foreground text-sm">
-            No observation data available
+            {tAuto("no_observation_data_available_5ab88b4")}{" "}
           </p>
         </div>
       </div>
@@ -223,16 +226,16 @@ export function MappingPreviewPanel({
   return (
     <div className="space-y-2">
       <div>
-        <h3 className="text-sm font-bold">Preview</h3>
+        <h3 className="text-sm font-bold">{tAuto("preview_f1fbb2b")}</h3>
         <p className="text-muted-foreground text-xs">
-          Sample from first observation
+          {tAuto("sample_from_first_observation_0a9ebdc")}{" "}
         </p>
       </div>
 
       {/* Source data */}
       <div className="space-y-2">
         <p className="text-muted-foreground text-xs font-bold">
-          Source: {sourceLabel}
+          {tAutoI18n("source_922acd2")} {sourceLabel}
         </p>
         <div className="bg-muted/30 max-h-[21vh] overflow-auto rounded-md border">
           <JSONView json={sourceData} className="text-xs" />
@@ -248,7 +251,7 @@ export function MappingPreviewPanel({
       <div className="space-y-2">
         <div className="flex items-center gap-2">
           <p className="text-muted-foreground text-xs font-bold">
-            Result: Dataset Item {fieldLabel}
+            {tAutoI18n("result_dataset_item_7b7591f")} {fieldLabel}
           </p>
           {/* Validation status indicator */}
           {config.mode !== "none" && (
@@ -276,7 +279,9 @@ export function MappingPreviewPanel({
           }`}
         >
           {config.mode === "none" ? (
-            <div className="text-muted-foreground p-3 text-xs italic">null</div>
+            <div className="text-muted-foreground p-3 text-xs italic">
+              {tAuto("null_2be88ca")}
+            </div>
           ) : (
             <JSONView json={resultData} className="text-xs" />
           )}
@@ -284,12 +289,16 @@ export function MappingPreviewPanel({
 
         {/* JSONPath syntax errors (always blocking) */}
         {jsonPathErrors.length > 0 && config.mode !== "none" && (
-          <IssueList variant="error" title="Invalid JSONPath:">
+          <IssueList variant="error" title={tAuto("invalid_jsonpath_db7109e")}>
             {jsonPathErrors.map((err, idx) => (
               <IssueItem key={idx}>
                 <span className="font-mono">{err.jsonPath}</span>
-                {err.mappingKey ? ` (key: "${err.mappingKey}")` : ""}:{" "}
-                {err.message}
+                {err.mappingKey
+                  ? tAutoI18n("key_value0_beaffcb", {
+                      value0: String((err.mappingKey as unknown) ?? ""),
+                    })
+                  : ""}
+                : {err.message}
               </IssueItem>
             ))}
           </IssueList>
@@ -299,7 +308,10 @@ export function MappingPreviewPanel({
         {hasSchema &&
           jsonPathErrors.length === 0 &&
           validationResult.errors.length > 0 && (
-            <IssueList variant="error" title="Schema validation errors:">
+            <IssueList
+              variant="error"
+              title={tAuto("schema_validation_errors_2a05182")}
+            >
               {validationResult.errors.map((error, idx) => (
                 <IssueItem key={idx}>
                   <span className="font-mono">{error.path || "root"}</span>:{" "}
@@ -313,13 +325,18 @@ export function MappingPreviewPanel({
         {jsonPathMisses.length > 0 && config.mode !== "none" && (
           <IssueList
             variant="warning"
-            title="JSONPath warnings (preview observation):"
+            title={tAuto("jsonpath_warnings_preview_observation_26a19c1")}
           >
             {jsonPathMisses.map((miss, idx) => (
               <IssueItem key={idx}>
-                <span className="font-mono">{miss.jsonPath}</span> did not match
-                any data in {miss.sourceField}
-                {miss.mappingKey ? ` (key: "${miss.mappingKey}")` : ""}
+                <span className="font-mono">{miss.jsonPath}</span>{" "}
+                {tAutoI18n("did_not_match_any_data_in_2151e01")}{" "}
+                {miss.sourceField}
+                {miss.mappingKey
+                  ? tAutoI18n("key_value0_beaffcb", {
+                      value0: String((miss.mappingKey as unknown) ?? ""),
+                    })
+                  : ""}
               </IssueItem>
             ))}
           </IssueList>

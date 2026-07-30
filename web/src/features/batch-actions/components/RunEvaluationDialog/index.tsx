@@ -25,6 +25,7 @@ import { ConfirmationStep } from "./ConfirmationStep";
 import { CreateEvaluatorDialog } from "./CreateEvaluatorDialog";
 import { buildQueryWithSelectedIds } from "./utils";
 import { useV4Beta } from "@/src/features/events/hooks/useV4Beta";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type RunEvaluationDialogProps = {
   projectId: string;
@@ -45,6 +46,8 @@ type RunEvaluationDialogProps = {
 type DialogStep = "select-evaluator" | "confirm";
 
 export function RunEvaluationDialog(props: RunEvaluationDialogProps) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const { isBetaEnabled } = useV4Beta();
   const {
     projectId,
@@ -73,7 +76,10 @@ export function RunEvaluationDialog(props: RunEvaluationDialogProps) {
   const runEvaluationMutation =
     api.batchAction.runEvaluation.create.useMutation({
       onError: (error) => {
-        showErrorToast("Failed to schedule evaluation", error.message);
+        showErrorToast(
+          tAutoI18n("failed_to_schedule_evaluation_2697bc3"),
+          error.message,
+        );
       },
     });
 
@@ -81,8 +87,14 @@ export function RunEvaluationDialog(props: RunEvaluationDialogProps) {
   // For experiments source, displayCount is experiment count, not item count
   const isExperimentsSource = sourceTable === SourceTable.EXPERIMENTS;
   const scopeLabel =
-    sourceTable === SourceTable.EVENTS ? "observation" : "experiment item";
+    sourceTable === SourceTable.EVENTS
+      ? tAutoI18n("observation_7c02c7e")
+      : tAutoI18n("experiment_item_fad3025");
   const evaluatorScopeLabel =
+    targetObject === EvalTargetObject.EVENT
+      ? tAutoI18n("observation_7c02c7e")
+      : tAutoI18n("experiment_f45f2bc");
+  const evaluatorScope =
     targetObject === EvalTargetObject.EVENT ? "observation" : "experiment";
   const experimentItemsExperimentCount =
     sourceTable === SourceTable.EXPERIMENT_ITEMS
@@ -176,12 +188,42 @@ export function RunEvaluationDialog(props: RunEvaluationDialogProps) {
     }
 
     showSuccessToast({
-      title: "Evaluation queued",
+      title: tAuto("evaluation_queued_fece902"),
       description: isExperimentsSource
-        ? `Scheduled evaluation for items from ${displayCount} selected experiment${displayCount === 1 ? "" : "s"} with ${selectedEvaluators.length} ${selectedEvaluators.length === 1 ? "evaluator" : "evaluators"}.`
+        ? tAuto(
+            "scheduled_evaluation_for_items_from_value0_selected__0647285",
+            {
+              value0: displayCount,
+              value1: displayCount === 1 ? "" : "s",
+              value2: selectedEvaluators.length,
+              value3:
+                selectedEvaluators.length === 1 ? "evaluator" : "evaluators",
+            },
+          )
         : sourceTable === SourceTable.EXPERIMENT_ITEMS
-          ? `Scheduled evaluation for up to ${displayCount} experiment item${displayCount === 1 ? "" : "s"} across ${experimentItemsExperimentCount} experiment${experimentItemsExperimentCount === 1 ? "" : "s"} with ${selectedEvaluators.length} ${selectedEvaluators.length === 1 ? "evaluator" : "evaluators"}.`
-          : `Scheduled evaluation for ${displayCount} selected ${scopeLabel}${displayCount === 1 ? "" : "s"} with ${selectedEvaluators.length} ${selectedEvaluators.length === 1 ? "evaluator" : "evaluators"}.`,
+          ? tAuto(
+              "scheduled_evaluation_for_up_to_value0_experiment_ite_b2064e5",
+              {
+                value0: displayCount,
+                value1: displayCount === 1 ? "" : "s",
+                value2: experimentItemsExperimentCount,
+                value3: experimentItemsExperimentCount === 1 ? "" : "s",
+                value4: selectedEvaluators.length,
+                value5:
+                  selectedEvaluators.length === 1 ? "evaluator" : "evaluators",
+              },
+            )
+          : tAuto(
+              "scheduled_evaluation_for_value0_selected_value1_valu_9f9217f",
+              {
+                value0: displayCount,
+                value1: scopeLabel,
+                value2: displayCount === 1 ? "" : "s",
+                value3: selectedEvaluators.length,
+                value4:
+                  selectedEvaluators.length === 1 ? "evaluator" : "evaluators",
+              },
+            ),
       link: {
         href: `/project/${projectId}/settings/batch-actions`,
         text: "View batch actions",
@@ -198,15 +240,38 @@ export function RunEvaluationDialog(props: RunEvaluationDialogProps) {
           <DialogHeader>
             <DialogTitle>
               {isExperimentsSource
-                ? `Evaluate items from ${displayCount} experiment${displayCount === 1 ? "" : "s"}`
+                ? tAutoI18n(
+                    "evaluate_items_from_value0_experiment_value1_f32fcba",
+                    {
+                      value0: String(displayCount),
+                      value1: displayCount === 1 ? "" : "s",
+                    },
+                  )
                 : sourceTable === SourceTable.EXPERIMENT_ITEMS
-                  ? `Evaluate up to ${displayCount} experiment item${displayCount === 1 ? "" : "s"} across ${experimentItemsExperimentCount} experiment${experimentItemsExperimentCount === 1 ? "" : "s"}`
-                  : `Evaluate ${displayCount} ${scopeLabel}${displayCount === 1 ? "" : "s"}`}
+                  ? tAutoI18n(
+                      "evaluate_up_to_value0_experiment_item_value1_across__fd022d1",
+                      {
+                        value0: String(displayCount),
+                        value1: displayCount === 1 ? "" : "s",
+                        value2: String(experimentItemsExperimentCount),
+                        value3: experimentItemsExperimentCount === 1 ? "" : "s",
+                      },
+                    )
+                  : tAutoI18n("evaluate_value0_value1_value2_53c30c2", {
+                      value0: String(displayCount),
+                      value1: String(scopeLabel),
+                      value2: displayCount === 1 ? "" : "s",
+                    })}
             </DialogTitle>
             <DialogDescription>
               {step === "confirm"
-                ? "Review your evaluation configuration before running."
-                : `Select one or more ${evaluatorScopeLabel}-scoped evaluators.`}
+                ? tAutoI18n(
+                    "review_your_evaluation_configuration_before_running_0ef0631",
+                  )
+                : tAutoI18n(
+                    "select_one_or_more_value0_scoped_evaluators_8bf7863",
+                    { value0: String((evaluatorScopeLabel as unknown) ?? "") },
+                  )}
             </DialogDescription>
           </DialogHeader>
 
@@ -227,7 +292,7 @@ export function RunEvaluationDialog(props: RunEvaluationDialogProps) {
                   previewObservationQuery.isLoading ||
                   previewEventQuery.isLoading
                 }
-                evaluatorScopeLabel={evaluatorScopeLabel}
+                evaluatorScopeLabel={evaluatorScope}
                 selectedEvaluatorIds={selectedEvaluatorIds}
                 evaluatorSearchQuery={evaluatorSearchQuery}
                 onSearchQueryChange={setEvaluatorSearchQuery}
@@ -257,7 +322,7 @@ export function RunEvaluationDialog(props: RunEvaluationDialogProps) {
                 disabled={runEvaluationMutation.isPending}
               >
                 <ChevronLeft className="mr-1 h-4 w-4" />
-                Back
+                {tAuto("back_b52b36b")}{" "}
               </Button>
             ) : (
               <div />
@@ -268,9 +333,13 @@ export function RunEvaluationDialog(props: RunEvaluationDialogProps) {
                 onClick={() => setStep("confirm")}
                 disabled={selectedEvaluators.length === 0}
               >
-                Continue{" "}
+                {tAutoI18n("continue_2e02623")}{" "}
                 {selectedEvaluators.length > 0
-                  ? `with ${selectedEvaluators.length} evaluator(s)`
+                  ? tAutoI18n("with_value0_evaluator_s_1034c84", {
+                      value0: String(
+                        (selectedEvaluators.length as unknown) ?? "",
+                      ),
+                    })
                   : null}
               </Button>
             ) : (
@@ -278,7 +347,7 @@ export function RunEvaluationDialog(props: RunEvaluationDialogProps) {
                 onClick={onSubmit}
                 loading={runEvaluationMutation.isPending}
               >
-                Run Evaluation
+                {tAuto("run_evaluation_9b5ca83")}{" "}
               </Button>
             )}
           </DialogFooter>

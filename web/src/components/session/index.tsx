@@ -102,6 +102,7 @@ import {
   type LegacySessionTrace,
 } from "@/src/components/session/sessionDetailPageTypes";
 import { getSessionFilterOptionsStartTimeFilters } from "@/src/components/session/sessionFilterOptions";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 // some projects have thousands of users in a session, paginate to avoid rendering all at once
 const INITIAL_USERS_DISPLAY_COUNT = 3;
@@ -116,6 +117,8 @@ export function SessionUsers({
   projectId: string;
   users?: string[];
 }) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const [page, setPage] = useState(0);
 
   if (!users) return null;
@@ -149,11 +152,13 @@ export function SessionUsers({
         <Popover modal>
           <PopoverTrigger asChild>
             <Button variant="outline" size="sm" className="mt-0.5">
-              +{remainingUsers.length} more users
+              +{remainingUsers.length} {tAutoI18n("more_users_2a395c0")}{" "}
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-[300px]">
-            <Label className="text-base capitalize">Session Users</Label>
+            <Label className="text-base capitalize">
+              {tAuto("session_users_3d5c669")}
+            </Label>
             <ScrollArea className="h-[300px]">
               <div className="flex flex-col gap-2 p-2">
                 {remainingUsers
@@ -191,10 +196,11 @@ export function SessionUsers({
                   onClick={() => setPage((p) => Math.max(0, p - 1))}
                   disabled={page === 0}
                 >
-                  Previous
+                  {tAuto("previous_50f9428")}{" "}
                 </Button>
                 <span className="text-muted-foreground text-sm">
-                  Page {page + 1} of{" "}
+                  {tAutoI18n("page_fb06270")} {page + 1}{" "}
+                  {tAutoI18n("of_de04fa0")}{" "}
                   {Math.ceil(remainingUsers.length / USERS_PER_PAGE_IN_POPOVER)}
                 </span>
                 <Button
@@ -206,7 +212,7 @@ export function SessionUsers({
                     remainingUsers.length
                   }
                 >
-                  Next
+                  {tAuto("next_bc98198")}{" "}
                 </Button>
               </div>
             )}
@@ -297,6 +303,7 @@ const CopySessionIdButton: React.FC<{
    *  default "toolbar" keeps the inline icon-only button. */
   layout?: "toolbar" | "menu";
 }> = ({ sessionId, layout = "toolbar" }) => {
+  const tAuto = useAutoTranslations();
   const capture = usePostHogClientCapture();
   const { copy, isCopied } = useCopyToClipboard();
   const isMenu = layout === "menu";
@@ -310,7 +317,7 @@ const CopySessionIdButton: React.FC<{
       <Button
         variant="ghost"
         size="sm"
-        aria-label="Copy session ID"
+        aria-label={tAuto("copy_session_id_4e298d5")}
         className="w-full justify-start gap-2 font-normal"
         onClick={onCopy}
       >
@@ -319,7 +326,7 @@ const CopySessionIdButton: React.FC<{
         ) : (
           <CopyIcon className="h-4 w-4" />
         )}
-        <span className="text-sm">Copy session ID</span>
+        <span className="text-sm">{tAuto("copy_session_id_4e298d5")}</span>
       </Button>
     );
   }
@@ -328,8 +335,8 @@ const CopySessionIdButton: React.FC<{
     <Button
       variant="ghost"
       size="icon-xs"
-      title="Copy session ID"
-      aria-label="Copy session ID"
+      title={tAuto("copy_session_id_4e298d5")}
+      aria-label={tAuto("copy_session_id_4e298d5")}
       onClick={onCopy}
     >
       {isCopied ? (
@@ -345,6 +352,8 @@ export const SessionPage: React.FC<{
   sessionId: string;
   projectId: string;
 }> = ({ sessionId, projectId }) => {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const { setDetailPageList, detailPagelists } = useDetailPageLists();
   const userSession = useSession();
@@ -473,15 +482,21 @@ export const SessionPage: React.FC<{
   const virtualItems = virtualizer.getVirtualItems();
 
   if (session.error?.data?.code === "UNAUTHORIZED")
-    return <ErrorPage message="You do not have access to this session." />;
+    return (
+      <ErrorPage
+        message={tAutoI18n("you_do_not_have_access_to_this_session_b470e17")}
+      />
+    );
 
   if (session.error?.data?.code === "NOT_FOUND")
     return (
       <ErrorPage
-        title="Session not found"
-        message="The session is either still being processed or has been deleted."
+        title={tAuto("session_not_found_4c2e72c")}
+        message={tAutoI18n(
+          "the_session_is_either_still_being_processed_or_has_b_6f35ebb",
+        )}
         additionalButton={{
-          label: "Retry",
+          label: tAuto("retry_9f5cd8a"),
           onClick: () => window.location.reload(),
         }}
       />
@@ -530,7 +545,7 @@ export const SessionPage: React.FC<{
                 variant="outline"
                 size="icon"
                 onClick={onDownloadSessionAsJson}
-                title="Download session as JSON"
+                title={tAuto("download_session_as_json_3668292")}
               >
                 <Download className="h-4 w-4" />
               </Button>
@@ -582,7 +597,7 @@ export const SessionPage: React.FC<{
                   />
                 </div>
                 <span className="text-muted-foreground text-xs">
-                  Show corrections
+                  {tAuto("show_corrections_7c0eab4")}{" "}
                 </span>
               </div>
             </>
@@ -602,7 +617,7 @@ export const SessionPage: React.FC<{
                 projectId={projectId}
                 sessionId={sessionId}
                 isPublic={session.data?.public ?? false}
-                label="Share"
+                label={tAuto("share_09ca55c")}
               />
               <CopySessionIdButton sessionId={sessionId} layout="menu" />
               <CommentDrawerButton
@@ -648,10 +663,14 @@ export const SessionPage: React.FC<{
                 className="w-full justify-start gap-2 font-normal"
               >
                 <Download className="h-4 w-4" />
-                <span className="text-sm">Download JSON</span>
+                <span className="text-sm">
+                  {tAuto("download_json_d296a30")}
+                </span>
               </Button>
               <label className="hover:bg-accent flex w-full items-center justify-between gap-4 rounded-md px-2 py-1.5">
-                <span className="text-sm">Show corrections</span>
+                <span className="text-sm">
+                  {tAuto("show_corrections_7c0eab4")}
+                </span>
                 <Switch
                   checked={showCorrections}
                   onCheckedChange={setShowCorrectionsForSession}
@@ -668,15 +687,18 @@ export const SessionPage: React.FC<{
             desktopClassName="bg-background sticky top-0 z-40 flex flex-wrap gap-2 border-b p-4"
             summary={
               <>
-                <span className="text-sm font-bold">Session controls</span>
+                <span className="text-sm font-bold">
+                  {tAuto("session_controls_85fcb88")}
+                </span>
                 <span
                   className="text-muted-foreground min-w-0 truncate text-xs"
-                  title={`${session.data?.traces.length ?? 0} traces · ${usdFormatter(
-                    session.data?.totalCost ?? 0,
-                    2,
-                  )}`}
+                  title={tAuto("value0_traces_value1_9c9b3d3", {
+                    value0: session.data?.traces.length ?? 0,
+                    value1: usdFormatter(session.data?.totalCost ?? 0, 2),
+                  })}
                 >
-                  {session.data?.traces.length ?? 0} traces ·{" "}
+                  {session.data?.traces.length ?? 0}{" "}
+                  {tAutoI18n("traces_9e85cd5")}{" "}
                   {usdFormatter(session.data?.totalCost ?? 0, 2)}
                 </span>
               </>
@@ -686,11 +708,12 @@ export const SessionPage: React.FC<{
               <SessionUsers projectId={projectId} users={session.data.users} />
             ) : null}
             <Badge variant="outline">
-              Total traces: {session.data?.traces.length}
+              {tAutoI18n("total_traces_d0fba9f")} {session.data?.traces.length}
             </Badge>
             {session.data && (
               <Badge variant="outline">
-                Total cost: {usdFormatter(session.data.totalCost, 2)}
+                {tAutoI18n("total_cost_a87e839")}{" "}
+                {usdFormatter(session.data.totalCost, 2)}
               </Badge>
             )}
             <SessionScores scores={session.data?.scores ?? []} />
@@ -748,6 +771,7 @@ export const SessionEventsPage: React.FC<{
   sessionId: string;
   projectId: string;
 }> = ({ sessionId, projectId }) => {
+  const tAuto = useAutoTranslations();
   const session = api.sessions.byIdWithScoresFromEvents.useQuery(
     {
       sessionId,
@@ -782,15 +806,21 @@ export const SessionEventsPage: React.FC<{
   );
 
   if (session.error?.data?.code === "UNAUTHORIZED")
-    return <ErrorPage message="You do not have access to this session." />;
+    return (
+      <ErrorPage
+        message={tAuto("you_do_not_have_access_to_this_session_b470e17")}
+      />
+    );
 
   if (session.error?.data?.code === "NOT_FOUND")
     return (
       <ErrorPage
-        title="Session not found"
-        message="The session is either still being processed or has been deleted."
+        title={tAuto("session_not_found_4c2e72c")}
+        message={tAuto(
+          "the_session_is_either_still_being_processed_or_has_b_6f35ebb",
+        )}
         additionalButton={{
-          label: "Retry",
+          label: tAuto("retry_9f5cd8a"),
           onClick: () => window.location.reload(),
         }}
       />
@@ -835,6 +865,8 @@ const LoadedSessionEventsPage: React.FC<{
   traces: EventSessionTrace[] | undefined;
   isTracesSuccess: boolean;
 }> = ({ sessionId, projectId, session, traces, isTracesSuccess }) => {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const { setDetailPageList, detailPagelists } = useDetailPageLists();
   const userSession = useSession();
@@ -903,17 +935,17 @@ const LoadedSessionEventsPage: React.FC<{
 
   const displayOptions = [
     {
-      label: "corrections",
+      label: tAuto("corrections_b8effb5"),
       checked: showCorrections,
       onCheckedChange: setShowCorrectionsForSession,
     },
     {
-      label: "tool calls",
+      label: tAuto("tool_calls_cc8b5f4"),
       checked: showInlineToolCalls,
       onCheckedChange: setInlineToolCallsForSession,
     },
     {
-      label: "system prompt",
+      label: tAuto("system_prompt_6995600"),
       checked: showSystemPrompt,
       onCheckedChange: setShowSystemPromptForSession,
     },
@@ -1400,7 +1432,9 @@ const LoadedSessionEventsPage: React.FC<{
               {isModernSessionEnabled ? (
                 <>
                   <div className="hidden items-center gap-3 pr-2 min-[1900px]:flex">
-                    <span className="text-muted-foreground text-xs">Show:</span>
+                    <span className="text-muted-foreground text-xs">
+                      {tAuto("show_18163d4")}
+                    </span>
                     {displayOptions.map(
                       ({ label, checked, onCheckedChange }) => (
                         <label
@@ -1420,7 +1454,9 @@ const LoadedSessionEventsPage: React.FC<{
                     )}
                   </div>
                   <div className="flex items-center gap-1.5 pr-2 min-[1900px]:hidden">
-                    <span className="text-muted-foreground text-xs">Show:</span>
+                    <span className="text-muted-foreground text-xs">
+                      {tAuto("show_18163d4")}
+                    </span>
                     <Popover>
                       <PopoverTrigger asChild>
                         <Button
@@ -1428,7 +1464,7 @@ const LoadedSessionEventsPage: React.FC<{
                           size="sm"
                           className="h-8 gap-1 px-2"
                         >
-                          Options
+                          {tAuto("options_6bf5da9")}{" "}
                           <ChevronDown className="h-3.5 w-3.5" />
                         </Button>
                       </PopoverTrigger>
@@ -1504,7 +1540,7 @@ const LoadedSessionEventsPage: React.FC<{
                     size="sm"
                   />
                   <span className="text-muted-foreground text-xs">
-                    Show corrections
+                    {tAuto("show_corrections_7c0eab4")}{" "}
                   </span>
                 </label>
               ) : null}
@@ -1525,7 +1561,7 @@ const LoadedSessionEventsPage: React.FC<{
                 projectId={projectId}
                 sessionId={sessionId}
                 isPublic={session.public}
-                label="Share"
+                label={tAuto("share_09ca55c")}
               />
               <CopySessionIdButton sessionId={sessionId} layout="menu" />
               <CommentDrawerButton
@@ -1580,7 +1616,9 @@ const LoadedSessionEventsPage: React.FC<{
                 ))
               ) : (
                 <label className="hover:bg-accent flex w-full items-center justify-between gap-4 rounded-md px-2 py-1.5">
-                  <span className="text-sm">Show corrections</span>
+                  <span className="text-sm">
+                    {tAuto("show_corrections_7c0eab4")}
+                  </span>
                   <Switch
                     checked={showCorrections}
                     onCheckedChange={setShowCorrectionsForSession}
@@ -1604,15 +1642,17 @@ const LoadedSessionEventsPage: React.FC<{
             desktopClassName="bg-background sticky top-0 z-40 flex flex-wrap items-center gap-2 border-b p-4"
             summary={
               <>
-                <span className="text-sm font-bold">Session controls</span>
+                <span className="text-sm font-bold">
+                  {tAuto("session_controls_85fcb88")}
+                </span>
                 <span
                   className="text-muted-foreground min-w-0 truncate text-xs"
-                  title={`${session.countTraces} traces · ${usdFormatter(
-                    session.totalCost ?? 0,
-                    2,
-                  )}`}
+                  title={tAuto("value0_traces_value1_9c9b3d3", {
+                    value0: session.countTraces,
+                    value1: usdFormatter(session.totalCost ?? 0, 2),
+                  })}
                 >
-                  {session.countTraces} traces ·{" "}
+                  {session.countTraces} {tAutoI18n("traces_9e85cd5")}{" "}
                   {usdFormatter(session.totalCost ?? 0, 2)}
                 </span>
               </>
@@ -1629,13 +1669,13 @@ const LoadedSessionEventsPage: React.FC<{
                       isLlmCallPresetActive ? "bg-primary/5" : undefined
                     }
                   >
-                    LLM Calls per Trace
+                    {tAuto("llm_calls_per_trace_307c1d1")}{" "}
                     <ChevronDown className="ml-1 h-4 w-4" aria-hidden />
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent align="start" className="w-72 p-1">
                   <div className="text-muted-foreground px-2 py-1.5 text-xs font-bold">
-                    LLM Calls per Trace
+                    {tAuto("llm_calls_per_trace_307c1d1")}{" "}
                   </div>
                   {SESSION_DETAIL_LLM_CALL_PRESETS.map((preset) => {
                     const isActive = matchedView?.id === preset.id;
@@ -1695,7 +1735,7 @@ const LoadedSessionEventsPage: React.FC<{
               filterState={visibleFilterState}
               onChange={queryFilter.setFilterState}
               columnsWithCustomSelect={filterColumnsWithCustomSelect}
-              label="Filter observations"
+              label={tAuto("filter_observations_c0816fb")}
               // Analytics (LFE-10781): session-detail observation refinement is a
               // v3/legacy surface (the v4 events table filters via the grammar bar).
               tableName="session-detail"
@@ -1710,10 +1750,11 @@ const LoadedSessionEventsPage: React.FC<{
             {!isModernSessionEnabled ? (
               <>
                 <Badge variant="outline">
-                  Total traces: {session.countTraces}
+                  {tAutoI18n("total_traces_d0fba9f")} {session.countTraces}
                 </Badge>
                 <Badge variant="outline">
-                  Total cost: {usdFormatter(session.totalCost ?? 0, 2)}
+                  {tAutoI18n("total_cost_a87e839")}{" "}
+                  {usdFormatter(session.totalCost ?? 0, 2)}
                 </Badge>
               </>
             ) : null}
@@ -1807,6 +1848,7 @@ export const SessionIO = ({
   environment?: string | null;
   showCorrections: boolean;
 }) => {
+  const tAuto = useAutoTranslations();
   const trace = api.traces.byId.useQuery(
     { traceId, projectId, timestamp },
     {
@@ -1853,7 +1895,7 @@ export const SessionIO = ({
         />
       ) : (
         <div className="text-muted-foreground p-2 text-xs">
-          This trace has no input or output.
+          {tAuto("this_trace_has_no_input_or_output_00bd770")}{" "}
         </div>
       )}
     </div>

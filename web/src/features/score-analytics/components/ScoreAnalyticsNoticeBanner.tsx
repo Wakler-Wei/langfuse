@@ -2,8 +2,10 @@ import { Clock, Info } from "lucide-react";
 import { useScoreAnalytics } from "./ScoreAnalyticsProvider";
 import { useState, useEffect } from "react";
 import { SamplingDetailsHoverCard } from "./SamplingDetailsHoverCard";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export function ScoreAnalyticsNoticeBanner() {
+  const tAuto = useAutoTranslations();
   const { isEstimating, estimate, isLoading, data } = useScoreAnalytics();
   const [showLoadingBanner, setShowLoadingBanner] = useState(false);
 
@@ -43,17 +45,37 @@ export function ScoreAnalyticsNoticeBanner() {
           <div className="flex-1 space-y-1">
             <div className="text-sm font-bold">
               {showLargeDataset
-                ? "Processing large dataset..."
-                : "Loading analytics..."}
+                ? tAuto("processing_large_dataset_76ffb7a")
+                : tAuto("loading_analytics_27228cb")}
             </div>
             {estimate && (
               <div className="text-muted-foreground text-sm">
                 {estimate.mode === "single"
-                  ? `Analyzing ~${estimate.score1Count.toLocaleString()} scores`
-                  : `Analyzing ~${estimate.score1Count.toLocaleString()} (Score 1) and ~${estimate.score2Count.toLocaleString()} (Score 2) scores`}
+                  ? tAuto("analyzing_value0_scores_ef6f98c", {
+                      value0: String(
+                        (estimate.score1Count.toLocaleString() as unknown) ??
+                          "",
+                      ),
+                    })
+                  : tAuto(
+                      "analyzing_value0_score_1_and_value1_score_2_scores_3d7170e",
+                      {
+                        value0: String(
+                          (estimate.score1Count.toLocaleString() as unknown) ??
+                            "",
+                        ),
+                        value1: String(
+                          (estimate.score2Count.toLocaleString() as unknown) ??
+                            "",
+                        ),
+                      },
+                    )}
                 {estimate.willSample && " • Sampling will be applied"}
                 {estimate.estimatedQueryTime && (
-                  <> • Est. time: {estimate.estimatedQueryTime}</>
+                  <>
+                    {" "}
+                    {tAuto("est_time_cd6b095")} {estimate.estimatedQueryTime}
+                  </>
                 )}
               </div>
             )}
@@ -71,7 +93,7 @@ export function ScoreAnalyticsNoticeBanner() {
           <Info className="text-muted-foreground mt-0.5 h-4 w-4 shrink-0" />
           <div className="flex-1 space-y-1">
             <div className="flex items-center gap-2 text-sm font-bold">
-              Sampled Data
+              {tAuto("sampled_data_a274c06")}{" "}
               <SamplingDetailsHoverCard
                 samplingMetadata={data.samplingMetadata}
                 mode={data.metadata.mode}
@@ -79,8 +101,38 @@ export function ScoreAnalyticsNoticeBanner() {
             </div>
             <div className="text-muted-foreground text-sm">
               {data.metadata.mode === "single"
-                ? `Results based on a ${(data.samplingMetadata.samplingRate * 100).toFixed(2)}% sample of ~${data.samplingMetadata.preflightEstimates?.score1Count.toLocaleString()} scores.`
-                : `Results based on a ${(data.samplingMetadata.samplingRate * 100).toFixed(2)}% sample of ~${data.samplingMetadata.preflightEstimates?.score1Count.toLocaleString()} Score 1 and ~${data.samplingMetadata.preflightEstimates?.score2Count.toLocaleString()} Score 2 data.`}
+                ? tAuto(
+                    "results_based_on_a_value0_sample_of_value1_scores_9eaf4b5",
+                    {
+                      value0: String(
+                        ((data.samplingMetadata.samplingRate * 100).toFixed(
+                          2,
+                        ) as unknown) ?? "",
+                      ),
+                      value1: String(
+                        (data.samplingMetadata.preflightEstimates?.score1Count.toLocaleString() as unknown) ??
+                          "",
+                      ),
+                    },
+                  )
+                : tAuto(
+                    "results_based_on_a_value0_sample_of_value1_score_1_a_5114ede",
+                    {
+                      value0: String(
+                        ((data.samplingMetadata.samplingRate * 100).toFixed(
+                          2,
+                        ) as unknown) ?? "",
+                      ),
+                      value1: String(
+                        (data.samplingMetadata.preflightEstimates?.score1Count.toLocaleString() as unknown) ??
+                          "",
+                      ),
+                      value2: String(
+                        (data.samplingMetadata.preflightEstimates?.score2Count.toLocaleString() as unknown) ??
+                          "",
+                      ),
+                    },
+                  )}
             </div>
           </div>
         </div>

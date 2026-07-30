@@ -4,11 +4,12 @@ import { Card } from "@/src/components/ui/card";
 import { CodeBlock } from "@/src/components/design-system/Codeblock/Codeblock";
 import Link from "next/link";
 import { Bot, SquareTerminal, Sparkles } from "lucide-react";
+import { I18nText, useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const DocsButton = ({ href }: { href: string }) => (
   <Button asChild variant="ghost">
     <Link href={href} target="_blank">
-      Documentation ↗
+      <I18nText id="documentation_81ff2fc" />{" "}
     </Link>
   </Button>
 );
@@ -16,25 +17,26 @@ const DocsButton = ({ href }: { href: string }) => (
 const ManageApiKeysButton = ({ projectId }: { projectId: string }) => (
   <Button asChild variant="secondary">
     <Link href={`/project/${projectId}/settings/api-keys`}>
-      Manage API keys
+      <I18nText id="manage_api_keys_85a7ad2" />{" "}
     </Link>
   </Button>
 );
 
 export function DeveloperToolsSettings({ projectId }: { projectId: string }) {
+  const tAuto = useAutoTranslations();
   return (
     <div>
-      <Header title="MCP & CLI" />
+      <Header title={tAuto("mcp_cli_38b1ba7")} />
       <p className="text-muted-foreground mb-6 text-sm">
-        Bring Langfuse into your terminal and AI coding agents. These tools let
-        you and your agents read and write Langfuse data—traces, prompts,
-        datasets, scores, and more—without leaving your development environment.
+        {tAuto(
+          "bring_langfuse_into_your_terminal_and_ai_coding_agen_1ce9cec",
+        )}{" "}
       </p>
       <div className="space-y-6">
         <Card className="p-4">
           <div className="mb-3 flex items-center gap-2">
             <Sparkles className="text-foreground h-5 w-5" />
-            <span className="font-bold">Agent Skill</span>
+            <span className="font-bold">{tAuto("agent_skill_0fa4cfe")}</span>
           </div>
           <p className="text-primary mb-4 text-sm">
             The Langfuse Agent Skill is an open-source skill following
@@ -55,14 +57,12 @@ export function DeveloperToolsSettings({ projectId }: { projectId: string }) {
         <Card className="p-4">
           <div className="mb-3 flex items-center gap-2">
             <Bot className="text-foreground h-5 w-5" />
-            <span className="font-bold">MCP Server</span>
+            <span className="font-bold">{tAuto("mcp_server_231652e")}</span>
           </div>
           <p className="text-primary mb-4 text-sm">
-            The Langfuse MCP server lets AI assistants and agents interact with
-            your Langfuse data programmatically via the Model Context Protocol.
-            It supports both read and write operations, and you can restrict it
-            to read-only access with an allowlist. Authenticate with a
-            project-scoped API key pair.
+            {tAuto(
+              "the_langfuse_mcp_server_lets_ai_assistants_and_agent_2acaf56",
+            )}{" "}
           </p>
           <CodeBlock
             language="shell"
@@ -82,10 +82,9 @@ export function DeveloperToolsSettings({ projectId }: { projectId: string }) {
             <span className="font-bold">CLI</span>
           </div>
           <p className="text-primary mb-4 text-sm">
-            The Langfuse CLI provides terminal access to the full Langfuse API.
-            It wraps every API endpoint, so you can manage traces, prompts,
-            datasets, scores, and sessions directly from your shell or scripts.
-            It uses the same API key pair as the Langfuse SDKs.
+            {tAuto(
+              "the_langfuse_cli_provides_terminal_access_to_the_ful_e094077",
+            )}{" "}
           </p>
           <CodeBlock
             language="shell"

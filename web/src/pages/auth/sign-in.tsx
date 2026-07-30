@@ -47,6 +47,7 @@ import { cn } from "@/src/utils/tailwind";
 import { useLangfuseCloudRegion } from "@/src/features/organizations/hooks";
 import { getSafeRedirectPath } from "@/src/utils/redirect";
 import { useTranslations } from "next-intl";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 // Also used in src/pages/auth/sign-up.tsx
 export type PageProps = {
@@ -193,6 +194,7 @@ export function SSOButtons({
   lastUsedMethod?: NextAuthProvider | null;
   onProviderSelect?: (provider: NextAuthProvider) => void;
 }) {
+  const tAuto = useAutoTranslations();
   const capture = usePostHogClientCapture();
   const t = useTranslations("Auth");
   const [providerSigningIn, setProviderSigningIn] =
@@ -243,7 +245,7 @@ export function SSOButtons({
           {authProviders.google && (
             <AuthProviderButton
               icon={<SiGoogle className="mr-3" size={18} />}
-              label="Google"
+              label={tAuto("google_2b681c0")}
               onClick={() => handleSignIn("google")}
               loading={providerSigningIn === "google"}
               showLastUsedBadge={
@@ -265,7 +267,7 @@ export function SSOButtons({
           {authProviders.githubEnterprise && (
             <AuthProviderButton
               icon={<SiGithub className="mr-3" size={18} />}
-              label="GitHub Enterprise"
+              label={tAuto("github_enterprise_337bb8d")}
               onClick={() => handleSignIn("github-enterprise")}
               loading={providerSigningIn === "github-enterprise"}
               showLastUsedBadge={
@@ -276,7 +278,7 @@ export function SSOButtons({
           {authProviders.gitlab && (
             <AuthProviderButton
               icon={<SiGitlab className="mr-3" size={18} />}
-              label="Gitlab"
+              label={tAuto("gitlab_f079a83")}
               onClick={() => handleSignIn("gitlab")}
               loading={providerSigningIn === "gitlab"}
               showLastUsedBadge={
@@ -287,7 +289,7 @@ export function SSOButtons({
           {authProviders.azureAd && (
             <AuthProviderButton
               icon={<TbBrandAzure className="mr-3" size={18} />}
-              label="Azure AD"
+              label={tAuto("azure_ad_8944a54")}
               onClick={() => handleSignIn("azure-ad")}
               loading={providerSigningIn === "azure-ad"}
               showLastUsedBadge={
@@ -298,7 +300,7 @@ export function SSOButtons({
           {authProviders.okta && (
             <AuthProviderButton
               icon={<SiOkta className="mr-3" size={18} />}
-              label="Okta"
+              label={tAuto("okta_f27eda0")}
               onClick={() => handleSignIn("okta")}
               loading={providerSigningIn === "okta"}
               showLastUsedBadge={
@@ -309,7 +311,7 @@ export function SSOButtons({
           {authProviders.authentik && (
             <AuthProviderButton
               icon={<SiAuthentik className="mr-3" size={18} />}
-              label="Authentik"
+              label={tAuto("authentik_e1ab894")}
               onClick={() => handleSignIn("authentik")}
               loading={providerSigningIn === "authentik"}
               showLastUsedBadge={
@@ -320,7 +322,7 @@ export function SSOButtons({
           {authProviders.onelogin && (
             <AuthProviderButton
               icon={<Key className="mr-3" size={18} />}
-              label="OneLogin"
+              label={tAuto("onelogin_95eb4c2")}
               onClick={() => handleSignIn("onelogin")}
               loading={providerSigningIn === "onelogin"}
               showLastUsedBadge={
@@ -331,7 +333,7 @@ export function SSOButtons({
           {authProviders.auth0 && (
             <AuthProviderButton
               icon={<SiAuth0 className="mr-3" size={18} />}
-              label="Auth0"
+              label={tAuto("auth0_7b9b186")}
               onClick={() => handleSignIn("auth0")}
               loading={providerSigningIn === "auth0"}
               showLastUsedBadge={
@@ -342,7 +344,7 @@ export function SSOButtons({
           {authProviders.clickhouseCloud && (
             <AuthProviderButton
               icon={<SiClickhouse className="mr-3" size={18} />}
-              label="ClickHouse Cloud"
+              label={tAuto("clickhouse_cloud_02acf3f")}
               onClick={() => handleSignIn("clickhouse-cloud")}
               loading={providerSigningIn === "clickhouse-cloud"}
               showLastUsedBadge={
@@ -353,7 +355,7 @@ export function SSOButtons({
           {authProviders.cognito && (
             <AuthProviderButton
               icon={<SiAmazoncognito className="mr-3" size={18} />}
-              label="Cognito"
+              label={tAuto("cognito_99215dd")}
               onClick={() => handleSignIn("cognito")}
               loading={providerSigningIn === "cognito"}
               showLastUsedBadge={
@@ -367,7 +369,7 @@ export function SSOButtons({
               label={
                 typeof authProviders.keycloak === "object"
                   ? authProviders.keycloak.name
-                  : "Keycloak"
+                  : tAuto("keycloak_10f3d52")
               }
               onClick={() => {
                 capture("sign_in:button_click", { provider: "keycloak" });
@@ -384,7 +386,7 @@ export function SSOButtons({
             "connectionId" in authProviders.workos && (
               <AuthProviderButton
                 icon={<Code className="mr-3" size={18} />}
-                label="WorkOS"
+                label={tAuto("workos_bdce452")}
                 onClick={() => {
                   capture("sign_in:button_click", { provider: "workos" });
                   onProviderSelect?.("workos");
@@ -404,7 +406,7 @@ export function SSOButtons({
             "organizationId" in authProviders.workos && (
               <AuthProviderButton
                 icon={<Code className="mr-3" size={18} />}
-                label="WorkOS"
+                label={tAuto("workos_bdce452")}
                 onClick={() => {
                   capture("sign_in:button_click", { provider: "workos" });
                   onProviderSelect?.("workos");
@@ -424,7 +426,7 @@ export function SSOButtons({
             <>
               <AuthProviderButton
                 icon={<Code className="mr-3" size={18} />}
-                label="WorkOS (organization)"
+                label={tAuto("workos_organization_5d3722c")}
                 onClick={() => {
                   const organization = window.prompt(
                     t("workosOrganizationPrompt"),
@@ -444,7 +446,7 @@ export function SSOButtons({
               />
               <AuthProviderButton
                 icon={<Code className="mr-3" size={18} />}
-                label="WorkOS (connection)"
+                label={tAuto("workos_connection_c8b0106")}
                 onClick={() => {
                   const connection = window.prompt(t("workosConnectionPrompt"));
                   if (connection) {
@@ -465,7 +467,7 @@ export function SSOButtons({
           {authProviders.wordpress && (
             <AuthProviderButton
               icon={<SiWordpress className="mr-3" size={18} />}
-              label="WordPress"
+              label={tAuto("wordpress_577ac1a")}
               onClick={() => handleSignIn("wordpress")}
               loading={providerSigningIn === "wordpress"}
               showLastUsedBadge={

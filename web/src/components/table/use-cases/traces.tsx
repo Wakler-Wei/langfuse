@@ -103,6 +103,7 @@ import { usePeekTableState } from "@/src/components/table/peek/contexts/PeekTabl
 import { useScoreColumns } from "@/src/features/scores/hooks/useScoreColumns";
 import { scoreFilters } from "@/src/features/scores/lib/scoreColumns";
 import TagList from "@/src/features/tag/components/TagList";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export type TracesTableRow = {
   // Shown by default
@@ -173,6 +174,7 @@ export default function TracesTable({
   limitRows,
   showControlsInPageHeader = false,
 }: TracesTableProps) {
+  const tAuto = useAutoTranslations();
   const peekContext = usePeekTableState();
   const tracesFilterConfig = useMemo(
     () => getTraceFilterConfig(omittedFilter),
@@ -524,9 +526,10 @@ export default function TracesTable({
   const traceDeleteMutation = api.traces.deleteMany.useMutation({
     onSuccess: () => {
       showSuccessToast({
-        title: "Traces deleted",
-        description:
-          "Selected traces will be deleted. Traces are removed asynchronously and may continue to be visible for up to 15 minutes.",
+        title: tAuto("traces_deleted_2dd7bf7"),
+        description: tAuto(
+          "selected_traces_will_be_deleted_traces_are_removed_a_d83122f",
+        ),
       });
     },
     onSettled: () => {
@@ -537,8 +540,11 @@ export default function TracesTable({
   const addToQueueMutation = api.annotationQueueItems.createMany.useMutation({
     onSuccess: (data) => {
       showSuccessToast({
-        title: "Traces added to queue",
-        description: `Selected traces will be added to queue "${data.queueName}". This may take a minute.`,
+        title: tAuto("traces_added_to_queue_a5f3b57"),
+        description: tAuto(
+          "selected_traces_will_be_added_to_queue_value0_this_m_10c5c02",
+          { value0: data.queueName ?? "" },
+        ),
         link: {
           href: `/project/${projectId}/annotation-queues/${data.queueId}`,
           text: `View queue "${data.queueName}"`,
@@ -591,13 +597,11 @@ export default function TracesTable({
     setSelectedRows({});
   };
 
-  const displayCount = totalCountQuery.isPending ? (
-    <span className="inline-block font-mono">...</span>
-  ) : selectAll ? (
-    compactNumberFormatter(totalCountQuery.data?.totalCount)
-  ) : (
-    compactNumberFormatter(Object.keys(selectedRows).length)
-  );
+  const displayCount = totalCountQuery.isPending
+    ? "..."
+    : selectAll
+      ? compactNumberFormatter(totalCountQuery.data?.totalCount)
+      : compactNumberFormatter(Object.keys(selectedRows).length);
 
   // Select-all deletes persist the raw filterState into the batch action, but
   // comment filters resolve via Postgres at read time and the server rejects
@@ -614,8 +618,11 @@ export default function TracesTable({
           {
             id: ActionId.TraceDelete,
             type: BatchActionType.Delete,
-            label: "Delete Traces",
-            description: `This action permanently deletes ${displayCount} traces and cannot be undone. Trace deletion happens asynchronously and may take up to 24 hours.`,
+            label: tAuto("delete_traces_c571b83"),
+            description: tAuto(
+              "this_action_permanently_deletes_value0_traces_and_ca_2e2c289",
+              { value0: displayCount },
+            ),
             disabled: selectAll && hasCommentFilter,
             disabledReason:
               "Batch deletion does not support comment filters. Remove the comment filter to delete.",
@@ -630,8 +637,8 @@ export default function TracesTable({
     {
       id: ActionId.TraceAddToAnnotationQueue,
       type: BatchActionType.Create,
-      label: "Add to Annotation Queue",
-      description: "Add selected traces to an annotation queue.",
+      label: tAuto("add_to_annotation_queue_adf3e2c"),
+      description: tAuto("add_selected_traces_to_an_annotation_queue_9abaada"),
       targetLabel: "Annotation Queue",
       execute: handleAddToAnnotationQueue,
       accessCheck: {
@@ -674,7 +681,7 @@ export default function TracesTable({
         ] satisfies LangfuseColumnDef<TracesTableRow>[])),
     {
       accessorKey: "timestamp",
-      header: "Timestamp",
+      header: tAuto("timestamp_19eabc9"),
       id: "timestamp",
       size: 150,
       enableHiding: true,
@@ -686,7 +693,7 @@ export default function TracesTable({
     },
     {
       accessorKey: "name",
-      header: "Name",
+      header: tAuto("name_709a232"),
       id: "name",
       size: 150,
       enableHiding: true,
@@ -698,7 +705,7 @@ export default function TracesTable({
     },
     {
       accessorKey: "input",
-      header: "Input",
+      header: tAuto("input_b568d47"),
       id: "input",
       size: 400,
       loadingCell: () => (
@@ -727,7 +734,7 @@ export default function TracesTable({
     },
     {
       accessorKey: "output",
-      header: "Output",
+      header: tAuto("output_4bed336"),
       id: "output",
       size: 400,
       loadingCell: () => (
@@ -757,7 +764,7 @@ export default function TracesTable({
     {
       accessorKey: "levelCounts",
       id: "levelCounts",
-      header: "Observation Levels",
+      header: tAuto("observation_levels_a55bee4"),
       size: 150,
       loadingCell: <TableTextLoadingCell />,
       cell: ({ row }) => {
@@ -780,7 +787,7 @@ export default function TracesTable({
     {
       accessorKey: "latency",
       id: "latency",
-      header: "Latency",
+      header: tAuto("latency_3e39972"),
       size: 100,
       // add seconds to the end of the latency
       loadingCell: <TableTextLoadingCell />,
@@ -797,7 +804,7 @@ export default function TracesTable({
 
     {
       accessorKey: "tokens",
-      header: "Tokens",
+      header: tAuto("tokens_c38c6c1"),
       id: "tokens",
       size: 180,
       loadingCell: <TableTextLoadingCell />,
@@ -828,7 +835,7 @@ export default function TracesTable({
     {
       accessorKey: "totalCost",
       id: "totalCost",
-      header: "Total Cost",
+      header: tAuto("total_cost_b5d8da4"),
       size: 130,
       loadingCell: <TableTextLoadingCell />,
       cell: ({ row }) => {
@@ -852,7 +859,7 @@ export default function TracesTable({
     },
     {
       accessorKey: "environment",
-      header: "Environment",
+      header: tAuto("environment_d443a11"),
       id: "environment",
       size: 150,
       enableHiding: true,
@@ -874,12 +881,14 @@ export default function TracesTable({
     {
       accessorKey: "tags",
       id: "tags",
-      header: "Tags",
+      header: tAuto("tags_848eed0"),
       size: 150,
       headerTooltip: {
         description: (
           <>
-            Group traces with tags. Read more about implementing tags{" "}
+            {tAuto(
+              "group_traces_with_tags_read_more_about_implementing__26470a6",
+            )}{" "}
             <a
               href="https://langfuse.com/docs/observability/features/tags"
               target="_blank"
@@ -887,7 +896,7 @@ export default function TracesTable({
               className="decoration-primary/30 hover:decoration-primary underline"
               onClick={(e) => e.stopPropagation()}
             >
-              here
+              {tAuto("here_0154c0d")}{" "}
             </a>
             .
           </>
@@ -915,7 +924,7 @@ export default function TracesTable({
     },
     {
       accessorKey: "metadata",
-      header: "Metadata",
+      header: tAuto("metadata_251edc0"),
       size: 400,
       loadingCell: () => (
         <MemoizedIOTableCell
@@ -927,8 +936,9 @@ export default function TracesTable({
       headerTooltip: {
         description: (
           <>
-            Add metadata to traces to track additional information. Read more
-            about adding metadata{" "}
+            {tAuto(
+              "add_metadata_to_traces_to_track_additional_informati_efe1493",
+            )}{" "}
             <a
               href="https://langfuse.com/docs/observability/features/metadata"
               target="_blank"
@@ -936,7 +946,7 @@ export default function TracesTable({
               className="decoration-primary/30 hover:decoration-primary underline"
               onClick={(e) => e.stopPropagation()}
             >
-              here
+              {tAuto("here_0154c0d")}{" "}
             </a>
             .
           </>
@@ -964,7 +974,7 @@ export default function TracesTable({
       : [
           {
             accessorKey: "scores",
-            header: "Scores",
+            header: tAuto("scores_126cb93"),
             id: "scores",
             enableHiding: true,
             defaultHidden: true,
@@ -978,13 +988,14 @@ export default function TracesTable({
       accessorKey: "sessionId",
       enableColumnFilter: !omittedFilter.includes("sessionId"),
       id: "sessionId",
-      header: "Session",
+      header: tAuto("session_f7f1997"),
       size: 150,
       headerTooltip: {
         description: (
           <>
-            Group traces into sessions to track longer conversations/workflows.
-            Read more about sessions{" "}
+            {tAuto(
+              "group_traces_into_sessions_to_track_longer_conversat_e6b65b1",
+            )}{" "}
             <a
               href="https://langfuse.com/docs/observability/features/sessions"
               target="_blank"
@@ -992,7 +1003,7 @@ export default function TracesTable({
               className="decoration-primary/30 hover:decoration-primary underline"
               onClick={(e) => e.stopPropagation()}
             >
-              here
+              {tAuto("here_0154c0d")}{" "}
             </a>
             .
           </>
@@ -1011,14 +1022,16 @@ export default function TracesTable({
     },
     {
       accessorKey: "userId",
-      header: "User",
+      header: tAuto("user_9f8a238"),
       id: "userId",
       size: 150,
       headerTooltip: {
         description: (
           <>
-            Add <code>userId</code> to traces to track users. Read more about
-            user tracking{" "}
+            {tAuto("add_61cc55a")} <code>userId</code>{" "}
+            {tAuto(
+              "to_traces_to_track_users_read_more_about_user_tracki_2cb78fa",
+            )}{" "}
             <a
               href="https://langfuse.com/docs/observability/features/users"
               target="_blank"
@@ -1026,7 +1039,7 @@ export default function TracesTable({
               className="decoration-primary/30 hover:decoration-primary underline"
               onClick={(e) => e.stopPropagation()}
             >
-              here
+              {tAuto("here_0154c0d")}{" "}
             </a>
             .
           </>
@@ -1046,10 +1059,10 @@ export default function TracesTable({
     {
       accessorKey: "observationCount",
       id: "observationCount",
-      header: "Observations",
+      header: tAuto("observations_461ebaa"),
       size: 120,
       headerTooltip: {
-        description: "The number of observations in the trace.",
+        description: tAuto("the_number_of_observations_in_the_trace_3e603f9"),
       },
       enableHiding: true,
       defaultHidden: true,
@@ -1064,7 +1077,7 @@ export default function TracesTable({
     {
       accessorKey: "level",
       id: "level",
-      header: "Level",
+      header: tAuto("level_7c7f5d0"),
       size: 75,
       loadingCell: <TableTextLoadingCell />,
       cell: ({ row }) => {
@@ -1091,12 +1104,14 @@ export default function TracesTable({
     {
       accessorKey: "version",
       id: "version",
-      header: "Version",
+      header: tAuto("version_2da600b"),
       size: 100,
       headerTooltip: {
         description: (
           <>
-            Track changes via the version tag. Read more about versions{" "}
+            {tAuto(
+              "track_changes_via_the_version_tag_read_more_about_ve_fb125ff",
+            )}{" "}
             <a
               href="https://langfuse.com/docs/observability/features/releases-and-versioning"
               target="_blank"
@@ -1104,7 +1119,7 @@ export default function TracesTable({
               className="decoration-primary/30 hover:decoration-primary underline"
               onClick={(e) => e.stopPropagation()}
             >
-              here
+              {tAuto("here_0154c0d")}{" "}
             </a>
             .
           </>
@@ -1118,13 +1133,14 @@ export default function TracesTable({
     {
       accessorKey: "release",
       id: "release",
-      header: "Release",
+      header: tAuto("release_d41f56c"),
       size: 100,
       headerTooltip: {
         description: (
           <>
-            Track changes to your application via the release tag. Read more
-            about the release tag{" "}
+            {tAuto(
+              "track_changes_to_your_application_via_the_release_ta_f11c69b",
+            )}{" "}
             <a
               href="https://langfuse.com/docs/observability/features/releases-and-versioning"
               target="_blank"
@@ -1132,7 +1148,7 @@ export default function TracesTable({
               className="decoration-primary/30 hover:decoration-primary underline"
               onClick={(e) => e.stopPropagation()}
             >
-              here
+              {tAuto("here_0154c0d")}{" "}
             </a>
             .
           </>
@@ -1145,7 +1161,7 @@ export default function TracesTable({
     },
     {
       accessorKey: "id",
-      header: "Trace ID",
+      header: tAuto("trace_id_976f74b"),
       id: "id",
       size: 90,
       cell: ({ row }) => {
@@ -1161,7 +1177,7 @@ export default function TracesTable({
     },
     {
       accessorKey: "cost",
-      header: "Cost",
+      header: tAuto("cost_64ae43e"),
       id: "cost",
       enableHiding: true,
       defaultHidden: true,
@@ -1172,7 +1188,7 @@ export default function TracesTable({
         {
           accessorKey: "inputCost",
           id: "inputCost",
-          header: "Input Cost",
+          header: tAuto("input_cost_26bd4e9"),
           size: 100,
           loadingCell: <TableTextLoadingCell />,
           cell: ({ row }) => {
@@ -1195,7 +1211,7 @@ export default function TracesTable({
         {
           accessorKey: "outputCost",
           id: "outputCost",
-          header: "Output Cost",
+          header: tAuto("output_cost_5b10194"),
           size: 100,
           loadingCell: <TableTextLoadingCell />,
           cell: ({ row }) => {
@@ -1219,7 +1235,7 @@ export default function TracesTable({
     },
     {
       accessorKey: "usage",
-      header: "Usage",
+      header: tAuto("usage_0bb1864"),
       id: "usage",
       enableHiding: true,
       defaultHidden: true,
@@ -1230,7 +1246,7 @@ export default function TracesTable({
         {
           accessorKey: "inputTokens",
           id: "inputTokens",
-          header: "Input Tokens",
+          header: tAuto("input_tokens_8add24d"),
           size: 110,
           loadingCell: <TableTextLoadingCell />,
           cell: ({ row }) => {
@@ -1245,7 +1261,7 @@ export default function TracesTable({
         {
           accessorKey: "outputTokens",
           id: "outputTokens",
-          header: "Output Tokens",
+          header: tAuto("output_tokens_878afed"),
           size: 110,
           loadingCell: <TableTextLoadingCell />,
           cell: ({ row }) => {
@@ -1260,7 +1276,7 @@ export default function TracesTable({
         {
           accessorKey: "totalTokens",
           id: "totalTokens",
-          header: "Total Tokens",
+          header: tAuto("total_tokens_b662ff2"),
           size: 110,
           loadingCell: <TableTextLoadingCell />,
           cell: ({ row }) => {
@@ -1279,7 +1295,7 @@ export default function TracesTable({
       : ([
           {
             accessorKey: "action",
-            header: "Action",
+            header: tAuto("action_97c89a4"),
             size: 70,
             isFixedPosition: true,
             cell: ({ row }) => {

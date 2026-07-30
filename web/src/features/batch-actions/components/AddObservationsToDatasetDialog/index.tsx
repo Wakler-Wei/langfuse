@@ -23,6 +23,7 @@ import {
   useAddToDatasetWizard,
   type UseAddToDatasetWizardProps,
 } from "./useAddToDatasetWizard";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type AddObservationsToDatasetDialogProps = {
   projectId: string;
@@ -32,6 +33,8 @@ type AddObservationsToDatasetDialogProps = {
 export function AddObservationsToDatasetDialog(
   props: AddObservationsToDatasetDialogProps,
 ) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const { projectId, onClose } = props;
 
   const {
@@ -67,7 +70,8 @@ export function AddObservationsToDatasetDialog(
       <DialogContent className="flex max-h-[90vh] max-w-6xl flex-col">
         <DialogHeader>
           <DialogTitle>
-            Add {displayCount} Observation(s) to dataset
+            {tAutoI18n("add_61cc55a")} {displayCount}{" "}
+            {tAutoI18n("observation_s_to_dataset_a055b3c")}{" "}
             {!["select", "create", "choice"].includes(step)
               ? " " + state.dataset.name
               : ""}
@@ -168,7 +172,7 @@ export function AddObservationsToDatasetDialog(
               {showBackButton && (
                 <Button type="button" variant="ghost" onClick={goBack}>
                   <ChevronLeft className="mr-1 h-4 w-4" />
-                  Back
+                  {tAuto("back_b52b36b")}{" "}
                 </Button>
               )}
             </div>

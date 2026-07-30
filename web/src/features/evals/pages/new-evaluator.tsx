@@ -23,12 +23,15 @@ import { Alert, AlertDescription, AlertTitle } from "@/src/components/ui/alert";
 import { Button } from "@/src/components/ui/button";
 import { useState } from "react";
 import { Skeleton } from "@/src/components/ui/skeleton";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 // Multi-step setup process
 // 1. Select Evaluator: /project/:projectId/evals/new
 // 2. Set up LLM connection (only after selecting an evaluator that needs it): /project/:projectId/evals/new?evaluator=:evaluatorId
 // 3. Configure Evaluator: /project/:projectId/evals/new?evaluator=:evaluatorId
 export default function NewEvaluatorPage() {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const projectId = router.query.projectId as string;
   const evaluatorId = router.query.evaluator as string | undefined;
@@ -150,7 +153,7 @@ export default function NewEvaluatorPage() {
   const isProviderStepComplete = step === "run" && selectedTemplateIsLlm;
 
   if (!hasAccess) {
-    return <div>You do not have access to this page.</div>;
+    return <div>{tAuto("you_do_not_have_access_to_this_page_a5030ad")}</div>;
   }
 
   return (
@@ -158,7 +161,7 @@ export default function NewEvaluatorPage() {
       withPadding
       scrollable
       headerProps={{
-        title: "Set up evaluator",
+        title: tAuto("set_up_evaluator_12086ef"),
         breadcrumb: [
           {
             name: "Running Evaluators",
@@ -180,7 +183,7 @@ export default function NewEvaluatorPage() {
                   : "text-foreground font-bold",
               )}
             >
-              1. Select Evaluator
+              {tAutoI18n("1_select_evaluator_ef567b1")}{" "}
               {step !== "select" && (
                 <Check className="ml-1 inline-block h-3 w-3" />
               )}
@@ -195,7 +198,7 @@ export default function NewEvaluatorPage() {
                   : "text-muted-foreground",
               )}
             >
-              2. Set up LLM connection
+              {tAutoI18n("2_set_up_llm_connection_8df9fcf")}{" "}
               {isProviderStepComplete && (
                 <Check className="ml-1 inline-block h-3 w-3" />
               )}
@@ -211,7 +214,7 @@ export default function NewEvaluatorPage() {
               )}
             >
               <div className="flex flex-row">
-                3. Run Evaluator
+                {tAutoI18n("3_run_evaluator_53b47a6")}{" "}
                 {currentTemplate && (
                   <div className="flex flex-row gap-2">
                     <span>
@@ -254,10 +257,14 @@ export default function NewEvaluatorPage() {
             {hasNewerTemplate && latestTemplate && currentTemplate ? (
               <Alert variant="info">
                 <Info className="h-4 w-4" />
-                <AlertTitle>Selected Evaluator has been updated</AlertTitle>
+                <AlertTitle>
+                  {tAuto("selected_evaluator_has_been_updated_f09278b")}
+                </AlertTitle>
                 <AlertDescription className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <span>
-                    Click to use the latest version of your evaluator{" "}
+                    {tAutoI18n(
+                      "click_to_use_the_latest_version_of_your_evaluator_0117083",
+                    )}{" "}
                     {latestTemplate.name}.
                   </span>
                   <Button
@@ -267,7 +274,7 @@ export default function NewEvaluatorPage() {
                     className="w-fit"
                     onClick={handleUseUpdatedEvaluator}
                   >
-                    Use updated evaluator
+                    {tAuto("use_updated_evaluator_6b31990")}{" "}
                   </Button>
                 </AlertDescription>
               </Alert>

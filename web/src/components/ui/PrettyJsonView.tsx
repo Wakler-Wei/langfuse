@@ -62,6 +62,7 @@ import {
 import { ItemBadge, type LangfuseItemType } from "@/src/components/ItemBadge";
 import { isLargeRenderString } from "@/src/components/ui/largeStringGate";
 import { LargeStringFallback } from "@/src/components/ui/LargeStringFallback";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 // Constants for table layout
 const INDENTATION_PER_LEVEL = 16;
@@ -465,6 +466,7 @@ function JsonPrettyTable({
   showObservationTypeBadge?: boolean;
   metadataActions?: MetadataFilterActions;
 }) {
+  const tAuto = useAutoTranslations();
   const headerRef = useRef<HTMLTableRowElement>(null);
   const topLevelRowRef = useRef<HTMLTableRowElement>(null);
   const [stickyOffsets, setStickyOffsets] = useState({ header: 32, row: 32 });
@@ -490,7 +492,7 @@ function JsonPrettyTable({
   const columns: LangfuseColumnDef<JsonTableRow, unknown>[] = [
     {
       accessorKey: "key",
-      header: "Path",
+      header: tAuto("path_519e391"),
       size: 35,
       cell: ({ row }) => {
         // we need to calculate the indentation here for a good line break
@@ -582,7 +584,7 @@ function JsonPrettyTable({
     },
     {
       accessorKey: "value",
-      header: "Value",
+      header: tAuto("value_8dce170"),
       size: 65,
       cell: ({ row }) => (
         <ValueCell
@@ -793,6 +795,7 @@ export function PrettyJsonView(props: {
       since the title can carry a message `name` instead of the role). */
   isSystemPrompt?: boolean;
 }) {
+  const tAuto = useAutoTranslations();
   // Large plain-string gate (LFE-10991): a multi-MB top-level string skips
   // deepParseJson's object-only `maxSize` guard, so without this it would run
   // several full-length main-thread passes (parse, the markdown-probe
@@ -1289,7 +1292,7 @@ export function PrettyJsonView(props: {
               <Skeleton className="h-3 w-2/3" />
               {props.isParsing && (
                 <div className="text-muted-foreground mt-2 text-xs">
-                  Parsing in background...
+                  {tAuto("parsing_in_background_1ce42b0")}{" "}
                 </div>
               )}
             </div>
@@ -1397,7 +1400,7 @@ export function PrettyJsonView(props: {
       {shouldRenderStandaloneMedia && remainingMarkdownMedia.length > 0 && (
         <>
           <div className="text-muted-foreground my-1 px-2 py-1 text-xs">
-            Media
+            {tAuto("media_0c77aee")}{" "}
           </div>
           <div className="flex flex-wrap gap-2 pt-1 pb-4">
             {remainingMarkdownMedia.map((m) => (
@@ -1416,7 +1419,7 @@ export function PrettyJsonView(props: {
         !isMarkdownMode && (
           <>
             <div className="text-muted-foreground my-1 px-2 py-1 text-xs">
-              Media
+              {tAuto("media_0c77aee")}{" "}
             </div>
             <div className="flex flex-wrap gap-2 pt-1 pb-4">
               {props.media.map((m) => (
@@ -1456,7 +1459,9 @@ export function PrettyJsonView(props: {
                   onClick={() => expandAllRef.current?.()}
                   className="hover:bg-border -mr-2"
                   title={
-                    allRowsExpanded ? "Collapse all rows" : "Expand all rows"
+                    allRowsExpanded
+                      ? tAuto("collapse_all_rows_01be758")
+                      : tAuto("expand_all_rows_9ff0a97")
                   }
                 >
                   {allRowsExpanded ? (
@@ -1472,7 +1477,11 @@ export function PrettyJsonView(props: {
                   size="icon-xs"
                   onClick={handleJsonToggleCollapse}
                   className="hover:bg-border -mr-2"
-                  title={jsonIsCollapsed ? "Expand all" : "Collapse all"}
+                  title={
+                    jsonIsCollapsed
+                      ? tAuto("expand_all_2af9d49")
+                      : tAuto("collapse_all_ec89836")
+                  }
                 >
                   {jsonIsCollapsed ? (
                     <UnfoldVertical className="h-3 w-3" />

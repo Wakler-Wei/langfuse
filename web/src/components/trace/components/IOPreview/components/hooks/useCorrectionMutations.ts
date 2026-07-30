@@ -4,6 +4,7 @@ import { useCorrectionCache } from "@/src/features/corrections/contexts/Correcti
 import { type ScoreDomain } from "@langfuse/shared";
 import { toast } from "sonner";
 import { v4 } from "uuid";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 interface UseCorrectionMutationsParams {
   projectId: string;
@@ -26,6 +27,7 @@ export function useCorrectionMutations({
   environment,
   effectiveCorrection,
 }: UseCorrectionMutationsParams) {
+  const tAuto = useAutoTranslations();
   const correctionCache = useCorrectionCache();
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">(
     "idle",
@@ -80,7 +82,7 @@ export function useCorrectionMutations({
       return { previousValue, correctionId: effectiveCorrection.id };
     },
     onError: (error, _, context) => {
-      toast.error("Failed to delete correction");
+      toast.error(tAuto("failed_to_delete_correction_1e03721"));
       // Rollback delete - restore to cache if we had a previous value
       if (context?.correctionId) {
         correctionCache.rollbackDelete(

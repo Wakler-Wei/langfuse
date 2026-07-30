@@ -53,6 +53,7 @@ import { MENTION_USER_PREFIX } from "@/src/features/comments/lib/mentionParser";
 import { type SelectionData } from "./contexts/InlineCommentSelectionContext";
 import { Badge } from "@/src/components/ui/badge";
 import { useTheme } from "next-themes";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 // IO field background colors - same as IOPreviewJSON.tsx
 const IO_FIELD_COLORS = {
@@ -104,6 +105,8 @@ export function CommentList({
   onSelectionUsed?: () => void;
   onCommentChange?: () => void | Promise<void>;
 }) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const session = useSession();
   const router = useRouter();
   const { resolvedTheme } = useTheme();
@@ -492,7 +495,7 @@ export function CommentList({
           <Spinner size="sm" variant="muted" />
         </span>
         <span className="text-muted-foreground text-sm opacity-60">
-          Loading comments...
+          {tAuto("loading_comments_4b98e94")}{" "}
         </span>
       </div>
     );
@@ -507,20 +510,23 @@ export function CommentList({
     >
       {cardView && (
         <div className="shrink-0 border-b px-2 py-1 text-sm font-bold">
-          Comments ({comments.data?.length ?? 0})
+          {tAutoI18n("comments_6b55068")}
+          {comments.data?.length ?? 0})
         </div>
       )}
       <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
         {!cardView && (
           <div className="shrink-0 border-b">
             <div className="flex items-center justify-between gap-2 px-2 py-1.5">
-              <div className="text-sm font-bold">Comments</div>
+              <div className="text-sm font-bold">
+                {tAuto("comments_fce06e2")}
+              </div>
               <div className="relative max-w-xs flex-1">
                 <Search className="text-muted-foreground absolute top-1/2 left-2 h-3.5 w-3.5 -translate-y-1/2" />
                 <Input
                   ref={searchInputRef}
                   type="text"
-                  placeholder="Search comments..."
+                  placeholder={tAuto("search_comments_fb0733d")}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="h-7 pr-7 pl-7 text-xs"
@@ -552,9 +558,14 @@ export function CommentList({
             <div className="text-muted-foreground px-2 pb-1 text-xs">
               {searchQuery.trim()
                 ? filteredComments && filteredComments.length > 0
-                  ? `Showing ${filteredComments.length} of ${comments.data?.length ?? 0} comments`
-                  : "No comments match your search"
-                : `${comments.data?.length ?? 0} comments`}
+                  ? tAutoI18n("showing_value0_of_value1_comments_274ff60", {
+                      value0: String(filteredComments.length),
+                      value1: String(comments.data?.length ?? 0),
+                    })
+                  : tAutoI18n("no_comments_match_your_search_b953ef7")
+                : tAutoI18n("value0_comments_8279785", {
+                    value0: String(comments.data?.length ?? 0),
+                  })}
             </div>
           </div>
         )}
@@ -634,7 +645,9 @@ export function CommentList({
                           align="start"
                           className="px-2 py-1 text-xs"
                         >
-                          The location of the text commented on
+                          {tAuto(
+                            "the_location_of_the_text_commented_on_887bc53",
+                          )}{" "}
                         </TooltipContent>
                       </Tooltip>
                     )}
@@ -681,7 +694,7 @@ export function CommentList({
                       type="button"
                       size="icon-xs"
                       variant="ghost"
-                      title="Delete comment"
+                      title={tAuto("delete_comment_4be7edc")}
                       loading={deleteCommentMutation.isPending}
                       onClick={() => {
                         if (
@@ -709,9 +722,9 @@ export function CommentList({
         {hasWriteAccess && (
           <div className="bg-background shrink-0 px-2 pt-2 pb-[calc(0.5rem+env(safe-area-inset-bottom,0px))]">
             <div className="text-muted-foreground relative flex flex-row items-center justify-between text-xs">
-              <span className="sr-only">New comment</span>
+              <span className="sr-only">{tAuto("new_comment_af65ae0")}</span>
               <span></span>
-              <span>Markdown and @-mentions support</span>
+              <span>{tAuto("markdown_and_mentions_support_e589924")}</span>
             </div>
             <div className="border-border/60 relative mt-0.5 min-h-[70px] rounded-lg border pt-1">
               {/* Visually hidden header for accessibility */}
@@ -726,7 +739,7 @@ export function CommentList({
                         <div>
                           <FormControl>
                             <Textarea
-                              placeholder="Add a comment..."
+                              placeholder={tAuto("add_a_comment_2339bc4")}
                               {...field}
                               ref={(el) => {
                                 if (textareaRef.current !== el) {
@@ -786,7 +799,7 @@ export function CommentList({
                           type="submit"
                           size="icon-xs"
                           variant="outline"
-                          title="Submit comment"
+                          title={tAuto("submit_comment_9b2c3bb")}
                           loading={createCommentMutation.isPending}
                           onClick={() => {
                             form.handleSubmit(onSubmit)();
@@ -802,7 +815,7 @@ export function CommentList({
                         className="w-auto p-2"
                       >
                         <div className="flex items-center gap-2 text-sm">
-                          <span>Send comment</span>
+                          <span>{tAuto("send_comment_591e0e8")}</span>
                           <KeyboardShortcut keys={["⌘", "Enter"]} />
                         </div>
                       </HoverCardContent>

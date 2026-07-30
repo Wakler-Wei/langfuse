@@ -13,8 +13,10 @@ import { ChevronRight } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { decomposeAggregateScoreKey } from "@/src/features/scores/lib/aggregateScores";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export const AnnotationPanel = ({ projectId }: { projectId: string }) => {
+  const tAuto = useAutoTranslations();
   const [hasCommentDraft, setHasCommentDraft] = useState(false);
   const { activeCell, clearActiveCell } = useActiveCell();
 
@@ -74,7 +76,9 @@ export const AnnotationPanel = ({ projectId }: { projectId: string }) => {
                   onClick={() => {
                     if (hasCommentDraft)
                       toast.error(
-                        "Please save or discard your comment before proceeding",
+                        tAuto(
+                          "please_save_or_discard_your_comment_before_proceedin_249d2e5",
+                        ),
                       );
                     else clearActiveCell();
                   }}
@@ -85,8 +89,9 @@ export const AnnotationPanel = ({ projectId }: { projectId: string }) => {
             />
             {hasNonAnnotationScores && (
               <div className="text-muted-foreground mt-4 text-xs">
-                API and eval scores visible on left. Add manual annotations
-                above.
+                {tAuto(
+                  "api_and_eval_scores_visible_on_left_add_manual_annot_bff6416",
+                )}{" "}
               </div>
             )}
           </>

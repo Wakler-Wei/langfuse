@@ -47,6 +47,7 @@ import {
 } from "@/src/features/score-configs/lib/upsertFormTypes";
 import { validateScoreConfigUpsertFormInput } from "@/src/features/score-configs/lib/validateScoreConfigUpsertFormInput";
 import { ScoreConfigDataType } from "@langfuse/shared";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export function UpsertScoreConfigDialog({
   projectId,
@@ -61,6 +62,7 @@ export function UpsertScoreConfigDialog({
   onOpenChange: (open: boolean) => void;
   defaultValues?: CreateConfig | UpdateConfig;
 }) {
+  const tAuto = useAutoTranslations();
   const [formError, setFormError] = useState<string | null>(null);
   const capture = usePostHogClientCapture();
 
@@ -151,13 +153,17 @@ export function UpsertScoreConfigDialog({
         <DialogTrigger asChild>
           <Button variant="secondary" loading={createScoreConfig.isPending}>
             <PlusIcon className="mr-1.5 -ml-0.5 h-4 w-4" aria-hidden="true" />
-            {id ? "Update score config" : "Add new score config"}
+            {id
+              ? tAuto("update_score_config_07e854f")
+              : tAuto("add_new_score_config_c32402c")}
           </Button>
         </DialogTrigger>
         <DialogContent className="max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
-              {id ? "Update score config" : "Add new score config"}
+              {id
+                ? tAuto("update_score_config_07e854f")
+                : tAuto("add_new_score_config_c32402c")}
             </DialogTitle>
           </DialogHeader>
           <Form {...form}>
@@ -168,7 +174,7 @@ export function UpsertScoreConfigDialog({
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Name</FormLabel>
+                      <FormLabel>{tAuto("name_709a232")}</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
@@ -187,7 +193,7 @@ export function UpsertScoreConfigDialog({
                   name="dataType"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Data type</FormLabel>
+                      <FormLabel>{tAuto("data_type_ee503fe")}</FormLabel>
                       <Select
                         disabled={!!id}
                         defaultValue={field.value}
@@ -206,8 +212,8 @@ export function UpsertScoreConfigDialog({
                             form.setValue("maxValue", undefined);
                             if (isBooleanDataType(dt)) {
                               replace([
-                                { label: "True", value: 1 },
-                                { label: "False", value: 0 },
+                                { label: tAuto("true_88b33e4"), value: 1 },
+                                { label: tAuto("false_97cdbdc"), value: 0 },
                               ]);
                             } else {
                               replace([{ label: "", value: 0 }]);
@@ -217,7 +223,9 @@ export function UpsertScoreConfigDialog({
                       >
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder="Select a data type" />
+                            <SelectValue
+                              placeholder={tAuto("select_a_data_type_15e128e")}
+                            />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
@@ -241,7 +249,9 @@ export function UpsertScoreConfigDialog({
                       name="minValue"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Minimum (optional) </FormLabel>
+                          <FormLabel>
+                            {tAuto("minimum_optional_d367e6f")}{" "}
+                          </FormLabel>
                           <FormControl>
                             <Input
                               {...field}
@@ -265,7 +275,9 @@ export function UpsertScoreConfigDialog({
                       name="maxValue"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Maximum (optional)</FormLabel>
+                          <FormLabel>
+                            {tAuto("maximum_optional_a51cf4f")}
+                          </FormLabel>
                           <FormControl>
                             <Input
                               {...field}
@@ -295,18 +307,21 @@ export function UpsertScoreConfigDialog({
                           {fields.length > 0 && (
                             <div className="mb-2 grid grid-cols-[1fr_3fr] items-center gap-2 text-left sm:grid-cols-[1fr_7fr]">
                               <FormLabel className="grid grid-flow-col">
-                                Value
+                                {tAuto("value_8dce170")}{" "}
                                 <DocPopup
-                                  description={`This is how the ${
-                                    isCategoricalDataType(
-                                      form.getValues("dataType"),
-                                    )
-                                      ? "category"
-                                      : "boolean"
-                                  } label is mapped to an integer value internally.`}
+                                  description={tAuto(
+                                    "this_is_how_the_value0_label_is_mapped_to_an_integer_38f8a15",
+                                    {
+                                      value0: isCategoricalDataType(
+                                        form.getValues("dataType"),
+                                      )
+                                        ? "category"
+                                        : "boolean",
+                                    },
+                                  )}
                                 />
                               </FormLabel>
-                              <FormLabel>Label</FormLabel>
+                              <FormLabel>{tAuto("label_74341e3")}</FormLabel>
                             </div>
                           )}
                           {fields.map((category, index) => (
@@ -398,7 +413,7 @@ export function UpsertScoreConfigDialog({
                                   })
                                 }
                               >
-                                Add category
+                                {tAuto("add_category_d169b7f")}{" "}
                               </Button>
                             </div>
                           )}
@@ -413,11 +428,15 @@ export function UpsertScoreConfigDialog({
                   render={({ field }) => (
                     <>
                       <FormItem>
-                        <FormLabel>Description (optional)</FormLabel>
+                        <FormLabel>
+                          {tAuto("description_optional_388de6f")}
+                        </FormLabel>
                         <FormControl>
                           <Textarea
                             {...field}
-                            placeholder="Provide an optional description of the score config..."
+                            placeholder={tAuto(
+                              "provide_an_optional_description_of_the_score_config_6e89c8f",
+                            )}
                             value={field.value ?? undefined}
                           />
                         </FormControl>
@@ -431,7 +450,10 @@ export function UpsertScoreConfigDialog({
                 <div className="flex w-full flex-col items-end gap-4">
                   {formError ? (
                     <p className="w-full text-center">
-                      <span className="font-bold">Error:</span> {formError}
+                      <span className="font-bold">
+                        {tAuto("error_787aa16")}
+                      </span>{" "}
+                      {formError}
                     </p>
                   ) : null}
                   <Button
@@ -440,7 +462,7 @@ export function UpsertScoreConfigDialog({
                       createScoreConfig.isPending || updateScoreConfig.isPending
                     }
                   >
-                    Submit
+                    {tAuto("submit_2dacf65")}{" "}
                   </Button>
                 </div>
               </DialogFooter>

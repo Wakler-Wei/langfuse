@@ -19,6 +19,7 @@ import { usePostHogClientCapture } from "@/src/features/posthog-analytics/usePos
 import { validateOrderBy, validateFilters } from "../validation";
 import { isSystemPresetId } from "../components/data-table-view-presets-drawer";
 import type { FilterStateMigration } from "@/src/features/filters/lib/filter-config";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 /** How a saved view / preset apply was initiated — the `trigger` analytics
  * dimension on `saved_views:applied` (LFE-10781). `system_preset_cleared` is a
@@ -112,6 +113,7 @@ export function useTableViewManager({
   disabled = false,
   allowBackendSystemPresets = false,
 }: UseTableStateProps) {
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const isRouterReady = router.isReady;
   const [isInitialized, setIsInitialized] = useState(false);
@@ -311,8 +313,8 @@ export function useTableViewManager({
         validFilters.length !== viewData.filters.length
       ) {
         showErrorToast(
-          "Outdated view",
-          "This view is outdated. Some old filters or ordering may have been ignored. Please update your view.",
+          tAuto("outdated_view_98d3bdb"),
+          tAuto("this_view_is_outdated_some_old_filters_or_ordering_m_e732682"),
           "WARNING",
         );
       }
@@ -412,6 +414,8 @@ export function useTableViewManager({
       validationContext,
       currentFilterState,
       currentExpandedFilters,
+      ,
+      tAuto,
     ],
   );
 
@@ -541,13 +545,13 @@ export function useTableViewManager({
         viewId: requestedViewId,
       });
       showErrorToast(
-        "View no longer available",
-        "This suggested view was retired — showing the default view instead.",
+        tAuto("view_no_longer_available_9fdf018"),
+        tAuto("this_suggested_view_was_retired_showing_the_default__8e15cb3"),
         "WARNING",
       );
     } else {
       showErrorToast(
-        "Error applying view",
+        tAuto("error_applying_view_025bded"),
         selectedViewError.message,
         "WARNING",
       );
@@ -560,6 +564,8 @@ export function useTableViewManager({
     handleSetViewId,
     capture,
     tableName,
+    ,
+    tAuto,
   ]);
 
   if (disabled) {

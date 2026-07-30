@@ -14,6 +14,7 @@ import { IntroSection } from "@/src/features/support-chat/IntroSection";
 import { SuccessSection } from "@/src/features/support-chat/SuccessSection";
 import { SupportFormSection } from "@/src/features/support-chat/SupportFormSection";
 import { cn } from "@/src/utils/tailwind";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export const SupportDrawer = (props: {
   showCloseButton?: boolean;
@@ -35,6 +36,7 @@ const SupportDrawerContent = ({
   showCloseButton?: boolean;
   className?: string;
 }) => {
+  const tAuto = useAutoTranslations();
   const { setOpen, initialMode } = useSupportDrawer();
   const [currentMode, setCurrentMode] = useState<"intro" | "form" | "success">(
     initialMode,
@@ -54,7 +56,7 @@ const SupportDrawerContent = ({
             <BreadcrumbList>
               {currentMode === "intro" ? (
                 <BreadcrumbItem>
-                  <BreadcrumbPage>Support</BreadcrumbPage>
+                  <BreadcrumbPage>{tAuto("support_f32d5a3")}</BreadcrumbPage>
                 </BreadcrumbItem>
               ) : (
                 <>
@@ -65,7 +67,7 @@ const SupportDrawerContent = ({
                         onClick={() => setCurrentMode("intro")}
                         className="text-foreground"
                       >
-                        Support
+                        {tAuto("support_f32d5a3")}{" "}
                       </button>
                     </BreadcrumbLink>
                   </BreadcrumbItem>
@@ -73,7 +75,9 @@ const SupportDrawerContent = ({
                     <Slash />
                   </BreadcrumbSeparator>
                   <BreadcrumbItem>
-                    <BreadcrumbPage>Email Engineer</BreadcrumbPage>
+                    <BreadcrumbPage>
+                      {tAuto("email_engineer_e903bac")}
+                    </BreadcrumbPage>
                   </BreadcrumbItem>
                 </>
               )}
@@ -84,7 +88,7 @@ const SupportDrawerContent = ({
               variant="ghost"
               size="icon"
               onClick={close}
-              aria-label="Close"
+              aria-label={tAuto("close_bbfa773")}
             >
               <X className="h-4 w-4" />
             </Button>

@@ -56,6 +56,7 @@ import {
   COMPOSER_SURFACE_CLASSES,
   COMPOSER_TEXT_CLASSES,
 } from "@/src/features/search-bar/components/composer-chrome";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const LISTBOX_ID = "search-bar-listbox";
 // Word joiners (shared with ComposerTokens) give the DOM caret boundaries
@@ -317,6 +318,7 @@ export function SearchComposer({
   /** Reason free-text tokens are not applied on the current surface, or null. */
   freeTextReason?: string | null;
 }) {
+  const tAuto = useAutoTranslations();
   const storeApi = useSearchBarStoreApi();
   const commitToFilterState = useSearchBarCommit();
   const { draft, valid, diagnostics, invalidRevealDraft } = useSearchBarStore(
@@ -1314,7 +1316,7 @@ export function SearchComposer({
         <div
           ref={rootRef}
           role="combobox"
-          aria-label="Search"
+          aria-label={tAuto("search_bce0641")}
           aria-expanded={plan !== null}
           aria-controls={plan !== null ? LISTBOX_ID : undefined}
           aria-autocomplete="list"
@@ -1381,11 +1383,11 @@ export function SearchComposer({
           <button
             type="button"
             data-testid="search-bar-ask-ai"
-            aria-label="Ask AI to build or refine filters"
+            aria-label={tAuto("ask_ai_to_build_or_refine_filters_5e589a3")}
             title={
               draft.trim().length === 0
-                ? "Describe filters in natural language"
-                : "Refine these filters with AI"
+                ? tAuto("describe_filters_in_natural_language_5bafd2f")
+                : tAuto("refine_these_filters_with_ai_13e6040")
             }
             onMouseDown={(event) => event.preventDefault()}
             onClick={(event) => {
@@ -1402,7 +1404,7 @@ export function SearchComposer({
             )}
           >
             <WandSparkles className="h-3.5 w-3.5" aria-hidden="true" />
-            <span>Ask AI</span>
+            <span>{tAuto("ask_ai_8dbaeb8")}</span>
           </button>
         )}
         {/* Bar-local overlay stacking ladder: token text (base) < remove-X
@@ -1428,7 +1430,7 @@ export function SearchComposer({
           <span
             className="text-destructive"
             title={visibleDiagnostics.map((d) => d.message).join("; ")}
-            aria-label="invalid query"
+            aria-label={tAuto("invalid_query_9b60e90")}
           >
             <AlertCircle className="h-4 w-4" />
           </span>
@@ -1501,12 +1503,13 @@ function RemoveTokenButton({
   position: { left: number; top: number };
   onRemove: (segment: ComposerSegment) => void;
 }) {
+  const tAuto = useAutoTranslations();
   return (
     <button
       type="button"
       data-overlay-remove
-      aria-label={`Remove ${segment.raw}`}
-      title={`Remove ${segment.raw}`}
+      aria-label={tAuto("remove_value0_a2d40d3", { value0: segment.raw })}
+      title={tAuto("remove_value0_a2d40d3", { value0: segment.raw })}
       style={{ left: position.left, top: position.top }}
       className={cn(
         "absolute z-20 inline-flex h-4 w-4 items-center justify-center rounded-sm",

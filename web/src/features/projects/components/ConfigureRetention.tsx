@@ -20,8 +20,10 @@ import { useHasProjectAccess } from "@/src/features/rbac/utils/checkProjectAcces
 import { projectRetentionSchema } from "@/src/features/auth/lib/projectRetentionSchema";
 import { ActionButton } from "@/src/components/ActionButton";
 import { useHasEntitlement } from "@/src/features/entitlements/hooks";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export default function ConfigureRetention() {
+  const tAuto = useAutoTranslations();
   const { update: updateSession } = useSession();
   const utils = api.useUtils();
   const { project } = useQueryProject();
@@ -66,13 +68,12 @@ export default function ConfigureRetention() {
 
   return (
     <div>
-      <Header title="Data Retention" />
+      <Header title={tAuto("data_retention_3728798")} />
       <Card className="mb-4 p-3">
         <p className="text-primary mb-4 text-sm">
-          Data retention automatically deletes events older than the specified
-          number of days. The value must be 0 or at least 3 days. Set to 0 to
-          retain data indefinitely. The deletion happens asynchronously, i.e.
-          event may be available for a while after they expired.
+          {tAuto(
+            "data_retention_automatically_deletes_events_older_th_33d361f",
+          )}{" "}
         </p>
         {Boolean(form.getValues().retention) &&
         form.getValues().retention !== project?.retentionDays ? (
@@ -81,13 +82,13 @@ export default function ConfigureRetention() {
             {project?.retentionDays ?? "Indefinite"}
             &quot; to &quot;
             {Number(form.watch("retention")) === 0
-              ? "Indefinite"
+              ? tAuto("indefinite_bcd939e")
               : Number(form.watch("retention"))}
             &quot; days.
           </p>
         ) : !Boolean(project?.retentionDays) ? (
           <p className="text-primary mb-4 text-sm">
-            Your Project retains data indefinitely.
+            {tAuto("your_project_retains_data_indefinitely_43cff36")}{" "}
           </p>
         ) : (
           <p className="text-primary mb-4 text-sm">
@@ -119,7 +120,7 @@ export default function ConfigureRetention() {
                         disabled={!hasAccess || !hasEntitlement}
                       />
                       {!hasAccess && (
-                        <span title="No access">
+                        <span title={tAuto("no_access_63bde5f")}>
                           <LockIcon className="text-muted absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2 transform" />
                         </span>
                       )}
@@ -138,7 +139,7 @@ export default function ConfigureRetention() {
                 disabled={form.getValues().retention === null}
                 type="submit"
               >
-                Save
+                {tAuto("save_efc007a")}{" "}
               </ActionButton>
             </div>
           </form>

@@ -6,6 +6,7 @@ import { MediaContentType } from "@/src/features/media/validation";
 import { api } from "@/src/utils/api";
 import { safeRandomUUID } from "@/src/utils/safe-random-uuid";
 import { type DatasetItemMediaField } from "@langfuse/shared";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const SUPPORTED_CONTENT_TYPES = new Set<string>(
   Object.values(MediaContentType),
@@ -53,6 +54,7 @@ export function useDatasetItemMediaUpload({
   // generates the id up front); the association is claimed when it is written.
   datasetItemId: string;
 }) {
+  const tAuto = useAutoTranslations();
   const [pendingUploads, setPendingUploads] = useState<PendingMediaUpload[]>(
     [],
   );
@@ -72,16 +74,20 @@ export function useDatasetItemMediaUpload({
     ): Promise<string | null> => {
       if (!SUPPORTED_CONTENT_TYPES.has(file.type)) {
         showErrorToast(
-          "Unsupported file type",
-          `${file.type || "Unknown type"} is not supported for media uploads.`,
+          tAuto("unsupported_file_type_5606cdd"),
+          tAuto("value0_is_not_supported_for_media_uploads_f7b99dc", {
+            value0: String((file.type || "Unknown type") ?? ""),
+          }),
         );
         return null;
       }
 
       if (file.size > MAX_BROWSER_MEDIA_UPLOAD_SIZE_BYTES) {
         showErrorToast(
-          "File too large",
-          `Maximum file size is ${MAX_BROWSER_MEDIA_UPLOAD_SIZE_MB}MB`,
+          tAuto("file_too_large_a0704a4"),
+          tAuto("maximum_file_size_is_value0_mb_05d2edb", {
+            value0: String(MAX_BROWSER_MEDIA_UPLOAD_SIZE_MB ?? ""),
+          }),
         );
         return null;
       }
@@ -138,15 +144,24 @@ export function useDatasetItemMediaUpload({
         return `@@@langfuseMedia:type=${file.type}|id=${mediaId}|source=bytes@@@`;
       } catch (error) {
         showErrorToast(
-          "Media upload failed",
-          error instanceof Error ? error.message : "Please try again.",
+          tAuto("media_upload_failed_0cc9db1"),
+          error instanceof Error
+            ? error.message
+            : tAuto("please_try_again_83a6fd7"),
         );
         return null;
       } finally {
         setPendingUploads((prev) => prev.filter((u) => u.id !== pendingId));
       }
     },
-    [projectId, datasetId, datasetItemId, getUploadUrl, markUploadComplete],
+    [
+      projectId,
+      datasetId,
+      datasetItemId,
+      getUploadUrl,
+      markUploadComplete,
+      tAuto,
+    ],
   );
 
   return { uploadFile, pendingUploads, resetPendingUploads };

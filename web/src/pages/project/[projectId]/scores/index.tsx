@@ -7,8 +7,10 @@ import {
   getScoresTabs,
   SCORES_TABS,
 } from "@/src/features/navigation/utils/scores-tabs";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export default function ScoresPage() {
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const projectId = router.query.projectId as string;
 
@@ -31,10 +33,11 @@ export default function ScoresPage() {
   return (
     <Page
       headerProps={{
-        title: "Scores",
+        title: tAuto("scores_126cb93"),
         help: {
-          description:
-            "A scores is an evaluation of a traces or observations. It can be created from user feedback, model-based evaluations, or manual review. See docs to learn more.",
+          description: tAuto(
+            "a_scores_is_an_evaluation_of_a_traces_or_observation_67237af",
+          ),
           href: "https://langfuse.com/docs/evaluation/overview",
         },
         tabsProps: {

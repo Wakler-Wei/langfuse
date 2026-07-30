@@ -12,6 +12,7 @@ import { traceViewQuery } from "@/src/features/dashboard/lib/dashboard-utils";
 import { useScheduledDashboardExecuteQuery } from "@/src/hooks/useDashboardQueryScheduler";
 import { useFitRowCount } from "@/src/features/dashboard/hooks/useFitRowCount";
 import { cn } from "@/src/utils/tailwind";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 // Target height of one bar row (bar + spacing) and the x-axis strip below the
 // bars. Used both to decide how many bars fit and to size the expanded chart.
@@ -39,6 +40,7 @@ export const TracesBarListChart = ({
   metricsVersion?: ViewVersion;
   schedulerId?: string;
 }) => {
+  const tAuto = useAutoTranslations();
   const [isExpanded, setIsExpanded] = useState(false);
 
   const isV2 = metricsVersion === "v2";
@@ -142,7 +144,7 @@ export const TracesBarListChart = ({
       // scrolls internally instead of overflowing the tile. (LFE-11035)
       className={cn(className, "h-full")}
       cardContentClassName="min-h-0"
-      title="Traces"
+      title={tAuto("traces_194e807")}
       description={null}
       isLoading={isLoading || traces.isPending || totalTraces.isPending}
     >
@@ -153,7 +155,7 @@ export const TracesBarListChart = ({
               ? Number(totalTraces.data[0][countField])
               : 0,
           )}
-          description="Total traces tracked"
+          description={tAuto("total_traces_tracked_68d42a1")}
         />
         {transformedTraces.length > 0 ? (
           <BarListChartArea
@@ -171,7 +173,9 @@ export const TracesBarListChart = ({
         ) : (
           <NoDataOrLoading
             isLoading={isLoading || traces.isPending || totalTraces.isPending}
-            description="Traces contain details about LLM applications and can be created using the SDK."
+            description={tAuto(
+              "traces_contain_details_about_llm_applications_and_ca_cdb7d30",
+            )}
             href="https://langfuse.com/docs/get-started"
             className="h-auto grow"
           />

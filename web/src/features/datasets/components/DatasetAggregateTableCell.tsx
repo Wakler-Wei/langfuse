@@ -25,6 +25,7 @@ import { useResourceMetricsDiff } from "@/src/features/datasets/hooks/useResourc
 import { NotFoundCard } from "@/src/features/datasets/components/NotFoundCard";
 import { usePostHogClientCapture } from "@/src/features/posthog-analytics/usePostHogClientCapture";
 import { useV4Beta } from "@/src/features/events/hooks/useV4Beta";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const DatasetAggregateCellContent = ({
   projectId,
@@ -41,6 +42,7 @@ const DatasetAggregateCellContent = ({
   scoreDiffs?: Record<string, BaselineDiff>;
   baselineRunValue?: EnrichedDatasetRunItem;
 }) => {
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const capture = usePostHogClientCapture();
   const { isBetaEnabled: isV4 } = useV4Beta();
@@ -202,7 +204,9 @@ const DatasetAggregateCellContent = ({
                 />
               ))
             ) : (
-              <span className="text-muted-foreground text-xs">No scores</span>
+              <span className="text-muted-foreground text-xs">
+                {tAuto("no_scores_030d848")}
+              </span>
             )}
           </div>
         </div>
@@ -255,7 +259,7 @@ const DatasetAggregateCellContent = ({
                 className="h-6 px-1 text-xs"
                 onClick={handleOpenReview}
               >
-                Annotate
+                {tAuto("annotate_4f5f32d")}{" "}
               </Button>
               {/* Triggers peek view */}
               <Button

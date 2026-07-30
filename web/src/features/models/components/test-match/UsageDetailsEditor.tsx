@@ -2,6 +2,7 @@ import { PlusCircle, Trash2 } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import { Input } from "@/src/components/ui/input";
 import { useState } from "react";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type UsageDetailsEditorProps = {
   usageDetails: Record<string, number>;
@@ -14,6 +15,7 @@ export function UsageDetailsEditor({
   usageDetails,
   onChange,
 }: UsageDetailsEditorProps) {
+  const tAuto = useAutoTranslations();
   const [entries, setEntries] = useState<Array<{ key: string; value: number }>>(
     Object.entries(usageDetails).map(([key, value]) => ({ key, value })),
   );
@@ -59,17 +61,20 @@ export function UsageDetailsEditor({
   return (
     <div className="space-y-4">
       <div>
-        <div className="pb-2 text-sm font-bold">Usage Details (optional)</div>
+        <div className="pb-2 text-sm font-bold">
+          {tAuto("usage_details_optional_3a75bba")}
+        </div>
         <div className="text-muted-foreground text-sm">
-          Add usage details to test pricing tier matching. Leave empty to match
-          the default tier.
+          {tAuto(
+            "add_usage_details_to_test_pricing_tier_matching_leav_3fb313a",
+          )}{" "}
         </div>
       </div>
 
       {/* Template Buttons */}
       <div className="space-y-2">
         <div className="text-muted-foreground text-sm">
-          Prefill from template:
+          {tAuto("prefill_from_template_dfdc945")}{" "}
         </div>
         <div className="flex gap-2">
           <Button
@@ -97,7 +102,7 @@ export function UsageDetailsEditor({
               })
             }
           >
-            Anthropic
+            {tAuto("anthropic_b780a23")}{" "}
           </Button>
         </div>
       </div>
@@ -106,14 +111,14 @@ export function UsageDetailsEditor({
       {entries.length > 0 ? (
         <div className="space-y-2 rounded-lg border p-3">
           <div className="grid grid-cols-[1fr_1fr_auto] gap-2 text-sm font-bold">
-            <div>Usage Type</div>
-            <div>Value</div>
+            <div>{tAuto("usage_type_0dba2d0")}</div>
+            <div>{tAuto("value_8dce170")}</div>
             <div className="w-10" />
           </div>
           {entries.map((entry, index) => (
             <div key={index} className="grid grid-cols-[1fr_1fr_auto] gap-2">
               <Input
-                placeholder="e.g. input"
+                placeholder={tAuto("e_g_input_caf7fda")}
                 value={entry.key}
                 onChange={(e) => handleKeyChange(index, e.target.value)}
               />
@@ -145,7 +150,7 @@ export function UsageDetailsEditor({
         className="w-full"
       >
         <PlusCircle className="mr-2 h-4 w-4" />
-        Add Usage Type
+        {tAuto("add_usage_type_4cf5015")}{" "}
       </Button>
     </div>
   );

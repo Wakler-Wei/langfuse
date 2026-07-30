@@ -47,6 +47,7 @@ import {
 } from "@/src/components/ui/collapsible";
 import { Checkbox } from "@/src/components/design-system/Checkbox/Checkbox";
 import { Separator } from "@/src/components/ui/separator";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 interface DataTableColumnVisibilityFilterProps<TData, TValue> {
   columns: LangfuseColumnDef<TData, TValue>[];
@@ -96,6 +97,7 @@ function ColumnVisibilityListItem<TData, TValue>({
   columnVisibility: VisibilityState;
   isOrderable?: boolean;
 }) {
+  const tAuto = useAutoTranslations();
   const isFixedPosition = column.isFixedPosition ?? false;
   const { attributes, isDragging, listeners, setNodeRef, transform } =
     useSortable({
@@ -138,9 +140,11 @@ function ColumnVisibilityListItem<TData, TValue>({
           )}
           title={
             !column.enableHiding
-              ? "This column may not be hidden"
+              ? tAuto("this_column_may_not_be_hidden_33d5104")
               : isFixedPosition
-                ? "This column is fixed in position and cannot be hidden"
+                ? tAuto(
+                    "this_column_is_fixed_in_position_and_cannot_be_hidde_1a23159",
+                  )
                 : undefined
           }
         >
@@ -162,7 +166,7 @@ function ColumnVisibilityListItem<TData, TValue>({
           {...listeners}
           variant="ghost"
           size="xs"
-          title="Drag and drop to reorder columns"
+          title={tAuto("drag_and_drop_to_reorder_columns_5647cb4")}
           className="invisible group-hover:visible"
         >
           <Menu className="h-3 w-3" />
@@ -189,6 +193,7 @@ function GroupVisibilityHeader<TData, TValue>({
   children: React.ReactNode;
   toggleAll: () => void;
 }) {
+  const tAuto = useAutoTranslations();
   const { attributes, isDragging, listeners, setNodeRef, transform } =
     useSortable({
       id: column.accessorKey,
@@ -231,7 +236,7 @@ function GroupVisibilityHeader<TData, TValue>({
                 {...listeners}
                 variant="ghost"
                 size="xs"
-                title="Drag and drop to reorder columns"
+                title={tAuto("drag_and_drop_to_reorder_columns_5647cb4")}
                 className="opacity-0 transition-opacity group-hover:opacity-100"
               >
                 <Menu className="h-3 w-3" />
@@ -247,8 +252,8 @@ function GroupVisibilityHeader<TData, TValue>({
               }}
             >
               {groupVisibleCount === groupTotalCount
-                ? "Deselect All"
-                : "Select All"}
+                ? tAuto("deselect_all_bc03949")
+                : tAuto("select_all_86a599e")}
             </Button>
             {isOpen ? (
               <ChevronDown className="h-4 w-4" />
@@ -296,6 +301,7 @@ export function DataTableColumnVisibilityFilter<TData, TValue>({
   columnOrder,
   setColumnOrder,
 }: DataTableColumnVisibilityFilterProps<TData, TValue>) {
+  const tAuto = useAutoTranslations();
   const capture = usePostHogClientCapture();
   const [openGroups, setOpenGroups] = React.useState<Record<string, boolean>>(
     {},
@@ -394,8 +400,8 @@ export function DataTableColumnVisibilityFilter<TData, TValue>({
     >
       <Drawer modal={false}>
         <DrawerTrigger asChild>
-          <Button variant="outline" title="Show/hide columns">
-            <span>Columns</span>
+          <Button variant="outline" title={tAuto("show_hide_columns_9693eac")}>
+            <span>{tAuto("columns_cf723c5")}</span>
             <div className="bg-input ml-1 rounded-sm px-1 text-xs">{`${count}/${total}`}</div>
           </Button>
         </DrawerTrigger>
@@ -403,7 +409,7 @@ export function DataTableColumnVisibilityFilter<TData, TValue>({
           <div className="mx-auto w-full overflow-y-auto md:max-h-full">
             <div className="sticky top-0 z-10">
               <DrawerHeader className="bg-modal flex flex-row items-center justify-between rounded-sm px-3 py-2">
-                <DrawerTitle>Column Visibility</DrawerTitle>
+                <DrawerTitle>{tAuto("column_visibility_1fe120f")}</DrawerTitle>
                 <div className="flex flex-row gap-2">
                   <Button
                     variant="outline"
@@ -414,7 +420,7 @@ export function DataTableColumnVisibilityFilter<TData, TValue>({
                       setColumnVisibility(defaultColumnVisibility);
                     }}
                   >
-                    Restore Defaults
+                    {tAuto("restore_defaults_8e80e07")}{" "}
                   </Button>
                   <DrawerClose asChild>
                     <Button variant="outline" size="icon">
@@ -440,8 +446,8 @@ export function DataTableColumnVisibilityFilter<TData, TValue>({
                   >
                     <span className="text-sm font-bold">
                       {count === total
-                        ? "Deselect All Columns"
-                        : "Select All Columns"}
+                        ? tAuto("deselect_all_columns_82ad6e7")
+                        : tAuto("select_all_columns_3d6fdf9")}
                     </span>
                     <div className="bg-input ml-1 rounded-sm px-1 text-xs">{`${count}/${total}`}</div>
                   </Button>

@@ -3,6 +3,7 @@ import { ChevronDown, ChevronRight, ExternalLink } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/src/components/ui/alert";
 import { Button } from "@/src/components/ui/button";
 import Link from "next/link";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type ValidationError = {
   datasetItemId: string;
@@ -23,6 +24,8 @@ type DatasetSchemaValidationErrorProps = {
 export const DatasetSchemaValidationError: React.FC<
   DatasetSchemaValidationErrorProps
 > = ({ projectId, datasetId, errors }) => {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const [isExpanded, setIsExpanded] = useState(false);
 
   const errorCount = errors.length;
@@ -31,13 +34,18 @@ export const DatasetSchemaValidationError: React.FC<
   return (
     <Alert variant="destructive" className="mt-4">
       <AlertTitle className="text-base font-bold">
-        Schema Validation Failed
+        {tAuto("schema_validation_failed_7986e4d")}{" "}
       </AlertTitle>
       <AlertDescription className="mt-2 space-y-3">
         <p className="text-sm">
           {hasMoreThan10
-            ? `More than 10 items failed validation. Showing first 10 errors.`
-            : `${errorCount} item${errorCount === 1 ? "" : "s"} failed validation.`}
+            ? tAutoI18n(
+                "more_than_10_items_failed_validation_showing_first_1_fc85c28",
+              )
+            : tAutoI18n("value0_item_value1_failed_validation_8bd56d7", {
+                value0: String(errorCount),
+                value1: errorCount === 1 ? "" : "s",
+              })}
         </p>
 
         <Button
@@ -52,7 +60,8 @@ export const DatasetSchemaValidationError: React.FC<
           ) : (
             <ChevronRight className="mr-1 h-4 w-4" />
           )}
-          {isExpanded ? "Hide" : "Show"} error details
+          {isExpanded ? tAutoI18n("hide_34d8b60") : tAutoI18n("show_d97d1ee")}{" "}
+          {tAutoI18n("error_details_753d1c9")}{" "}
         </Button>
 
         {isExpanded && (
@@ -73,12 +82,14 @@ export const DatasetSchemaValidationError: React.FC<
                       rel="noopener noreferrer"
                       className="flex items-center gap-1 text-sm font-bold hover:underline"
                     >
-                      Item: {error.datasetItemId}
+                      {tAutoI18n("item_ab12e73")} {error.datasetItemId}
                       <ExternalLink className="h-3 w-3" />
                     </Link>
                   </div>
                   <span className="bg-destructive/20 rounded px-2 py-0.5 text-xs font-bold">
-                    {error.field === "input" ? "Input" : "Expected Output"}
+                    {error.field === "input"
+                      ? tAutoI18n("input_b568d47")
+                      : tAutoI18n("expected_output_395c41e")}
                   </span>
                 </div>
 
@@ -86,7 +97,7 @@ export const DatasetSchemaValidationError: React.FC<
                   {error.errors.map((err, errIdx) => (
                     <li key={errIdx} className="text-destructive">
                       <span className="text-muted-foreground font-mono text-xs">
-                        Path {err.path}
+                        {tAutoI18n("path_519e391")} {err.path}
                       </span>
                       : {err.message}
                     </li>
@@ -97,8 +108,9 @@ export const DatasetSchemaValidationError: React.FC<
 
             {hasMoreThan10 && (
               <p className="text-muted-foreground pt-2 text-xs">
-                Fix these errors to see if there are additional validation
-                issues.
+                {tAuto(
+                  "fix_these_errors_to_see_if_there_are_additional_vali_fb17381",
+                )}{" "}
               </p>
             )}
           </div>

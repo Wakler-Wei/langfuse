@@ -13,6 +13,7 @@ import {
 import { showErrorToast } from "@/src/features/notifications/showErrorToast";
 import { showSuccessToast } from "@/src/features/notifications/showSuccessToast";
 import { api } from "@/src/utils/api";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type WebCalloutTarget = {
   projectId: string;
@@ -22,6 +23,7 @@ type WebCalloutTarget = {
 };
 
 function useWebCalloutAction(props: WebCalloutTarget) {
+  const tAuto = useAutoTranslations();
   const endpoint = api.webCallouts.enabled.useQuery(
     { projectId: props.projectId },
     {
@@ -39,7 +41,7 @@ function useWebCalloutAction(props: WebCalloutTarget) {
       });
     },
     onError: (error) => {
-      showErrorToast("Web callout failed", error.message);
+      showErrorToast(tAuto("web_callout_failed_b87f3e0"), error.message);
     },
   });
 
@@ -75,6 +77,7 @@ export function WebCalloutMenuItem({
 }: WebCalloutTarget & {
   withSeparator?: boolean;
 }) {
+  const tAuto = useAutoTranslations();
   const action = useWebCalloutAction({
     projectId,
     traceId,
@@ -101,7 +104,7 @@ export function WebCalloutMenuItem({
           className="max-w-[260px] min-w-0 truncate"
           title={action.endpointName}
         >
-          <span>Call </span>
+          <span>{tAuto("call_291a0a5")} </span>
           <span className="font-bold">{action.endpointName}</span>
         </span>
       </DropdownMenuItem>

@@ -28,6 +28,8 @@ import {
 } from "@/src/components/ui/PromptReferences";
 import { copyTextToClipboard } from "@/src/utils/clipboard";
 import { useCopyToClipboard } from "@/src/hooks/useCopyToClipboard";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
+import { useLocale } from "next-intl";
 
 export const IO_TABLE_CHAR_LIMIT = 10000;
 
@@ -47,6 +49,8 @@ export function JSONView(props: {
   externalJsonCollapsed?: boolean;
   onToggleCollapse?: () => void;
 }) {
+  const tAuto = useAutoTranslations();
+  const locale = useLocale();
   // some users ingest stringified json nested in json, parse it. Also decode
   // \uXXXX escapes (e.g. Japanese ingested with Python ensure_ascii=True) so
   // non-ASCII content renders as real characters. Already-decoded strings are
@@ -140,12 +144,25 @@ export function JSONView(props: {
               collapseStringMode="word"
               customizeCollapseStringUI={(fullSTring, truncated) =>
                 truncated ? (
-                  <div className="opacity-50">{`\n...expand (${Math.max(fullSTring.length - collapseStringsAfterLength, 0)} more characters)`}</div>
+                  <div className="opacity-50">
+                    {tAuto("expand_value0_more_characters_d770611", {
+                      value0: Math.max(
+                        fullSTring.length - collapseStringsAfterLength,
+                        0,
+                      ),
+                    })}
+                  </div>
                 ) : (
                   ""
                 )
               }
-              displaySize={isCollapsed ? "collapsed" : "expanded"}
+              displaySize={
+                locale === "zh-CN"
+                  ? false
+                  : isCollapsed
+                    ? "collapsed"
+                    : "expanded"
+              }
               matchesURL={true}
               // Render previewable media (Langfuse refs, data URIs, media URLs)
               // as a hover-to-peek chip instead of the raw string; everything
@@ -165,7 +182,7 @@ export function JSONView(props: {
       {props.media && props.media.length > 0 && (
         <>
           <div className="text-muted-foreground my-1 px-0 py-1 text-xs">
-            Media
+            {tAuto("media_0c77aee")}{" "}
           </div>
           <div className="flex flex-wrap gap-2 pt-1 pb-4">
             {props.media.map((m) => (
@@ -203,7 +220,11 @@ export function JSONView(props: {
                 size="icon-xs"
                 onClick={handleToggleCollapse}
                 className="hover:bg-border -mr-2"
-                title={isCollapsed ? "Expand all" : "Collapse all"}
+                title={
+                  isCollapsed
+                    ? tAuto("expand_all_2af9d49")
+                    : tAuto("collapse_all_ec89836")
+                }
               >
                 {isCollapsed ? (
                   <UnfoldVertical className="h-3 w-3" />

@@ -14,6 +14,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/src/components/ui/chart";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 interface HistogramDataPoint {
   binLabel: string;
@@ -25,12 +26,7 @@ interface HistogramDataPoint {
 
 const HistogramChart = ({
   data,
-  config = {
-    count: {
-      label: "Count",
-      color: "hsl(var(--chart-1))",
-    },
-  },
+  config,
   subtleFill = false,
   metricFormatter = (value, options) => formatMetric(value, options),
 }: {
@@ -39,6 +35,13 @@ const HistogramChart = ({
   subtleFill?: boolean;
   metricFormatter?: MetricFormatterFunction;
 }) => {
+  const tAuto = useAutoTranslations();
+  const chartConfig = config ?? {
+    count: {
+      label: tAuto("count_66e1296"),
+      color: "hsl(var(--chart-1))",
+    },
+  };
   const formatBinEdge = (value: number) =>
     toFullMetricString(metricFormatter(value, { style: "compact" }));
 
@@ -72,14 +75,14 @@ const HistogramChart = ({
   if (!histogramData.length) {
     return (
       <div className="text-muted-foreground flex h-full items-center justify-center">
-        No data available
+        {tAuto("no_data_available_0cfc430")}{" "}
       </div>
     );
   }
 
   return (
     <ChartContainer
-      config={config}
+      config={chartConfig}
       className="[&_.recharts-bar-rectangle:hover]:opacity-30 dark:[&_.recharts-bar-rectangle:hover]:opacity-100 dark:[&_.recharts-bar-rectangle:hover]:brightness-[3]"
     >
       <BarChart

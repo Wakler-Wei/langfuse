@@ -8,6 +8,7 @@ import {
 import { getDimensionSummaries } from "@/src/features/widgets/chart-library/utils";
 import { getPlainTextFromReactNode } from "@/src/utils/react-node-plain-text";
 import { cn } from "@/src/utils/tailwind";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 /** The 8-slot chart palette, cycled by series index (matches the series fills). */
 export const seriesColor = (index: number): string =>
@@ -159,10 +160,12 @@ export function SeriesOverflowNote({
   visibleCount: number;
   totalCount: number;
 }) {
+  const tAuto = useAutoTranslations();
   if (totalCount <= visibleCount) return null;
   return (
     <div className="text-muted-foreground shrink-0 pb-1 text-right text-xs">
-      Showing top {visibleCount} of {totalCount} series
+      {tAuto("showing_top_2b235b5")} {visibleCount} {tAuto("of_de04fa0")}{" "}
+      {totalCount} {tAuto("series_8c45d09")}{" "}
     </div>
   );
 }
@@ -182,6 +185,7 @@ export function TimeSeriesLegend({
   onItemClick: (dimension: string) => void;
   formatSummary: (value: number) => string;
 }) {
+  const tAuto = useAutoTranslations();
   if (items.length === 0) return null;
 
   return (
@@ -202,11 +206,17 @@ export function TimeSeriesLegend({
           const ariaLabel =
             interaction === "toggle"
               ? item.dimmed
-                ? `Show ${labelText}`
-                : `Hide ${labelText}`
+                ? tAuto("show_value0_60e2ce8", {
+                    value0: String((labelText as unknown) ?? ""),
+                  })
+                : tAuto("hide_value0_eee67d1", {
+                    value0: String((labelText as unknown) ?? ""),
+                  })
               : item.focused
-                ? "Show all series"
-                : `Show only ${labelText}`;
+                ? tAuto("show_all_series_0fcfb7a")
+                : tAuto("show_only_value0_72dbdfb", {
+                    value0: String((labelText as unknown) ?? ""),
+                  });
           // aria-pressed reflects state: visible (toggle) / focused (highlight).
           const ariaPressed =
             interaction === "toggle" ? !item.dimmed : item.focused;

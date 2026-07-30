@@ -14,6 +14,7 @@ import {
   removeAppRootDefaultFilter,
   shouldRunAppRootFallbackQuery,
 } from "@/src/features/events/lib/appRootDefaultFilterPolicy";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type FullEventsObservation = FullEventsObservations[number] & {
   scores?: ScoreAggregate;
@@ -58,6 +59,7 @@ export function useEventsTableData({
   appRootFallbackEnabled = false,
   rowsEnabled = true,
 }: UseEventsTableDataParams) {
+  const tAuto = useAutoTranslations();
   // Prepare query payloads
   const getCountPayload = useMemo(
     () => ({
@@ -240,8 +242,11 @@ export function useEventsTableData({
   const addToQueueMutation = api.annotationQueueItems.createMany.useMutation({
     onSuccess: (data) => {
       showSuccessToast({
-        title: "Observations added to queue",
-        description: `Selected observations will be added to queue "${data.queueName}". This may take a minute.`,
+        title: tAuto("observations_added_to_queue_bd02d27"),
+        description: tAuto(
+          "selected_observations_will_be_added_to_queue_value0__c8a57b2",
+          { value0: String(data.queueName ?? "") },
+        ),
         link: {
           href: `/project/${projectId}/annotation-queues/${data.queueId}`,
           text: `View queue "${data.queueName}"`,

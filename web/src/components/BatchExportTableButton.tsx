@@ -21,6 +21,7 @@ import React from "react";
 import { api } from "@/src/utils/api";
 import { showSuccessToast } from "@/src/features/notifications/showSuccessToast";
 import { useHasProjectAccess } from "@/src/features/rbac/utils/checkProjectAccess";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export type BatchExportTableButtonProps = {
   projectId: string;
@@ -34,6 +35,8 @@ export type BatchExportTableButtonProps = {
 export const BatchExportTableButton: React.FC<BatchExportTableButtonProps> = (
   props,
 ) => {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const [isExporting, setIsExporting] = React.useState(false);
   const createExport = api.batchExport.create.useMutation({
     onSettled: () => {
@@ -41,8 +44,10 @@ export const BatchExportTableButton: React.FC<BatchExportTableButtonProps> = (
     },
     onSuccess: () => {
       showSuccessToast({
-        title: "Export queued",
-        description: "You will receive an email when the export is ready.",
+        title: tAuto("export_queued_e61ee49"),
+        description: tAuto(
+          "you_will_receive_an_email_when_the_export_is_ready_aa18b68",
+        ),
         duration: 10000,
         link: {
           href: `/project/${props.projectId}/settings/exports`,
@@ -97,7 +102,7 @@ export const BatchExportTableButton: React.FC<BatchExportTableButtonProps> = (
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="icon" title="Export">
+        <Button variant="outline" size="icon" title={tAuto("export_f3e4fad")}>
           {isExporting ? (
             <Spinner size="sm" />
           ) : (
@@ -107,7 +112,7 @@ export const BatchExportTableButton: React.FC<BatchExportTableButtonProps> = (
       </DropdownMenuTrigger>
       <DropdownMenuPortal>
         <DropdownMenuContent className="w-80">
-          <DropdownMenuLabel>Export</DropdownMenuLabel>
+          <DropdownMenuLabel>{tAuto("export_f3e4fad")}</DropdownMenuLabel>
           {warningMessage && (
             <div className="text-muted-foreground px-2 py-1.5 text-xs">
               <div className="flex items-start gap-1.5">
@@ -123,7 +128,7 @@ export const BatchExportTableButton: React.FC<BatchExportTableButtonProps> = (
               className="capitalize"
               onClick={() => handleExport(key as BatchExportFileFormat)}
             >
-              as {options.label}
+              {tAutoI18n("as_df211cc")} {options.label}
             </DropdownMenuItem>
           ))}
         </DropdownMenuContent>

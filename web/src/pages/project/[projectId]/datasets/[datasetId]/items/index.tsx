@@ -28,8 +28,10 @@ import { DatasetVersionWarningBanner } from "@/src/features/datasets/components/
 import { useState } from "react";
 import { useDatasetVersion } from "@/src/features/datasets/hooks/useDatasetVersion";
 import { getDatasetBreadcrumb } from "@/src/features/datasets/utils/getDatasetBreadcrumb";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 function DatasetItemsView() {
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const projectId = router.query.projectId as string;
   const datasetId = router.query.datasetId as string;
@@ -128,7 +130,7 @@ function DatasetItemsView() {
                     <DropdownMenuItemWithSecondaryAction
                       disabled={disabled}
                       icon={disabled === undefined ? Edit : LockIcon}
-                      title="Edit"
+                      title={tAuto("edit_5301648")}
                       onClick={openDialog}
                     />
                     <DropdownMenuItem asChild>
@@ -159,7 +161,7 @@ function DatasetItemsView() {
               variant="outline"
               size="icon"
               onClick={() => setIsVersionPanelOpen(!isVersionPanelOpen)}
-              title="Version History"
+              title={tAuto("version_history_6974ab7")}
             >
               <History className="h-4 w-4" />
             </Button>

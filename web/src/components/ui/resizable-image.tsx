@@ -9,6 +9,7 @@ import { Skeleton } from "@/src/components/ui/skeleton";
 import { useSession } from "next-auth/react";
 import { buildResizableImageSrc } from "./resizable-image.utils";
 import { getSafeImageUrl } from "@/src/components/ui/safe-url";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export const COMPACT_IMAGE_MAX_HEIGHT_REM = 16;
 
@@ -75,6 +76,7 @@ export const ResizableImage = ({
   fitContent?: boolean;
   compactWidth?: string;
 }) => {
+  const tAuto = useAutoTranslations();
   const safeSrc = getSafeImageUrl(src);
   const [isZoomedIn, setIsZoomedIn] = useState(true);
   const [hasFetchError, setHasFetchError] = useState(false);
@@ -101,7 +103,7 @@ export const ResizableImage = ({
   if (isValidImage.isLoading && isImageVisible) {
     return (
       <Skeleton className="h-8 w-1/2 items-center p-2 text-xs">
-        <span className="opacity-80">Loading image...</span>
+        <span className="opacity-80">{tAuto("loading_image_3aa5c10")}</span>
       </Skeleton>
     );
   }
@@ -133,7 +135,12 @@ export const ResizableImage = ({
               <Image
                 loader={customLoader}
                 src={safeSrc}
-                alt={alt ?? `Markdown Image-${Math.random()}`}
+                alt={
+                  alt ??
+                  tAuto("markdown_image_value0_2872ec1", {
+                    value0: Math.random(),
+                  })
+                }
                 loading="lazy"
                 width={0}
                 height={0}
@@ -168,14 +175,14 @@ export const ResizableImage = ({
           ) : (
             <div className="bg-muted/30 text-muted-foreground/60 flex w-full items-center gap-2 rounded border border-dashed p-2 text-xs">
               <Button
-                title="Render image"
+                title={tAuto("render_image_f29251d")}
                 type="button"
                 size="sm"
                 variant="secondary"
                 onClick={() => setIsImageVisible(!isImageVisible)}
                 disabled={!safeSrc}
               >
-                Load Image
+                {tAuto("load_image_0792343")}{" "}
               </Button>
               <div className="flex min-w-0 flex-1 items-center overflow-hidden">
                 {safeSrc ? (

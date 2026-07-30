@@ -62,6 +62,7 @@ import { AlertCircle, TrashIcon } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const SSO_PROVIDERS: ReadonlyArray<{
   id: SsoProviderSchema["authProvider"];
@@ -81,7 +82,11 @@ const SSO_PROVIDERS: ReadonlyArray<{
   { id: "keycloak", label: "Keycloak", fields: ["issuer"] },
   { id: "jumpcloud", label: "JumpCloud", fields: ["issuer"] },
   // Custom OIDC requires a display name on the schema; surface it in the form.
-  { id: "custom", label: "Custom OIDC", fields: ["name", "issuer"] },
+  {
+    id: "custom",
+    label: "Custom OIDC",
+    fields: ["name", "issuer"],
+  },
 ];
 
 const providerLabel = (id: string) =>
@@ -126,6 +131,7 @@ type SsoConfigRow = {
 };
 
 export const SSOSettings = ({ orgId }: { orgId: string }) => {
+  const tAuto = useAutoTranslations();
   const hasEntitlement = useHasEntitlement("cloud-multi-tenant-sso");
   const hasAccess = useHasOrganizationAccess({
     organizationId: orgId,
@@ -134,10 +140,11 @@ export const SSOSettings = ({ orgId }: { orgId: string }) => {
 
   const heading = (
     <>
-      <Header title="SSO Configuration" />
+      <Header title={tAuto("sso_configuration_8aab7c8")} />
       <p className="text-muted-foreground mb-4 text-sm">
-        Configure Single Sign-On per verified domain. Once active, every user
-        signing in with that domain is redirected to your identity provider.
+        {tAuto(
+          "configure_single_sign_on_per_verified_domain_once_ac_18ce3d9",
+        )}{" "}
       </p>
     </>
   );
@@ -150,10 +157,11 @@ export const SSOSettings = ({ orgId }: { orgId: string }) => {
           {heading}
           <Alert>
             <AlertCircle className="h-4 w-4" />
-            <AlertTitle>Not available</AlertTitle>
+            <AlertTitle>{tAuto("not_available_d1a17af")}</AlertTitle>
             <AlertDescription>
-              Enterprise SSO is not available on your plan. Please upgrade to
-              access this feature.
+              {tAuto(
+                "enterprise_sso_is_not_available_on_your_plan_please__6ff942d",
+              )}{" "}
             </AlertDescription>
           </Alert>
         </div>
@@ -168,9 +176,11 @@ export const SSOSettings = ({ orgId }: { orgId: string }) => {
         <div>
           {heading}
           <Alert>
-            <AlertTitle>Access Denied</AlertTitle>
+            <AlertTitle>{tAuto("access_denied_1647b9d")}</AlertTitle>
             <AlertDescription>
-              You do not have permission to configure SSO for this organization.
+              {tAuto(
+                "you_do_not_have_permission_to_configure_sso_for_this_f969376",
+              )}{" "}
             </AlertDescription>
           </Alert>
         </div>
@@ -190,6 +200,7 @@ export const SSOSettings = ({ orgId }: { orgId: string }) => {
 };
 
 function SsoConfigsTable({ orgId }: { orgId: string }) {
+  const tAuto = useAutoTranslations();
   const verifiedDomainsQuery = api.verifiedDomain.list.useQuery({ orgId });
   const ssoConfigsQuery = api.ssoConfig.get.useQuery({ orgId });
 
@@ -207,7 +218,9 @@ function SsoConfigsTable({ orgId }: { orgId: string }) {
     return (
       <Card className="overflow-hidden">
         <p className="text-muted-foreground px-6 py-12 text-center text-sm">
-          Verify a domain in the section above to configure SSO for it.
+          {tAuto(
+            "verify_a_domain_in_the_section_above_to_configure_ss_38712f0",
+          )}{" "}
         </p>
       </Card>
     );
@@ -218,10 +231,14 @@ function SsoConfigsTable({ orgId }: { orgId: string }) {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="text-primary pl-2.5">Domain</TableHead>
-            <TableHead className="text-primary">Provider</TableHead>
+            <TableHead className="text-primary pl-2.5">
+              {tAuto("domain_9b10914")}
+            </TableHead>
+            <TableHead className="text-primary">
+              {tAuto("provider_7ceee3f")}
+            </TableHead>
             <TableHead className="text-primary hidden md:table-cell">
-              Updated
+              {tAuto("updated_f2f8570")}{" "}
             </TableHead>
             <TableHead />
           </TableRow>
@@ -250,6 +267,7 @@ function SsoConfigRow({
   domain: string;
   config: SsoConfigRow | null;
 }) {
+  const tAuto = useAutoTranslations();
   return (
     <TableRow className="hover:bg-primary-foreground">
       <TableCell density="comfortable" className="font-mono">
@@ -259,7 +277,7 @@ function SsoConfigRow({
         {config ? (
           <Badge variant="default">{providerLabel(config.authProvider)}</Badge>
         ) : (
-          <Badge variant="secondary">Not configured</Badge>
+          <Badge variant="secondary">{tAuto("not_configured_811931b")}</Badge>
         )}
       </TableCell>
       <TableCell density="comfortable" className="hidden md:table-cell">
@@ -287,6 +305,8 @@ function SsoConfigDialog({
   domain: string;
   existing: SsoConfigRow | null;
 }) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [pendingValues, setPendingValues] = useState<FormValues | null>(null);
@@ -336,8 +356,12 @@ function SsoConfigDialog({
     onSuccess: () => {
       utils.ssoConfig.get.invalidate({ orgId });
       showSuccessToast({
-        title: existing ? "SSO updated" : "SSO configured",
-        description: `Active for @${domain} within 1 hour.`,
+        title: existing
+          ? tAuto("sso_updated_51bd66e")
+          : tAuto("sso_configured_42f460d"),
+        description: tAuto("active_for_value0_within_1_hour_45dd531", {
+          value0: domain,
+        }),
       });
       setDialogOpen(false);
       setConfirmOpen(false);
@@ -346,7 +370,9 @@ function SsoConfigDialog({
     },
     onError: (err) => {
       showErrorToast(
-        existing ? "Update failed" : "SSO configuration failed",
+        existing
+          ? tAutoI18n("update_failed_4de04cd")
+          : tAutoI18n("sso_configuration_failed_95e2f11"),
         err.message,
       );
     },
@@ -391,7 +417,9 @@ function SsoConfigDialog({
       ];
       if (!FORM_FIELDS.includes(formField)) {
         showErrorToast(
-          existing ? "Update failed" : "SSO configuration failed",
+          existing
+            ? tAutoI18n("update_failed_4de04cd")
+            : tAutoI18n("sso_configuration_failed_95e2f11"),
           firstIssue.message,
         );
       }
@@ -406,15 +434,15 @@ function SsoConfigDialog({
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogTrigger asChild>
           <Button size="sm" variant={existing ? "outline" : "default"}>
-            {existing ? "Update" : "Configure SSO"}
+            {existing ? tAutoI18n("update_fb91e24") : tAutoI18n("configure_sso_033080c")}
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-xl">
           <DialogHeader>
             <DialogTitle>
               {existing
-                ? `Update SSO for ${domain}`
-                : `Configure SSO for ${domain}`}
+                ? tAutoI18n("update_sso_for_value0_0cc4dda", { value0: String(((domain) as unknown) ?? "") })
+                : tAutoI18n("configure_sso_for_value0_2d57181", { value0: String(((domain) as unknown) ?? "") })}
             </DialogTitle>
           </DialogHeader>
           <Form {...form}>
@@ -425,14 +453,18 @@ function SsoConfigDialog({
                   name="authProvider"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Provider</FormLabel>
+                      <FormLabel>{tAuto("provider_7ceee3f")}</FormLabel>
                       <FormControl>
                         <Select
                           value={field.value}
                           onValueChange={field.onChange}
                         >
                           <SelectTrigger>
-                            <SelectValue placeholder="Select an SSO provider" />
+                            <SelectValue
+                              placeholder={tAuto(
+                                "select_an_sso_provider_590b2dd",
+                              )}
+                            />
                           </SelectTrigger>
                           <SelectContent>
                             {SSO_PROVIDERS.map((p) => (
@@ -456,9 +488,12 @@ function SsoConfigDialog({
                     name="authConfig.name"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Display Name</FormLabel>
+                        <FormLabel>{tAuto("display_name_8d6b348")}</FormLabel>
                         <FormControl>
-                          <Input placeholder="Acme SSO" {...field} />
+                          <Input
+                            placeholder={tAuto("acme_sso_8c2632b")}
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -471,7 +506,7 @@ function SsoConfigDialog({
                   name="authConfig.clientId"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Client ID</FormLabel>
+                      <FormLabel>{tAuto("client_id_a766cd7")}</FormLabel>
                       <FormControl>
                         <Input {...field} />
                       </FormControl>
@@ -485,13 +520,15 @@ function SsoConfigDialog({
                   name="authConfig.clientSecret"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Client Secret</FormLabel>
+                      <FormLabel>{tAuto("client_secret_2c4e1ba")}</FormLabel>
                       <FormControl>
                         <Input
                           type="password"
                           autoComplete="off"
                           placeholder={
-                            existing ? "Re-enter to update" : undefined
+                            existing
+                              ? tAuto("re_enter_to_update_871e3d8")
+                              : undefined
                           }
                           {...field}
                         />
@@ -507,7 +544,7 @@ function SsoConfigDialog({
                     name="authConfig.issuer"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Issuer URL</FormLabel>
+                        <FormLabel>{tAuto("issuer_url_040c065")}</FormLabel>
                         <FormControl>
                           <Input
                             placeholder="https://example.okta.com"
@@ -526,7 +563,7 @@ function SsoConfigDialog({
                     name="authConfig.tenantId"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Tenant ID</FormLabel>
+                        <FormLabel>{tAuto("tenant_id_3422cdf")}</FormLabel>
                         <FormControl>
                           <Input {...field} />
                         </FormControl>
@@ -542,7 +579,7 @@ function SsoConfigDialog({
                     name="authConfig.baseUrl"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Base URL</FormLabel>
+                        <FormLabel>{tAuto("base_url_1dbd61f")}</FormLabel>
                         <FormControl>
                           <Input
                             placeholder="https://github.acme.com"
@@ -572,11 +609,14 @@ function SsoConfigDialog({
                           </FormControl>
                           <div className="space-y-1 leading-none">
                             <FormLabel>
-                              Use id_token claims only (skip userinfo)
+                              {tAuto(
+                                "use_id_token_claims_only_skip_userinfo_9488077",
+                              )}{" "}
                             </FormLabel>
                             <FormDescription>
-                              Leave off for IdPs that release email only via the
-                              userinfo endpoint.
+                              {tAuto(
+                                "leave_off_for_idps_that_release_email_only_via_the_u_cbe53c5",
+                              )}{" "}
                             </FormDescription>
                           </div>
                         </FormItem>
@@ -591,10 +631,10 @@ function SsoConfigDialog({
                   variant="ghost"
                   onClick={() => setDialogOpen(false)}
                 >
-                  Cancel
+                  {tAuto("cancel_77dfd21")}{" "}
                 </Button>
                 <Button type="submit" loading={saveMutation.isPending}>
-                  Save
+                  {tAuto("save_efc007a")}{" "}
                 </Button>
               </DialogFooter>
             </form>
@@ -607,12 +647,12 @@ function SsoConfigDialog({
           <AlertDialogHeader>
             <AlertDialogTitle>
               {existing
-                ? `Replace SSO for @${domain}?`
-                : `Activate SSO for @${domain}?`}
+                ? tAutoI18n("replace_sso_for_value0_01d4381", { value0: String(((domain) as unknown) ?? "") })
+                : tAutoI18n("activate_sso_for_value0_ad2f0df", { value0: String(((domain) as unknown) ?? "") })}
             </AlertDialogTitle>
             <AlertDialogDescription>
               <span className="block">
-                Saving will activate SSO for{" "}
+                {tAutoI18n("saving_will_activate_sso_for_8e87e50")}{" "}
                 <span className="font-bold">@{domain}</span> within 1 hour.
                 Every user at that domain will be redirected to your identity
                 provider on sign-in &mdash; they will not be able to use Google,
@@ -620,22 +660,25 @@ function SsoConfigDialog({
               </span>
               {existing ? (
                 <span className="mt-2 block">
-                  The new credentials will replace the active configuration.
+                  {tAuto(
+                    "the_new_credentials_will_replace_the_active_configur_b068c68",
+                  )}{" "}
                 </span>
               ) : null}
               <span className="mt-2 block">
-                Tip: sign in via the new SSO in a second browser to confirm it
-                works before closing this tab.
+                {tAuto(
+                  "tip_sign_in_via_the_new_sso_in_a_second_browser_to_c_b524221",
+                )}{" "}
               </span>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{tAuto("cancel_77dfd21")}</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleConfirm}
               disabled={saveMutation.isPending}
             >
-              {existing ? "Replace" : "Activate SSO"}
+              {existing ? tAutoI18n("replace_a7cf7b2") : tAutoI18n("activate_sso_e2c8b4d")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -645,9 +688,10 @@ function SsoConfigDialog({
 }
 
 function CallbackUrlPanel({ callbackUrl }: { callbackUrl: string }) {
+  const tAuto = useAutoTranslations();
   return (
     <div>
-      <p className="mb-2 text-sm font-bold">Callback URL</p>
+      <p className="mb-2 text-sm font-bold">{tAuto("callback_url_e7ecd08")}</p>
       <Card className="overflow-hidden">
         <Table>
           <TableHeader>
@@ -667,7 +711,9 @@ function CallbackUrlPanel({ callbackUrl }: { callbackUrl: string }) {
         </Table>
       </Card>
       <p className="text-muted-foreground mt-2 text-xs">
-        Add this URL as an authorized redirect URI in your identity provider.
+        {tAuto(
+          "add_this_url_as_an_authorized_redirect_uri_in_your_i_8a755a4",
+        )}{" "}
       </p>
     </div>
   );
@@ -680,18 +726,22 @@ function DeleteSsoConfigButton({
   orgId: string;
   domain: string;
 }) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const utils = api.useUtils();
 
   const deleteMutation = api.ssoConfig.delete.useMutation({
     onSuccess: () => {
       utils.ssoConfig.get.invalidate({ orgId });
       showSuccessToast({
-        title: "SSO disabled",
-        description: `SSO for @${domain} has been removed.`,
+        title: tAuto("sso_disabled_63e083b"),
+        description: tAuto("sso_for_value0_has_been_removed_466c6d5", {
+          value0: domain,
+        }),
       });
     },
     onError: (err) => {
-      showErrorToast("Failed to remove SSO", err.message);
+      showErrorToast(tAutoI18n("failed_to_remove_sso_2b08ecb"), err.message);
     },
   });
 
@@ -701,26 +751,32 @@ function DeleteSsoConfigButton({
         <Button
           variant="ghost"
           size="icon-xs"
-          aria-label={`Delete SSO for ${domain}`}
+          aria-label={tAuto("delete_sso_for_value0_5d879ba", {
+            value0: domain,
+          })}
         >
           <TrashIcon className="h-4 w-4" />
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Remove SSO for @{domain}?</AlertDialogTitle>
+          <AlertDialogTitle>
+            {tAutoI18n("remove_sso_for_b0be5d9")}
+            {domain}?
+          </AlertDialogTitle>
           <AlertDialogDescription>
-            Users at this domain will be able to sign in with any enabled method
-            again. Active sessions are not invalidated.
+            {tAuto(
+              "users_at_this_domain_will_be_able_to_sign_in_with_an_3365d47",
+            )}{" "}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel>{tAuto("cancel_77dfd21")}</AlertDialogCancel>
           <AlertDialogAction
             onClick={() => deleteMutation.mutate({ orgId, domain })}
             disabled={deleteMutation.isPending}
           >
-            Remove
+            {tAuto("remove_e963907")}{" "}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

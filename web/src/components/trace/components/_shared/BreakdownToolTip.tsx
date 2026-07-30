@@ -7,6 +7,7 @@ import {
 import { useState } from "react";
 import Decimal from "decimal.js";
 import { getMaxDecimals } from "@/src/features/models/utils";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 interface Details {
   [key: string]: number | undefined;
@@ -71,6 +72,8 @@ export const BreakdownTooltip = ({
   isCost = false,
   pricingTierName,
 }: BreakdownTooltipProps) => {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const [isOpen, setIsOpen] = useState(false);
 
   // Aggregate details if array is provided
@@ -112,17 +115,21 @@ export const BreakdownTooltip = ({
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-1">
               <span className="font-bold">
-                {isCost ? "Cost breakdown" : "Usage breakdown"}
+                {isCost
+                  ? tAutoI18n("cost_breakdown_e233f3f")
+                  : tAutoI18n("usage_breakdown_8312e8f")}
               </span>
               {Array.isArray(details) && details.length > 0 && (
                 <span className="text-muted-foreground text-xs italic">
-                  Aggregate across {details.length}{" "}
-                  {details.length === 1 ? "generation" : "generations"}
+                  {tAutoI18n("aggregate_across_5060c02")} {details.length}{" "}
+                  {details.length === 1
+                    ? tAutoI18n("generation_cd738eb")
+                    : tAutoI18n("generations_f20cc44")}
                 </span>
               )}
               {pricingTierName && (
                 <div className="text-muted-foreground flex justify-between text-xs">
-                  <span>Pricing Tier:</span>
+                  <span>{tAuto("pricing_tier_83bca84")}</span>
                   <span className="font-mono">{pricingTierName}</span>
                 </div>
               )}
@@ -130,7 +137,11 @@ export const BreakdownTooltip = ({
 
             {/* Input Section */}
             <Section
-              title={isCost ? "Input cost" : "Input usage"}
+              title={
+                isCost
+                  ? tAuto("input_cost_5545619")
+                  : tAuto("input_usage_c17f6a6")
+              }
               details={aggregatedDetails}
               filterFn={(key) => key.includes("input")}
               formatValue={(v) => formatValueWithPadding(v, maxDecimals)}
@@ -138,7 +149,11 @@ export const BreakdownTooltip = ({
 
             {/* Output Section */}
             <Section
-              title={isCost ? "Output cost" : "Output usage"}
+              title={
+                isCost
+                  ? tAuto("output_cost_3ca4df8")
+                  : tAuto("output_usage_a6cf86c")
+              }
               details={aggregatedDetails}
               filterFn={(key) => key.includes("output")}
               formatValue={(v) => formatValueWithPadding(v, maxDecimals)}
@@ -154,7 +169,9 @@ export const BreakdownTooltip = ({
             {/* Total */}
             <div className="flex justify-between border-t border-b-4 border-double py-1">
               <span className="text-xs font-bold">
-                {isCost ? "Total cost" : "Total usage"}
+                {isCost
+                  ? tAutoI18n("total_cost_2f69970")
+                  : tAutoI18n("total_usage_af341c8")}
               </span>
               <span className="font-mono text-xs font-bold">
                 {formatValueWithPadding(
@@ -216,6 +233,7 @@ interface OtherSectionProps {
 }
 
 const OtherSection = ({ details, isCost, formatValue }: OtherSectionProps) => {
+  const tAuto = useAutoTranslations();
   const otherEntries = Object.entries(details)
     .filter(
       ([key]) =>
@@ -235,7 +253,7 @@ const OtherSection = ({ details, isCost, formatValue }: OtherSectionProps) => {
     <div className="flex flex-col gap-2">
       <div className="flex justify-between border-b pb-2">
         <span className="text-xs font-bold">
-          {isCost ? "Other cost" : "Other usage"}
+          {isCost ? tAuto("other_cost_e2d62d9") : tAuto("other_usage_f5cb879")}
         </span>
         <span className="text-right font-mono text-xs font-bold">
           {formatValue(otherTotal)}

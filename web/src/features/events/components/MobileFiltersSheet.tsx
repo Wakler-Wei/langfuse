@@ -14,6 +14,7 @@ import {
 } from "@/src/components/ui/sheet";
 import { useDataTableControls } from "@/src/components/table/data-table-controls";
 import { numberFormatter } from "@/src/utils/numbers";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 interface MobileFiltersSheetProps {
   /** Count shown on the trigger badge — active facet columns (+ free-text
@@ -80,6 +81,7 @@ export function MobileFiltersSheet({
   savedViews,
   facets,
 }: MobileFiltersSheetProps) {
+  const tAuto = useAutoTranslations();
   const { open, setOpen } = useDataTableControls();
 
   return (
@@ -87,7 +89,7 @@ export function MobileFiltersSheet({
       <SheetTrigger asChild>
         <Button variant="outline" size="sm" className="h-8 shrink-0 gap-2">
           <SlidersHorizontal className="h-4 w-4" />
-          <span>Filters</span>
+          <span>{tAuto("filters_96e5782")}</span>
           {activeCount > 0 && (
             <Badge variant="secondary" className="ml-0.5 h-5 px-1.5 text-xs">
               {activeCount}
@@ -107,19 +109,21 @@ export function MobileFiltersSheet({
         className="flex h-[85svh] flex-col gap-0 p-0 [&>button]:hidden"
       >
         {/* Accessible name for the dialog; the visible heading is below. */}
-        <SheetTitle className="sr-only">Filters</SheetTitle>
+        <SheetTitle className="sr-only">{tAuto("filters_96e5782")}</SheetTitle>
         {/* Header: title (left) · compact time-range + refresh · close (right).
             The controls that used to sit in the body move up here so the body
             below is a single uninterrupted scroll. */}
         <div className="flex shrink-0 items-center gap-2 border-b px-4 py-3">
-          <span className="text-foreground text-lg font-bold">Filters</span>
+          <span className="text-foreground text-lg font-bold">
+            {tAuto("filters_96e5782")}
+          </span>
           <div className="ml-auto flex min-w-0 items-center gap-1">
             {headerControls}
             <SheetClose asChild>
               <Button
                 variant="ghost"
                 size="icon"
-                aria-label="Close filters"
+                aria-label={tAuto("close_filters_c2db1e0")}
                 className="h-8 w-8 shrink-0"
               >
                 <X className="h-4 w-4" />
@@ -138,8 +142,10 @@ export function MobileFiltersSheet({
         <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
           {(presets || savedViews) && (
             <div className="flex flex-col gap-5 px-4 py-4">
-              <Section label="Quick presets">{presets}</Section>
-              <Section label="My views">{savedViews}</Section>
+              <Section label={tAuto("quick_presets_0e86c99")}>
+                {presets}
+              </Section>
+              <Section label={tAuto("my_views_dce90e3")}>{savedViews}</Section>
             </div>
           )}
           {facets}
@@ -147,13 +153,17 @@ export function MobileFiltersSheet({
 
         <div className="flex shrink-0 items-center gap-2 border-t px-4 py-3">
           <Button variant="outline" className="flex-1" onClick={onClearAll}>
-            Clear all
+            {tAuto("clear_all_c043160")}{" "}
           </Button>
           <SheetClose asChild>
             <Button className="flex-1">
               {resultCount != null
-                ? `Show ${numberFormatter(resultCount, 0)} results`
-                : "Show results"}
+                ? tAuto("show_value0_results_92a7869", {
+                    value0: String(
+                      (numberFormatter(resultCount, 0) as unknown) ?? "",
+                    ),
+                  })
+                : tAuto("show_results_71c5c8d")}
             </Button>
           </SheetClose>
         </div>

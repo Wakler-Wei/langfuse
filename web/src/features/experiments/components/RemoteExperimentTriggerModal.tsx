@@ -27,6 +27,7 @@ import { showErrorToast } from "@/src/features/notifications/showErrorToast";
 import { getFormattedPayload } from "@/src/features/experiments/utils/format";
 import { type Prisma } from "@langfuse/shared";
 import Spinner from "@/src/components/design-system/Spinner/Spinner";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const RemoteExperimentTriggerSchema = z.object({
   payload: z.string(),
@@ -50,6 +51,8 @@ export const RemoteExperimentTriggerModal = ({
   };
   setShowTriggerModal: (show: boolean) => void;
 }) => {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const hasDatasetAccess = useHasProjectAccess({
     projectId,
     scope: "datasets:CUD",
@@ -72,21 +75,26 @@ export const RemoteExperimentTriggerModal = ({
       onSuccess: (data) => {
         if (data.success && data.skipped) {
           showErrorToast(
-            "Trigger is disabled",
-            "Enable the trigger in settings to run remote experiments.",
+            tAutoI18n("trigger_is_disabled_ce21426"),
+            tAutoI18n(
+              "enable_the_trigger_in_settings_to_run_remote_experim_fd0e1e0",
+            ),
             "WARNING",
           );
         } else if (data.success) {
           showSuccessToast({
-            title: "Remote experiment triggered",
-            description:
-              "Your remote experiment may take a few minutes to complete.",
+            title: tAuto("remote_experiment_triggered_6581fb0"),
+            description: tAuto(
+              "your_remote_experiment_may_take_a_few_minutes_to_com_efb5235",
+            ),
           });
         } else {
           showErrorToast(
-            "Failed to trigger remote experiment",
+            tAutoI18n("failed_to_trigger_remote_experiment_84ab01f"),
             data.error ||
-              "Please try again or check your remote experiment configuration.",
+              tAutoI18n(
+                "please_try_again_or_check_your_remote_experiment_con_394a1b3",
+              ),
           );
         }
         setShowTriggerModal(false);
@@ -124,11 +132,13 @@ export const RemoteExperimentTriggerModal = ({
           onClick={() => setShowTriggerModal(false)}
           className="inline-block self-start"
         >
-          ← Back
+          {tAuto("back_c32ae9f")}{" "}
         </Button>
-        <DialogTitle>Run remote dataset run</DialogTitle>
+        <DialogTitle>{tAuto("run_remote_dataset_run_a2a62e7")}</DialogTitle>
         <DialogDescription>
-          This action will send the following information to{" "}
+          {tAutoI18n(
+            "this_action_will_send_the_following_information_to_ce97316",
+          )}{" "}
           <strong>{remoteExperimentConfig.url}</strong>.
         </DialogDescription>
       </DialogHeader>
@@ -142,11 +152,13 @@ export const RemoteExperimentTriggerModal = ({
                 name="payload"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Config</FormLabel>
+                    <FormLabel>{tAuto("config_8851142")}</FormLabel>
                     <FormDescription>
-                      Confirm the config you want to send to the remote dataset
-                      run URL along with the{" "}
-                      <strong>{dataset.data?.name}</strong> dataset information.
+                      {tAutoI18n(
+                        "confirm_the_config_you_want_to_send_to_the_remote_da_300251a",
+                      )}{" "}
+                      <strong>{dataset.data?.name}</strong>{" "}
+                      {tAutoI18n("dataset_information_f032946")}{" "}
                     </FormDescription>
                     <FormControl>
                       <CodeMirrorEditor
@@ -173,7 +185,7 @@ export const RemoteExperimentTriggerModal = ({
                 onClick={() => setShowTriggerModal(false)}
                 disabled={runRemoteExperimentMutation.isPending}
               >
-                Cancel
+                {tAuto("cancel_77dfd21")}{" "}
               </Button>
               <Button
                 type="submit"
@@ -184,7 +196,7 @@ export const RemoteExperimentTriggerModal = ({
                     <Spinner size="sm" />
                   </div>
                 )}
-                Run
+                {tAutoI18n("run_b1b3926")}{" "}
               </Button>
             </div>
           </DialogFooter>

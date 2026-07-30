@@ -7,6 +7,7 @@ import {
   isExperimentTarget,
   isDatasetTarget,
 } from "@/src/features/evals/utils/typeHelpers";
+import { I18nText } from "@/src/features/i18n/I18nText";
 
 interface EvalVersionCalloutProps {
   targetObject: string;
@@ -15,7 +16,7 @@ interface EvalVersionCalloutProps {
 
 interface CalloutContent {
   visible: boolean;
-  title: string;
+  title: React.ReactNode;
   description: React.ReactNode;
 }
 
@@ -33,19 +34,17 @@ const getCalloutContent = (
 
     return {
       visible: true,
-      title: "Please verify your SDK version",
+      title: <I18nText id="please_verify_your_sdk_version_d6fd5a1" />,
       description: (
         <>
-          This evaluator targets observations, which require JS SDK v4+ or
-          Python SDK v3+. You can still configure this evaluator now—it will
-          start running once you upgrade.{" "}
+          <I18nText id="this_evaluator_targets_observations_which_require_js_43248f5" />{" "}
           <a
             href="https://langfuse.com/docs/observability/sdk/upgrade-path"
             target="_blank"
             rel="noopener noreferrer"
             className="text-dark-blue font-bold hover:opacity-80"
           >
-            Learn more
+            <I18nText id="learn_more_824d76b" />{" "}
           </a>
           .
         </>
@@ -58,19 +57,19 @@ const getCalloutContent = (
     if (!evalCapabilities.isNewCompatible) {
       return {
         visible: true,
-        title: "Please verify you are using the Experiment Runner SDK",
+        title: (
+          <I18nText id="please_verify_you_are_using_the_experiment_runner_sd_8eba1cc" />
+        ),
         description: (
           <>
-            The Experiment Runner SDK requires JS SDK v4.4+ or Python SDK v3.9+.
-            You can still configure this evaluator now—it will start running
-            once you upgrade.{" "}
+            <I18nText id="the_experiment_runner_sdk_requires_js_sdk_v4_4_or_py_dc05482" />{" "}
             <a
               href="https://langfuse.com/docs/evaluation/experiments/experiments-via-sdk#experiment-runner-sdk"
               target="_blank"
               rel="noopener noreferrer"
               className="text-dark-blue font-bold hover:opacity-80"
             >
-              Learn more about the Experiment Runner SDK.
+              <I18nText id="learn_more_about_the_experiment_runner_sdk_9290166" />{" "}
             </a>
             .
           </>
@@ -85,20 +84,17 @@ const getCalloutContent = (
   if (isDatasetTarget(targetObject)) {
     return {
       visible: true,
-      title: "Legacy low-level SDK methods",
+      title: <I18nText id="legacy_low_level_sdk_methods_bc3d8cd" />,
       description: (
         <>
-          This evaluator targets traces from legacy low-level SDK methods for
-          dataset runs that manually linked dataset items to traces. Consider
-          upgrading to the Experiment Runner SDK for improved performance and
-          features.{" "}
+          <I18nText id="this_evaluator_targets_traces_from_legacy_low_level__ad86a5b" />{" "}
           <a
             href="https://langfuse.com/docs/evaluation/experiments/experiments-via-sdk#experiment-runner-sdk"
             target="_blank"
             rel="noopener noreferrer"
             className="text-dark-blue font-bold hover:opacity-80"
           >
-            Learn more
+            <I18nText id="learn_more_824d76b" />{" "}
           </a>
           .
         </>
@@ -110,18 +106,19 @@ const getCalloutContent = (
   if (isTraceTarget(targetObject)) {
     return {
       visible: true,
-      title: "Consider upgrading to observation evaluators",
+      title: (
+        <I18nText id="consider_upgrading_to_observation_evaluators_2e097dd" />
+      ),
       description: (
         <>
-          Observation evaluators provide more granular control and an easier
-          workflow. We strongly recommend upgrading to observation evaluators.{" "}
+          <I18nText id="observation_evaluators_provide_more_granular_control_ffe074e" />{" "}
           <a
             href="https://langfuse.com/faq/all/llm-as-a-judge-migration"
             target="_blank"
             rel="noopener noreferrer"
             className="text-dark-blue font-bold hover:opacity-80"
           >
-            Learn more
+            <I18nText id="learn_more_824d76b" />{" "}
           </a>
           .
         </>

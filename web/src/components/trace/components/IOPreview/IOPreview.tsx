@@ -14,6 +14,7 @@ import { type ChatMLParserResult } from "./hooks/useChatMLParser";
 import { Button } from "@/src/components/ui/button";
 import { ActionButton } from "@/src/components/ActionButton";
 import { BookOpen, X } from "lucide-react";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export type { ViewMode };
 export type IOPreviewContentMode = "all" | "conversation";
@@ -146,6 +147,7 @@ export function IOPreview({
   environment = "default",
   showCorrections = true,
 }: IOPreviewProps) {
+  const tAuto = useAutoTranslations();
   const capture = usePostHogClientCapture();
   const [dismissedTraceViewNotifications, setDismissedTraceViewNotifications] =
     useLocalStorage<string[]>(STORAGE_KEY, []);
@@ -314,7 +316,7 @@ export function IOPreview({
                     : [...prev, EMPTY_IO_ALERT_ID],
                 );
               }}
-              title="Dismiss"
+              title={tAuto("dismiss_70afe9e")}
             >
               <X className="h-3.5 w-3.5" />
             </Button>
@@ -327,7 +329,9 @@ export function IOPreview({
               </h3>
             </div>
             <p className="text-muted-foreground max-w-sm text-sm">
-              Add it in your code to make debugging a lot easier.
+              {tAuto(
+                "add_it_in_your_code_to_make_debugging_a_lot_easier_750f643",
+              )}{" "}
             </p>
             <ActionButton
               variant="outline"
@@ -336,7 +340,7 @@ export function IOPreview({
               trackingEventName="notification:click_link"
               trackingProps={{ notification_id: EMPTY_IO_ALERT_ID }}
             >
-              View Documentation
+              {tAuto("view_documentation_4b0cd03")}{" "}
             </ActionButton>
           </div>
         </div>

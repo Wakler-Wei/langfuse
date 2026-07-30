@@ -54,6 +54,7 @@ import { MultiSelect } from "@/src/features/filters/components/multi-select";
 import { Alert, AlertDescription, AlertTitle } from "@/src/components/ui/alert";
 import Link from "next/link";
 import { Info } from "lucide-react";
+import { I18nText, useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 // Define Slack action schema
 const slackSchema = z.object({
@@ -222,6 +223,7 @@ const EventSourceField = ({
   onSourceChange: (value: TriggerEventSource) => void;
   disabled: boolean;
 }) => {
+  const tAuto = useAutoTranslations();
   const { isLangfuseCloud } = useLangfuseCloudRegion();
   return (
     <FormField
@@ -229,7 +231,7 @@ const EventSourceField = ({
       name="eventSource"
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Event Source</FormLabel>
+          <FormLabel>{tAuto("event_source_888cae2")}</FormLabel>
           <Select
             onValueChange={(value) =>
               onSourceChange(value as TriggerEventSource)
@@ -239,24 +241,28 @@ const EventSourceField = ({
           >
             <FormControl>
               <SelectTrigger>
-                <SelectValue placeholder="Select an event source" />
+                <SelectValue
+                  placeholder={tAuto("select_an_event_source_4c2c771")}
+                />
               </SelectTrigger>
             </FormControl>
             <SelectContent>
-              <SelectItem value={TriggerEventSource.Prompt}>Prompt</SelectItem>
+              <SelectItem value={TriggerEventSource.Prompt}>
+                {tAuto("prompt_a817d7e")}
+              </SelectItem>
               {(isLangfuseCloud ||
                 field.value === TriggerEventSource.Monitor) && (
                 <SelectItem value={TriggerEventSource.Monitor}>
-                  Monitor
+                  {tAuto("monitor_ec0f106")}{" "}
                 </SelectItem>
               )}
               <SelectItem disabled={true} value="planned">
-                More coming soon...
+                {tAuto("more_coming_soon_9f0ce86")}{" "}
               </SelectItem>
             </SelectContent>
           </Select>
           <FormDescription>
-            The event that triggers this automation.
+            {tAuto("the_event_that_triggers_this_automation_0c9d598")}{" "}
           </FormDescription>
           <FormMessage />
         </FormItem>
@@ -272,83 +278,99 @@ const PromptTriggerFields = ({
 }: {
   control: Control<FormValues>;
   disabled: boolean;
-}) => (
-  <>
-    <FormField
-      control={control}
-      name="eventAction"
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>Event Action</FormLabel>
-          <FormControl>
-            <MultiSelect
-              title="Event Actions"
-              label="Actions"
-              values={field.value}
-              onValueChange={field.onChange}
-              options={[
-                {
-                  value: "created",
-                  description: "Whenever a new prompt version is created",
-                },
-                {
-                  value: "updated",
-                  description:
-                    "Whenever tags or labels on a prompt version are updated",
-                },
-                {
-                  value: "deleted",
-                  description: "Whenever a prompt version is deleted",
-                },
-              ]}
-              className="my-0 w-auto overflow-hidden"
-              disabled={disabled}
-              labelTruncateCutOff={4}
-            />
-          </FormControl>
-          <FormDescription>
-            The actions on the event source that trigger this automation.
-          </FormDescription>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
-    <FormField
-      control={control}
-      name="filter"
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>Filter</FormLabel>
-          <FormControl>
-            <InlineFilterBuilder
-              columns={webhookActionFilterOptions()}
-              filterState={field.value || []}
-              onChange={field.onChange}
-              disabled={disabled}
-            />
-          </FormControl>
-          <FormDescription>
-            Add conditions to narrow down when this trigger fires.
-          </FormDescription>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
-  </>
-);
+}) => {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
+
+  return (
+    <>
+      <FormField
+        control={control}
+        name="eventAction"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>{tAutoI18n("event_action_ea66384")}</FormLabel>
+            <FormControl>
+              <MultiSelect
+                title={tAuto("event_actions_a9a0b7c")}
+                label={tAuto("actions_c3cd636")}
+                values={field.value}
+                onValueChange={field.onChange}
+                options={[
+                  {
+                    value: "created",
+                    description: tAuto(
+                      "whenever_a_new_prompt_version_is_created_e5c07c0",
+                    ),
+                  },
+                  {
+                    value: "updated",
+                    description: tAuto(
+                      "whenever_tags_or_labels_on_a_prompt_version_are_upda_262ac06",
+                    ),
+                  },
+                  {
+                    value: "deleted",
+                    description: tAuto(
+                      "whenever_a_prompt_version_is_deleted_20601f6",
+                    ),
+                  },
+                ]}
+                className="my-0 w-auto overflow-hidden"
+                disabled={disabled}
+                labelTruncateCutOff={4}
+              />
+            </FormControl>
+            <FormDescription>
+              {tAutoI18n(
+                "the_actions_on_the_event_source_that_trigger_this_au_e331fba",
+              )}{" "}
+            </FormDescription>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={control}
+        name="filter"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>{tAutoI18n("filter_d7decf1")}</FormLabel>
+            <FormControl>
+              <InlineFilterBuilder
+                columns={webhookActionFilterOptions()}
+                filterState={field.value || []}
+                onChange={field.onChange}
+                disabled={disabled}
+              />
+            </FormControl>
+            <FormDescription>
+              {tAutoI18n(
+                "add_conditions_to_narrow_down_when_this_trigger_fire_48f516d",
+              )}{" "}
+            </FormDescription>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    </>
+  );
+};
 
 /** MonitorTriggerFields renders an info card explaining that monitors connect to this automation via the create-monitor page. */
 const MonitorTriggerFields = ({ projectId }: { projectId: string }) => (
   <Alert>
     <Info className="h-4 w-4" />
-    <AlertTitle>How Monitors Connect</AlertTitle>
+    <AlertTitle>
+      <I18nText id="how_monitors_connect_ce8ce14" />
+    </AlertTitle>
     <AlertDescription>
-      Add this automation to a monitor from the{" "}
+      <I18nText id="add_automation_to_monitor_from_0375b59" />{" "}
       <Link
         href={`/project/${projectId}/monitors/new`}
         className="text-primary underline underline-offset-2"
       >
-        create monitors page
+        <I18nText id="create_monitors_page_8348d05" />{" "}
       </Link>
       .
     </AlertDescription>
@@ -384,6 +406,8 @@ export const AutomationForm = ({
   lockedEventSource,
   allowedActionTypes,
 }: AutomationFormProps) => {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const hasAccess = useHasProjectAccess({
     projectId,
@@ -521,8 +545,8 @@ export const AutomationForm = ({
   const onSubmit = async (data: FormValues) => {
     if (!hasAccess) {
       showErrorToast(
-        "Permission Denied",
-        "You don't have permission to modify automations.",
+        tAutoI18n("permission_denied_244fbfa"),
+        tAutoI18n("you_don_t_have_permission_to_modify_automations_988f7bb"),
       );
       return;
     }
@@ -533,8 +557,9 @@ export const AutomationForm = ({
 
     if (!validation.isValid) {
       showErrorToast(
-        "Validation Error",
-        validation.errors?.join(", ") || "Please fill in all required fields",
+        tAutoI18n("validation_error_a9970ff"),
+        validation.errors?.join(", ") ||
+          tAutoI18n("please_fill_in_all_required_fields_47aab3e"),
       );
       return;
     }
@@ -564,8 +589,10 @@ export const AutomationForm = ({
       });
 
       showSuccessToast({
-        title: "Automation Updated",
-        description: `Successfully updated automation "${resolvedName}".`,
+        title: tAuto("automation_updated_0daf166"),
+        description: tAuto("successfully_updated_automation_value0_061bd51", {
+          value0: resolvedName,
+        }),
       });
 
       onSuccess?.(automation.id);
@@ -583,8 +610,10 @@ export const AutomationForm = ({
       });
 
       showSuccessToast({
-        title: "Automation Created",
-        description: `Successfully created automation "${resolvedName}".`,
+        title: tAuto("automation_created_578d976"),
+        description: tAuto("successfully_created_automation_value0_21ac792", {
+          value0: resolvedName,
+        }),
       });
 
       onSuccess?.(
@@ -597,7 +626,9 @@ export const AutomationForm = ({
 
   // Update button text based on if we're editing an existing automation
   const submitButtonText =
-    isEditing && automation ? "Update Automation" : "Save Automation";
+    isEditing && automation
+      ? tAutoI18n("update_automation_0f08d5f")
+      : tAutoI18n("save_automation_e4def70");
 
   // Update required fields based on action type
   const handleActionTypeChange = (value: ActionTypes) => {
@@ -676,7 +707,7 @@ export const AutomationForm = ({
                   <FormItem>
                     <FormControl>
                       <Input
-                        placeholder="Automation name"
+                        placeholder={tAuto("automation_name_5289875")}
                         {...field}
                         autoFocus={!automation}
                         disabled={!hasAccess || !isEditing}
@@ -693,7 +724,9 @@ export const AutomationForm = ({
               name="status"
               render={({ field }) => (
                 <FormItem className="flex flex-row items-center gap-2">
-                  <FormLabel className="text-sm font-bold">Active</FormLabel>
+                  <FormLabel className="text-sm font-bold">
+                    {tAuto("active_a733b80")}
+                  </FormLabel>
                   <FormControl>
                     <Switch
                       checked={field.value === "ACTIVE"}
@@ -714,9 +747,11 @@ export const AutomationForm = ({
         {!isProjectNotification && (
           <Card>
             <CardHeader>
-              <CardTitle>Trigger</CardTitle>
+              <CardTitle>{tAuto("trigger_d3f06a5")}</CardTitle>
               <CardDescription>
-                Configure when this automation should run.
+                {tAuto(
+                  "configure_when_this_automation_should_run_e605e2e",
+                )}{" "}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -741,9 +776,11 @@ export const AutomationForm = ({
 
         <Card>
           <CardHeader>
-            <CardTitle>Action</CardTitle>
+            <CardTitle>{tAuto("action_97c89a4")}</CardTitle>
             <CardDescription>
-              Configure what happens when the trigger fires.
+              {tAuto(
+                "configure_what_happens_when_the_trigger_fires_34dad47",
+              )}{" "}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -752,7 +789,7 @@ export const AutomationForm = ({
               name="actionType"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Action Type</FormLabel>
+                  <FormLabel>{tAuto("action_type_b35abdb")}</FormLabel>
                   <Select
                     onValueChange={handleActionTypeChange}
                     value={field.value}
@@ -760,7 +797,9 @@ export const AutomationForm = ({
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select an action type" />
+                        <SelectValue
+                          placeholder={tAuto("select_an_action_type_bc92d60")}
+                        />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -770,21 +809,23 @@ export const AutomationForm = ({
                       ).map((actionType) => (
                         <SelectItem key={actionType} value={actionType}>
                           {actionType === "WEBHOOK"
-                            ? "Webhook"
+                            ? tAutoI18n("webhook_3ac2826")
                             : actionType === "SLACK"
                               ? "Slack"
                               : actionType === "GITHUB_DISPATCH"
-                                ? "GitHub Dispatch"
-                                : "Annotation Queue"}
+                                ? tAutoI18n("github_dispatch_5a5d930")
+                                : tAutoI18n("annotation_queue_216920e")}
                         </SelectItem>
                       ))}
                       <SelectItem disabled={true} value="planned">
-                        More coming soon...
+                        {tAuto("more_coming_soon_9f0ce86")}{" "}
                       </SelectItem>
                     </SelectContent>
                   </Select>
                   <FormDescription>
-                    The type of action to perform when the trigger fires.
+                    {tAuto(
+                      "the_type_of_action_to_perform_when_the_trigger_fires_32d9300",
+                    )}{" "}
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -825,7 +866,7 @@ export const AutomationForm = ({
             <div className="grow"></div>
             <div className="flex gap-3">
               <Button type="button" variant="outline" onClick={handleCancel}>
-                Cancel
+                {tAuto("cancel_77dfd21")}{" "}
               </Button>
               <Button
                 type="submit"

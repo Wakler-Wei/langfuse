@@ -2,12 +2,14 @@ import Decimal from "decimal.js";
 
 import { PriceMapSchema } from "@/src/features/models/validation";
 import { getMaxDecimals } from "@/src/features/models/utils";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export function PricePreview({
   prices,
 }: {
   prices: Record<string, number | undefined>;
 }) {
+  const tAuto = useAutoTranslations();
   const parsedPrices = PriceMapSchema.safeParse(prices);
 
   const getMaxDecimalsForPriceGroup = (
@@ -28,17 +30,17 @@ export function PricePreview({
       <div className="flex flex-col gap-3">
         <div className="flex items-center gap-2">
           <h4 className="text-muted-foreground text-sm font-bold">
-            Price Preview
+            {tAuto("price_preview_63ce5e0")}{" "}
           </h4>
         </div>
 
         {parsedPrices.success ? (
           <div className="space-y-2">
             <div className="border-border text-muted-foreground grid grid-cols-[2fr_1fr_1fr_1fr] gap-2 border-b pb-2 text-xs font-bold">
-              <span>Usage Type</span>
-              <span className="text-right">per unit</span>
-              <span className="text-right">per 1K</span>
-              <span className="text-right">per 1M</span>
+              <span>{tAuto("usage_type_0dba2d0")}</span>
+              <span className="text-right">{tAuto("per_unit_7e51045")}</span>
+              <span className="text-right">{tAuto("per_1k_35e5adf")}</span>
+              <span className="text-right">{tAuto("per_1m_8f7aae1")}</span>
             </div>
 
             {Object.entries(parsedPrices.data)
@@ -72,7 +74,9 @@ export function PricePreview({
           </div>
         ) : (
           <div className="bg-destructive/10 text-destructive rounded-md p-3 text-sm">
-            Invalid price entries. Please check your input format.
+            {tAuto(
+              "invalid_price_entries_please_check_your_input_format_5e4cc70",
+            )}{" "}
           </div>
         )}
       </div>

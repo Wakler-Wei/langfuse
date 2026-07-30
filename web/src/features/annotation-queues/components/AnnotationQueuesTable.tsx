@@ -18,6 +18,7 @@ import { useHasProjectAccess } from "@/src/features/rbac/utils/checkProjectAcces
 import { DeleteAnnotationQueueButton } from "@/src/features/annotation-queues/components/DeleteAnnotationQueueButton";
 import { getScoreDataTypeIcon } from "@/src/features/scores/lib/scoreColumns";
 import { type ScoreConfigDataType } from "@langfuse/shared";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type RowData = {
   key: {
@@ -33,6 +34,7 @@ type RowData = {
 };
 
 export function AnnotationQueuesTable({ projectId }: { projectId: string }) {
+  const tAuto = useAutoTranslations();
   const [rowHeight, setRowHeight] = useRowHeightLocalStorage(
     "annotationQueues",
     "s",
@@ -57,7 +59,7 @@ export function AnnotationQueuesTable({ projectId }: { projectId: string }) {
   const columns: LangfuseColumnDef<RowData>[] = [
     {
       accessorKey: "key",
-      header: "Name",
+      header: tAuto("name_709a232"),
       id: "key",
       size: 150,
       isPinnedLeft: true,
@@ -74,28 +76,28 @@ export function AnnotationQueuesTable({ projectId }: { projectId: string }) {
     },
     {
       accessorKey: "description",
-      header: "Description",
+      header: tAuto("description_55f8ebc"),
       id: "description",
       enableHiding: true,
       size: 200,
     },
     {
       accessorKey: "countCompletedItems",
-      header: "Completed Items",
+      header: tAuto("completed_items_11431b1"),
       id: "countCompletedItems",
       enableHiding: true,
       size: 90,
     },
     {
       accessorKey: "countPendingItems",
-      header: "Pending Items",
+      header: tAuto("pending_items_be2c6f2"),
       id: "countPendingItems",
       enableHiding: true,
       size: 90,
     },
     {
       accessorKey: "scoreConfigs",
-      header: "Score Configs",
+      header: tAuto("score_configs_c78e87c"),
       id: "scoreConfigs",
       enableHiding: true,
       size: 200,
@@ -122,14 +124,14 @@ export function AnnotationQueuesTable({ projectId }: { projectId: string }) {
     },
     {
       accessorKey: "createdAt",
-      header: "Created",
+      header: tAuto("created_accf40c"),
       id: "createdAt",
       enableHiding: true,
       size: 150,
     },
     {
       accessorKey: "processAction",
-      header: "Process",
+      header: tAuto("process_12f4c13"),
       id: "processAction",
       isFixedPosition: true,
       cell: ({ row }) => {
@@ -137,7 +139,7 @@ export function AnnotationQueuesTable({ projectId }: { projectId: string }) {
         return !hasAccess ? (
           <Button size="sm" disabled>
             <Lock className="mr-1 h-3 w-3" />
-            <span className="text-xs">Process queue</span>
+            <span className="text-xs">{tAuto("process_queue_4a4ed7f")}</span>
           </Button>
         ) : (
           <Button size="sm" asChild>
@@ -145,7 +147,7 @@ export function AnnotationQueuesTable({ projectId }: { projectId: string }) {
               href={`/project/${projectId}/annotation-queues/${key.id}/items`}
             >
               <ClipboardPen className="mr-1 h-3 w-3" />
-              <span className="text-xs">Process queue</span>
+              <span className="text-xs">{tAuto("process_queue_4a4ed7f")}</span>
             </Link>
           </Button>
         );
@@ -153,7 +155,7 @@ export function AnnotationQueuesTable({ projectId }: { projectId: string }) {
     },
     {
       accessorKey: "actions",
-      header: "Actions",
+      header: tAuto("actions_c3cd636"),
       id: "actions",
       size: 70,
       isFixedPosition: true,

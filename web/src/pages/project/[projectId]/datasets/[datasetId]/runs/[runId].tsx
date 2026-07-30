@@ -26,8 +26,10 @@ import { LocalIsoDate } from "@/src/components/LocalIsoDate";
 import { getDatasetBreadcrumb } from "@/src/features/datasets/utils/getDatasetBreadcrumb";
 import { useExperimentAccess } from "@/src/features/experiments/hooks/useExperimentAccess";
 import { singleRunToExperimentsUrl } from "@/src/features/experiments/utils/experimentUrlTranslation";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 function DatasetRunLegacy() {
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const projectId = router.query.projectId as string;
   const datasetId = router.query.datasetId as string;
@@ -70,7 +72,7 @@ function DatasetRunLegacy() {
             >
               <Button>
                 <Columns3 className="mr-2 h-4 w-4" />
-                <span>Compare</span>
+                <span>{tAuto("compare_8d105cf")}</span>
               </Button>
             </Link>
             <DetailPageNav
@@ -115,7 +117,9 @@ function DatasetRunLegacy() {
           id="experiment-run-details"
         >
           <SidePanelHeader>
-            <SidePanelTitle>Experiment run details</SidePanelTitle>
+            <SidePanelTitle>
+              {tAuto("experiment_run_details_adf3a7c")}
+            </SidePanelTitle>
           </SidePanelHeader>
           <SidePanelContent>
             {run.isPending ? (
@@ -124,7 +128,9 @@ function DatasetRunLegacy() {
               <>
                 {run.data?.datasetVersion && (
                   <div className="flex flex-col gap-2 p-1">
-                    <span className="text-sm font-bold">Dataset Version</span>
+                    <span className="text-sm font-bold">
+                      {tAuto("dataset_version_a24fed8")}
+                    </span>
                     <Link
                       href={`/project/${projectId}/datasets/${datasetId}/items?version=${run.data.datasetVersion.toISOString()}`}
                       className="text-link hover:text-link-hover text-sm"
@@ -136,20 +142,22 @@ function DatasetRunLegacy() {
                 {!!run.data?.description && (
                   <JSONView
                     json={run.data.description}
-                    title="Description"
+                    title={tAuto("description_55f8ebc")}
                     className="w-full overflow-y-auto"
                   />
                 )}
                 {!!run.data?.metadata && (
                   <JSONView
                     json={run.data.metadata}
-                    title="Metadata"
+                    title={tAuto("metadata_251edc0")}
                     className="w-full overflow-y-auto"
                   />
                 )}
                 {!run.data?.description && !run.data?.metadata && (
                   <div className="text-muted-foreground mt-1 px-1 text-sm">
-                    No description or metadata for this run
+                    {tAuto(
+                      "no_description_or_metadata_for_this_run_8325c6e",
+                    )}{" "}
                   </div>
                 )}
               </>

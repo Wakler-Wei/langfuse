@@ -8,9 +8,10 @@ import {
   DropdownMenuTrigger,
 } from "@/src/components/ui/dropdown-menu";
 import { cn } from "@/src/utils/tailwind";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export const REFRESH_INTERVALS = [
-  { label: "Off", value: null },
+  { label: null, value: null },
   { label: "30s", value: 30_000 },
   { label: "1m", value: 60_000 },
   { label: "5m", value: 300_000 },
@@ -40,7 +41,9 @@ export function DataTableRefreshButton({
   setInterval,
   compact = false,
 }: DataTableRefreshButtonProps) {
+  const tAuto = useAutoTranslations();
   const activeInterval = REFRESH_INTERVALS.find((i) => i.value === interval);
+  const activeLabel = activeInterval?.label ?? tAuto("off_e3de5ab");
   // Only a real interval counts as active; null ("Off") is the resting state.
   const isActive = interval != null;
 
@@ -55,7 +58,7 @@ export function DataTableRefreshButton({
           "rounded-r-none border-r-0",
           compact && isActive && "border-primary",
         )}
-        title="Refresh"
+        title={tAuto("refresh_56e3bad")}
       >
         <RefreshCw className={cn("h-4 w-4", isRefreshing && "animate-spin")} />
       </Button>
@@ -72,13 +75,9 @@ export function DataTableRefreshButton({
             <ChevronDown className="h-4 w-4" />
             {compact ? (
               // Drop the "Off" label; surface the interval only when set.
-              isActive && (
-                <span className="ml-1 text-sm">{activeInterval?.label}</span>
-              )
+              isActive && <span className="ml-1 text-sm">{activeLabel}</span>
             ) : (
-              <span className="ml-1 text-sm">
-                {activeInterval?.label ?? "Off"}
-              </span>
+              <span className="ml-1 text-sm">{activeLabel}</span>
             )}
           </Button>
         </DropdownMenuTrigger>
@@ -91,16 +90,19 @@ export function DataTableRefreshButton({
               )
             }
           >
-            {REFRESH_INTERVALS.map((option) => (
-              <DropdownMenuRadioItem
-                key={String(option.value)}
-                value={String(option.value)}
-              >
-                {option.label === "Off"
-                  ? "Auto-refresh off"
-                  : `Every ${option.label}`}
-              </DropdownMenuRadioItem>
-            ))}
+            {REFRESH_INTERVALS.map((option) => {
+              const optionLabel = option.label ?? tAuto("off_e3de5ab");
+              return (
+                <DropdownMenuRadioItem
+                  key={String(option.value)}
+                  value={String(option.value)}
+                >
+                  {option.value === null
+                    ? tAuto("auto_refresh_off_58f15a2")
+                    : tAuto("every_value0_21cf884", { value0: optionLabel })}
+                </DropdownMenuRadioItem>
+              );
+            })}
           </DropdownMenuRadioGroup>
         </DropdownMenuContent>
       </DropdownMenu>

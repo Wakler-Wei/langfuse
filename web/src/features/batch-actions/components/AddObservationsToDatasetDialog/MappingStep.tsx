@@ -13,6 +13,7 @@ import type {
   MappingMode,
   CustomMappingConfig,
 } from "./types";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export function MappingStep({
   field,
@@ -25,6 +26,7 @@ export function MappingStep({
   schema,
   onValidationChange,
 }: MappingStepProps) {
+  const tAuto = useAutoTranslations();
   const hasSchema = schema !== null && schema !== undefined;
   const isObjectType = hasSchema && isObjectSchema(schema);
   const hasInitializedRef = useRef(false);
@@ -118,7 +120,7 @@ export function MappingStep({
         <div>
           <div className="flex items-center gap-2">
             <h3 className="grow text-lg font-bold">
-              Dataset Item {fieldLabel}
+              {tAuto("dataset_item_999bf57")} {fieldLabel}
             </h3>
             {hasSchema && (
               <DatasetSchemaHoverCard
@@ -131,8 +133,10 @@ export function MappingStep({
             )}
           </div>
           <p className="text-muted-foreground text-sm">
-            Configure how observation data maps to the Dataset Item {fieldLabel}
-            .
+            {tAuto(
+              "configure_how_observation_data_maps_to_the_dataset_i_ae87992",
+            )}{" "}
+            {fieldLabel}.
           </p>
         </div>
 

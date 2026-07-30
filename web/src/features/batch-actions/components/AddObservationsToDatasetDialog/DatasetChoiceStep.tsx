@@ -1,7 +1,9 @@
 import { Database, Plus } from "lucide-react";
 import type { DatasetChoiceStepProps } from "./types";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export function DatasetChoiceStep(props: DatasetChoiceStepProps) {
+  const tAuto = useAutoTranslations();
   const { onSelectMode } = props;
 
   return (
@@ -15,9 +17,11 @@ export function DatasetChoiceStep(props: DatasetChoiceStepProps) {
         <div className="bg-primary/10 mb-4 rounded-full p-4">
           <Database className="text-primary h-8 w-8" />
         </div>
-        <h3 className="mb-2 text-lg font-bold">Existing Dataset</h3>
+        <h3 className="mb-2 text-lg font-bold">
+          {tAuto("existing_dataset_a1ccf56")}
+        </h3>
         <p className="text-muted-foreground text-sm">
-          Add to a dataset that already exists
+          {tAuto("add_to_a_dataset_that_already_exists_e72e570")}{" "}
         </p>
       </button>
 
@@ -30,9 +34,11 @@ export function DatasetChoiceStep(props: DatasetChoiceStepProps) {
         <div className="bg-primary/10 mb-4 rounded-full p-4">
           <Plus className="text-primary h-8 w-8" />
         </div>
-        <h3 className="mb-2 text-lg font-bold">New Dataset</h3>
+        <h3 className="mb-2 text-lg font-bold">
+          {tAuto("new_dataset_e1abdfb")}
+        </h3>
         <p className="text-muted-foreground text-sm">
-          Create a new dataset for these observations
+          {tAuto("create_a_new_dataset_for_these_observations_e8878d8")}{" "}
         </p>
       </button>
     </div>

@@ -8,8 +8,11 @@ import { type DashboardWidgetChartType } from "@langfuse/shared";
 import { type metricAggregations, type views } from "@langfuse/shared/query";
 import { type z } from "zod";
 import { type WidgetChartConfig } from "@/src/features/widgets/utils";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export default function EditWidget() {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const { projectId, widgetId, dashboardId } = router.query as {
     projectId: string;
@@ -37,8 +40,8 @@ export default function EditWidget() {
     },
     onSuccess: () => {
       showSuccessToast({
-        title: "Widget updated successfully",
-        description: "Your widget has been updated.",
+        title: tAuto("widget_updated_successfully_76775ef"),
+        description: tAuto("your_widget_has_been_updated_b733de6"),
       });
       // Navigate back to dashboard if provided else widgets list
       if (dashboardId) {
@@ -50,7 +53,10 @@ export default function EditWidget() {
       }
     },
     onError: (error) => {
-      showErrorToast("Failed to update widget", error.message);
+      showErrorToast(
+        tAutoI18n("failed_to_update_widget_25ac1b4"),
+        error.message,
+      );
     },
   });
 
@@ -90,9 +96,9 @@ export default function EditWidget() {
     <Page
       withPadding
       headerProps={{
-        title: "Edit Widget",
+        title: tAuto("edit_widget_e78a098"),
         help: {
-          description: "Edit an existing widget",
+          description: tAuto("edit_an_existing_widget_e08c7bd"),
         },
       }}
     >
@@ -126,7 +132,7 @@ export default function EditWidget() {
         />
       ) : (
         <div className="flex h-[300px] items-center justify-center">
-          <p className="text-muted-foreground">Loading...</p>
+          <p className="text-muted-foreground">{tAuto("loading_b04ba49")}</p>
         </div>
       )}
     </Page>

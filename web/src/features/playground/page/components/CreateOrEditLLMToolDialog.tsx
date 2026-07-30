@@ -32,6 +32,7 @@ import { api } from "@/src/utils/api";
 import { CodeMirrorEditor } from "@/src/components/editor";
 import { JSONSchemaFormSchema, type LlmTool } from "@langfuse/shared";
 import { showErrorToast } from "@/src/features/notifications/showErrorToast";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const formSchema = z.object({
   name: LLMToolNameSchema,
@@ -57,6 +58,8 @@ type CreateOrEditLLMToolDialog = {
 export const CreateOrEditLLMToolDialog: React.FC<CreateOrEditLLMToolDialog> = (
   props,
 ) => {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const { children, projectId, onSave, existingLlmTool } = props;
 
   const utils = api.useUtils();
@@ -142,8 +145,8 @@ export const CreateOrEditLLMToolDialog: React.FC<CreateOrEditLLMToolDialog> = (
       form.setValue("parameters", prettified);
     } catch {
       showErrorToast(
-        "Failed to prettify JSON",
-        "Please verify your input is valid JSON",
+        tAutoI18n("failed_to_prettify_json_074c7e8"),
+        tAutoI18n("please_verify_your_input_is_valid_json_fe436a3"),
         "WARNING",
       );
     }
@@ -160,10 +163,12 @@ export const CreateOrEditLLMToolDialog: React.FC<CreateOrEditLLMToolDialog> = (
       >
         <DialogHeader>
           <DialogTitle>
-            {existingLlmTool ? "Edit LLM Tool" : "Create LLM Tool"}
+            {existingLlmTool
+              ? tAutoI18n("edit_llm_tool_3133887")
+              : tAutoI18n("create_llm_tool_bb5c445")}
           </DialogTitle>
           <DialogDescription>
-            Define a tool for LLM function calling
+            {tAuto("define_a_tool_for_llm_function_calling_9472f9d")}{" "}
           </DialogDescription>
         </DialogHeader>
 
@@ -179,9 +184,12 @@ export const CreateOrEditLLMToolDialog: React.FC<CreateOrEditLLMToolDialog> = (
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Name</FormLabel>
+                      <FormLabel>{tAuto("name_709a232")}</FormLabel>
                       <FormControl>
-                        <Input placeholder="e.g., get_weather" {...field} />
+                        <Input
+                          placeholder={tAuto("e_g_get_weather_e40c6e4")}
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -193,14 +201,16 @@ export const CreateOrEditLLMToolDialog: React.FC<CreateOrEditLLMToolDialog> = (
                   name="description"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Description</FormLabel>
+                      <FormLabel>{tAuto("description_55f8ebc")}</FormLabel>
                       <FormDescription>
                         This description will be sent to the LLM to help it
                         understand the tool&apos;s purpose and functionality.
                       </FormDescription>
                       <FormControl>
                         <Textarea
-                          placeholder="Describe the tool's purpose and usage"
+                          placeholder={tAuto(
+                            "describe_the_tool_s_purpose_and_usage_c0f0505",
+                          )}
                           className="max-h-[120px] focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0"
                           {...field}
                           onKeyDown={(e) => {
@@ -218,17 +228,20 @@ export const CreateOrEditLLMToolDialog: React.FC<CreateOrEditLLMToolDialog> = (
                   name="parameters"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Parameters (JSON Schema)</FormLabel>
+                      <FormLabel>
+                        {tAuto("parameters_json_schema_2ad0657")}
+                      </FormLabel>
                       <FormDescription>
-                        Define the structure of your tool parameters using JSON
-                        Schema format.{" "}
+                        {tAutoI18n(
+                          "define_the_structure_of_your_tool_parameters_using_j_fc4b026",
+                        )}{" "}
                         <a
                           href="https://json-schema.org/learn/miscellaneous-examples"
                           target="_blank"
                           rel="noopener noreferrer"
                           className="flex items-center"
                         >
-                          See JSON Schema examples here
+                          {tAuto("see_json_schema_examples_here_69bdb1d")}{" "}
                           <ArrowUpRight className="h-3 w-3" />
                         </a>
                       </FormDescription>
@@ -248,12 +261,14 @@ export const CreateOrEditLLMToolDialog: React.FC<CreateOrEditLLMToolDialog> = (
                             onClick={prettifyJson}
                             className="absolute top-3 right-3 text-xs"
                           >
-                            Prettify
+                            {tAuto("prettify_1a7e7a5")}{" "}
                           </Button>
                         </div>
                       </FormControl>
                       <p className="text-muted-foreground text-xs">
-                        Parameters must be a valid JSON Schema object
+                        {tAuto(
+                          "parameters_must_be_a_valid_json_schema_object_5291d5b",
+                        )}{" "}
                       </p>
                       <FormMessage />
                     </FormItem>
@@ -265,8 +280,9 @@ export const CreateOrEditLLMToolDialog: React.FC<CreateOrEditLLMToolDialog> = (
             <DialogFooter className="bg-modal sticky bottom-0 mt-4 flex flex-col gap-2 border-t pt-4">
               <div className="flex w-full flex-col gap-2">
                 <p className="text-muted-foreground text-xs">
-                  Note: Changes to tools are reflected to all members of this
-                  project.
+                  {tAuto(
+                    "note_changes_to_tools_are_reflected_to_all_members_o_8f34939",
+                  )}{" "}
                 </p>
                 <div className="flex items-center justify-between gap-2">
                   {existingLlmTool && (
@@ -276,7 +292,7 @@ export const CreateOrEditLLMToolDialog: React.FC<CreateOrEditLLMToolDialog> = (
                       onClick={handleDelete}
                       className="mr-auto"
                     >
-                      Delete
+                      {tAuto("delete_f6fdbe4")}{" "}
                     </Button>
                   )}
                   <Button
@@ -284,9 +300,9 @@ export const CreateOrEditLLMToolDialog: React.FC<CreateOrEditLLMToolDialog> = (
                     variant="outline"
                     onClick={() => setOpen(false)}
                   >
-                    Cancel
+                    {tAuto("cancel_77dfd21")}{" "}
                   </Button>
-                  <Button type="submit">Save</Button>
+                  <Button type="submit">{tAuto("save_efc007a")}</Button>
                 </div>
               </div>
             </DialogFooter>

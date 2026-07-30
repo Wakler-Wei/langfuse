@@ -27,6 +27,7 @@ import { SectionContextProvider } from "./contexts/SectionContext";
 import { searchInTree, getMatchCountsPerNode } from "./utils/searchJson";
 import { type MediaReturnType } from "@/src/features/media/validation";
 import { type CommentedPathsByField } from "./utils/commentRanges";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export interface MultiSectionJsonViewerHandle {
   scrollToSection: (sectionKey: string) => void;
@@ -116,6 +117,7 @@ export const MultiSectionJsonViewer = forwardRef<
   },
   ref,
 ) {
+  const tAuto = useAutoTranslations();
   // Ref for child viewer (either virtualized or simple)
   const viewerRef = useRef<
     VirtualizedMultiSectionViewerHandle | SimpleMultiSectionViewerHandle
@@ -231,7 +233,7 @@ export const MultiSectionJsonViewer = forwardRef<
   );
 
   if (!tree) {
-    return <div className={className}>Building tree...</div>;
+    return <div className={className}>{tAuto("building_tree_a150ade")}</div>;
   }
 
   return (

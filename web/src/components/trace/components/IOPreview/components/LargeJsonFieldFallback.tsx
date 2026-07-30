@@ -3,6 +3,7 @@ import { Download } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import { compactNumberFormatter } from "@/src/utils/numbers";
 import { usePostHogClientCapture } from "@/src/features/posthog-analytics/usePostHogClientCapture";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 /** How much of the raw payload the preview head shows. Bounded regardless of
  *  payload size — the full value is reachable via download or the other views. */
@@ -55,6 +56,8 @@ export function LargeJsonFieldFallback({
    *  the download is only a secondary escape hatch. */
   downloadOnly?: boolean;
 }) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const capture = usePostHogClientCapture();
 
   // Name the metric that actually tripped the gate: rows for the virtualized
@@ -92,7 +95,7 @@ export function LargeJsonFieldFallback({
           <span>{sizeSummary}</span>
           <Button variant="outline" size="sm" onClick={onDownload}>
             <Download className="mr-1 h-3.5 w-3.5" />
-            Download {title}
+            {tAutoI18n("download_a479c9c")} {title}
           </Button>
         </div>
       </div>
@@ -106,12 +109,19 @@ export function LargeJsonFieldFallback({
           {!hideTitle && (
             <span className="text-foreground font-bold">{title}</span>
           )}
-          <span>{sizeSummary} — too large to render in JSON view</span>
+          <span>
+            {sizeSummary}{" "}
+            {tAutoI18n("too_large_to_render_in_json_view_99f9d53")}
+          </span>
         </div>
         <p className="text-muted-foreground text-xs">
-          Rendering this much JSON at once freezes the tab. Use the{" "}
-          <span className="font-bold">Formatted</span> view for the full
-          payload, or download it below.
+          {tAutoI18n(
+            "rendering_this_much_json_at_once_freezes_the_tab_use_ad443a8",
+          )}{" "}
+          <span className="font-bold">{tAuto("formatted_f26356d")}</span>{" "}
+          {tAutoI18n(
+            "view_for_the_full_payload_or_download_it_below_d9c7b0c",
+          )}{" "}
         </p>
         <pre className="bg-muted/50 max-h-40 overflow-hidden rounded-md border p-2 font-mono text-xs break-all whitespace-pre-wrap">
           {previewText}
@@ -119,7 +129,7 @@ export function LargeJsonFieldFallback({
         <div>
           <Button variant="outline" size="sm" onClick={onDownload}>
             <Download className="mr-1 h-3.5 w-3.5" />
-            Download {title}
+            {tAutoI18n("download_a479c9c")} {title}
           </Button>
         </div>
       </div>

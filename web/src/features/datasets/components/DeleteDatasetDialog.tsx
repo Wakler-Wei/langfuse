@@ -4,6 +4,7 @@ import { Label } from "@/src/components/ui/label";
 import { usePostHogClientCapture } from "@/src/features/posthog-analytics/usePostHogClientCapture";
 import { api } from "@/src/utils/api";
 import { useState } from "react";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export interface DeleteDatasetDialogDataProps {
   projectId: string;
@@ -23,6 +24,7 @@ export function DeleteDatasetDialog({
   open,
   onOpenChange,
 }: DeleteDatasetDialogProps) {
+  const tAuto = useAutoTranslations();
   const capture = usePostHogClientCapture();
   const [deleteConfirmationInput, setDeleteConfirmationInput] = useState("");
   const utils = api.useUtils();
@@ -49,8 +51,10 @@ export function DeleteDatasetDialog({
         if (!isOpen) setDeleteConfirmationInput("");
       }}
       size="lg"
-      title="Please confirm"
-      description="This action cannot be undone and removes all the data associated with this dataset."
+      title={tAuto("please_confirm_3a799cc")}
+      description={tAuto(
+        "this_action_cannot_be_undone_and_removes_all_the_dat_db21677",
+      )}
       confirmLabel="Delete dataset"
       confirmDisabled={deleteConfirmationInput !== datasetName}
       loading={deleteMutation.isPending}

@@ -5,6 +5,7 @@ import {
   type DatasetSchema,
 } from "../utils/datasetItemUtils";
 import { DatasetItemFields } from "@/src/features/datasets/components/DatasetItemFields";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type DatasetItemVersionedContentProps = {
   itemAtVersion: DatasetItemDomain | null;
@@ -30,9 +31,14 @@ export const DatasetItemVersionedContent = ({
   itemChangedAtVersion,
   dataset,
 }: DatasetItemVersionedContentProps) => {
+  const tAuto = useAutoTranslations();
   // Loading states
   if (isLoadingVersioned) {
-    return <div className="text-muted-foreground text-sm">Loading...</div>;
+    return (
+      <div className="text-muted-foreground text-sm">
+        {tAuto("loading_b04ba49")}
+      </div>
+    );
   }
 
   // Item doesn't exist at this version
@@ -41,11 +47,12 @@ export const DatasetItemVersionedContent = ({
       <div className="flex flex-col items-center justify-center p-12 text-center">
         <div className="text-muted-foreground">
           <p className="text-lg font-bold">
-            Item does not exist at this version
+            {tAuto("item_does_not_exist_at_this_version_a5698e3")}{" "}
           </p>
           <p className="mt-2 text-sm">
-            This dataset item either had not been created yet or was deleted at
-            the selected version timestamp.
+            {tAuto(
+              "this_dataset_item_either_had_not_been_created_yet_or_833a7c8",
+            )}{" "}
           </p>
         </div>
       </div>
@@ -55,7 +62,11 @@ export const DatasetItemVersionedContent = ({
   // Show diff mode if enabled and item changed at this version
   if (showDiffMode && itemChangedAtVersion) {
     if (isLoadingLatest) {
-      return <div className="text-muted-foreground text-sm">Loading...</div>;
+      return (
+        <div className="text-muted-foreground text-sm">
+          {tAuto("loading_b04ba49")}
+        </div>
+      );
     }
 
     // Can't show diff if latest doesn't exist
@@ -63,9 +74,13 @@ export const DatasetItemVersionedContent = ({
       return (
         <div className="flex flex-col items-center justify-center p-12 text-center">
           <div className="text-muted-foreground">
-            <p className="text-lg font-bold">Cannot show diff</p>
+            <p className="text-lg font-bold">
+              {tAuto("cannot_show_diff_9b76088")}
+            </p>
             <p className="mt-2 text-sm">
-              The latest version of this item does not exist (has been deleted).
+              {tAuto(
+                "the_latest_version_of_this_item_does_not_exist_has_b_aa00e9a",
+              )}{" "}
             </p>
           </div>
         </div>

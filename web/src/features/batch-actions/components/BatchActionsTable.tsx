@@ -13,6 +13,7 @@ import {
   TooltipTrigger,
 } from "@/src/components/ui/tooltip";
 import { LocalIsoDate } from "@/src/components/LocalIsoDate";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type BatchActionRow = {
   id: string;
@@ -32,6 +33,8 @@ type BatchActionRow = {
 };
 
 export function BatchActionsTable(props: { projectId: string }) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const [paginationState, setPaginationState] = useQueryParams({
     pageIndex: withDefault(NumberParam, 0),
     pageSize: withDefault(NumberParam, 10),
@@ -47,7 +50,7 @@ export function BatchActionsTable(props: { projectId: string }) {
     {
       accessorKey: "actionType",
       id: "actionType",
-      header: "Action Type",
+      header: tAuto("action_type_b35abdb"),
       size: 200,
       cell: ({ row }) => {
         const actionType = row.getValue("actionType") as string;
@@ -61,7 +64,7 @@ export function BatchActionsTable(props: { projectId: string }) {
     {
       accessorKey: "tableName",
       id: "tableName",
-      header: "Table",
+      header: tAuto("table_0424f6e"),
       size: 120,
       cell: ({ row }) => {
         const tableName = row.getValue("tableName") as string;
@@ -71,7 +74,7 @@ export function BatchActionsTable(props: { projectId: string }) {
     {
       accessorKey: "status",
       id: "status",
-      header: "Status",
+      header: tAuto("status_bae7d5b"),
       size: 110,
       cell: ({ row }) => {
         const status = row.getValue("status") as string;
@@ -81,7 +84,7 @@ export function BatchActionsTable(props: { projectId: string }) {
     {
       accessorKey: "progress",
       id: "progress",
-      header: "Progress",
+      header: tAuto("progress_1b90271"),
       size: 150,
       cell: ({ row }) => {
         const totalCount = row.original.totalCount;
@@ -98,7 +101,7 @@ export function BatchActionsTable(props: { projectId: string }) {
             </div>
             {failedCount > 0 && (
               <div className="text-destructive text-xs">
-                {failedCount} failed
+                {failedCount} {tAutoI18n("failed_5f5f875")}{" "}
               </div>
             )}
           </div>
@@ -108,7 +111,7 @@ export function BatchActionsTable(props: { projectId: string }) {
     {
       accessorKey: "createdAt",
       id: "createdAt",
-      header: "Created",
+      header: tAuto("created_accf40c"),
       size: 150,
       cell: ({ row }) => {
         const createdAt = row.getValue("createdAt") as Date;
@@ -118,7 +121,7 @@ export function BatchActionsTable(props: { projectId: string }) {
     {
       accessorKey: "finishedAt",
       id: "finishedAt",
-      header: "Finished",
+      header: tAuto("finished_355bcc5"),
       size: 150,
       cell: ({ row }) => {
         const finishedAt = row.getValue("finishedAt") as Date | null;
@@ -132,7 +135,7 @@ export function BatchActionsTable(props: { projectId: string }) {
     {
       accessorKey: "user",
       id: "user",
-      header: "Created By",
+      header: tAuto("created_by_43de2bc"),
       size: 150,
       cell: ({ row }) => {
         const user = row.getValue("user") as {
@@ -144,7 +147,7 @@ export function BatchActionsTable(props: { projectId: string }) {
             <Avatar className="h-7 w-7">
               <AvatarImage
                 src={user?.image ?? undefined}
-                alt={user?.name ?? "User Avatar"}
+                alt={user?.name ?? tAuto("user_avatar_32e4f25")}
               />
             </Avatar>
             <span>{user?.name ?? "Unknown"}</span>
@@ -155,7 +158,7 @@ export function BatchActionsTable(props: { projectId: string }) {
     {
       accessorKey: "log",
       id: "log",
-      header: "Log",
+      header: tAuto("log_8bf95ea"),
       size: 300,
       cell: ({ row }) => {
         const log = row.getValue("log") as string | null;

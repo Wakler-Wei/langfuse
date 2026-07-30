@@ -30,6 +30,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/src/components/ui/dropdown-menu";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 /**
  * A "preset" dashboard placement: renders a registered curated component by
@@ -87,6 +88,8 @@ export function PresetDashboardWidget({
    */
   onDuplicatePreset?: (anchor: PresetPlacement) => void;
 }) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const { isBetaEnabled } = useV4Beta();
   const metricsVersion: ViewVersion = isBetaEnabled ? "v2" : "v1";
 
@@ -191,7 +194,10 @@ export function PresetDashboardWidget({
         dashboard_id: dashboardId,
       });
     } catch {
-      showErrorToast("Copy failed", "Could not write to the clipboard.");
+      showErrorToast(
+        tAutoI18n("copy_failed_bd5acbf"),
+        tAutoI18n("could_not_write_to_the_clipboard_a601e40"),
+      );
     }
   };
 
@@ -199,7 +205,7 @@ export function PresetDashboardWidget({
     return (
       <div className="bg-background flex h-full items-center justify-center rounded-lg border p-4">
         <div className="text-muted-foreground">
-          Unknown preset: {placement.presetId}
+          {tAutoI18n("unknown_preset_2e83932")} {placement.presetId}
         </div>
       </div>
     );
@@ -220,7 +226,7 @@ export function PresetDashboardWidget({
             <button
               onClick={handleDelete}
               className="text-muted-foreground hover:text-destructive"
-              aria-label="Delete widget"
+              aria-label={tAuto("delete_widget_6306b40")}
             >
               <TrashIcon size={16} />
             </button>
@@ -230,7 +236,7 @@ export function PresetDashboardWidget({
           <DropdownMenuTrigger asChild>
             <button
               className="text-muted-foreground hover:text-foreground"
-              aria-label="Widget actions"
+              aria-label={tAuto("widget_actions_2659cd3")}
             >
               <MoreVerticalIcon size={16} />
             </button>
@@ -238,7 +244,7 @@ export function PresetDashboardWidget({
           <DropdownMenuContent align="end">
             <DropdownMenuItem onClick={handleCopyToClipboard}>
               <CopyIcon className="mr-2 h-4 w-4" />
-              Copy to clipboard
+              {tAuto("copy_to_clipboard_d8f482e")}{" "}
             </DropdownMenuItem>
             {onPasteWidget && (
               <DropdownMenuItem
@@ -246,13 +252,13 @@ export function PresetDashboardWidget({
                 onClick={() => onPasteWidget(placement)}
               >
                 <ClipboardPasteIcon className="mr-2 h-4 w-4" />
-                Paste to the right
+                {tAuto("paste_to_the_right_655607e")}{" "}
               </DropdownMenuItem>
             )}
             {onDuplicatePreset && (
               <DropdownMenuItem onClick={() => onDuplicatePreset(placement)}>
                 <CopyPlusIcon className="mr-2 h-4 w-4" />
-                Duplicate
+                {tAuto("duplicate_972d573")}{" "}
               </DropdownMenuItem>
             )}
           </DropdownMenuContent>

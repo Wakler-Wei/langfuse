@@ -26,6 +26,7 @@ import type { SearchBarStore } from "@/src/features/search-bar/store/searchBarSt
 import { api } from "@/src/utils/api";
 import { cn } from "@/src/utils/tailwind";
 import { usePostHogClientCapture } from "@/src/features/posthog-analytics/usePostHogClientCapture";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 // "No such score X" note for score filters the server dropped because their
 // name matches no observed score (exactly or normalized).
@@ -62,6 +63,8 @@ export function SearchBarAiPrompt({
   /** Leave AI mode and restore the grammar composer. */
   onExit: () => void;
 }) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const capture = usePostHogClientCapture();
   const [value, setValue] = React.useState("");
   const [error, setError] = React.useState<string | null>(null);
@@ -87,8 +90,8 @@ export function SearchBarAiPrompt({
   const refineContext = useStore(store, (s) => s.draft).trim();
   const refining = refineContext.length > 0;
   const placeholder = refining
-    ? "Refine your filters — e.g. only errors, or drop the env filter"
-    : "Describe the filters you want — e.g. slow production errors from today";
+    ? tAutoI18n("refine_your_filters_e_g_only_errors_or_drop_the_env__9a3dfdc")
+    : tAutoI18n("describe_the_filters_you_want_e_g_slow_production_er_e23f429");
 
   const generateFilter = api.searchBar.generateFilter.useMutation();
   const pending = generateFilter.isPending;
@@ -143,7 +146,9 @@ export function SearchBarAiPrompt({
           reason: "stale",
           isV4: true,
         });
-        setError("Filters changed while generating — try again.");
+        setError(
+          tAutoI18n("filters_changed_while_generating_try_again_28b581b"),
+        );
         return;
       }
       if (result.filters.length === 0) {
@@ -158,7 +163,9 @@ export function SearchBarAiPrompt({
         setError(
           result.unknownScoreNames.length > 0
             ? unknownScoresMessage(result.unknownScoreNames)
-            : "Couldn't build filters from that — try rephrasing.",
+            : tAutoI18n(
+                "couldn_t_build_filters_from_that_try_rephrasing_2d4f886",
+              ),
         );
         return;
       }
@@ -173,7 +180,7 @@ export function SearchBarAiPrompt({
         // Partial apply: the rest of the filters went through, so exit as
         // usual but surface which score clause was dropped and why.
         showErrorToast(
-          "Score filter skipped",
+          tAutoI18n("score_filter_skipped_381f85e"),
           unknownScoresMessage(result.unknownScoreNames),
           "WARNING",
         );
@@ -192,7 +199,9 @@ export function SearchBarAiPrompt({
         reason: "error",
         isV4: true,
       });
-      setError("Couldn't reach the AI service. Please try again.");
+      setError(
+        tAutoI18n("couldn_t_reach_the_ai_service_please_try_again_f791bf0"),
+      );
     }
   };
 
@@ -214,7 +223,7 @@ export function SearchBarAiPrompt({
             onMouseDown={(event) => event.preventDefault()}
             className="text-muted-foreground mb-1.5 flex min-w-0 items-center gap-1.5 pl-1 text-xs"
           >
-            <span className="shrink-0">Refining</span>
+            <span className="shrink-0">{tAuto("refining_e2d71a8")}</span>
             <code
               className="bg-muted text-foreground/80 min-w-0 truncate rounded px-1.5 py-0.5 font-mono text-[11px]"
               title={refineContext}
@@ -228,8 +237,8 @@ export function SearchBarAiPrompt({
               you're in a sub-mode you can leave. */}
           <button
             type="button"
-            aria-label="Back to search"
-            title="Back (Esc)"
+            aria-label={tAuto("back_to_search_dd8ab18")}
+            title={tAuto("back_esc_7cfd2c3")}
             onMouseDown={(event) => event.preventDefault()}
             onClick={onExit}
             className="text-muted-foreground hover:text-foreground hover:bg-accent -ml-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md"
@@ -242,7 +251,7 @@ export function SearchBarAiPrompt({
             value={value}
             disabled={pending}
             placeholder={placeholder}
-            aria-label="Ask AI to build filters"
+            aria-label={tAuto("ask_ai_to_build_filters_fdab0ab")}
             data-testid="search-bar-ai-input"
             spellCheck={false}
             autoComplete="off"
@@ -279,20 +288,22 @@ export function SearchBarAiPrompt({
                 className="h-3.5 w-3.5 animate-spin"
                 aria-hidden="true"
               />
-              Generating…
+              {tAuto("generating_11edad7")}{" "}
             </span>
           ) : (
             <div className="flex shrink-0 items-center gap-1.5">
               {value.trim().length > 0 && (
-                <KeyboardShortcut title="Press Enter to generate">
+                <KeyboardShortcut
+                  title={tAuto("press_enter_to_generate_dbd2813")}
+                >
                   ↵
                 </KeyboardShortcut>
               )}
-              <KeyboardShortcut>esc</KeyboardShortcut>
+              <KeyboardShortcut>{tAuto("esc_abb761d")}</KeyboardShortcut>
               <button
                 type="button"
-                aria-label="Generate filters"
-                title="Generate filters (Enter)"
+                aria-label={tAuto("generate_filters_510ce25")}
+                title={tAuto("generate_filters_enter_c85eacc")}
                 data-testid="search-bar-ai-submit"
                 disabled={value.trim().length === 0}
                 onMouseDown={(event) => event.preventDefault()}

@@ -25,6 +25,7 @@ import {
 } from "@/src/components/ui/tooltip";
 import { compactNumberFormatter } from "@/src/utils/numbers";
 import { useEffect, useState } from "react";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>;
@@ -52,6 +53,8 @@ export function DataTablePagination<TData>({
   approxTotalCountIsPartialScope = false,
   hasNextPage,
 }: DataTablePaginationProps<TData>) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const capture = usePostHogClientCapture();
 
   // Last page shows the exact loaded-row total; multi-page shows "Total ≈ X".
@@ -117,14 +120,14 @@ export function DataTablePagination<TData>({
         {showExactTotal ? (
           // Result fits on the loaded page(s) — the total is exact, no estimate.
           <span className="text-muted-foreground hidden text-sm font-normal whitespace-nowrap md:inline-flex md:items-center">
-            Total&nbsp;{compactNumberFormatter(exactTotal)}
+            {tAuto("total_b25928c")}&nbsp;{compactNumberFormatter(exactTotal)}
           </span>
         ) : showApproxTotal ? (
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
                 <span className="text-muted-foreground hidden text-sm font-normal whitespace-nowrap md:inline-flex md:items-center">
-                  Total&nbsp;≈&nbsp;
+                  {tAuto("total_b25928c")}&nbsp;≈&nbsp;
                   {approxTotalCount != null ? (
                     compactNumberFormatter(approxTotalCount)
                   ) : (
@@ -144,26 +147,23 @@ export function DataTablePagination<TData>({
               <TooltipContent className="max-w-xs font-normal">
                 {approxTotalCountIsPartialScope ? (
                   <>
-                    Approximate count over the active column filters and time
-                    range only. It excludes full-text search, score, and comment
-                    filters, so it can be noticeably higher than the number of
-                    matching rows.
+                    {tAuto(
+                      "approximate_count_over_the_active_column_filters_and_e49b727",
+                    )}{" "}
                   </>
                 ) : (
-                  <>
-                    Approximate number of matching rows for the active filters
-                    and time range, estimated with ClickHouse&apos;s HyperLogLog
-                    (typically within a few percent of the true count).
-                  </>
+                  <>{tAuto("approximate_matching_rows_hll_01")}</>
                 )}
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
         ) : null}
         <div className="flex items-center space-x-2">
-          <p className="text-sm font-bold whitespace-nowrap md:hidden">Rows</p>
+          <p className="text-sm font-bold whitespace-nowrap md:hidden">
+            {tAuto("rows_52d0b35")}
+          </p>
           <p className="hidden text-sm font-bold whitespace-nowrap md:block">
-            Rows per page
+            {tAuto("rows_per_page_af2f9c1")}{" "}
           </p>
           <Select
             value={`${table.getState().pagination.pageSize}`}
@@ -189,7 +189,7 @@ export function DataTablePagination<TData>({
         <div className="flex items-center justify-center gap-1 text-sm font-bold whitespace-nowrap">
           {table.getPageCount() !== -1 ? (
             <>
-              Page
+              {tAuto("page_fb06270")}{" "}
               {canJumpPages && (
                 <Input
                   type="number"
@@ -217,15 +217,17 @@ export function DataTablePagination<TData>({
               {!canJumpPages && <span>{currentPage}</span>}
             </>
           ) : (
-            `Page ${currentPage}`
+            `${tAuto("page_fb06270")} ${currentPage}`
           )}
           {!hideTotalCount && (
             <>
               {pageCount !== -1 ? (
-                <span>of {pageCount}</span>
+                <span>
+                  {tAutoI18n("of_de04fa0")} {pageCount}
+                </span>
               ) : (
                 <span>
-                  of{" "}
+                  {tAutoI18n("of_de04fa0")}{" "}
                   {isLoading ? (
                     <span className="ml-1 inline-flex align-middle">
                       <Spinner size="xxs" variant="muted" display="inline" />
@@ -252,7 +254,9 @@ export function DataTablePagination<TData>({
               }}
               disabled={!table.getCanPreviousPage()}
             >
-              <span className="sr-only">Go to first page</span>
+              <span className="sr-only">
+                {tAuto("go_to_first_page_7dae288")}
+              </span>
               <ChevronsLeft className="h-4 w-4" />
             </Button>
           )}
@@ -267,7 +271,9 @@ export function DataTablePagination<TData>({
             }}
             disabled={!table.getCanPreviousPage()}
           >
-            <span className="sr-only">Go to previous page</span>
+            <span className="sr-only">
+              {tAuto("go_to_previous_page_8d993b6")}
+            </span>
             <ChevronLeft className="h-4 w-4" />
           </Button>
           <Button
@@ -281,7 +287,7 @@ export function DataTablePagination<TData>({
             }}
             disabled={!table.getCanNextPage() || pageCount === -1}
           >
-            <span className="sr-only">Go to next page</span>
+            <span className="sr-only">{tAuto("go_to_next_page_fd7164f")}</span>
             <ChevronRight className="h-4 w-4" />
           </Button>
           {canJumpPages && (
@@ -296,7 +302,9 @@ export function DataTablePagination<TData>({
               }}
               disabled={!table.getCanNextPage() || pageCount === -1}
             >
-              <span className="sr-only">Go to last page</span>
+              <span className="sr-only">
+                {tAuto("go_to_last_page_f9b71b7")}
+              </span>
               <ChevronsRight className="h-4 w-4" />
             </Button>
           )}

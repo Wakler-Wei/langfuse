@@ -233,9 +233,12 @@ export const constructDatasetRunAggregateColumns = ({
   });
 };
 
-export const getDatasetRunAggregateColumnProps = (isLoading: boolean) => ({
+export const getDatasetRunAggregateColumnProps = (
+  isLoading: boolean,
+  header: string,
+) => ({
   accessorKey: "runs",
-  header: "Experiments",
+  header,
   id: "runs",
   isFixedPosition: true,
   cell: () => {

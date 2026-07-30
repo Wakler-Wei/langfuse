@@ -13,10 +13,13 @@ import { LayoutDashboard } from "lucide-react";
 import Page from "@/src/components/layouts/page";
 import { useV4Beta } from "@/src/features/events/hooks/useV4Beta";
 import { ObservationsEventsTable } from "@/src/features/events/components";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const tabs = ["Traces", "Sessions", "Scores"] as const;
 
 export default function UserPage() {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const userId = router.query.userId as string;
   const projectId = router.query.projectId as string;
@@ -81,7 +84,7 @@ export default function UserPage() {
               variant="secondary"
               icon={<LayoutDashboard className="h-4 w-4" />}
             >
-              Dashboard
+              {tAuto("dashboard_d87f47b")}{" "}
             </ActionButton>
             <DetailPageNav
               currentId={encodeURIComponent(userId)}
@@ -98,27 +101,30 @@ export default function UserPage() {
         {user.data && (
           <div className="flex flex-wrap gap-2 px-4 py-4">
             <Badge variant="outline">
-              Observations:{" "}
+              {tAutoI18n("observations_580a776")}{" "}
               {compactNumberFormatter(user.data.totalObservations)}
             </Badge>
             <Badge variant="outline">
-              Traces: {compactNumberFormatter(user.data.totalTraces)}
+              {tAutoI18n("traces_b40613b")}{" "}
+              {compactNumberFormatter(user.data.totalTraces)}
             </Badge>
             <Badge variant="outline">
-              Total Tokens: {compactNumberFormatter(user.data.totalTokens)}
+              {tAutoI18n("total_tokens_5bdafe0")}{" "}
+              {compactNumberFormatter(user.data.totalTokens)}
             </Badge>
             <Badge variant="outline">
               <span className="flex items-center gap-1">
-                Total Cost: {usdFormatter(user.data.sumCalculatedTotalCost)}
+                {tAutoI18n("total_cost_21e39a5")}{" "}
+                {usdFormatter(user.data.sumCalculatedTotalCost)}
               </span>
             </Badge>
             <Badge variant="outline">
-              Active:{" "}
+              {tAutoI18n("active_43b6016")}{" "}
               {user.data.firstTrace
                 ? `${user.data.firstTrace.toLocaleString()} - ${user.data.lastTrace?.toLocaleString()}`
                 : isBetaEnabled
-                  ? "No activity yet"
-                  : "No traces yet"}
+                  ? tAutoI18n("no_activity_yet_ac2a036")
+                  : tAutoI18n("no_traces_yet_78f1c9c")}
             </Badge>
           </div>
         )}
@@ -128,7 +134,7 @@ export default function UserPage() {
         <div>
           <div className="sm:hidden">
             <label htmlFor="tabs" className="sr-only">
-              Select a tab
+              {tAuto("select_a_tab_b4d9890")}{" "}
             </label>
             <select
               id="tabs"
@@ -144,7 +150,7 @@ export default function UserPage() {
           </div>
           <div className="hidden sm:block">
             <div className="border-border border-b">
-              <nav className="-mb-px flex" aria-label="Tabs">
+              <nav className="-mb-px flex" aria-label={tAuto("tabs_2a4d562")}>
                 {tabs.map((tab) => (
                   <button
                     key={tab}

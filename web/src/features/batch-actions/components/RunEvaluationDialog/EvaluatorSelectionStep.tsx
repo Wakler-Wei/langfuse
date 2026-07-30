@@ -9,6 +9,7 @@ import { Input } from "@/src/components/ui/input";
 import { EvaluatorPromptPreview } from "./EvaluatorPromptPreview";
 import { renderPromptPreviewFromObservation } from "./utils";
 import { Eye, Plus, X } from "lucide-react";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type Evaluator = RouterOutputs["evals"]["jobConfigsByTarget"][number];
 type ObservationPreview = RouterOutputs["observations"]["byId"];
@@ -31,6 +32,8 @@ type EvaluatorSelectionStepProps = {
 };
 
 export function EvaluatorSelectionStep(props: EvaluatorSelectionStepProps) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const {
     eligibleEvaluators,
     selectedEvaluators,
@@ -95,18 +98,25 @@ export function EvaluatorSelectionStep(props: EvaluatorSelectionStepProps) {
     <div className="flex h-full min-h-0 flex-col gap-2">
       <div className="flex min-h-0 flex-1 flex-col">
         {isQueryLoading ? (
-          <p className="text-muted-foreground text-sm">Loading evaluators...</p>
+          <p className="text-muted-foreground text-sm">
+            {tAuto("loading_evaluators_0a87a47")}
+          </p>
         ) : isQueryError ? (
           <Card>
             <CardContent className="text-destructive p-4 text-sm">
-              Failed to load evaluators: {queryErrorMessage}
+              {tAutoI18n("failed_to_load_evaluators_001c3cd")}{" "}
+              {queryErrorMessage}
             </CardContent>
           </Card>
         ) : eligibleEvaluators.length === 0 ? (
           <Card>
             <CardContent className="text-muted-foreground p-4 text-sm">
-              No {evaluatorScopeLabel}-scoped evaluators found. Create a new{" "}
-              {evaluatorScopeLabel}-scoped evaluator and it will appear here.
+              {tAutoI18n("no_816c52f")} {evaluatorScopeLabel}
+              {tAutoI18n("scoped_evaluators_found_create_a_new_3999a8d")}{" "}
+              {evaluatorScopeLabel}
+              {tAutoI18n(
+                "scoped_evaluator_and_it_will_appear_here_96578f7",
+              )}{" "}
             </CardContent>
           </Card>
         ) : (
@@ -115,7 +125,7 @@ export function EvaluatorSelectionStep(props: EvaluatorSelectionStepProps) {
               <Input
                 autoFocus
                 className="pr-10"
-                placeholder="Search evaluators..."
+                placeholder={tAuto("search_evaluators_f35afa0")}
                 value={evaluatorSearchQuery}
                 onChange={(event) =>
                   onSearchQueryChange(event.currentTarget.value)
@@ -128,7 +138,7 @@ export function EvaluatorSelectionStep(props: EvaluatorSelectionStepProps) {
                   size="icon-sm"
                   className="absolute top-1/2 right-1.5 h-7 w-7 -translate-y-1/2"
                   onClick={() => onSearchQueryChange("")}
-                  aria-label="Clear evaluator search"
+                  aria-label={tAuto("clear_evaluator_search_ebed769")}
                 >
                   <X className="h-3 w-3" />
                 </Button>
@@ -151,7 +161,9 @@ export function EvaluatorSelectionStep(props: EvaluatorSelectionStepProps) {
                             <span>{evaluator.scoreName}</span>
                             <button
                               type="button"
-                              aria-label={`Remove ${evaluator.scoreName}`}
+                              aria-label={tAuto("remove_value0_a2d40d3", {
+                                value0: evaluator.scoreName,
+                              })}
                               className="hover:bg-muted rounded p-0.5"
                               onClick={() => onToggleEvaluator(evaluator.id)}
                             >
@@ -164,7 +176,7 @@ export function EvaluatorSelectionStep(props: EvaluatorSelectionStepProps) {
                   ))
                 ) : (
                   <p className="text-muted-foreground text-xs">
-                    No evaluators selected
+                    {tAuto("no_evaluators_selected_af8d8de")}{" "}
                   </p>
                 )}
               </div>
@@ -173,7 +185,7 @@ export function EvaluatorSelectionStep(props: EvaluatorSelectionStepProps) {
             {filteredEvaluators.length === 0 ? (
               <div className="flex min-h-0 flex-1 items-center justify-center rounded-md border">
                 <p className="text-muted-foreground p-4 text-sm">
-                  No evaluators match your search.
+                  {tAuto("no_evaluators_match_your_search_19fdb6d")}{" "}
                 </p>
               </div>
             ) : (
@@ -213,7 +225,9 @@ export function EvaluatorSelectionStep(props: EvaluatorSelectionStepProps) {
                                 event.stopPropagation();
                               }}
                               onClick={(event) => event.stopPropagation()}
-                              aria-label={`Preview ${item.scoreName}`}
+                              aria-label={tAuto("preview_value0_091141c", {
+                                value0: item.scoreName,
+                              })}
                             >
                               <Eye className="h-4 w-4" />
                             </Button>
@@ -222,7 +236,9 @@ export function EvaluatorSelectionStep(props: EvaluatorSelectionStepProps) {
                         <span className="mr-1">
                           <Checkbox
                             checked={selectedEvaluatorIds.includes(item.id)}
-                            aria-label={`Select ${item.scoreName}`}
+                            aria-label={tAuto("select_value0_a9ef046", {
+                              value0: item.scoreName,
+                            })}
                             onClick={(event) => event.stopPropagation()}
                             onCheckedChange={() => onToggleEvaluator(item.id)}
                           />
@@ -247,7 +263,7 @@ export function EvaluatorSelectionStep(props: EvaluatorSelectionStepProps) {
         onClick={onCreateEvaluator}
       >
         <Plus className="mr-1 h-4 w-4" />
-        Create new Evaluator
+        {tAuto("create_new_evaluator_b237f1a")}{" "}
       </Button>
     </div>
   );

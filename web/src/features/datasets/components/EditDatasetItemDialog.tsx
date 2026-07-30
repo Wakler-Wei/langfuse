@@ -29,6 +29,7 @@ import {
   type DatasetSchema,
 } from "../utils/datasetItemUtils";
 import { isValidDatasetJson } from "../utils/parseDatasetJson";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const formSchema = z.object({
   input: z.string().refine(
@@ -75,6 +76,7 @@ export const EditDatasetItemDialog = ({
   datasetItem,
   dataset,
 }: EditDatasetItemDialogProps) => {
+  const tAuto = useAutoTranslations();
   const [formError, setFormError] = useState<string | null>(null);
   const hasAccess = useHasProjectAccess({
     projectId: projectId,
@@ -137,7 +139,7 @@ export const EditDatasetItemDialog = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent size="xl">
         <DialogHeader>
-          <DialogTitle>Edit Dataset Item</DialogTitle>
+          <DialogTitle>{tAuto("edit_dataset_item_04d962f")}</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form
@@ -147,7 +149,8 @@ export const EditDatasetItemDialog = ({
             <DialogBody>
               {formError ? (
                 <p className="text-destructive mb-4">
-                  <span className="font-bold">Error:</span> {formError}
+                  <span className="font-bold">{tAuto("error_787aa16")}</span>{" "}
+                  {formError}
                 </p>
               ) : null}
               <DatasetItemFields
@@ -168,7 +171,7 @@ export const EditDatasetItemDialog = ({
                 onClick={() => onOpenChange(false)}
                 disabled={updateDatasetItemMutation.isPending}
               >
-                Cancel
+                {tAuto("cancel_77dfd21")}{" "}
               </Button>
               <SaveChangesButton
                 control={form.control}
@@ -204,6 +207,7 @@ const SaveChangesButton = ({
   isPending: boolean;
   pendingUploads: PendingMediaUpload[];
 }) => {
+  const tAuto = useAutoTranslations();
   const [input, expectedOutput] = useWatch({
     control,
     name: ["input", "expectedOutput"],
@@ -226,7 +230,7 @@ const SaveChangesButton = ({
         pendingUploads.length > 0
       }
     >
-      Save changes
+      {tAuto("save_changes_179359b")}{" "}
     </Button>
   );
 };

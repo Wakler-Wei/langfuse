@@ -18,6 +18,7 @@ import {
 import { SlackTestMessageButton } from "@/src/features/slack/components/SlackTestMessageButton";
 import { useState } from "react";
 import { useHasProjectAccess } from "@/src/features/rbac/utils/checkProjectAccess";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 interface SlackActionFormProps {
   form: UseFormReturn<any>;
@@ -31,6 +32,8 @@ export const SlackActionForm: React.FC<SlackActionFormProps> = ({
   disabled,
   projectId,
 }) => {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const initialChannelId = form.getValues("slack.channelId") as string;
   const initialChannelName = form.getValues("slack.channelName") as string;
   const [selectedChannel, setSelectedChannel] = useState<SlackChannel | null>(
@@ -86,7 +89,7 @@ export const SlackActionForm: React.FC<SlackActionFormProps> = ({
             name="slack.channelId"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Channel</FormLabel>
+                <FormLabel>{tAuto("channel_879f0b1")}</FormLabel>
                 <FormControl>
                   <div className="max-w-md">
                     <ChannelSelector
@@ -95,18 +98,19 @@ export const SlackActionForm: React.FC<SlackActionFormProps> = ({
                       selectedChannel={selectedChannel}
                       onChannelSelect={handleChannelSelect}
                       disabled={disabled}
-                      placeholder="Select a channel"
+                      placeholder={tAuto("select_a_channel_0e2b8f4")}
                       showRefreshButton={true}
                     />
                   </div>
                 </FormControl>
                 <FormDescription>
-                  Select the Slack channel where notifications will be sent. For
-                  private channels, invite the app first with{" "}
+                  {tAutoI18n(
+                    "select_the_slack_channel_where_notifications_will_be_ba8b2eb",
+                  )}{" "}
                   <code className="bg-muted rounded px-1 py-0.5">
                     /invite @Langfuse
                   </code>{" "}
-                  in that channel.
+                  {tAutoI18n("in_that_channel_127a727")}{" "}
                 </FormDescription>
                 <FormMessage />
               </FormItem>
@@ -129,7 +133,7 @@ export const SlackActionForm: React.FC<SlackActionFormProps> = ({
                 hasAccess={hasAccess}
                 disabled={disabled}
                 size="sm"
-                buttonText="Test Channel"
+                buttonText={tAuto("test_channel_887c8d8")}
                 onSuccess={(channelInfo) => {
                   form.setValue("slack.channelId", channelInfo.id);
                   form.setValue(
@@ -149,7 +153,9 @@ export const SlackActionForm: React.FC<SlackActionFormProps> = ({
                 }}
               />
               <p className="text-muted-foreground text-sm">
-                Test this channel to verify the bot can send messages.
+                {tAuto(
+                  "test_this_channel_to_verify_the_bot_can_send_message_4d99a64",
+                )}{" "}
               </p>
             </div>
           )}

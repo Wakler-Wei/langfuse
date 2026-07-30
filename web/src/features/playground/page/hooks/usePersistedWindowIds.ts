@@ -9,12 +9,14 @@ import {
   clearAllPlaygroundData,
 } from "../storage/windowStorage";
 import { toast } from "sonner";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 /**
  * Hook to persist window IDs across page refreshes.
  * Manages the list of active playground windows by orchestrating with storage utilities.
  */
 export function usePersistedWindowIds() {
+  const tAuto = useAutoTranslations();
   const [windowIds, setWindowIds] = useState<string[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -44,14 +46,16 @@ export function usePersistedWindowIds() {
       }
       if (windowIds.length >= MULTI_WINDOW_CONFIG.MAX_WINDOWS) {
         toast.error(
-          `Maximum window limit of ${MULTI_WINDOW_CONFIG.MAX_WINDOWS} reached`,
+          tAuto("maximum_window_limit_of_value0_reached_d718946", {
+            value0: String(MULTI_WINDOW_CONFIG.MAX_WINDOWS ?? ""),
+          }),
         );
         return null;
       }
       setWindowIds((prev) => [...prev, windowId]);
       return windowId;
     },
-    [windowIds],
+    [windowIds, tAuto],
   );
 
   /**
@@ -63,7 +67,9 @@ export function usePersistedWindowIds() {
     (sourceWindowId?: string) => {
       if (windowIds.length >= MULTI_WINDOW_CONFIG.MAX_WINDOWS) {
         toast.error(
-          `Maximum window limit of ${MULTI_WINDOW_CONFIG.MAX_WINDOWS} reached`,
+          tAuto("maximum_window_limit_of_value0_reached_d718946", {
+            value0: String(MULTI_WINDOW_CONFIG.MAX_WINDOWS ?? ""),
+          }),
         );
         return null;
       }
@@ -78,7 +84,7 @@ export function usePersistedWindowIds() {
       setWindowIds((prev) => [...prev, newWindowId]);
       return newWindowId;
     },
-    [windowIds],
+    [windowIds, tAuto],
   );
 
   /**
@@ -88,14 +94,14 @@ export function usePersistedWindowIds() {
   const removeWindowId = useCallback(
     (windowId: string) => {
       if (windowIds.length <= 1) {
-        toast.error("Cannot remove the last remaining window");
+        toast.error(tAuto("cannot_remove_the_last_remaining_window_0f6f2f6"));
         return;
       }
 
       removeWindowState(windowId);
       setWindowIds((prev) => prev.filter((id) => id !== windowId));
     },
-    [windowIds.length],
+    [windowIds.length, tAuto],
   );
 
   /**

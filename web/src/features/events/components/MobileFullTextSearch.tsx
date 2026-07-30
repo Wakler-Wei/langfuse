@@ -6,6 +6,7 @@ import { Search } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import { Input } from "@/src/components/ui/input";
 import { usePostHogClientCapture } from "@/src/features/posthog-analytics/usePostHogClientCapture";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 /**
  * Full-text search input for the mobile Filters sheet, used when the grammar
@@ -32,6 +33,7 @@ export function MobileFullTextSearch({
   tableAllowsFullTextSearch?: boolean;
   metadataSearchFields?: string[];
 }) {
+  const tAuto = useAutoTranslations();
   const capture = usePostHogClientCapture();
   const committed = currentQuery ?? "";
   const [draft, setDraft] = useState(committed);
@@ -56,7 +58,7 @@ export function MobileFullTextSearch({
       <Button
         variant="ghost"
         size="icon"
-        aria-label="Search"
+        aria-label={tAuto("search_bce0641")}
         className="mr-1 h-7 w-7 shrink-0"
         onClick={() => submit(draft)}
       >
@@ -65,8 +67,10 @@ export function MobileFullTextSearch({
       <Input
         placeholder={
           tableAllowsFullTextSearch
-            ? "Search…"
-            : `Search (${metadataSearchFields?.join(", ") ?? ""})`
+            ? tAuto("search_f54fbca")
+            : tAuto("search_value0_4969eff", {
+                value0: metadataSearchFields?.join(", ") ?? "",
+              })
         }
         value={draft}
         onChange={(event) => {

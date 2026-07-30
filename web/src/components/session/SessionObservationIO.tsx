@@ -12,6 +12,7 @@ import { showErrorToast } from "@/src/features/notifications/showErrorToast";
 import { usePostHogClientCapture } from "@/src/features/posthog-analytics/usePostHogClientCapture";
 import { compactNumberFormatter } from "@/src/utils/numbers";
 import { type ChatMLParserResult } from "@/src/components/trace/components/IOPreview/hooks/useChatMLParser";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export type SessionTraceObservation =
   RouterOutputs["sessions"]["observationsForTraceFromEvents"][number];
@@ -36,6 +37,7 @@ const TruncatedIOSection = ({
   fullLength: number;
   truncated: boolean;
 }) => {
+  const tAuto = useAutoTranslations();
   if (value === null || value === undefined || value === "") return null;
   const text = typeof value === "string" ? value : JSON.stringify(value);
   const shown =
@@ -50,7 +52,7 @@ const TruncatedIOSection = ({
         {(truncated || shown.length < text.length) && (
           <span>
             {compactNumberFormatter(Math.max(fullLength, text.length), 1)}{" "}
-            characters — showing the first{" "}
+            {tAuto("characters_showing_the_first_e0278af")}{" "}
             {compactNumberFormatter(shown.length, 1)}
           </span>
         )}
@@ -102,6 +104,8 @@ export const SessionObservationIO = ({
   parsedMetadata?: unknown;
   chatMLParserResult?: ChatMLParserResult;
 }) => {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const capture = usePostHogClientCapture();
   const utils = api.useUtils();
   const [isDownloading, setIsDownloading] = React.useState(false);
@@ -138,8 +142,10 @@ export const SessionObservationIO = ({
       });
     } catch {
       showErrorToast(
-        "Download failed",
-        "Could not fetch the observation's full I/O. Please try again.",
+        tAutoI18n("download_failed_01125e1"),
+        tAutoI18n(
+          "could_not_fetch_the_observation_s_full_i_o_please_tr_e4e0422",
+        ),
       );
     } finally {
       setIsDownloading(false);
@@ -179,15 +185,17 @@ export const SessionObservationIO = ({
         {ioPreview}
         {observation.metadataTruncated && (
           <p className="text-muted-foreground text-xs">
-            Some metadata values are too large to show here.{" "}
+            {tAutoI18n(
+              "some_metadata_values_are_too_large_to_show_here_2d98187",
+            )}{" "}
             <button
               type="button"
               onClick={openInTraceView}
               className="text-primary underline underline-offset-2 hover:no-underline"
             >
-              Open in trace view
+              {tAuto("open_in_trace_view_d5a7543")}{" "}
             </button>{" "}
-            for full metadata.
+            {tAutoI18n("for_full_metadata_993c2ba")}{" "}
           </p>
         )}
       </>
@@ -201,13 +209,13 @@ export const SessionObservationIO = ({
         session view.
       </p>
       <TruncatedIOSection
-        label="Input"
+        label={tAuto("input_b568d47")}
         value={observation.input}
         fullLength={observation.inputLength}
         truncated={observation.inputTruncated}
       />
       <TruncatedIOSection
-        label="Output"
+        label={tAuto("output_4bed336")}
         value={observation.output}
         fullLength={observation.outputLength}
         truncated={observation.outputTruncated}
@@ -218,7 +226,7 @@ export const SessionObservationIO = ({
         typeof observation.metadata === "object" &&
         Object.keys(observation.metadata).length > 0 && (
           <TruncatedIOSection
-            label="Metadata"
+            label={tAuto("metadata_251edc0")}
             value={observation.metadata}
             fullLength={observation.metadataLength}
             truncated={observation.metadataTruncated}
@@ -227,7 +235,7 @@ export const SessionObservationIO = ({
       <div className="flex flex-wrap gap-2">
         <Button variant="outline" size="sm" onClick={openInTraceView}>
           <ExternalLinkIcon className="mr-1 h-3.5 w-3.5" />
-          Open in trace view
+          {tAuto("open_in_trace_view_d5a7543")}{" "}
         </Button>
         <Button
           variant="outline"

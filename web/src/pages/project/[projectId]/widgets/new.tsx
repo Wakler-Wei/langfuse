@@ -11,8 +11,11 @@ import { SelectDashboardDialog } from "@/src/features/dashboard/components/Selec
 import { useState } from "react";
 import { useV4Beta } from "@/src/features/events/hooks/useV4Beta";
 import { getDefaultView } from "@/src/features/widgets/utils";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export default function NewWidget() {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const { projectId, dashboardId } = router.query as {
     projectId: string;
@@ -23,8 +26,8 @@ export default function NewWidget() {
   const createWidgetMutation = api.dashboardWidgets.create.useMutation({
     onSuccess: (data) => {
       showSuccessToast({
-        title: "Widget created successfully",
-        description: "Your widget has been created.",
+        title: tAuto("widget_created_successfully_e4196aa"),
+        description: tAuto("your_widget_has_been_created_1060573"),
       });
 
       if (dashboardId) {
@@ -37,7 +40,7 @@ export default function NewWidget() {
       }
     },
     onError: (error) => {
-      showErrorToast("Failed to save widget", error.message);
+      showErrorToast(tAutoI18n("failed_to_save_widget_7307900"), error.message);
     },
   });
 
@@ -53,7 +56,10 @@ export default function NewWidget() {
     minVersion: number;
   }) => {
     if (!widgetData.name.trim()) {
-      showErrorToast("Error", "Widget name is required");
+      showErrorToast(
+        tAutoI18n("error_7f2f6a1"),
+        tAutoI18n("widget_name_is_required_de4eb75"),
+      );
       return;
     }
 
@@ -82,9 +88,9 @@ export default function NewWidget() {
     <Page
       withPadding
       headerProps={{
-        title: "New Widget",
+        title: tAuto("new_widget_922c50c"),
         help: {
-          description: "Create a new widget",
+          description: tAuto("create_a_new_widget_49a4313"),
         },
       }}
     >

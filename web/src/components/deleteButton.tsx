@@ -17,6 +17,7 @@ import { Input } from "@/src/components/ui/input";
 import { Label } from "@/src/components/ui/label";
 import { showSuccessToast } from "@/src/features/notifications/showSuccessToast";
 import { useHasEntitlement } from "@/src/features/entitlements/hooks";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export type DeleteButtonProps = {
   itemId: string;
@@ -83,6 +84,8 @@ export function DeleteButton({
   onPopoverOpenChange,
   "aria-label": ariaLabel,
 }: BaseDeleteButtonProps) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const [isDeleted, setIsDeleted] = useState(false);
   const [open, setOpen] = useState(false);
   const router = useRouter();
@@ -127,8 +130,8 @@ export function DeleteButton({
           <span className="inline-flex">
             <IconOnlyButton
               icon={<TrashIcon className="h-4 w-4" />}
-              label={title ?? "Delete"}
-              aria-label={ariaLabel ?? "delete"}
+              label={title ?? tAuto("delete_f6fdbe4")}
+              aria-label={ariaLabel ?? tAuto("delete_9485989")}
               disabledReason={
                 hasAccess
                   ? undefined
@@ -169,14 +172,16 @@ export function DeleteButton({
             ) : (
               <LockIcon className="mr-2 h-4 w-4" />
             )}
-            Delete
+            {tAutoI18n("delete_f6fdbe4")}{" "}
           </Button>
         </PopoverTrigger>
       )}
       <PopoverContent onClick={(e) => e.stopPropagation()}>
         {deleteBlocker ?? (
           <>
-            <h2 className="mb-3 font-bold">Please confirm</h2>
+            <h2 className="mb-3 font-bold">
+              {tAuto("please_confirm_3a799cc")}
+            </h2>
             <p className="mb-3 max-w-72 text-sm">
               {customDeletePrompt ??
                 `This action cannot be undone. It removes all the data associated with
@@ -210,7 +215,7 @@ export function DeleteButton({
                   executeDeleteMutation(onDeleteSuccess);
                 }}
               >
-                Delete {entityToDeleteName}
+                {tAutoI18n("delete_f6fdbe4")} {entityToDeleteName}
               </Button>
             </div>
           </>
@@ -221,6 +226,7 @@ export function DeleteButton({
 }
 
 export function DeleteTraceButton(props: DeleteButtonProps) {
+  const tAuto = useAutoTranslations();
   const utils = api.useUtils();
   const {
     itemId,
@@ -239,9 +245,10 @@ export function DeleteTraceButton(props: DeleteButtonProps) {
       return Promise.reject(error);
     }
     showSuccessToast({
-      title: "Trace deleted",
-      description:
-        "Selected trace will be deleted. Traces are removed asynchronously and may continue to be visible for up to 24 hours.",
+      title: tAuto("trace_deleted_4a621d4"),
+      description: tAuto(
+        "selected_trace_will_be_deleted_traces_are_removed_as_6822802",
+      ),
     });
     onSuccess();
   };
@@ -312,6 +319,7 @@ export function DeleteDatasetButton(props: DeleteButtonProps) {
 }
 
 export function DeleteDashboardButton(props: DeleteButtonProps) {
+  const tAuto = useAutoTranslations();
   const utils = api.useUtils();
   const {
     itemId,
@@ -330,8 +338,8 @@ export function DeleteDashboardButton(props: DeleteButtonProps) {
       return Promise.reject(error);
     }
     showSuccessToast({
-      title: "Dashboard deleted",
-      description: "The dashboard has been deleted successfully",
+      title: tAuto("dashboard_deleted_db032e9"),
+      description: tAuto("the_dashboard_has_been_deleted_successfully_76fdef5"),
     });
     onSuccess();
   };
@@ -356,6 +364,7 @@ export function DeleteDashboardButton(props: DeleteButtonProps) {
 
 /** DeleteMonitorButton deletes a monitor through the shared confirm-then-delete pattern. */
 export function DeleteMonitorButton(props: DeleteButtonProps) {
+  const tAuto = useAutoTranslations();
   const utils = api.useUtils();
   const {
     itemId,
@@ -366,8 +375,8 @@ export function DeleteMonitorButton(props: DeleteButtonProps) {
   const monitorMutation = api.monitors.delete.useMutation({
     onSuccess: () => {
       showSuccessToast({
-        title: "Monitor deleted",
-        description: "The monitor has been deleted successfully",
+        title: tAuto("monitor_deleted_bf17bdc"),
+        description: tAuto("the_monitor_has_been_deleted_successfully_dd12f2f"),
       });
       utils.monitors.invalidate();
     },
@@ -406,6 +415,7 @@ export function DeleteMonitorButton(props: DeleteButtonProps) {
 }
 
 export function DeleteEvalConfigButton(props: DeleteButtonProps) {
+  const tAuto = useAutoTranslations();
   const utils = api.useUtils();
   const {
     itemId,
@@ -417,8 +427,10 @@ export function DeleteEvalConfigButton(props: DeleteButtonProps) {
   const evaluatorMutation = api.evals.deleteEvalJob.useMutation({
     onSuccess: () => {
       showSuccessToast({
-        title: "Running evaluator deleted",
-        description: "The running evaluator has been deleted successfully",
+        title: tAuto("running_evaluator_deleted_b797b1e"),
+        description: tAuto(
+          "the_running_evaluator_has_been_deleted_successfully_98bc23f",
+        ),
       });
       utils.evals.invalidate();
     },
@@ -462,6 +474,7 @@ export function DeleteEvalConfigButton(props: DeleteButtonProps) {
 export function DeleteEvaluationModelButton(
   props: Omit<DeleteButtonProps, "itemId">,
 ) {
+  const tAuto = useAutoTranslations();
   const utils = api.useUtils();
   const {
     projectId,
@@ -473,9 +486,10 @@ export function DeleteEvaluationModelButton(
     api.defaultLlmModel.deleteDefaultModel.useMutation({
       onSuccess: () => {
         showSuccessToast({
-          title: "Default evaluation model deleted",
-          description:
-            "The default evaluation model has been deleted. Any running evaluations relying on the default model will be inactivated. Queued jobs will fail.",
+          title: tAuto("default_evaluation_model_deleted_484a5d0"),
+          description: tAuto(
+            "the_default_evaluation_model_has_been_deleted_any_ru_a485e7a",
+          ),
         });
         utils.defaultLlmModel.fetchDefaultModel.invalidate({ projectId });
       },

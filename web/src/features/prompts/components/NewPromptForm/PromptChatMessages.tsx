@@ -24,6 +24,7 @@ import {
 
 import type { ControllerRenderProps } from "react-hook-form";
 import type { MessagesContext } from "@/src/components/ChatMessages/types";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type PromptChatMessagesProps = ControllerRenderProps<
   NewPromptFormSchemaType,
@@ -47,6 +48,7 @@ export const PromptChatMessages: React.FC<PromptChatMessagesProps> = ({
   initialMessages,
   projectId,
 }) => {
+  const tAuto = useAutoTranslations();
   const searchRootRef = useRef<HTMLDivElement | null>(null);
   const [messages, setMessages] = useState<ChatMessageWithId[]>([]);
   const [availableRoles, setAvailableRoles] = useState<string[]>([]);
@@ -160,7 +162,9 @@ export const PromptChatMessages: React.FC<PromptChatMessagesProps> = ({
                 onClick={() => setIsDialogOpen(true)}
               >
                 <PlusIcon className="h-4 w-4" />
-                <span className="text-xs">Add prompt reference</span>
+                <span className="text-xs">
+                  {tAuto("add_prompt_reference_bd7e7e2")}
+                </span>
               </Button>
 
               {projectId && (

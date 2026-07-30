@@ -15,6 +15,7 @@ import {
   ExperimentOverviewField,
   ExperimentOverviewSectionHeading,
 } from "./ExperimentOverviewField";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const isSafeHttpUrl = (value: string | undefined) => {
   if (!value) return false;
@@ -57,6 +58,8 @@ export function ExperimentOverviewPanel({
   onBaselineChange,
   onBaselineClear,
 }: ExperimentOverviewPanelProps) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
 
   const metadata = experiment?.metadata ?? {};
@@ -95,25 +98,28 @@ export function ExperimentOverviewPanel({
   return (
     <div className="space-y-4">
       <div className="bg-background sticky -top-4 z-30 -mx-4 -mt-4 space-y-4 px-4 pt-4 pb-4">
-        <h3 className="text-lg font-bold">Experiment Details</h3>
+        <h3 className="text-lg font-bold">
+          {tAuto("experiment_details_5ff9e80")}
+        </h3>
 
         <div>
           <ExperimentOverviewSectionHeading>
             <span className="inline-flex items-center gap-1.5">
-              Baseline
+              {tAuto("baseline_e6ab798")}{" "}
               <Tooltip>
                 <TooltipTrigger asChild>
                   <button
                     type="button"
-                    aria-label="What is a baseline experiment?"
+                    aria-label={tAuto("what_is_a_baseline_experiment_ec3adc8")}
                     className="text-muted-foreground hover:text-primary"
                   >
                     <InfoIcon className="h-3.5 w-3.5" />
                   </button>
                 </TooltipTrigger>
                 <TooltipContent className="max-w-[280px]">
-                  The baseline is the reference experiment run used to compare
-                  all other selected runs.
+                  {tAuto(
+                    "the_baseline_is_the_reference_experiment_run_used_to_907cdee",
+                  )}{" "}
                 </TooltipContent>
               </Tooltip>
             </span>
@@ -130,7 +136,7 @@ export function ExperimentOverviewPanel({
 
         <div className="border-t pt-4">
           <ExperimentOverviewSectionHeading>
-            Compare with
+            {tAuto("compare_with_719f56a")}{" "}
           </ExperimentOverviewSectionHeading>
           <ExperimentComparisonSelector
             projectId={projectId}
@@ -145,15 +151,15 @@ export function ExperimentOverviewPanel({
         <>
           <div className="border-t pt-4">
             <ExperimentOverviewSectionHeading>
-              Overview
+              {tAuto("overview_0efc2e6")}{" "}
             </ExperimentOverviewSectionHeading>
             <div className="space-y-3 text-sm">
-              <ExperimentOverviewField label="Name">
+              <ExperimentOverviewField label={tAuto("name_709a232")}>
                 <div className="font-bold">{experiment.name}</div>
               </ExperimentOverviewField>
 
               {experiment.description && (
-                <ExperimentOverviewField label="Description">
+                <ExperimentOverviewField label={tAuto("description_55f8ebc")}>
                   <div className="break-words">{displayDescription}</div>
                   {isLongDescription && (
                     <Button
@@ -164,13 +170,15 @@ export function ExperimentOverviewPanel({
                         setIsDescriptionExpanded(!isDescriptionExpanded)
                       }
                     >
-                      {isDescriptionExpanded ? "Show less" : "Show more"}
+                      {isDescriptionExpanded
+                        ? tAutoI18n("show_less_4c852b2")
+                        : tAutoI18n("show_more_25911d4")}
                     </Button>
                   )}
                 </ExperimentOverviewField>
               )}
 
-              <ExperimentOverviewField label="Dataset">
+              <ExperimentOverviewField label={tAuto("dataset_1052689")}>
                 <Link
                   href={`/project/${projectId}/datasets/${encodeURIComponent(experiment.datasetId)}`}
                   className="text-primary hover:underline"
@@ -180,7 +188,7 @@ export function ExperimentOverviewPanel({
               </ExperimentOverviewField>
 
               {promptName && (
-                <ExperimentOverviewField label="Prompt">
+                <ExperimentOverviewField label={tAuto("prompt_a817d7e")}>
                   <Link
                     href={`/project/${projectId}/prompts/${encodeURIComponent(promptName)}${promptVersion !== null ? `?version=${promptVersion}` : ""}`}
                     className="text-primary hover:underline"
@@ -188,7 +196,8 @@ export function ExperimentOverviewPanel({
                     {promptName}
                     {promptVersion !== null && (
                       <span className="text-muted-foreground ml-1">
-                        (v{promptVersion})
+                        {tAutoI18n("v_2c87db6")}
+                        {promptVersion})
                       </span>
                     )}
                   </Link>
@@ -196,7 +205,7 @@ export function ExperimentOverviewPanel({
               )}
 
               {(provider || model) && (
-                <ExperimentOverviewField label="Model">
+                <ExperimentOverviewField label={tAuto("model_68c2cc7")}>
                   <div>
                     {provider && model
                       ? `${provider}/${model}`
@@ -205,12 +214,14 @@ export function ExperimentOverviewPanel({
                 </ExperimentOverviewField>
               )}
 
-              <ExperimentOverviewField label="Start Time">
+              <ExperimentOverviewField label={tAuto("start_time_41c1074")}>
                 <LocalIsoDate date={experiment.startTime} />
               </ExperimentOverviewField>
 
               {safePullRequestUrl && (
-                <ExperimentOverviewField label="Pull Request URL">
+                <ExperimentOverviewField
+                  label={tAuto("pull_request_url_0d5ea7f")}
+                >
                   <a
                     href={safePullRequestUrl}
                     target="_blank"
@@ -223,7 +234,9 @@ export function ExperimentOverviewPanel({
               )}
 
               {safeGithubJobUrl && (
-                <ExperimentOverviewField label="GitHub Job URL">
+                <ExperimentOverviewField
+                  label={tAuto("github_job_url_e3a7af0")}
+                >
                   <a
                     href={safeGithubJobUrl}
                     target="_blank"

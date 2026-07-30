@@ -7,6 +7,7 @@ import { usePostHogClientCapture } from "@/src/features/posthog-analytics/usePos
 import { useAccountV4MigrationData } from "@/src/features/v4-migration/hooks/useV4MigrationData";
 import { getProjectMigrationReadiness } from "@/src/features/v4-migration/migrationData";
 import { env } from "@/src/env.mjs";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const V4_DOCS_URL = "https://langfuse.com/docs/v4";
 // Shorter than the Callout default (30d) so the banner resurfaces while the
@@ -21,6 +22,7 @@ const DISMISS_TTL_MS = 7 * 24 * 60 * 60 * 1000;
  * them.
  */
 export function V4MigrationBanner() {
+  const tAuto = useAutoTranslations();
   const capture = usePostHogClientCapture();
   const session = useSession();
 
@@ -63,7 +65,7 @@ export function V4MigrationBanner() {
                 capture("v4_migration:overview_banner_status_clicked")
               }
             >
-              Check status
+              {tAuto("check_status_07adf97")}{" "}
             </Link>
           </Button>
           <Button asChild size="sm" variant="secondary">
@@ -75,7 +77,7 @@ export function V4MigrationBanner() {
                 capture("v4_migration:overview_banner_docs_clicked")
               }
             >
-              Docs
+              {tAuto("docs_68a4194")}{" "}
             </a>
           </Button>
         </>
@@ -85,13 +87,22 @@ export function V4MigrationBanner() {
         <Zap className="h-4 w-4 shrink-0" />
         <span>
           <span className="font-bold">
-            Langfuse v4 is here: real-time and up to 165× faster.
+            {tAuto(
+              "langfuse_v4_is_here_real_time_and_up_to_165_faster_ad385fe",
+            )}{" "}
           </span>{" "}
           {projectsNeedingMigration === statuses.length
             ? projectsNeedingMigration === 1
-              ? "Your project needs an upgrade."
-              : "All projects need an upgrade."
-            : `${projectsNeedingMigration} of your ${statuses.length} projects ${projectsNeedingMigration === 1 ? "needs" : "need"} an upgrade.`}
+              ? tAuto("your_project_needs_an_upgrade_23cfee6")
+              : tAuto("all_projects_need_an_upgrade_28d80a2")
+            : tAuto(
+                "value0_of_your_value1_projects_value2_an_upgrade_1c5d13c",
+                {
+                  value0: String(projectsNeedingMigration),
+                  value1: String(statuses.length),
+                  value2: projectsNeedingMigration === 1 ? "needs" : "need",
+                },
+              )}
         </span>
       </div>
     </Callout>

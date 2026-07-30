@@ -3,8 +3,10 @@ import { Alert, AlertDescription, AlertTitle } from "@/src/components/ui/alert";
 import { AuditLogsTable } from "@/src/ee/features/audit-log-viewer/AuditLogsTable";
 import { useHasEntitlement } from "@/src/features/entitlements/hooks";
 import { useHasOrganizationAccess } from "@/src/features/rbac/utils/checkOrganizationAccess";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export function OrgAuditLogsSettingsPage(props: { orgId: string }) {
+  const tAuto = useAutoTranslations();
   const hasAccess = useHasOrganizationAccess({
     organizationId: props.orgId,
     scope: "auditLogs:read",
@@ -13,14 +15,17 @@ export function OrgAuditLogsSettingsPage(props: { orgId: string }) {
 
   const body = !hasEntitlement ? (
     <p className="text-muted-foreground text-sm">
-      Audit logs are an Enterprise feature. Upgrade your plan to track all
-      changes made to your organization.
+      {tAuto(
+        "audit_logs_are_an_enterprise_feature_upgrade_your_pl_633ca84",
+      )}{" "}
     </p>
   ) : !hasAccess ? (
     <Alert>
-      <AlertTitle>Access Denied</AlertTitle>
+      <AlertTitle>{tAuto("access_denied_1647b9d")}</AlertTitle>
       <AlertDescription>
-        Contact your organization administrator to request access.
+        {tAuto(
+          "contact_your_organization_administrator_to_request_a_cef767c",
+        )}{" "}
       </AlertDescription>
     </Alert>
   ) : (
@@ -29,11 +34,11 @@ export function OrgAuditLogsSettingsPage(props: { orgId: string }) {
 
   return (
     <>
-      <Header title="Organization Audit Logs" />
+      <Header title={tAuto("organization_audit_logs_d3273e4")} />
       <p className="text-muted-foreground mb-2 text-sm">
-        Track who changed what in your organization and when. Monitor
-        organization settings, project creation/deletion, and membership changes
-        over time.
+        {tAuto(
+          "track_who_changed_what_in_your_organization_and_when_a500386",
+        )}{" "}
       </p>
       {body}
     </>

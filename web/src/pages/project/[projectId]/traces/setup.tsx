@@ -11,6 +11,7 @@ import { useLangfuseBaseUrl } from "@/src/features/public-api/hooks/useLangfuseE
 import { type RouterOutput } from "@/src/utils/types";
 import { useState } from "react";
 import { useQueryProject } from "@/src/features/projects/hooks";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export const TracingSetup = ({
   projectId,
@@ -19,6 +20,7 @@ export const TracingSetup = ({
   projectId: string;
   hasTracingConfigured?: boolean;
 }) => {
+  const tAuto = useAutoTranslations();
   const baseUrl = useLangfuseBaseUrl();
   const [apiKeys, setApiKeys] = useState<
     RouterOutput["projectApiKeys"]["create"] | null
@@ -42,7 +44,7 @@ export const TracingSetup = ({
   return (
     <div className="space-y-8">
       <div>
-        <SubHeader title="1. Get API keys" />
+        <SubHeader title={tAuto("1_get_api_keys_d0d9d3c")} />
         {apiKeys ? (
           <ApiKeyDetailContent
             scope="project"
@@ -55,8 +57,9 @@ export const TracingSetup = ({
         ) : (
           <div className="flex flex-col gap-4">
             <p className="text-muted-foreground text-sm">
-              You need to create an API key to start tracing your application.
-              You can create more keys later in the project settings.
+              {tAuto(
+                "you_need_to_create_an_api_key_to_start_tracing_your__e7edb97",
+              )}{" "}
             </p>
             <div className="flex gap-2">
               <Button
@@ -64,13 +67,13 @@ export const TracingSetup = ({
                 loading={mutCreateApiKey.isPending}
                 className="self-start"
               >
-                Create new API key
+                {tAuto("create_new_api_key_87fc3d3")}{" "}
               </Button>
               <ActionButton
                 href={`/project/${projectId}/settings/api-keys`}
                 variant="secondary"
               >
-                Manage API keys
+                {tAuto("manage_api_keys_85a7ad2")}{" "}
               </ActionButton>
             </div>
           </div>
@@ -79,17 +82,16 @@ export const TracingSetup = ({
 
       <div>
         <SubHeader
-          title="2. Add tracing to your application"
+          title={tAuto("2_add_tracing_to_your_application_73b497e")}
           status={hasTracingConfigured ? "active" : "pending"}
         />
         <p className="text-muted-foreground mb-4 text-sm">
-          Langfuse relies on OpenTelemetry to instrument your application and
-          export LLM application/agent traces to Langfuse. You can use one of
-          our SDKs or 50+ framework integrations. Please follow the quickstart
-          in the documentation to add Langfuse to your application.
+          {tAuto(
+            "langfuse_relies_on_opentelemetry_to_instrument_your__523752e",
+          )}{" "}
         </p>
         <ActionButton href="https://langfuse.com/docs/observability/get-started">
-          Quickstart guide
+          {tAuto("quickstart_guide_5ee5d76")}{" "}
         </ActionButton>
       </div>
     </div>
@@ -97,6 +99,7 @@ export const TracingSetup = ({
 };
 
 export default function TracesSetupPage() {
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const projectId = router.query.projectId as string;
   const { project } = useQueryProject();
@@ -131,10 +134,11 @@ export default function TracesSetupPage() {
   return (
     <ContainerPage
       headerProps={{
-        title: "Tracing Setup",
+        title: tAuto("tracing_setup_1cdd2cc"),
         help: {
-          description:
-            "Setup tracing to track and analyze your LLM calls. You can create API keys and integrate Langfuse with your application.",
+          description: tAuto(
+            "setup_tracing_to_track_and_analyze_your_llm_calls_yo_573f723",
+          ),
           href: "https://langfuse.com/docs/observability/overview",
         },
       }}

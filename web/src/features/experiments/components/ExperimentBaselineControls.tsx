@@ -2,6 +2,7 @@ import { Button } from "@/src/components/ui/button";
 import { Combobox } from "@/src/components/ui/combobox";
 import { X } from "lucide-react";
 import { useExperimentNames } from "@/src/features/experiments/hooks/useExperimentNames";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type ExperimentBaselineControlsProps = {
   projectId: string;
@@ -20,6 +21,7 @@ export function ExperimentBaselineControls({
   onBaselineClear,
   canClearBaseline = true,
 }: ExperimentBaselineControlsProps) {
+  const tAuto = useAutoTranslations();
   const { experimentNames, isLoading } = useExperimentNames({
     projectId,
   });
@@ -35,9 +37,11 @@ export function ExperimentBaselineControls({
           options={baselineOptions}
           value={baselineId}
           onValueChange={onBaselineChange}
-          placeholder={baselineName ?? baselineId ?? "Select baseline..."}
+          placeholder={
+            baselineName ?? baselineId ?? tAuto("select_baseline_32ed427")
+          }
           emptyText="No experiments found"
-          searchPlaceholder="Search experiments..."
+          searchPlaceholder={tAuto("search_experiments_437f238")}
           disabled={isLoading}
           className="h-9"
         />
@@ -49,7 +53,7 @@ export function ExperimentBaselineControls({
           size="sm"
           onClick={onBaselineClear}
           disabled={isLoading}
-          title="Clear baseline"
+          title={tAuto("clear_baseline_31a196e")}
         >
           <X className="h-4 w-4" />
         </Button>

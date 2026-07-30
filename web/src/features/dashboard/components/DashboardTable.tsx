@@ -28,6 +28,7 @@ import { EditDashboardDialog } from "@/src/features/dashboard/components/EditDas
 import { CloneFirstDialog } from "@/src/features/dashboard/components/CloneFirstDialog";
 import { User as UserIcon } from "lucide-react";
 import { useRouter } from "next/router";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type DashboardTableRow = {
   id: string;
@@ -45,6 +46,8 @@ function CloneDashboardButton({
   dashboardId: string;
   projectId: string;
 }) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const utils = api.useUtils();
   const hasAccess = useHasProjectAccess({ projectId, scope: "dashboards:CUD" });
   const capture = usePostHogClientCapture();
@@ -54,12 +57,14 @@ function CloneDashboardButton({
       utils.dashboard.invalidate();
       capture("dashboard:clone_dashboard", { source: "list_clone_button" });
       showSuccessToast({
-        title: "Dashboard cloned",
-        description: "The dashboard has been cloned successfully",
+        title: tAuto("dashboard_cloned_825da22"),
+        description: tAuto(
+          "the_dashboard_has_been_cloned_successfully_21d91cc",
+        ),
       });
     },
     onError: (e) => {
-      showErrorToast("Failed to clone dashboard", e.message);
+      showErrorToast(tAutoI18n("failed_to_clone_dashboard_b18bc33"), e.message);
     },
   });
 
@@ -83,7 +88,7 @@ function CloneDashboardButton({
       onClick={handleCloneDashboard}
     >
       <Copy className="mr-2 h-4 w-4" />
-      Clone
+      {tAuto("clone_d8cdb57")}{" "}
     </Button>
   );
 }
@@ -99,6 +104,7 @@ function EditDashboardButton({
   dashboardName: string;
   dashboardDescription: string;
 }) {
+  const tAuto = useAutoTranslations();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const hasAccess = useHasProjectAccess({ projectId, scope: "dashboards:CUD" });
 
@@ -111,7 +117,7 @@ function EditDashboardButton({
         onClick={() => setIsDialogOpen(true)}
       >
         <Edit className="mr-2 h-4 w-4" />
-        Edit
+        {tAuto("edit_5301648")}{" "}
       </Button>
 
       <EditDashboardDialog
@@ -135,6 +141,7 @@ function LockedEditDashboardButton({
   projectId: string;
   dashboardName: string;
 }) {
+  const tAuto = useAutoTranslations();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const hasAccess = useHasProjectAccess({ projectId, scope: "dashboards:CUD" });
   const capture = usePostHogClientCapture();
@@ -155,7 +162,7 @@ function LockedEditDashboardButton({
         }}
       >
         <Edit className="mr-2 h-4 w-4" />
-        Edit
+        {tAuto("edit_5301648")}{" "}
       </Button>
 
       <CloneFirstDialog
@@ -170,6 +177,7 @@ function LockedEditDashboardButton({
 }
 
 export function DashboardTable() {
+  const tAuto = useAutoTranslations();
   const projectId = useProjectIdFromURL() as string;
   const { setDetailPageList } = useDetailPageLists();
   const router = useRouter();
@@ -213,7 +221,7 @@ export function DashboardTable() {
   const columnHelper = createColumnHelper<DashboardTableRow>();
   const dashboardColumns = [
     columnHelper.accessor("name", {
-      header: "Name",
+      header: tAuto("name_709a232"),
       id: "name",
       enableSorting: true,
       size: 200,
@@ -228,7 +236,7 @@ export function DashboardTable() {
       },
     }),
     columnHelper.accessor("description", {
-      header: "Description",
+      header: tAuto("description_55f8ebc"),
       id: "description",
       size: 300,
       cell: (row) => {
@@ -237,7 +245,7 @@ export function DashboardTable() {
     }),
     columnHelper.display({
       id: "ownerTag",
-      header: "Owner",
+      header: tAuto("owner_89ff312"),
       size: 80,
       cell: (row) => {
         return row.row.original.owner === "LANGFUSE" ? (
@@ -249,13 +257,13 @@ export function DashboardTable() {
           </span>
         ) : (
           <span className="flex gap-1 px-2 py-0.5 text-xs">
-            <UserIcon className="h-3 w-3" /> Project
+            <UserIcon className="h-3 w-3" /> {tAuto("project_f6f4da8")}{" "}
           </span>
         );
       },
     }),
     columnHelper.accessor("createdAt", {
-      header: "Created At",
+      header: tAuto("created_at_5db1542"),
       id: "createdAt",
       enableSorting: true,
       size: 150,
@@ -265,7 +273,7 @@ export function DashboardTable() {
       },
     }),
     columnHelper.accessor("updatedAt", {
-      header: "Updated At",
+      header: tAuto("updated_at_2271427"),
       id: "updatedAt",
       enableSorting: true,
       size: 150,
@@ -276,7 +284,7 @@ export function DashboardTable() {
     }),
     columnHelper.display({
       id: "actions",
-      header: "Actions",
+      header: tAuto("actions_c3cd636"),
       size: 70,
       cell: (row) => {
         const id = row.row.original.id;

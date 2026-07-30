@@ -34,6 +34,7 @@ import {
   convertSelectedEnvironmentsToFilter,
 } from "@/src/hooks/useEnvironmentFilter";
 import { Badge } from "@/src/components/ui/badge";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type RowData = {
   userId: string;
@@ -46,6 +47,7 @@ type RowData = {
 };
 
 export default function UsersPage() {
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const projectId = router.query.projectId as string;
   const { isBetaEnabled } = useV4Beta();
@@ -85,12 +87,13 @@ export default function UsersPage() {
   return (
     <Page
       headerProps={{
-        title: "Users",
+        title: tAuto("users_57f2b18"),
         help: {
           description: (
             <>
-              Attribute data in Langfuse to a user by adding a userId to your
-              traces. See{" "}
+              {tAuto(
+                "attribute_data_in_langfuse_to_a_user_by_adding_a_use_fb8bf60",
+              )}{" "}
               <a
                 href="https://langfuse.com/docs/observability/features/users"
                 target="_blank"
@@ -98,9 +101,9 @@ export default function UsersPage() {
                 className="decoration-primary/30 hover:decoration-primary underline"
                 onClick={(e) => e.stopPropagation()}
               >
-                docs
+                {tAuto("docs_71ab8b6")}{" "}
               </a>{" "}
-              to learn more.
+              {tAuto("to_learn_more_3d1d2de")}{" "}
             </>
           ),
           href: "https://langfuse.com/docs/observability/features/users",
@@ -125,6 +128,7 @@ const UsersTable = ({
   isBetaEnabled: boolean;
   showControlsInPageHeader?: boolean;
 }) => {
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const projectId = router.query.projectId as string;
 
@@ -296,10 +300,11 @@ const UsersTable = ({
     {
       accessorKey: "userId",
       enableColumnFilter: true,
-      header: "User ID",
+      header: tAuto("user_id_23bf49d"),
       headerTooltip: {
-        description:
-          "The unique identifier for the user that was logged in Langfuse. See docs for more details on how to set this up.",
+        description: tAuto(
+          "the_unique_identifier_for_the_user_that_was_logged_i_04a15b8",
+        ),
         href: "https://langfuse.com/docs/observability/features/users",
       },
       size: 150,
@@ -317,7 +322,7 @@ const UsersTable = ({
     },
     {
       accessorKey: "environment",
-      header: "Environment",
+      header: tAuto("environment_d443a11"),
       id: "environment",
       size: 150,
       enableHiding: true,
@@ -337,9 +342,9 @@ const UsersTable = ({
     },
     {
       accessorKey: "firstEvent",
-      header: "First Event",
+      header: tAuto("first_event_4ca5953"),
       headerTooltip: {
-        description: "The earliest trace recorded for this user.",
+        description: tAuto("the_earliest_trace_recorded_for_this_user_3812b04"),
       },
       size: 150,
       loadingCell: <TableTextLoadingCell />,
@@ -353,9 +358,9 @@ const UsersTable = ({
     },
     {
       accessorKey: "lastEvent",
-      header: "Last Event",
+      header: tAuto("last_event_046ef78"),
       headerTooltip: {
-        description: "The latest trace recorded for this user.",
+        description: tAuto("the_latest_trace_recorded_for_this_user_248abe3"),
       },
       size: 150,
       loadingCell: <TableTextLoadingCell />,
@@ -369,10 +374,11 @@ const UsersTable = ({
     },
     {
       accessorKey: "totalEvents",
-      header: "Total Events",
+      header: tAuto("total_events_404aaee"),
       headerTooltip: {
-        description:
-          "Total number of events for the user, includes traces and observations. See data model for more details.",
+        description: tAuto(
+          "total_number_of_events_for_the_user_includes_traces__09bcecf",
+        ),
         href: "https://langfuse.com/docs/observability/data-model",
       },
       size: 120,
@@ -387,10 +393,11 @@ const UsersTable = ({
     },
     {
       accessorKey: "totalTokens",
-      header: "Total Tokens",
+      header: tAuto("total_tokens_b662ff2"),
       headerTooltip: {
-        description:
-          "Total number of tokens used for the user across all generations.",
+        description: tAuto(
+          "total_number_of_tokens_used_for_the_user_across_all__05eceac",
+        ),
         href: "https://langfuse.com/docs/model-usage-and-cost",
       },
       size: 120,
@@ -405,9 +412,11 @@ const UsersTable = ({
     },
     {
       accessorKey: "totalCost",
-      header: "Total Cost",
+      header: tAuto("total_cost_b5d8da4"),
       headerTooltip: {
-        description: "Total cost for the user across all generations.",
+        description: tAuto(
+          "total_cost_for_the_user_across_all_generations_f2deb91",
+        ),
         href: "https://langfuse.com/docs/model-usage-and-cost",
       },
       size: 120,

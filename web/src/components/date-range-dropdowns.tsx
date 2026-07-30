@@ -19,13 +19,47 @@ import {
   getTimeRangeLabel,
 } from "@/src/utils/date-range-utils";
 import { useEntitlementLimit } from "@/src/features/entitlements/hooks";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
   HoverCardPortal,
 } from "@/src/components/ui/hover-card";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
+import { useTranslations } from "next-intl";
+
+const TIME_RANGE_TRANSLATION_KEYS = {
+  last5Minutes: "last5Minutes",
+  last30Minutes: "last30Minutes",
+  last1Hour: "last1Hour",
+  last3Hours: "last3Hours",
+  last6Hours: "last6Hours",
+  last1Day: "last1Day",
+  last3Days: "last3Days",
+  last7Days: "last7Days",
+  last14Days: "last14Days",
+  last30Days: "last30Days",
+  last90Days: "last90Days",
+  last1Year: "last1Year",
+  allTime: "allTime",
+  custom: "custom",
+} as const;
+
+export function useTimeRangeLabel() {
+  const tTimeRanges = useTranslations("TimeRanges");
+
+  return useCallback(
+    (option: string) => {
+      const key =
+        TIME_RANGE_TRANSLATION_KEYS[
+          option as keyof typeof TIME_RANGE_TRANSLATION_KEYS
+        ];
+      return key ? tTimeRanges(key) : getTimeRangeLabel(option);
+    },
+    [tTimeRanges],
+  );
+}
 
 type BaseDateRangeDropdownProps<T> = {
   selectedOption: T;
@@ -40,15 +74,17 @@ const BaseDateRangeDropdown = <T extends string>({
   limitedOptions,
   onSelectionChange,
 }: BaseDateRangeDropdownProps<T>) => {
+  const tAuto = useAutoTranslations();
+  const localizedLabel = useTimeRangeLabel();
   return (
     <Select value={selectedOption} onValueChange={onSelectionChange}>
       <SelectTrigger className="hover:bg-accent hover:text-accent-foreground w-fit font-bold focus:ring-0 focus:ring-offset-0">
-        <SelectValue placeholder="Select">
+        <SelectValue placeholder={tAuto("select_8598222")}>
           <div className="flex items-center gap-2">
             <span className="bg-muted w-10 rounded px-1.5 py-0.5 text-center text-xs">
               {getAbbreviatedTimeRange(selectedOption)}
             </span>
-            <span>{getTimeRangeLabel(selectedOption)}</span>
+            <span>{localizedLabel(selectedOption)}</span>
           </div>
         </SelectValue>
       </SelectTrigger>
@@ -69,7 +105,7 @@ const BaseDateRangeDropdown = <T extends string>({
                 <span className="bg-muted w-10 rounded px-1.5 py-0.5 text-center text-xs">
                   {getAbbreviatedTimeRange(item)}
                 </span>
-                <span>{getTimeRangeLabel(item)}</span>
+                <span>{localizedLabel(item)}</span>
               </div>
             </SelectItem>
           );
@@ -82,7 +118,9 @@ const BaseDateRangeDropdown = <T extends string>({
               </HoverCardTrigger>
               <HoverCardPortal>
                 <HoverCardContent className="w-60 text-sm" side="right">
-                  This time range is not available in your current plan.
+                  {tAuto(
+                    "this_time_range_is_not_available_in_your_current_pla_34cb980",
+                  )}{" "}
                 </HoverCardContent>
               </HoverCardPortal>
             </HoverCard>

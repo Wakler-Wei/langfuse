@@ -17,6 +17,7 @@ import {
   TableBody,
   TableCell,
 } from "@/src/components/ui/table";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export interface SelectDashboardDialogProps {
   open: boolean;
@@ -33,6 +34,8 @@ export function SelectDashboardDialog({
   onSelectDashboard,
   onSkip,
 }: SelectDashboardDialogProps) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const [selectedDashboardId, setSelectedDashboardId] = useState<string | null>(
     null,
   );
@@ -68,27 +71,31 @@ export function SelectDashboardDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[800px]">
         <DialogHeader>
-          <DialogTitle>Select dashboard to add widget to</DialogTitle>
+          <DialogTitle>
+            {tAuto("select_dashboard_to_add_widget_to_f1f338e")}
+          </DialogTitle>
         </DialogHeader>
         <DialogBody>
           <div className="mt-4 max-h-[400px] overflow-y-auto">
             {dashboards.isLoading ? (
-              <div className="py-8 text-center">Loading dashboards...</div>
+              <div className="py-8 text-center">
+                {tAuto("loading_dashboards_cdc518b")}
+              </div>
             ) : dashboards.isError ? (
               <div className="text-destructive py-8 text-center">
-                Error: {dashboards.error.message}
+                {tAutoI18n("error_787aa16")} {dashboards.error.message}
               </div>
             ) : dashboards.data?.dashboards.length === 0 ? (
               <div className="text-muted-foreground py-8 text-center">
-                No dashboards found.
+                {tAuto("no_dashboards_found_026e69c")}{" "}
               </div>
             ) : (
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Description</TableHead>
-                    <TableHead>Updated</TableHead>
+                    <TableHead>{tAuto("name_709a232")}</TableHead>
+                    <TableHead>{tAuto("description_55f8ebc")}</TableHead>
+                    <TableHead>{tAuto("updated_f2f8570")}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -124,10 +131,10 @@ export function SelectDashboardDialog({
         </DialogBody>
         <DialogFooter className="mt-4 flex justify-between">
           <Button variant="outline" onClick={handleSkip}>
-            Skip
+            {tAuto("skip_3da4745")}{" "}
           </Button>
           <Button onClick={handleAdd} disabled={!selectedDashboardId}>
-            Add to Dashboard
+            {tAuto("add_to_dashboard_10557b0")}{" "}
           </Button>
         </DialogFooter>
       </DialogContent>

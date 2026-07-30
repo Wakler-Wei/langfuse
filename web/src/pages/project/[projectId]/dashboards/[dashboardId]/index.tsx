@@ -81,6 +81,7 @@ import { useClipboardWidgetProbe } from "@/src/features/widgets/hooks/useClipboa
 import { extractTransferFiles } from "@/src/components/editor/fileDropPaste";
 import { Layer } from "@/src/components/ui/layer";
 import { showSuccessToast } from "@/src/features/notifications/showSuccessToast";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 // Position for a tile inserted "next to" an anchor tile: same size,
 // immediately to the right when that fits the 12-column grid, otherwise
@@ -96,6 +97,8 @@ function placementNextTo(anchor: DashboardPlacement) {
 }
 
 export default function DashboardDetail() {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const utils = api.useUtils();
   const capture = usePostHogClientCapture();
@@ -200,7 +203,10 @@ export default function DashboardDetail() {
         dashboard.refetch();
       },
       onError: (error) => {
-        showErrorToast("Error updating dashboard", error.message);
+        showErrorToast(
+          tAutoI18n("error_updating_dashboard_f6e0963"),
+          error.message,
+        );
       },
     });
 
@@ -218,7 +224,10 @@ export default function DashboardDetail() {
       utils.dashboard.getHomeDashboard.invalidate();
     },
     onError: (error) => {
-      showErrorToast("Failed to update home dashboard", error.message);
+      showErrorToast(
+        tAutoI18n("failed_to_update_home_dashboard_87dee9d"),
+        error.message,
+      );
     },
   });
 
@@ -232,7 +241,10 @@ export default function DashboardDetail() {
         utils.dashboard.invalidate();
       },
       onError: (error) => {
-        showErrorToast("Error renaming dashboard", error.message);
+        showErrorToast(
+          tAutoI18n("error_renaming_dashboard_b920e3d"),
+          error.message,
+        );
       },
     });
 
@@ -244,7 +256,10 @@ export default function DashboardDetail() {
         setSavedFilters(currentFilters);
       },
       onError: (error) => {
-        showErrorToast("Error saving filters", error.message);
+        showErrorToast(
+          tAutoI18n("error_saving_filters_281ec62"),
+          error.message,
+        );
       },
     });
 
@@ -454,12 +469,19 @@ export default function DashboardDetail() {
         insertWidgetPlacement(result.widget.id, placementNextTo(anchor));
       } catch (e) {
         showErrorToast(
-          "Failed to duplicate widget",
-          e instanceof Error ? e.message : "Unknown error",
+          tAutoI18n("failed_to_duplicate_widget_f68f6a1"),
+          e instanceof Error ? e.message : tAutoI18n("unknown_error_e5fd9aa"),
         );
       }
     },
-    [createWidgetAsync, projectId, dashboardId, capture, insertWidgetPlacement],
+    [
+      createWidgetAsync,
+      projectId,
+      dashboardId,
+      capture,
+      insertWidgetPlacement,
+      tAutoI18n,
+    ],
   );
 
   // Recreate a parsed clipboard widget as a project widget and place it on
@@ -476,7 +498,11 @@ export default function DashboardDetail() {
           reason: "invalid",
           dashboard_id: dashboardId,
         });
-        showErrorToast("Cannot paste widget", parsed.reason, "WARNING");
+        showErrorToast(
+          tAutoI18n("cannot_paste_widget_1761d8e"),
+          parsed.reason,
+          "WARNING",
+        );
         return;
       }
       // Don't create a widget row the placement step couldn't attach — a
@@ -501,19 +527,28 @@ export default function DashboardDetail() {
         );
         if (parsed.removedFilters) {
           showErrorToast(
-            "Widget filters were adjusted",
-            "Some pasted filters were removed because they are not available in this view.",
+            tAutoI18n("widget_filters_were_adjusted_50c8985"),
+            tAutoI18n(
+              "some_pasted_filters_were_removed_because_they_are_no_1cdad50",
+            ),
             "WARNING",
           );
         }
       } catch (e) {
         showErrorToast(
-          "Failed to paste widget",
-          e instanceof Error ? e.message : "Unknown error",
+          tAutoI18n("failed_to_paste_widget_225c274"),
+          e instanceof Error ? e.message : tAutoI18n("unknown_error_e5fd9aa"),
         );
       }
     },
-    [capture, createWidgetAsync, dashboardId, insertWidgetPlacement, projectId],
+    [
+      capture,
+      createWidgetAsync,
+      dashboardId,
+      insertWidgetPlacement,
+      projectId,
+      tAutoI18n,
+    ],
   );
 
   // Menu-driven paste ("Paste widget" / "Paste to the right"): read the
@@ -526,8 +561,10 @@ export default function DashboardDetail() {
       const text = await readTextFromClipboard();
       if (text === null) {
         showErrorToast(
-          "Clipboard unavailable",
-          "Your browser did not allow reading the clipboard. Paste with Cmd/Ctrl+V on the dashboard instead.",
+          tAutoI18n("clipboard_unavailable_bec46a2"),
+          tAutoI18n(
+            "your_browser_did_not_allow_reading_the_clipboard_pas_58db43b",
+          ),
           "WARNING",
         );
         return;
@@ -545,7 +582,11 @@ export default function DashboardDetail() {
             reason: "invalid",
             dashboard_id: dashboardId,
           });
-          showErrorToast("Cannot paste card", preset.reason, "WARNING");
+          showErrorToast(
+            tAutoI18n("cannot_paste_card_47acb69"),
+            preset.reason,
+            "WARNING",
+          );
           return;
         }
         capture("dashboard:widget_paste_rejected", {
@@ -554,8 +595,10 @@ export default function DashboardDetail() {
           dashboard_id: dashboardId,
         });
         showErrorToast(
-          "No widget in clipboard",
-          "The clipboard does not contain a Langfuse widget JSON. Copy one via a widget's ⋯ menu first.",
+          tAutoI18n("no_widget_in_clipboard_303d8e9"),
+          tAutoI18n(
+            "the_clipboard_does_not_contain_a_langfuse_widget_jso_7b98e78",
+          ),
           "WARNING",
         );
         return;
@@ -568,6 +611,8 @@ export default function DashboardDetail() {
       handleParsedWidgetPaste,
       handlePastedPreset,
       isBetaEnabled,
+      ,
+      tAutoI18n,
     ],
   );
 
@@ -601,7 +646,11 @@ export default function DashboardDetail() {
             reason: "invalid",
             dashboard_id: dashboardId,
           });
-          showErrorToast("Cannot paste card", preset.reason, "WARNING");
+          showErrorToast(
+            tAutoI18n("cannot_paste_card_47acb69"),
+            preset.reason,
+            "WARNING",
+          );
           return;
         }
         handlePastedPreset(preset.presetId, "cmd_v");
@@ -620,6 +669,8 @@ export default function DashboardDetail() {
     handlePastedPreset,
     capture,
     dashboardId,
+    ,
+    tAutoI18n,
   ]);
 
   // Gate the dashboard-menu "Paste widget" item on the clipboard actually
@@ -667,10 +718,10 @@ export default function DashboardDetail() {
             (s): s is PromiseRejectedResult => s.status === "rejected",
           )?.reason;
           showErrorToast(
-            "Failed to import dashboard",
+            tAutoI18n("failed_to_import_dashboard_b3a4827"),
             firstError instanceof Error
               ? firstError.message
-              : "Could not create the dashboard's widgets.",
+              : tAutoI18n("could_not_create_the_dashboard_s_widgets_f6cd461"),
           );
           return;
         }
@@ -724,29 +775,36 @@ export default function DashboardDetail() {
         }, 150);
 
         showSuccessToast({
-          title: "Dashboard imported",
-          description: `Added ${newPlacements.length} widget${
-            newPlacements.length === 1 ? "" : "s"
-          } from "${imported.name}".`,
+          title: tAuto("dashboard_imported_425143c"),
+          description: tAuto("added_value0_widget_value1_from_value2_2adf9ff", {
+            value0: newPlacements.length,
+            value1: newPlacements.length === 1 ? "" : "s",
+            value2: imported.name,
+          }),
         });
         if (imported.removedFilters) {
           showErrorToast(
-            "Widget filters were adjusted",
-            "Some imported filters were removed because they are not available in this view.",
+            tAutoI18n("widget_filters_were_adjusted_50c8985"),
+            tAutoI18n(
+              "some_imported_filters_were_removed_because_they_are__2609b30",
+            ),
             "WARNING",
           );
         }
         if (imported.skippedPresetCount > 0) {
           showErrorToast(
-            "Some cards were skipped",
-            `${imported.skippedPresetCount} preset card(s) in the file are not available in this Langfuse version.`,
+            tAutoI18n("some_cards_were_skipped_b066b1e"),
+            tAutoI18n(
+              "value0_preset_card_s_in_the_file_are_not_available_i_32810e6",
+              { value0: String(imported.skippedPresetCount ?? "") },
+            ),
             "WARNING",
           );
         }
       } catch (e) {
         showErrorToast(
-          "Failed to import dashboard",
-          e instanceof Error ? e.message : "Unknown error",
+          tAutoI18n("failed_to_import_dashboard_b3a4827"),
+          e instanceof Error ? e.message : tAutoI18n("unknown_error_e5fd9aa"),
         );
       }
     },
@@ -757,6 +815,9 @@ export default function DashboardDetail() {
       applyDashboardDefinition,
       capture,
       dashboardId,
+      ,
+      tAuto,
+      tAutoI18n,
     ],
   );
 
@@ -777,7 +838,7 @@ export default function DashboardDetail() {
           dashboard_id: dashboardId,
         });
         showErrorToast(
-          "Cannot import dashboard",
+          tAutoI18n("cannot_import_dashboard_cb28686"),
           dashboardResult.reason,
           "WARNING",
         );
@@ -797,7 +858,11 @@ export default function DashboardDetail() {
             reason: "invalid",
             dashboard_id: dashboardId,
           });
-          showErrorToast("Cannot import card", preset.reason, "WARNING");
+          showErrorToast(
+            tAutoI18n("cannot_import_card_7ff07fe"),
+            preset.reason,
+            "WARNING",
+          );
           return;
         }
         capture("dashboard:widget_paste_rejected", {
@@ -806,8 +871,10 @@ export default function DashboardDetail() {
           dashboard_id: dashboardId,
         });
         showErrorToast(
-          "Unsupported file",
-          "Only Langfuse dashboard or widget JSON files can be dropped here.",
+          tAutoI18n("unsupported_file_71fc0b3"),
+          tAutoI18n(
+            "only_langfuse_dashboard_or_widget_json_files_can_be__102a3ad",
+          ),
           "WARNING",
         );
         return;
@@ -821,6 +888,8 @@ export default function DashboardDetail() {
       handlePastedPreset,
       capture,
       dashboardId,
+      ,
+      tAutoI18n,
     ],
   );
 
@@ -1066,7 +1135,7 @@ export default function DashboardDetail() {
       }
     },
     onError: (e) => {
-      showErrorToast("Failed to clone dashboard", e.message);
+      showErrorToast(tAutoI18n("failed_to_clone_dashboard_b18bc33"), e.message);
     },
   });
 
@@ -1124,16 +1193,16 @@ export default function DashboardDetail() {
         scrollable
         headerProps={{
           title:
-            (dashboard.data?.name || "Dashboard") +
+            (dashboard.data?.name || tAuto("dashboard_d87f47b")) +
             (dashboard.data?.owner === "LANGFUSE"
-              ? " (Langfuse Maintained)"
+              ? tAuto("langfuse_maintained_9517350")
               : ""),
           titleContent:
             hasCUDAccess && dashboard.data ? (
               <InlineEditText
                 value={dashboard.data.name}
                 required
-                aria-label="Rename dashboard"
+                aria-label={tAuto("rename_dashboard_ceb1d6d")}
                 onSave={(name) => {
                   capture("dashboard:dashboard_renamed_inline", {
                     dashboard_id: dashboardId,
@@ -1155,13 +1224,14 @@ export default function DashboardDetail() {
           ],
           help: {
             description:
-              dashboard.data?.description || "No description available",
+              dashboard.data?.description ||
+              tAuto("no_description_available_c017d28"),
           },
           actionButtonsLeft: (
             <>
               <MultiSelect
-                title="Environment"
-                label="Env"
+                title={tAuto("environment_d443a11")}
+                label={tAuto("env_a256269")}
                 values={selectedEnvironments}
                 onValueChange={useDebounce(setSelectedEnvironments)}
                 options={environmentOptions}
@@ -1186,9 +1256,9 @@ export default function DashboardDetail() {
                 setHomeDashboard.isPending) && (
                 <span
                   className="flex items-center"
-                  title="Saving..."
+                  title={tAuto("saving_ae7e887")}
                   role="status"
-                  aria-label="Saving"
+                  aria-label={tAuto("saving_369c534")}
                 >
                   <Loader2 className="text-muted-foreground h-4 w-4 animate-spin" />
                 </span>
@@ -1200,14 +1270,14 @@ export default function DashboardDetail() {
                   variant="outline"
                 >
                   {updateDashboardFilters.isPending
-                    ? "Saving..."
-                    : "Save Filters"}
+                    ? tAutoI18n("saving_ae7e887")
+                    : tAutoI18n("save_filters_2b8dcec")}
                 </Button>
               )}
               {hasRbacCUDAccess && (
                 <Button onClick={handleAddWidget}>
                   <PlusIcon size={16} className="mr-1 h-4 w-4" />
-                  Add Widget
+                  {tAuto("add_widget_a9df350")}{" "}
                 </Button>
               )}
               {hasCloneAccess && (
@@ -1217,7 +1287,7 @@ export default function DashboardDetail() {
                   disabled={mutateCloneDashboard.isPending}
                 >
                   <Copy size={16} className="mr-1 h-4 w-4" />
-                  Clone
+                  {tAuto("clone_d8cdb57")}{" "}
                 </Button>
               )}
               {hasRbacCUDAccess && (
@@ -1226,7 +1296,7 @@ export default function DashboardDetail() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      aria-label="More actions"
+                      aria-label={tAuto("more_actions_a1e34f9")}
                     >
                       <MoreVertical className="h-4 w-4" />
                     </Button>
@@ -1240,7 +1310,7 @@ export default function DashboardDetail() {
                         }
                       >
                         <ClipboardPasteIcon className="mr-2 h-4 w-4" />
-                        Paste widget
+                        {tAuto("paste_widget_36b51b3")}{" "}
                       </DropdownMenuItem>
                     )}
                     <DropdownMenuItem
@@ -1260,14 +1330,16 @@ export default function DashboardDetail() {
                       }}
                     >
                       <HomeIcon className="mr-2 h-4 w-4" />
-                      {isCurrentHome ? "Shown on Home" : "Use as Home"}
+                      {isCurrentHome
+                        ? tAutoI18n("shown_on_home_f9c3383")
+                        : tAutoI18n("use_as_home_68ed0d8")}
                     </DropdownMenuItem>
                     {hasCUDAccess && (
                       <DropdownMenuItem
                         onClick={() => setIsEditDialogOpen(true)}
                       >
                         <PencilIcon className="mr-2 h-4 w-4" />
-                        Edit name & description
+                        {tAuto("edit_name_description_384960e")}{" "}
                       </DropdownMenuItem>
                     )}
                   </DropdownMenuContent>
@@ -1300,9 +1372,9 @@ export default function DashboardDetail() {
           <Layer name="modal">
             <div className="bg-background/80 pointer-events-none fixed inset-0 flex items-center justify-center backdrop-blur-xs">
               <div className="border-primary bg-background rounded-lg border-2 border-dashed px-8 py-6 text-center shadow-lg">
-                <p className="font-bold">Drop to import</p>
+                <p className="font-bold">{tAuto("drop_to_import_05eb875")}</p>
                 <p className="text-muted-foreground text-sm">
-                  Langfuse dashboard or widget JSON
+                  {tAuto("langfuse_dashboard_or_widget_json_3f600ab")}{" "}
                 </p>
               </div>
             </div>
@@ -1347,7 +1419,7 @@ export default function DashboardDetail() {
         ) : dashboard.isError ? (
           <div className="flex h-64 items-center justify-center">
             <div className="text-destructive">
-              Error: {dashboard.error.message}
+              {tAutoI18n("error_787aa16")} {dashboard.error.message}
             </div>
           </div>
         ) : (

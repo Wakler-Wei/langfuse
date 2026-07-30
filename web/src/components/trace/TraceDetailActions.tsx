@@ -2,6 +2,7 @@ import { api } from "@/src/utils/api";
 import { StarTraceDetailsToggle } from "@/src/components/star-toggle";
 import { PublishTraceSwitch } from "@/src/components/publish-object-switch";
 import { DeleteTraceButton } from "@/src/components/deleteButton";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 /**
  * Trace-level header actions (star / publish / delete) shared by the peek and
@@ -49,6 +50,7 @@ export function TraceDetailActions({
   size?: "icon" | "icon-xs";
   layout?: "toolbar" | "menu";
 }) {
+  const tAuto = useAutoTranslations();
   const utils = api.useUtils();
   const isMenu = layout === "menu";
 
@@ -77,7 +79,7 @@ export function TraceDetailActions({
           timestamp={timestamp}
           isPublic={isPublic}
           shareUrl={shareUrl}
-          label="Share"
+          label={tAuto("share_09ca55c")}
         />
         <DeleteTraceButton
           itemId={traceId}
@@ -112,7 +114,9 @@ export function TraceDetailActions({
         isPublic={isPublic}
         shareUrl={shareUrl}
         size={size}
-        tooltip={isPublic ? "Shared (public)" : "Share"}
+        tooltip={
+          isPublic ? tAuto("shared_public_2e0db3f") : tAuto("share_09ca55c")
+        }
       />
       <DeleteTraceButton
         itemId={traceId}

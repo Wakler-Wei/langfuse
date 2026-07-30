@@ -2,12 +2,14 @@
 
 import Head from "next/head";
 import { OnboardingSurvey } from "@/src/features/onboarding/components/OnboardingSurvey";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export default function OnboardingPage() {
+  const tAuto = useAutoTranslations();
   return (
     <>
       <Head>
-        <title>Onboarding | Langfuse</title>
+        <title>{tAuto("onboarding_langfuse_9d6695a")}</title>
       </Head>
       <OnboardingSurvey />
     </>

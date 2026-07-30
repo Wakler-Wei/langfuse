@@ -33,6 +33,7 @@ import { useUniqueNameValidation } from "@/src/hooks/useUniqueNameValidation";
 import { DialogBody, DialogFooter } from "@/src/components/ui/dialog";
 import { DatasetSchemaInput } from "./DatasetSchemaInput";
 import { DatasetSchemaValidationError } from "./DatasetSchemaValidationError";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type ServerSideSchemaValidationErrors = {
   datasetItemId: string;
@@ -125,6 +126,7 @@ const formSchema = z.object({
 
 export const DatasetForm = forwardRef<DatasetFormRef, DatasetFormProps>(
   (props, ref) => {
+    const tAuto = useAutoTranslations();
     const [formError, setFormError] = useState<string | null>(null);
     const [
       serverSideSchemaValidationErrors,
@@ -332,10 +334,10 @@ export const DatasetForm = forwardRef<DatasetFormRef, DatasetFormProps>(
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Name</FormLabel>
+                    <FormLabel>{tAuto("name_709a232")}</FormLabel>
                     <FormDescription>
                       Use slashes &apos;/&apos; in dataset names to organize
-                      them into <em>folders</em>.
+                      them into <em>{tAuto("folders_9fa302e")}</em>.
                     </FormDescription>
                     <FormControl>
                       <Input {...field} />
@@ -349,7 +351,9 @@ export const DatasetForm = forwardRef<DatasetFormRef, DatasetFormProps>(
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Description (optional)</FormLabel>
+                    <FormLabel>
+                      {tAuto("description_optional_388de6f")}
+                    </FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -362,7 +366,7 @@ export const DatasetForm = forwardRef<DatasetFormRef, DatasetFormProps>(
                 name="metadata"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Metadata (optional)</FormLabel>
+                    <FormLabel>{tAuto("metadata_optional_c362dcc")}</FormLabel>
                     <FormControl>
                       <CodeMirrorEditor
                         mode="json"
@@ -381,8 +385,10 @@ export const DatasetForm = forwardRef<DatasetFormRef, DatasetFormProps>(
                 name="inputSchema"
                 render={({ field }) => (
                   <DatasetSchemaInput
-                    label="Input schema"
-                    description="Validate dataset item inputs against a JSON Schema. All new and existing items must conform to this schema."
+                    label={tAuto("input_schema_7cb06ff")}
+                    description={tAuto(
+                      "validate_dataset_item_inputs_against_a_json_schema_a_cfbbfa0",
+                    )}
                     value={field.value}
                     onChange={field.onChange}
                     initialValue={inputSchemaString}
@@ -394,8 +400,10 @@ export const DatasetForm = forwardRef<DatasetFormRef, DatasetFormProps>(
                 name="expectedOutputSchema"
                 render={({ field }) => (
                   <DatasetSchemaInput
-                    label="Expected output schema"
-                    description="Validate dataset item expected outputs against a JSON Schema. All new and existing items must conform to this schema."
+                    label={tAuto("expected_output_schema_14fcd49")}
+                    description={tAuto(
+                      "validate_dataset_item_expected_outputs_against_a_jso_fd80ccb",
+                    )}
                     value={field.value}
                     onChange={field.onChange}
                     initialValue={expectedOutputSchemaString}
@@ -428,12 +436,13 @@ export const DatasetForm = forwardRef<DatasetFormRef, DatasetFormProps>(
                   className="w-full"
                 >
                   {props.mode === "create"
-                    ? "Create dataset"
-                    : "Update dataset"}
+                    ? tAuto("create_dataset_3812b43")
+                    : tAuto("update_dataset_32dfdd9")}
                 </Button>
                 {formError && (
                   <p className="mt-4 text-center text-sm text-red-500">
-                    <span className="font-bold">Error:</span> {formError}
+                    <span className="font-bold">{tAuto("error_787aa16")}</span>{" "}
+                    {formError}
                   </p>
                 )}
               </div>

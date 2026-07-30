@@ -12,6 +12,7 @@ import { Button } from "@/src/components/ui/button";
 import { Switch } from "@/src/components/design-system/Switch/Switch";
 import { isLegacyEvalTarget } from "@/src/features/evals/utils/typeHelpers";
 import { useEvalCapabilities } from "@/src/features/evals/hooks/useEvalCapabilities";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export function DeactivateEvalConfig({
   projectId,
@@ -23,6 +24,7 @@ export function DeactivateEvalConfig({
   /** Called when the user confirms an activate/deactivate toggle. */
   onStatusChange?: () => void;
 }) {
+  const tAuto = useAutoTranslations();
   const utils = api.useUtils();
   const hasAccess = useHasProjectAccess({ projectId, scope: "evalJob:CUD" });
   const { allowLegacy } = useEvalCapabilities(projectId);
@@ -92,18 +94,23 @@ export function DeactivateEvalConfig({
             checked={isActive}
             color="green"
             {...(reactivationBlocked && {
-              title:
-                "Deprecated evaluators cannot be reactivated. Migrate to the new evaluators instead.",
+              title: tAuto(
+                "deprecated_evaluators_cannot_be_reactivated_migrate__7c895ee",
+              ),
             })}
           />
         </div>
       </PopoverTrigger>
       <PopoverContent>
-        <h2 className="mb-3 font-bold">Please confirm</h2>
+        <h2 className="mb-3 font-bold">{tAuto("please_confirm_3a799cc")}</h2>
         <p className="mb-3 text-sm">
           {evalConfig?.status === "ACTIVE"
-            ? "This action will deactivate the evaluator. No more traces will be evaluated based on this evaluator."
-            : "This action will activate the evaluator. New traces will be evaluated based on this evaluator."}
+            ? tAuto(
+                "this_action_will_deactivate_the_evaluator_no_more_tr_26e6072",
+              )
+            : tAuto(
+                "this_action_will_activate_the_evaluator_new_traces_w_1d28b12",
+              )}
         </p>
         <div className="flex justify-end space-x-4">
           <Button
@@ -114,7 +121,9 @@ export function DeactivateEvalConfig({
             loading={mutEvaluator.isPending}
             onClick={onClick}
           >
-            {evalConfig?.status === "ACTIVE" ? "Deactivate" : "Activate"}
+            {evalConfig?.status === "ACTIVE"
+              ? tAuto("deactivate_d65ded9")
+              : tAuto("activate_92ef083")}
           </Button>
         </div>
       </PopoverContent>

@@ -5,6 +5,7 @@ import { useUiCustomization } from "@/src/ee/features/ui-customization/useUiCust
 import { PlusIcon } from "lucide-react";
 import { LangfuseIcon } from "@/src/components/design-system/LangfuseIcon/LangfuseIcon";
 import { useHasAppSidebar } from "@/src/components/nav/sidebar-presence";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 /**
  * Compact Langfuse brand mark for the top bar.
@@ -27,6 +28,7 @@ export const TopbarBrand = ({
   className?: string;
   variant?: "icon" | "wordmark";
 }) => {
+  const tAuto = useAutoTranslations();
   const hasAppSidebar = useHasAppSidebar();
   const uiCustomization = useUiCustomization();
   const logoLight = uiCustomization?.logoLightModeHref;
@@ -41,7 +43,7 @@ export const TopbarBrand = ({
   return (
     <Link
       href="/"
-      aria-label="Langfuse home"
+      aria-label={tAuto("langfuse_home_c515fad")}
       className={cn("flex shrink-0 items-center gap-1", className)}
     >
       {logoLight && logoDark ? (
@@ -51,13 +53,13 @@ export const TopbarBrand = ({
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={logoLight}
-            alt="Logo"
+            alt={tAuto("logo_83fce83")}
             className="max-h-5 max-w-16 dark:hidden"
           />
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={logoDark}
-            alt="Logo"
+            alt={tAuto("logo_83fce83")}
             className="hidden max-h-5 max-w-16 dark:block"
           />
           <PlusIcon size={8} className="text-muted-foreground" />
@@ -69,13 +71,13 @@ export const TopbarBrand = ({
           <img
             className="max-h-5 max-w-24 dark:hidden"
             src={`${env.NEXT_PUBLIC_BASE_PATH ?? ""}/wordart-black.svg`}
-            alt="Langfuse Logo"
+            alt={tAuto("langfuse_logo_2337c85")}
           />
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             className="hidden max-h-5 max-w-24 dark:block"
             src={`${env.NEXT_PUBLIC_BASE_PATH ?? ""}/wordart-white.svg`}
-            alt="Langfuse Logo"
+            alt={tAuto("langfuse_logo_2337c85")}
           />
         </>
       ) : (

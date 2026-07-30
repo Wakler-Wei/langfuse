@@ -62,6 +62,7 @@ import {
 } from "@/src/features/in-app-agent/quickActions";
 import { usePostHogClientCapture } from "@/src/features/posthog-analytics/usePostHogClientCapture";
 import { Tabs, TabsList, TabsTrigger } from "@/src/components/ui/tabs";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const AUTO_SCROLL_THRESHOLD_PX = 50;
 const SCROLL_DIRECTION_TOLERANCE_PX = 1;
@@ -91,6 +92,7 @@ function InAppAgentQuickActionPicker({
     position: number,
   ) => void;
 }) {
+  const tAuto = useAutoTranslations();
   const [selectedContext, setSelectedContext] = useState(initialContext);
   const selectedActions =
     selectedContext === initialContext && focusedActions?.length
@@ -102,10 +104,10 @@ function InAppAgentQuickActionPicker({
   return (
     <>
       <p className="text-foreground mt-3 text-sm font-bold">
-        Welcome to the Langfuse Assistant
+        {tAuto("welcome_to_the_langfuse_assistant_a68b6d4")}{" "}
       </p>
       <p className="text-muted-foreground mt-1 max-w-xs text-center text-xs leading-relaxed">
-        What do you want to do?
+        {tAuto("what_do_you_want_to_do_8d4f6ef")}{" "}
       </p>
       <Tabs
         value={selectedContext}
@@ -117,7 +119,7 @@ function InAppAgentQuickActionPicker({
         }}
       >
         <TabsList
-          aria-label="Quick action category"
+          aria-label={tAuto("quick_action_category_0df7526")}
           className="flex h-auto w-full rounded-none border-b bg-transparent p-0"
         >
           {IN_APP_AGENT_QUICK_ACTION_CONTEXTS.map((context) => (
@@ -298,6 +300,7 @@ function InAppAgentRateLimitError({
   error: Extract<InAppAgentError, { type: "rate_limit" }>;
   isExpanded: boolean;
 }) {
+  const tAuto = useAutoTranslations();
   const [secondsRemaining, setSecondsRemaining] = useState(() =>
     Math.ceil((error.retryAt - Date.now()) / 1_000),
   );
@@ -329,7 +332,10 @@ function InAppAgentRateLimitError({
         <p className="font-bold">
           You&apos;ve reached the assistant request limit
         </p>
-        <p>Try again in about {formatApproximateDuration(secondsRemaining)}.</p>
+        <p>
+          {tAuto("try_again_in_about_4c6e916")}{" "}
+          {formatApproximateDuration(secondsRemaining)}.
+        </p>
       </div>
     </div>
   );
@@ -356,6 +362,7 @@ function InAppAgentGenericError({
 }
 
 export function InAppAgentWindow(props: InAppAgentWindowProps) {
+  const tAuto = useAutoTranslations();
   const {
     conversations,
     disablePendingToolApprovalActions = false,
@@ -502,7 +509,7 @@ export function InAppAgentWindow(props: InAppAgentWindowProps) {
 
   return (
     <section
-      aria-label="Assistant"
+      aria-label={tAuto("assistant_8010d1f")}
       className="bg-background flex h-full min-h-0 w-full min-w-0 flex-col overflow-hidden rounded-xl border shadow/5"
     >
       <header
@@ -515,11 +522,14 @@ export function InAppAgentWindow(props: InAppAgentWindowProps) {
         )}
       >
         <div className="flex min-w-0 flex-1 items-center gap-2">
-          <p className="shrink-0 truncate text-sm font-bold" title="Assistant">
-            Assistant
+          <p
+            className="shrink-0 truncate text-sm font-bold"
+            title={tAuto("assistant_8010d1f")}
+          >
+            {tAuto("assistant_8010d1f")}{" "}
           </p>
           <span className="text-muted-foreground rounded border px-1.5 py-1 text-xs leading-none font-bold">
-            Beta
+            {tAuto("beta_f03b60f")}{" "}
           </span>
         </div>
         <div
@@ -535,12 +545,14 @@ export function InAppAgentWindow(props: InAppAgentWindowProps) {
                 className="size-6 shrink-0"
                 onClick={onNewConversation}
                 disabled={baseIsInputDisabled}
-                aria-label="Start new conversation"
+                aria-label={tAuto("start_new_conversation_bf79f47")}
               >
                 <Plus className="size-3" />
               </Button>
             </TooltipTrigger>
-            <TooltipContent>Start new conversation</TooltipContent>
+            <TooltipContent>
+              {tAuto("start_new_conversation_bf79f47")}
+            </TooltipContent>
           </Tooltip>
           <DropdownMenu
             open={isConversationHistoryOpen}
@@ -561,23 +573,27 @@ export function InAppAgentWindow(props: InAppAgentWindowProps) {
                     size="icon"
                     className="size-6 shrink-0"
                     disabled={baseIsInputDisabled}
-                    aria-label="Conversation history"
+                    aria-label={tAuto("conversation_history_a03d887")}
                   >
                     <History className="size-3" />
                   </Button>
                 </DropdownMenuTrigger>
               </TooltipTrigger>
-              <TooltipContent>Conversation history</TooltipContent>
+              <TooltipContent>
+                {tAuto("conversation_history_a03d887")}
+              </TooltipContent>
             </Tooltip>
             <DropdownMenuContent
               align="end"
               className="max-h-80 w-64 overflow-y-auto"
             >
-              <DropdownMenuLabel>Recent conversations</DropdownMenuLabel>
+              <DropdownMenuLabel>
+                {tAuto("recent_conversations_2eff3a4")}
+              </DropdownMenuLabel>
               <DropdownMenuSeparator />
               {conversations.length === 0 ? (
                 <DropdownMenuItem disabled>
-                  No conversations yet
+                  {tAuto("no_conversations_yet_f58811b")}{" "}
                 </DropdownMenuItem>
               ) : (
                 conversations.map((conversation) => {
@@ -608,7 +624,7 @@ export function InAppAgentWindow(props: InAppAgentWindowProps) {
                         size="icon-xs"
                         className="text-muted-foreground hover:text-destructive -mr-1.5 shrink-0"
                         disabled={baseIsInputDisabled}
-                        aria-label="Delete conversation"
+                        aria-label={tAuto("delete_conversation_de43467")}
                         onClick={(event) => {
                           event.preventDefault();
                           event.stopPropagation();
@@ -629,7 +645,9 @@ export function InAppAgentWindow(props: InAppAgentWindowProps) {
                     disabled={isLoadingMoreConversations}
                     onSelect={onLoadMoreConversations}
                   >
-                    {isLoadingMoreConversations ? "Loading..." : "Load more"}
+                    {isLoadingMoreConversations
+                      ? tAuto("loading_b04ba49")
+                      : tAuto("load_more_dfe60ca")}
                   </DropdownMenuItem>
                 </>
               ) : null}
@@ -642,7 +660,11 @@ export function InAppAgentWindow(props: InAppAgentWindowProps) {
                 variant="ghost"
                 size="icon"
                 className="size-6"
-                aria-label={isExpanded ? "Collapse window" : "Expand window"}
+                aria-label={
+                  isExpanded
+                    ? tAuto("collapse_window_8cb4445")
+                    : tAuto("expand_window_6cf63a6")
+                }
                 onClick={() => {
                   onExpandedChange(!isExpanded);
                 }}
@@ -655,7 +677,9 @@ export function InAppAgentWindow(props: InAppAgentWindowProps) {
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              {isExpanded ? "Collapse window" : "Expand window"}
+              {isExpanded
+                ? tAuto("collapse_window_8cb4445")
+                : tAuto("expand_window_6cf63a6")}
             </TooltipContent>
           </Tooltip>
           {props.showCloseButton !== false ? (
@@ -666,13 +690,15 @@ export function InAppAgentWindow(props: InAppAgentWindowProps) {
                   variant="ghost"
                   size="icon"
                   className="size-6"
-                  aria-label="Minimize assistant"
+                  aria-label={tAuto("minimize_assistant_98b6ac4")}
                   onClick={props.onClose}
                 >
                   <Minus className="size-3" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>Minimize assistant</TooltipContent>
+              <TooltipContent>
+                {tAuto("minimize_assistant_98b6ac4")}
+              </TooltipContent>
             </Tooltip>
           ) : null}
         </div>
@@ -936,8 +962,8 @@ export function InAppAgentWindow(props: InAppAgentWindowProps) {
                 }
               }}
               disabled={isInputDisabled}
-              aria-label="Message the assistant"
-              placeholder="Let me know what I can do for you..."
+              aria-label={tAuto("message_the_assistant_75a2342")}
+              placeholder={tAuto("let_me_know_what_i_can_do_for_you_5f43aa8")}
               rows={1}
               className={cn(
                 "bg-background placeholder:text-foreground-tertiary w-full flex-1 resize-none overflow-y-auto rounded-md text-sm leading-5 disabled:cursor-not-allowed disabled:opacity-60",
@@ -951,7 +977,7 @@ export function InAppAgentWindow(props: InAppAgentWindowProps) {
                 type="submit"
                 size="icon"
                 className="h-8 w-8 rounded-md border"
-                aria-label="Send message"
+                aria-label={tAuto("send_message_c70a890")}
                 variant="outline"
                 disabled={isInputDisabled || !input.trim()}
               >
@@ -964,13 +990,14 @@ export function InAppAgentWindow(props: InAppAgentWindowProps) {
                 <Button
                   type="submit"
                   className="h-8 w-fit rounded-md px-3"
-                  aria-label="Send message"
+                  aria-label={tAuto("send_message_c70a890")}
                   disabled={isInputDisabled || !input.trim()}
                   onClick={(e) => {
                     e.stopPropagation();
                   }}
                 >
-                  Send <SendHorizontal className="ml-2 h-4 w-4" />
+                  {tAuto("send_9bc2575")}{" "}
+                  <SendHorizontal className="ml-2 h-4 w-4" />
                 </Button>
               </div>
             )}

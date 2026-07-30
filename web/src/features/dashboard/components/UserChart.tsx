@@ -14,6 +14,8 @@ import { traceViewQuery } from "@/src/features/dashboard/lib/dashboard-utils";
 import { useScheduledDashboardExecuteQuery } from "@/src/hooks/useDashboardQueryScheduler";
 import { useFitRowCount } from "@/src/features/dashboard/hooks/useFitRowCount";
 import { cn } from "@/src/utils/tailwind";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
+import { useTranslations } from "next-intl";
 
 // Target height of one bar row (bar + spacing) and the x-axis strip; matches
 // TracesBarListChart so bars are the same thickness across the two cards.
@@ -44,6 +46,8 @@ export const UserChart = ({
   metricsVersion?: ViewVersion;
   schedulerId?: string;
 }) => {
+  const tAuto = useAutoTranslations();
+  const tDashboard = useTranslations("Dashboard");
   const [isExpanded, setIsExpanded] = useState(false);
   const maxNumberOfEntries = { collapsed: 5, expanded: 20 } as const;
 
@@ -178,20 +182,20 @@ export const UserChart = ({
 
   const data = [
     {
-      tabTitle: "Token cost",
+      tabTitle: tDashboard("tokenCost"),
       data: transformedCost,
       totalMetric: costFormatter(totalCost),
-      metricDescription: "Total cost",
+      metricDescription: tDashboard("totalCost"),
       chartMetricLabel: "USD",
       chartUnit: "USD",
     },
     {
-      tabTitle: "Count of Traces",
+      tabTitle: tDashboard("traceCount"),
       data: transformedNumberOfTraces,
       totalMetric: totalTraces
         ? compactNumberFormatter(totalTraces)
         : compactNumberFormatter(0),
-      metricDescription: "Total traces",
+      metricDescription: tDashboard("totalTraces"),
       chartMetricLabel: "Traces",
       chartUnit: "traces",
     },
@@ -204,7 +208,7 @@ export const UserChart = ({
       // shrink so the chart viewport scrolls internally. (LFE-11035)
       className={cn(className, "h-full")}
       cardContentClassName="min-h-0"
-      title="User consumption"
+      title={tAuto("user_consumption_8d6a915")}
       isLoading={isLoading || user.isPending}
     >
       <TabComponent
@@ -240,7 +244,9 @@ export const UserChart = ({
                 ) : (
                   <NoDataOrLoading
                     isLoading={isLoading || user.isPending}
-                    description="Consumption per user is tracked by passing their ids on traces."
+                    description={tAuto(
+                      "consumption_per_user_is_tracked_by_passing_their_ids_40617f0",
+                    )}
                     href="https://langfuse.com/docs/observability/features/users"
                     className="h-auto grow"
                   />

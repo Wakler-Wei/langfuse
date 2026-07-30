@@ -3,11 +3,13 @@ import { Button } from "@/src/components/ui/button";
 import { api } from "@/src/utils/api";
 import { Copy } from "lucide-react";
 import { useHasProjectAccess } from "@/src/features/rbac/utils/checkProjectAccess";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export const DuplicateDatasetButton: React.FC<{
   projectId: string;
   datasetId: string;
 }> = ({ projectId, datasetId }) => {
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const hasAccess = useHasProjectAccess({
     projectId,
@@ -33,12 +35,12 @@ export const DuplicateDatasetButton: React.FC<{
     <Button
       onClick={handleDuplicate}
       variant="ghost"
-      title="Duplicate dataset"
+      title={tAuto("duplicate_dataset_e45438d")}
       loading={duplicateDataset.isPending}
       disabled={!hasAccess}
     >
       <Copy className="mr-2 h-4 w-4" />
-      Duplicate
+      {tAuto("duplicate_972d573")}{" "}
     </Button>
   );
 };

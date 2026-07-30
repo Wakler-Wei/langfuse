@@ -6,6 +6,7 @@ import { cn } from "@/src/utils/tailwind";
 import { InAppAgentToolPayload } from "./InAppAgentToolPayload";
 import { InAppAgentToolResultPayload } from "./InAppAgentToolResultPayload";
 import { type InAppAgentToolCallContent } from "@/src/features/in-app-agent/components/utils/utils";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export function InAppAgentToolCallCard({
   tool,
@@ -20,6 +21,8 @@ export function InAppAgentToolCallCard({
   onApproveToolCall?: (approvalId: string) => Promise<void>;
   onRejectToolCall?: (approvalId: string) => Promise<void>;
 }) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const approval = tool.approval;
   const isApprovalPending = approval?.status === "pending";
   const isApprovalSubmitting = approval?.status === "submitting";
@@ -48,7 +51,7 @@ export function InAppAgentToolCallCard({
           </div>
           <div className="mt-2 space-y-2">
             <InAppAgentToolPayload
-              label="Arguments"
+              label={tAuto("arguments_cbb9fa2")}
               value={tool.args}
               variant="default"
             />
@@ -72,7 +75,7 @@ export function InAppAgentToolCallCard({
                 ) : (
                   <Check className="mr-1 size-3" />
                 )}
-                Confirm
+                {tAutoI18n("confirm_04a2122")}{" "}
               </Button>
               <Button
                 type="button"
@@ -88,7 +91,7 @@ export function InAppAgentToolCallCard({
                   }
                 }}
               >
-                Reject
+                {tAuto("reject_2b03b59")}{" "}
               </Button>
             </div>
           </div>
@@ -101,15 +104,15 @@ export function InAppAgentToolCallCard({
               {usedLabel}
             </span>
             <span className="text-muted-foreground text-xs group-open/tool:hidden">
-              Show
+              {tAuto("show_d97d1ee")}{" "}
             </span>
             <span className="text-muted-foreground hidden text-xs group-open/tool:inline">
-              Hide
+              {tAuto("hide_34d8b60")}{" "}
             </span>
           </summary>
           <div className="mt-2 space-y-2">
             <InAppAgentToolPayload
-              label="Arguments"
+              label={tAuto("arguments_cbb9fa2")}
               value={tool.args}
               variant="default"
             />

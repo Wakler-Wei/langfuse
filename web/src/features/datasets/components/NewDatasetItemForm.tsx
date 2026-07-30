@@ -61,6 +61,7 @@ import {
   isValidDatasetJson,
   parseDatasetJson,
 } from "../utils/parseDatasetJson";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const formSchema = z.object({
   datasetIds: z.array(z.string()).min(1, "Select at least one dataset"),
@@ -130,6 +131,8 @@ export const NewDatasetItemForm = (props: {
   onFormSuccess?: () => void;
   currentDatasetId?: string;
 }) => {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const [formError, setFormError] = useState<string | null>(null);
   const capture = usePostHogClientCapture();
   const form = useForm({
@@ -176,14 +179,14 @@ export const NewDatasetItemForm = (props: {
     async (file: File): Promise<string | null> => {
       if (!uploadDatasetId) {
         showErrorToast(
-          "Select a dataset first",
-          "Choose a dataset before attaching media.",
+          tAutoI18n("select_a_dataset_first_10a9b84"),
+          tAutoI18n("choose_a_dataset_before_attaching_media_2aa9f1e"),
         );
         return null;
       }
       return uploadFile(file, "input");
     },
-    [uploadDatasetId, uploadFile],
+    [uploadDatasetId, uploadFile, tAutoI18n],
   );
 
   const handleFileUpload =
@@ -351,7 +354,7 @@ export const NewDatasetItemForm = (props: {
               name="datasetIds"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>Target datasets</FormLabel>
+                  <FormLabel>{tAuto("target_datasets_7858bf2")}</FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
                       <FormControl>
@@ -364,8 +367,14 @@ export const NewDatasetItemForm = (props: {
                           )}
                         >
                           {field.value.length > 0
-                            ? `${field.value.length} dataset${field.value.length > 1 ? "s" : ""} selected`
-                            : "Select datasets"}
+                            ? tAutoI18n(
+                                "value0_dataset_value1_selected_4d043aa",
+                                {
+                                  value0: String(field.value.length),
+                                  value1: field.value.length > 1 ? "s" : "",
+                                },
+                              )
+                            : tAutoI18n("select_datasets_3ad7265")}
                           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                         </Button>
                       </FormControl>
@@ -373,11 +382,11 @@ export const NewDatasetItemForm = (props: {
                     <PopoverContent className="p-0">
                       <InputCommand>
                         <InputCommandInput
-                          placeholder="Search datasets..."
+                          placeholder={tAuto("search_datasets_2edc7dc")}
                           variant="bottom"
                         />
                         <InputCommandEmpty>
-                          No datasets found.
+                          {tAuto("no_datasets_found_757b2ce")}{" "}
                         </InputCommandEmpty>
                         <InputCommandGroup>
                           <ScrollArea className="h-fit">
@@ -407,7 +416,7 @@ export const NewDatasetItemForm = (props: {
                                 {dataset.name}
                                 {dataset.id === props.currentDatasetId && (
                                   <span className="text-muted-foreground ml-1">
-                                    (current)
+                                    {tAuto("current_3d527c2")}{" "}
                                   </span>
                                 )}
                               </InputCommandItem>
@@ -448,7 +457,7 @@ export const NewDatasetItemForm = (props: {
                 render={({ field }) => (
                   <FormItem className="flex flex-col gap-2">
                     <div className="flex items-center gap-2">
-                      <FormLabel>Input</FormLabel>
+                      <FormLabel>{tAuto("input_b568d47")}</FormLabel>
                       {hasInputSchema &&
                         selectedDatasets
                           .filter((d) => d.inputSchema)
@@ -473,9 +482,9 @@ export const NewDatasetItemForm = (props: {
                         editorRef={inputEditorRef}
                         minHeight={200}
                         extensions={mediaDropPasteExtensions}
-                        placeholder={`{
-  "question": "What is the capital of England?"
-}`}
+                        placeholder={tAuto(
+                          "question_what_is_the_capital_of_england_d95d136",
+                        )}
                       />
                     </FormControl>
                     <FormMessage />
@@ -494,7 +503,7 @@ export const NewDatasetItemForm = (props: {
                 render={({ field }) => (
                   <FormItem className="flex flex-col gap-2">
                     <div className="flex items-center gap-2">
-                      <FormLabel>Expected output</FormLabel>
+                      <FormLabel>{tAuto("expected_output_fd02e3d")}</FormLabel>
                       {hasOutputSchema &&
                         selectedDatasets
                           .filter((d) => d.expectedOutputSchema)
@@ -519,9 +528,7 @@ export const NewDatasetItemForm = (props: {
                         editorRef={expectedOutputEditorRef}
                         minHeight={200}
                         extensions={mediaDropPasteExtensions}
-                        placeholder={`{
-  "answer": "London"
-}`}
+                        placeholder={tAuto("answer_london_41aa339")}
                       />
                     </FormControl>
                     <FormMessage />
@@ -544,7 +551,7 @@ export const NewDatasetItemForm = (props: {
               render={({ field }) => (
                 <FormItem className="flex flex-col gap-2">
                   <div className="flex items-center gap-2">
-                    <FormLabel>Metadata</FormLabel>
+                    <FormLabel>{tAuto("metadata_251edc0")}</FormLabel>
                     <DatasetItemFieldToolbar
                       copyValue={field.value}
                       onSelectFile={handleFileUpload(metadataEditorRef)}
@@ -581,7 +588,8 @@ export const NewDatasetItemForm = (props: {
             />
             {formError ? (
               <p className="mt-2 text-center">
-                <span className="font-bold">Error:</span> {formError}
+                <span className="font-bold">{tAuto("error_787aa16")}</span>{" "}
+                {formError}
               </p>
             ) : null}
           </div>
@@ -667,6 +675,7 @@ const AddItemsButton = ({
   isPending: boolean;
   pendingUploads: PendingMediaUpload[];
 }) => {
+  const tAuto = useAutoTranslations();
   const [input, expectedOutput] = useWatch({
     control,
     name: ["input", "expectedOutput"],
@@ -688,10 +697,12 @@ const AddItemsButton = ({
         pendingUploads.length > 0
       }
     >
-      Add
+      {tAuto("add_61cc55a")}{" "}
       {selectedDatasetCount > 1
-        ? ` to ${selectedDatasetCount} datasets`
-        : " to dataset"}
+        ? tAuto("to_value0_datasets_a58f20c", {
+            value0: String((selectedDatasetCount as unknown) ?? ""),
+          })
+        : tAuto("to_dataset_1995b7d")}
     </Button>
   );
 };

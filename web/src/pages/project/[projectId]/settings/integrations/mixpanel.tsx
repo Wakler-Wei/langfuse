@@ -59,8 +59,11 @@ import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { type z } from "zod";
 import { Info, ExternalLink } from "lucide-react";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export default function MixpanelIntegrationSettings() {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const projectId = router.query.projectId as string;
 
@@ -85,7 +88,7 @@ export default function MixpanelIntegrationSettings() {
   return (
     <ContainerPage
       headerProps={{
-        title: "Mixpanel Integration",
+        title: tAuto("mixpanel_integration_2f6cc3e"),
         breadcrumb: [
           { name: "Settings", href: `/project/${projectId}/settings` },
         ],
@@ -93,32 +96,31 @@ export default function MixpanelIntegrationSettings() {
         actionButtonsRight: (
           <Button asChild variant="secondary">
             <Link href="https://langfuse.com/integrations/analytics/mixpanel">
-              Integration Docs ↗
+              {tAuto("integration_docs_aca3483")}{" "}
             </Link>
           </Button>
         ),
       }}
     >
       <p className="text-primary mb-4 text-sm">
-        Integrate with{" "}
+        {tAutoI18n("integrate_with_a1c2e39")}{" "}
         <Link href="https://mixpanel.com" className="underline">
-          Mixpanel
+          {tAuto("mixpanel_a932c04")}{" "}
         </Link>{" "}
-        to sync your Langfuse traces, generations, and scores for advanced
-        product analytics. Upon activation, all historical data from your
-        project will be synced. After the initial sync, new data is
-        automatically synced every hour to keep your Mixpanel dashboards up to
-        date.
+        {tAutoI18n(
+          "to_sync_your_langfuse_traces_generations_and_scores__50c0651",
+        )}{" "}
       </p>
       {!hasAccess && (
         <p className="text-sm">
-          Your current role does not grant you access to these settings, please
-          reach out to your project admin or owner.
+          {tAuto(
+            "your_current_role_does_not_grant_you_access_to_these_9dfff7c",
+          )}{" "}
         </p>
       )}
       {hasAccess && (
         <>
-          <Header title="Configuration" />
+          <Header title={tAuto("configuration_7541648")} />
           <Card className="p-3">
             <MixpanelLogo className="text-foreground mb-4 w-20" />
             <MixpanelIntegrationSettingsForm
@@ -132,12 +134,12 @@ export default function MixpanelIntegrationSettings() {
       )}
       {state.data?.config?.enabled && (
         <>
-          <Header title="Status" className="mt-8" />
+          <Header title={tAuto("status_bae7d5b")} className="mt-8" />
           <p className="text-primary text-sm">
-            Data synced until:{" "}
+            {tAutoI18n("data_synced_until_d7275ff")}{" "}
             {state.data?.config?.lastSyncAt
               ? new Date(state.data.config.lastSyncAt).toLocaleString()
-              : "Never (pending)"}
+              : tAutoI18n("never_pending_5219c85")}
           </p>
         </>
       )}
@@ -156,6 +158,7 @@ const MixpanelIntegrationSettingsForm = ({
   isLoading: boolean;
   legacyWritesActive: boolean;
 }) => {
+  const tAuto = useAutoTranslations();
   const capture = usePostHogClientCapture();
   const { isBetaEnabled } = useV4Beta();
   const { isLangfuseCloud } = useLangfuseCloudRegion();
@@ -293,11 +296,13 @@ const MixpanelIntegrationSettingsForm = ({
           name="mixpanelRegion"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Mixpanel Region</FormLabel>
+              <FormLabel>{tAuto("mixpanel_region_fe0a386")}</FormLabel>
               <Select onValueChange={field.onChange} value={field.value}>
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select a region" />
+                    <SelectValue
+                      placeholder={tAuto("select_a_region_4220bcb")}
+                    />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
@@ -309,7 +314,9 @@ const MixpanelIntegrationSettingsForm = ({
                 </SelectContent>
               </Select>
               <FormDescription>
-                Select the Mixpanel region where your project is hosted
+                {tAuto(
+                  "select_the_mixpanel_region_where_your_project_is_hos_74447ae",
+                )}{" "}
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -320,7 +327,7 @@ const MixpanelIntegrationSettingsForm = ({
           name="mixpanelProjectToken"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Mixpanel Project Token</FormLabel>
+              <FormLabel>{tAuto("mixpanel_project_token_ada8dcf")}</FormLabel>
               <FormControl>
                 <PasswordInput
                   {...field}
@@ -329,8 +336,8 @@ const MixpanelIntegrationSettingsForm = ({
               </FormControl>
               <FormDescription>
                 {state
-                  ? "Leave blank to keep the current token."
-                  : "You can find your Project Token in your Mixpanel project settings"}
+                  ? tAuto("leave_blank_to_keep_the_current_token_b322ce3")
+                  : tAuto("you_can_find_your_project_token_in_your_mixpanel_pro_c9a1283")}
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -343,7 +350,7 @@ const MixpanelIntegrationSettingsForm = ({
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="flex items-center gap-1.5 pt-2">
-                  Export Source
+                  {tAuto("export_source_8ae76d6")}{" "}
                   <Tooltip>
                     <TooltipTrigger>
                       <Info className="text-muted-foreground h-3.5 w-3.5" />
@@ -367,7 +374,7 @@ const MixpanelIntegrationSettingsForm = ({
                           rel="noopener noreferrer"
                           className="text-muted-foreground hover:text-primary inline-flex items-center gap-1 text-xs hover:underline"
                         >
-                          For further information see
+                          {tAuto("for_further_information_see_b73bd24")}{" "}
                           <ExternalLink className="h-3 w-3" />
                         </a>
                       </div>
@@ -377,7 +384,9 @@ const MixpanelIntegrationSettingsForm = ({
                 <Select onValueChange={field.onChange} value={field.value}>
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select data to export" />
+                      <SelectValue
+                        placeholder={tAuto("select_data_to_export_102a16f")}
+                      />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -388,15 +397,16 @@ const MixpanelIntegrationSettingsForm = ({
                         disabled={option.unavailable}
                       >
                         {option.unavailable
-                          ? `${option.label} (not available on this deployment)`
+                          ? tAuto("value0_not_available_on_this_deployment_6309a73", { value0: String(((option.label) as unknown) ?? "") })
                           : option.label}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
                 <FormDescription>
-                  Choose which data sources to export to Mixpanel. Scores are
-                  always included.
+                  {tAuto(
+                    "choose_which_data_sources_to_export_to_mixpanel_scor_ece8d74",
+                  )}{" "}
                 </FormDescription>
                 <FormMessage />
               </FormItem>
@@ -405,7 +415,9 @@ const MixpanelIntegrationSettingsForm = ({
         )}
         {!watchedValidation.ok && (
           <Alert variant="destructive">
-            <AlertTitle>Saved export source is no longer available</AlertTitle>
+            <AlertTitle>
+              {tAuto("saved_export_source_is_no_longer_available_f0a40dc")}
+            </AlertTitle>
             <AlertDescription>
               {getExportSourceUnavailableMessage(watchedValidation.reason)}
             </AlertDescription>
@@ -416,7 +428,7 @@ const MixpanelIntegrationSettingsForm = ({
           name="enabled"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Enabled</FormLabel>
+              <FormLabel>{tAuto("enabled_df174a3")}</FormLabel>
               <FormControl>
                 <div className="mt-1 ml-4">
                   <Switch
@@ -439,7 +451,7 @@ const MixpanelIntegrationSettingsForm = ({
           onClick={mixpanelForm.handleSubmit(onSubmit)}
           disabled={isLoading}
         >
-          Save
+          {tAuto("save_efc007a")}{" "}
         </Button>
         <Button
           variant="ghost"
@@ -454,7 +466,7 @@ const MixpanelIntegrationSettingsForm = ({
               mutDelete.mutate({ projectId });
           }}
         >
-          Reset
+          {tAuto("reset_44c57ab")}{" "}
         </Button>
       </div>
     </Form>

@@ -48,6 +48,7 @@ import { TraceLogView } from "../TraceLogView/TraceLogView";
 import { TRACE_VIEW_CONFIG } from "@/src/components/trace/config/trace-view-config";
 import ScoresTable from "@/src/components/table/use-cases/scores";
 import { getMostRecentCorrection } from "@/src/features/corrections/utils/getMostRecentCorrection";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export interface TraceDetailViewProps {
   trace: Omit<WithStringifiedMetadata<TraceDomain>, "input" | "output"> & {
@@ -68,6 +69,8 @@ export function TraceDetailView({
   corrections,
   projectId,
 }: TraceDetailViewProps) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   // Tab and view state from URL (via SelectionContext)
   const { selectedTab, setSelectedTab } = useSelection();
   const utils = api.useUtils();
@@ -233,23 +236,36 @@ export function TraceDetailView({
         {showTabsBar && (
           <TooltipProvider>
             <TabsBarList>
-              <TabsBarTrigger value="preview">Preview</TabsBarTrigger>
+              <TabsBarTrigger value="preview">
+                {tAuto("preview_f1fbb2b")}
+              </TabsBarTrigger>
               {showLogViewTab && (
                 <TabsBarTrigger value="log">
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <span>Log View</span>
+                      <span>{tAuto("log_view_53547ed")}</span>
                     </TooltipTrigger>
                     <TooltipContent className="text-xs">
                       {isLogViewVirtualized
-                        ? `Shows all ${observations.length} observations with virtualization enabled.`
-                        : "Shows all observations concatenated. Great for quickly scanning through them."}
+                        ? tAutoI18n(
+                            "shows_all_value0_observations_with_virtualization_en_95564dd",
+                            {
+                              value0: String(
+                                (observations.length as unknown) ?? "",
+                              ),
+                            },
+                          )
+                        : tAutoI18n(
+                            "shows_all_observations_concatenated_great_for_quickl_3dc3ce0",
+                          )}
                     </TooltipContent>
                   </Tooltip>
                 </TabsBarTrigger>
               )}
               {showScoresTab && (
-                <TabsBarTrigger value="scores">Scores</TabsBarTrigger>
+                <TabsBarTrigger value="scores">
+                  {tAuto("scores_126cb93")}
+                </TabsBarTrigger>
               )}
 
               {/* View toggle (Formatted/JSON) - show for preview and log tabs when pretty view available */}
@@ -281,7 +297,7 @@ export function TraceDetailView({
                         value="pretty"
                         className="h-fit px-1 text-xs"
                       >
-                        Formatted
+                        {tAuto("formatted_f26356d")}{" "}
                       </TabsTrigger>
                       {selectedTab === "log" && isLogViewVirtualized ? (
                         <HoverCard openDelay={200}>
@@ -299,14 +315,18 @@ export function TraceDetailView({
                             className="w-64 text-sm"
                             sideOffset={8}
                           >
-                            <p className="font-bold">JSON view unavailable</p>
+                            <p className="font-bold">
+                              {tAuto("json_view_unavailable_125878b")}
+                            </p>
                             <p className="text-muted-foreground mt-1">
-                              Disabled for traces with{" "}
+                              {tAutoI18n("disabled_for_traces_with_0ad8952")}{" "}
                               {
                                 TRACE_VIEW_CONFIG.logView
                                   .virtualizationThreshold
                               }
-                              + observations to maintain performance.
+                              {tAutoI18n(
+                                "observations_to_maintain_performance_500417e",
+                              )}{" "}
                             </p>
                           </HoverCardContent>
                         </HoverCard>
@@ -330,7 +350,7 @@ export function TraceDetailView({
                           onCheckedChange={handleBetaToggle}
                         />
                         <span className="text-muted-foreground text-xs">
-                          Beta
+                          {tAuto("beta_f03b60f")}{" "}
                         </span>
                       </div>
                     )}
@@ -358,7 +378,7 @@ export function TraceDetailView({
                 <div
                   className={`px-2 pt-2 text-sm font-bold ${currentView !== "pretty" ? "shrink-0" : ""}`}
                 >
-                  Tags
+                  {tAuto("tags_848eed0")}{" "}
                 </div>
                 <div
                   className={`flex flex-wrap gap-x-1 gap-y-1 px-2 pb-2 ${currentView !== "pretty" ? "shrink-0" : ""}`}

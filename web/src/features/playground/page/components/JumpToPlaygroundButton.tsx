@@ -46,6 +46,10 @@ import {
   type MetadataDomainClient,
   type WithStringifiedMetadata,
 } from "@/src/utils/clientSideDomainTypes";
+import {
+  type AutoTranslator,
+  useAutoTranslations,
+} from "@/src/features/i18n/I18nText";
 
 type JumpToPlaygroundButtonProps = (
   | {
@@ -79,6 +83,7 @@ type JumpToPlaygroundButtonProps = (
 export const JumpToPlaygroundButton: React.FC<JumpToPlaygroundButtonProps> = (
   props,
 ) => {
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const capture = usePostHogClientCapture();
   const projectId = useProjectIdFromURL();
@@ -134,10 +139,15 @@ export const JumpToPlaygroundButton: React.FC<JumpToPlaygroundButtonProps> = (
       setCapturedState(parsePrompt(promptData));
     } else if (generationData) {
       setCapturedState(
-        parseGeneration(generationData, modelToProviderMap, includeOutput),
+        parseGeneration(
+          generationData,
+          modelToProviderMap,
+          tAuto,
+          includeOutput,
+        ),
       );
     }
-  }, [promptData, generationData, modelToProviderMap, includeOutput]);
+  }, [promptData, generationData, modelToProviderMap, includeOutput, tAuto]);
 
   useEffect(() => {
     if (capturedState) {
@@ -192,8 +202,8 @@ export const JumpToPlaygroundButton: React.FC<JumpToPlaygroundButtonProps> = (
   };
 
   const tooltipMessage = isAvailable
-    ? "Test in LLM playground"
-    : "Test in LLM playground is not available since messages are not in valid ChatML format or tool calls have been used. If you think this is not correct, please open a GitHub issue.";
+    ? tAuto("test_in_llm_playground_ac90732")
+    : tAuto("test_in_llm_playground_is_not_available_since_messag_aa68d3a");
 
   const isMenu = props.layout === "menu";
 
@@ -222,11 +232,13 @@ export const JumpToPlaygroundButton: React.FC<JumpToPlaygroundButtonProps> = (
             }
           />
           {isMenu ? (
-            <span className="text-sm">Test in playground</span>
+            <span className="text-sm">
+              {tAuto("test_in_playground_a52f5e8")}
+            </span>
           ) : (
             <>
               <span className={cn("hidden md:inline", props.className)}>
-                Playground
+                {tAuto("playground_a68eb23")}{" "}
               </span>
               <ChevronDown className="h-3 w-3" />
             </>
@@ -236,17 +248,17 @@ export const JumpToPlaygroundButton: React.FC<JumpToPlaygroundButtonProps> = (
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={() => handlePlaygroundAction(true)}>
           <Terminal className="mr-2 h-4 w-4" />
-          Fresh playground
+          {tAuto("fresh_playground_9374c22")}{" "}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => handlePlaygroundAction(false)}>
           <Terminal className="mr-2 h-4 w-4" />
-          Add to existing
+          {tAuto("add_to_existing_6fb4540")}{" "}
         </DropdownMenuItem>
         {props.source === "generation" && (
           <>
             <DropdownMenuSeparator />
             <div className="flex items-center justify-between px-2 py-1.5">
-              <span className="text-sm">Include output</span>
+              <span className="text-sm">{tAuto("include_output_6636c3a")}</span>
               <Switch
                 checked={includeOutput}
                 onCheckedChange={setIncludeOutput}
@@ -302,6 +314,7 @@ const parseGeneration = (
     output: string | null;
   },
   modelToProviderMap: Record<string, string>,
+  tAuto: AutoTranslator,
   includeOutput = false,
 ): PlaygroundCache => {
   if (!isGenerationLike(generation.type)) return null;
@@ -313,7 +326,7 @@ const parseGeneration = (
     generation.metadata,
   );
 
-  const structuredOutputSchema = parseStructuredOutputSchema(generation);
+  const structuredOutputSchema = parseStructuredOutputSchema(generation, tAuto);
   const providerOptions = parseLitellmMetadataFromGeneration(generation);
 
   if (modelParams && providerOptions) {
@@ -536,6 +549,7 @@ function parseStructuredOutputSchema(
     input: string | null;
     output: string | null;
   },
+  tAuto: AutoTranslator,
 ): PlaygroundSchema | null {
   try {
     let metadata = generation.metadata;
@@ -559,7 +573,7 @@ function parseStructuredOutputSchema(
         return {
           id: Math.random().toString(36).substring(2),
           name: parseStructuredOutputSchema.data.json_schema.name,
-          description: "Schema parsed from generation",
+          description: tAuto("schema_parsed_from_generation_224c97d"),
           schema: parseStructuredOutputSchema.data.json_schema.schema,
         };
     }
@@ -582,7 +596,7 @@ function parseStructuredOutputSchema(
         return {
           id: Math.random().toString(36).substring(2),
           name: parseStructuredOutputSchema.data.json_schema.name,
-          description: "Schema parsed from generation",
+          description: tAuto("schema_parsed_from_generation_224c97d"),
           schema: parseStructuredOutputSchema.data.json_schema.schema,
         };
     }

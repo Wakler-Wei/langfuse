@@ -1,6 +1,7 @@
 import { PlusCircle } from "lucide-react";
 import TableIdOrName from "@/src/components/table/table-id";
 import { UpsertModelFormDialog } from "@/src/features/models/components/UpsertModelFormDialog";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 /**
  * Renders the "Provided Model Name" cell shared by the generations and events
@@ -24,6 +25,7 @@ export function ProvidedModelNameCell({
   projectId: string;
   usageDetails: Record<string, number>;
 }) {
+  const tAuto = useAutoTranslations();
   if (!modelName) return null;
 
   // Both states wrap the name in the same inline-flex so the text sits at an
@@ -64,7 +66,9 @@ export function ProvidedModelNameCell({
       */}
       <button
         type="button"
-        title={`Add a model definition for "${modelName}"`}
+        title={tAuto("add_a_model_definition_for_value0_84b34dd", {
+          value0: modelName,
+        })}
         onClick={(e) => e.stopPropagation()}
         className="inline-flex max-w-full cursor-pointer items-center gap-1 text-left"
       >

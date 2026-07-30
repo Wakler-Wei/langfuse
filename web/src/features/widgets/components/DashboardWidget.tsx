@@ -69,6 +69,7 @@ import { useScheduledDashboardExecuteQuery } from "@/src/hooks/useDashboardQuery
 import { CopyWidgetDialog } from "@/src/features/widgets/components/CopyWidgetDialog";
 import { usePostHogClientCapture } from "@/src/features/posthog-analytics/usePostHogClientCapture";
 import { Badge } from "@/src/components/ui/badge";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export interface WidgetPlacement {
   id: string;
@@ -124,6 +125,8 @@ export function DashboardWidget({
     widget: WidgetExportSource,
   ) => void;
 }) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const utils = api.useUtils();
   const capture = usePostHogClientCapture();
@@ -535,7 +538,7 @@ export function DashboardWidget({
       });
     },
     onError: (e) => {
-      showErrorToast("Failed to clone widget", e.message);
+      showErrorToast(tAutoI18n("failed_to_clone_widget_60b926e"), e.message);
     },
   });
   const handleCopy = () => {
@@ -561,7 +564,7 @@ export function DashboardWidget({
   if (widget.isPending) {
     return (
       <div className="bg-background flex items-center justify-center rounded-lg border p-4">
-        <div className="text-muted-foreground">Loading...</div>
+        <div className="text-muted-foreground">{tAuto("loading_b04ba49")}</div>
       </div>
     );
   }
@@ -569,7 +572,9 @@ export function DashboardWidget({
   if (!widget.data) {
     return (
       <div className="bg-background flex items-center justify-center rounded-lg border p-4">
-        <div className="text-muted-foreground">Widget not found</div>
+        <div className="text-muted-foreground">
+          {tAuto("widget_not_found_0546133")}
+        </div>
       </div>
     );
   }
@@ -603,7 +608,10 @@ export function DashboardWidget({
         dashboard_id: dashboardId,
       });
     } catch {
-      showErrorToast("Copy failed", "Could not write to the clipboard.");
+      showErrorToast(
+        tAutoI18n("copy_failed_bd5acbf"),
+        tAutoI18n("could_not_write_to_the_clipboard_a601e40"),
+      );
     }
   };
 
@@ -639,7 +647,9 @@ export function DashboardWidget({
             <Badge
               variant="secondary"
               className="shrink-0"
-              title="Maintained by Langfuse — editing creates your own copy"
+              title={tAuto(
+                "maintained_by_langfuse_editing_creates_your_own_copy_13ea7de",
+              )}
             >
               Langfuse
             </Badge>
@@ -656,7 +666,7 @@ export function DashboardWidget({
                 <button
                   onClick={onLockedEditAttempt}
                   className="text-muted-foreground hover:text-foreground hidden group-hover:block"
-                  aria-label="Edit widget"
+                  aria-label={tAuto("edit_widget_6b744b9")}
                 >
                   <PencilIcon size={16} />
                 </button>
@@ -664,7 +674,7 @@ export function DashboardWidget({
                 <button
                   onClick={handleEdit}
                   className="text-muted-foreground hover:text-foreground hidden group-hover:block"
-                  aria-label="Edit widget"
+                  aria-label={tAuto("edit_widget_6b744b9")}
                 >
                   <PencilIcon size={16} />
                 </button>
@@ -678,7 +688,7 @@ export function DashboardWidget({
                     setIsCopyDialogOpen(true);
                   }}
                   className="text-muted-foreground hover:text-foreground hidden group-hover:block"
-                  aria-label="Edit widget"
+                  aria-label={tAuto("edit_widget_6b744b9")}
                 >
                   <PencilIcon size={16} />
                 </button>
@@ -686,7 +696,7 @@ export function DashboardWidget({
               <button
                 onClick={handleDelete}
                 className="text-muted-foreground hover:text-destructive hidden group-hover:block"
-                aria-label="Delete widget"
+                aria-label={tAuto("delete_widget_6306b40")}
               >
                 <TrashIcon size={16} />
               </button>
@@ -696,7 +706,7 @@ export function DashboardWidget({
             <DropdownMenuTrigger asChild>
               <button
                 className="text-muted-foreground hover:text-foreground hidden group-hover:block data-[state=open]:block"
-                aria-label="Widget actions"
+                aria-label={tAuto("widget_actions_2659cd3")}
               >
                 <MoreVerticalIcon size={16} />
               </button>
@@ -710,12 +720,12 @@ export function DashboardWidget({
                   >
                     <TableIcon className="mr-2 h-4 w-4" />
                     <span className="flex flex-col">
-                      <span>View as table</span>
+                      <span>{tAuto("view_as_table_ac45356")}</span>
                       {viewAsTableHint && (
                         <span className="text-muted-foreground text-xs">
-                          {viewAsTableHint.count} filter
-                          {viewAsTableHint.count === 1 ? "" : "s"} not shown in
-                          the table
+                          {viewAsTableHint.count} {tAutoI18n("filter_4bb4ca7")}{" "}
+                          {viewAsTableHint.count === 1 ? "" : "s"}{" "}
+                          {tAutoI18n("not_shown_in_the_table_a2f0771")}{" "}
                         </span>
                       )}
                     </span>
@@ -725,7 +735,7 @@ export function DashboardWidget({
               )}
               <DropdownMenuItem onClick={handleCopyToClipboard}>
                 <CopyIcon className="mr-2 h-4 w-4" />
-                Copy to clipboard
+                {tAuto("copy_to_clipboard_d8f482e")}{" "}
               </DropdownMenuItem>
               {onPasteWidget && (
                 <DropdownMenuItem
@@ -733,7 +743,7 @@ export function DashboardWidget({
                   onClick={() => onPasteWidget(placement)}
                 >
                   <ClipboardPasteIcon className="mr-2 h-4 w-4" />
-                  Paste to the right
+                  {tAuto("paste_to_the_right_655607e")}{" "}
                 </DropdownMenuItem>
               )}
               {onDuplicateWidget && (
@@ -743,13 +753,13 @@ export function DashboardWidget({
                   }
                 >
                   <CopyPlusIcon className="mr-2 h-4 w-4" />
-                  Duplicate
+                  {tAuto("duplicate_972d573")}{" "}
                 </DropdownMenuItem>
               )}
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleDownloadJson}>
                 <FileJsonIcon className="mr-2 h-4 w-4" />
-                Download as JSON
+                {tAuto("download_as_json_a1d2758")}{" "}
               </DropdownMenuItem>
               {/* Chart data download needs the query result to have loaded */}
               <DropdownMenuItem
@@ -759,7 +769,7 @@ export function DashboardWidget({
                 }
               >
                 <DownloadIcon className="mr-2 h-4 w-4" />
-                Download data as CSV
+                {tAuto("download_data_as_csv_e09a15e")}{" "}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

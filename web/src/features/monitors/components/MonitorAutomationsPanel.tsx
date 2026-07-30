@@ -26,6 +26,7 @@ import {
   type AutomationDomain,
   TriggerEventSource,
 } from "@langfuse/shared";
+import { I18nText, useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 /** actionLabel maps each automation action type to its display name. */
 const actionLabel: Record<ActionTypes, string> = {
@@ -86,7 +87,7 @@ const SetupMonitorAutomationsCard = ({
 }) => (
   <MonitorAutomationsCard>
     <p className="text-muted-foreground px-4 py-6 text-center text-base">
-      Set up Slack, Webhook, and Github Action Automations to Receive Alerts
+      <I18nText id="set_up_slack_webhook_and_github_action_automations_t_32027cb" />{" "}
     </p>
     <AddAutomationDropdown
       projectId={projectId}
@@ -248,6 +249,7 @@ const AddAutomationDropdown = ({
   fullWidth?: boolean;
   isDisabled?: boolean;
 }) => {
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   return (
     <DropdownMenu>
@@ -259,7 +261,7 @@ const AddAutomationDropdown = ({
           className={fullWidth ? "w-full" : undefined}
         >
           <Plus className="mr-2 h-4 w-4" />
-          Automation
+          {tAuto("automation_a15fde5")}{" "}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48">
@@ -268,7 +270,7 @@ const AddAutomationDropdown = ({
             href={automationCreateHref(projectId, undefined, router.asPath)}
           >
             <Plus className="mr-2 h-3.5 w-3.5" />
-            New automation
+            {tAuto("new_automation_72ca3ef")}{" "}
           </Link>
         </DropdownMenuItem>
         {ActionTypeSchema.options.map((t) => (

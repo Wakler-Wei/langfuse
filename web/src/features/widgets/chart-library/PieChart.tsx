@@ -16,6 +16,7 @@ import {
   formatMetric,
   toFullMetricString,
 } from "@/src/features/widgets/chart-library/utils";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 /**
  * PieChart component
@@ -37,6 +38,7 @@ export const PieChart: React.FC<ChartProps> = ({
   metricFormatter = (value, options) => formatMetric(value, options),
   subtleFill = false,
 }) => {
+  const tAuto = useAutoTranslations();
   const formatValue = (value: number) =>
     toFullMetricString(metricFormatter(value, { style: "compact" }));
 
@@ -123,7 +125,7 @@ export const PieChart: React.FC<ChartProps> = ({
                         y={(viewBox.cy || 0) + 24}
                         className="fill-muted-foreground"
                       >
-                        Total
+                        {tAuto("total_b25928c")}{" "}
                       </tspan>
                     </text>
                   );

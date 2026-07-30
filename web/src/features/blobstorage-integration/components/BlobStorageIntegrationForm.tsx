@@ -26,6 +26,7 @@ import { ExportScheduleFields } from "@/src/features/blobstorage-integration/com
 import { ExportSourceField } from "@/src/features/blobstorage-integration/components/ExportSourceField";
 import { ExportFieldGroupsField } from "@/src/features/blobstorage-integration/components/ExportFieldGroupsField";
 import { GzipCompressionField } from "@/src/features/blobstorage-integration/components/GzipCompressionField";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 // Disposable draft layer. The container mounts one instance per entity
 // identity (project + config existence, via React key) after all async
@@ -51,6 +52,7 @@ export const BlobStorageIntegrationForm = ({
   // this draft.
   children?: ReactNode;
 }) => {
+  const tAuto = useAutoTranslations();
   // Block the save when the persisted source is no longer selectable rather
   // than silently rewriting it (LFE-10296). The policy context is fixed for
   // the lifetime of this mount: it derives from the project and config
@@ -97,7 +99,7 @@ export const BlobStorageIntegrationForm = ({
           name="enabled"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Enabled</FormLabel>
+              <FormLabel>{tAuto("enabled_df174a3")}</FormLabel>
               <FormControl>
                 <div className="mt-1 ml-4">
                   <Switch
@@ -116,7 +118,7 @@ export const BlobStorageIntegrationForm = ({
           loading={isSaving}
           onClick={blobStorageForm.handleSubmit(onSubmit)}
         >
-          Save
+          {tAuto("save_efc007a")}{" "}
         </Button>
         {children}
       </div>

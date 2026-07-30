@@ -10,11 +10,12 @@ import {
   SelectValue,
 } from "@/src/components/ui/select";
 import { useRouter } from "next/router";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type SettingsProps = {
   pages: Array<
     {
-      title: string;
+      title: ReactNode;
       slug: string;
       show?: boolean | (() => boolean);
     } & ({ content: ReactNode } | { href: string })
@@ -26,6 +27,7 @@ export const PagedSettingsContainer = ({
   pages,
   activeSlug,
 }: SettingsProps) => {
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const availablePages = pages.filter((page) =>
     "show" in page
@@ -60,11 +62,11 @@ export const PagedSettingsContainer = ({
             value={currentPage.slug}
           >
             <SelectTrigger>
-              <SelectValue placeholder="Select a page" />
+              <SelectValue placeholder={tAuto("select_a_page_2ff5423")} />
             </SelectTrigger>
             <SelectContent>
               {availablePages.map((page) => (
-                <SelectItem key={page.title} value={page.slug}>
+                <SelectItem key={page.slug} value={page.slug}>
                   {page.title}
                   {"href" in page && (
                     <ArrowUpRight size={14} className="ml-1 inline" />
@@ -81,7 +83,7 @@ export const PagedSettingsContainer = ({
           {availablePages.map((page) =>
             "href" in page ? (
               <Link
-                key={page.title}
+                key={page.slug}
                 href={page.href}
                 className="flex flex-row items-center gap-2 font-bold"
               >
@@ -90,7 +92,7 @@ export const PagedSettingsContainer = ({
               </Link>
             ) : (
               <span
-                key={page.title}
+                key={page.slug}
                 onClick={() => onChange(page.slug)}
                 className={cn(
                   "cursor-pointer font-bold",

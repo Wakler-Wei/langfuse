@@ -37,6 +37,8 @@ import {
   useOptionalMessageSearchActions,
   useOptionalMessageSearchPageId,
 } from "./MessageSearch";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
+import { useTranslations } from "next-intl";
 
 export type MessageRowRefs = {
   rowRef: RefObject<HTMLDivElement | null>;
@@ -66,25 +68,6 @@ const ROLES: ChatMessageRole[] = [
   ChatMessageRole.Tool,
 ] as const;
 
-const getRoleNamePlaceholder = (role: string) => {
-  switch (role) {
-    case ChatMessageRole.System:
-      return "a system message";
-    case ChatMessageRole.Developer:
-      return "a developer message";
-    case ChatMessageRole.Assistant:
-      return "an assistant message";
-    case ChatMessageRole.User:
-      return "a user message";
-    case ChatMessageRole.Tool:
-      return "a tool response message";
-    case "placeholder":
-      return "placeholder name (e.g. chat_history)";
-    default:
-      return `a ${role}`;
-  }
-};
-
 const ToolCalls: React.FC<{ toolCalls: LLMToolCall[] }> = ({ toolCalls }) => {
   if (!toolCalls || toolCalls.length === 0) return null;
 
@@ -107,6 +90,8 @@ export const ChatMessageComponent: React.FC<ChatMessageProps> = ({
   toolCallIds,
   registerRow,
 }) => {
+  const tAuto = useAutoTranslations();
+  const t = useTranslations("Playground");
   const [roleIndex, setRoleIndex] = useState(1);
   const playgroundContext = useOptionalPlaygroundContext();
   const searchPageId = useOptionalMessageSearchPageId();
@@ -304,7 +289,7 @@ export const ChatMessageComponent: React.FC<ChatMessageProps> = ({
           <div className="bg-background sticky top-0 bottom-0 z-10 flex w-16 shrink-0 flex-col gap-1">
             {isPlaceholder ? (
               <span className="bg-accent text-muted-foreground inline-flex h-6 w-full items-center justify-center rounded-md px-4 font-mono text-[9px]">
-                placeholder
+                {tAuto("placeholder_ff55435")}{" "}
               </span>
             ) : (
               <Button
@@ -313,7 +298,17 @@ export const ChatMessageComponent: React.FC<ChatMessageProps> = ({
                 variant="ghost"
                 className="text-muted-foreground hover:bg-accent hover:text-accent-foreground h-6 w-full px-1 py-0 text-[10px] font-bold"
               >
-                {capitalize(message.role)}
+                {message.role === ChatMessageRole.System
+                  ? t("roles.system")
+                  : message.role === ChatMessageRole.Developer
+                    ? t("roles.developer")
+                    : message.role === ChatMessageRole.Assistant
+                      ? t("roles.assistant")
+                      : message.role === ChatMessageRole.User
+                        ? t("roles.user")
+                        : message.role === ChatMessageRole.Tool
+                          ? t("roles.tool")
+                          : capitalize(message.role)}
               </Button>
             )}
           </div>
@@ -332,10 +327,12 @@ export const ChatMessageComponent: React.FC<ChatMessageProps> = ({
                   }
                 >
                   <SelectTrigger
-                    title="Select Tool Call ID"
+                    title={tAuto("select_tool_call_id_0df7ca8")}
                     className="bg-muted h-[25px] w-[96px] border-0 text-[9px]"
                   >
-                    <SelectValue placeholder="Select Call ID" />
+                    <SelectValue
+                      placeholder={tAuto("select_call_id_3d9fa78")}
+                    />
                   </SelectTrigger>
                   <SelectContent>
                     {toolCallIds?.map((id) => (
@@ -376,7 +373,7 @@ export const ChatMessageComponent: React.FC<ChatMessageProps> = ({
             size="icon"
             onClick={() => deleteMessage(message.id)}
             className="h-5 w-5 shrink-0 rounded-full p-0 opacity-60 transition-all hover:opacity-100"
-            aria-label="Delete message"
+            aria-label={tAuto("delete_message_3c82c2a")}
           >
             <MinusCircleIcon size={14} />
           </Button>
@@ -402,7 +399,21 @@ const MemoizedEditor = memo(function MemoizedEditor(props: {
     onEditorMount,
     enableSearchKeymap,
   } = props;
-  const placeholder = `Enter ${getRoleNamePlaceholder(role)} here.`;
+  const t = useTranslations("Playground");
+  const placeholder =
+    role === ChatMessageRole.System
+      ? t("placeholders.system")
+      : role === ChatMessageRole.Developer
+        ? t("placeholders.developer")
+        : role === ChatMessageRole.Assistant
+          ? t("placeholders.assistant")
+          : role === ChatMessageRole.User
+            ? t("placeholders.user")
+            : role === ChatMessageRole.Tool
+              ? t("placeholders.tool")
+              : role === "placeholder"
+                ? t("placeholders.placeholder")
+                : t("placeholders.customRole", { role });
 
   return (
     <CodeMirrorEditor

@@ -18,6 +18,7 @@ import {
 } from "@/src/components/ui/hover-card";
 import Link from "next/link";
 import Spinner from "@/src/components/design-system/Spinner/Spinner";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 interface CorrectedOutputFieldProps {
   projectId: string;
@@ -45,6 +46,8 @@ export function CorrectedOutputField({
   environment = "default",
   compact = false,
 }: CorrectedOutputFieldProps) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const hasAccess = useHasProjectAccess({ projectId, scope: "scores:CUD" });
 
   // JSON validation toggle (persisted in localStorage)
@@ -175,7 +178,7 @@ export function CorrectedOutputField({
                   compact ? "text-xs" : "text-sm",
                 )}
               >
-                {compact ? "" : "Corrected Output"}
+                {compact ? "" : tAutoI18n("corrected_output_281b898")}
               </span>
               <HoverCard>
                 <HoverCardTrigger asChild>
@@ -185,15 +188,16 @@ export function CorrectedOutputField({
                 </HoverCardTrigger>
                 <HoverCardContent className="w-80 text-xs" side="right">
                   <p>
-                    Corrected outputs allow you to save the expected output for
-                    a trace or observation. Learn more in the{" "}
+                    {tAutoI18n(
+                      "corrected_outputs_allow_you_to_save_the_expected_out_740e78a",
+                    )}{" "}
                     <Link
                       href="https://langfuse.com/docs/observability/features/corrections"
                       target="_blank"
                       rel="noreferrer"
                       className="hover:text-foreground underline"
                     >
-                      documentation
+                      {tAuto("documentation_ba2a165")}{" "}
                     </Link>
                     .
                   </p>
@@ -205,22 +209,24 @@ export function CorrectedOutputField({
                 {!isValidJson && isEditing && hasContent && (
                   <span className="mr-2 text-xs text-red-500">
                     {strictJsonMode
-                      ? "Invalid JSON - fix to save"
-                      : "Cannot save empty content"}
+                      ? tAutoI18n("invalid_json_fix_to_save_2e01c22")
+                      : tAutoI18n("cannot_save_empty_content_5e1fcb8")}
                   </span>
                 )}
                 {isValidJson && saveStatus === "saving" && (
                   <div className="mr-2 flex items-center gap-1">
                     <Spinner size="xxs" />
                     <span className="text-muted-foreground text-xs">
-                      Saving
+                      {tAuto("saving_369c534")}{" "}
                     </span>
                   </div>
                 )}
                 {isValidJson && saveStatus === "saved" && (
                   <div className="mr-2 flex items-center gap-1">
                     <Check className="h-3 w-3" />
-                    <span className="text-muted-foreground text-xs">Saved</span>
+                    <span className="text-muted-foreground text-xs">
+                      {tAuto("saved_c0ae8f6")}
+                    </span>
                   </div>
                 )}
                 {hasContent && (
@@ -230,7 +236,9 @@ export function CorrectedOutputField({
                       variant="ghost"
                       onClick={() => setIsDiffDialogOpen(true)}
                       className="hover:bg-border"
-                      title="View diff between original and corrected output"
+                      title={tAuto(
+                        "view_diff_between_original_and_corrected_output_7c962d4",
+                      )}
                     >
                       <FileDiff className="h-3 w-3" />
                     </Button>
@@ -241,7 +249,7 @@ export function CorrectedOutputField({
                         onClick={handleEdit}
                         disabled={!hasAccess}
                         className="hover:bg-border"
-                        title="Edit corrected output"
+                        title={tAuto("edit_corrected_output_97b9e13")}
                       >
                         <Pencil className="h-3 w-3" />
                       </Button>
@@ -252,7 +260,7 @@ export function CorrectedOutputField({
                       onClick={handleDeleteWithExitEdit}
                       disabled={!hasAccess}
                       className="hover:bg-border"
-                      title="Delete corrected output"
+                      title={tAuto("delete_corrected_output_3776ec6")}
                     >
                       <Trash className="h-3 w-3" />
                     </Button>
@@ -279,7 +287,7 @@ export function CorrectedOutputField({
               disabled={!hasAccess}
               className="text-muted-foreground hover:bg-muted/50 w-full cursor-pointer rounded-md border px-3 py-4 text-center text-xs transition-colors"
             >
-              Click to add corrected output
+              {tAuto("click_to_add_corrected_output_5da39fe")}{" "}
             </button>
           ) : isEditing ? (
             <CodeMirrorEditor
@@ -287,7 +295,7 @@ export function CorrectedOutputField({
               onChange={handleEditorChange}
               mode={strictJsonMode ? "json" : "text"}
               minHeight={200}
-              placeholder="Enter corrected output..."
+              placeholder={tAuto("enter_corrected_output_5a95436")}
               className="bg-accent-light-green"
             />
           ) : (

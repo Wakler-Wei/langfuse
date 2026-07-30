@@ -10,6 +10,7 @@ import {
 import { Input } from "@/src/components/ui/input";
 import { Label } from "@/src/components/ui/label";
 import { ApiKeyDetailContent } from "@/src/features/public-api/components/ApiKeyDetailContent";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type ApiKeyScope = "project" | "organization";
 
@@ -32,6 +33,7 @@ export type ApiKeyCreateDialogContentProps =
 export function ApiKeyCreateDialogContent(
   props: ApiKeyCreateDialogContentProps,
 ) {
+  const tAuto = useAutoTranslations();
   const { scope } = props;
 
   if (props.type === "detail") {
@@ -40,7 +42,7 @@ export function ApiKeyCreateDialogContent(
     return (
       <DialogContent closeOnInteractionOutside>
         <DialogHeader>
-          <DialogTitle>API Keys</DialogTitle>
+          <DialogTitle>{tAuto("api_keys_e18ffc8")}</DialogTitle>
         </DialogHeader>
         <DialogBody>
           <ApiKeyDetailContent
@@ -60,15 +62,15 @@ export function ApiKeyCreateDialogContent(
   return (
     <DialogContent closeOnInteractionOutside>
       <DialogHeader>
-        <DialogTitle>Create API Keys</DialogTitle>
+        <DialogTitle>{tAuto("create_api_keys_c0979fd")}</DialogTitle>
       </DialogHeader>
       <DialogBody>
         <div className="space-y-4">
           <div>
-            <Label htmlFor="note">Note (optional)</Label>
+            <Label htmlFor="note">{tAuto("note_optional_4e39567")}</Label>
             <Input
               id="note"
-              placeholder="Production key"
+              placeholder={tAuto("production_key_3c392fc")}
               value={note}
               onChange={(e) => onNoteChange(e.target.value)}
               onKeyDown={(e) => {
@@ -83,7 +85,7 @@ export function ApiKeyCreateDialogContent(
       </DialogBody>
       <DialogFooter>
         <Button onClick={onSubmit} loading={isPending}>
-          Create API keys
+          {tAuto("create_api_keys_e5f0bf3")}{" "}
         </Button>
       </DialogFooter>
     </DialogContent>

@@ -20,8 +20,10 @@ import { useTraceData } from "../../contexts/TraceDataContext";
 import { TraceDetailView } from "../TraceDetailView/TraceDetailView";
 import { ObservationDetailView } from "../ObservationDetailView/ObservationDetailView";
 import { useMemo } from "react";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export function TracePanelDetail() {
+  const tAuto = useAutoTranslations();
   const { selectedNodeId } = useSelection();
   const {
     trace,
@@ -47,7 +49,7 @@ export function TracePanelDetail() {
         return (
           <div className="flex h-full w-full items-center justify-center p-4">
             <p className="text-muted-foreground text-sm">
-              Observation not found
+              {tAuto("observation_not_found_6c80dd5")}{" "}
             </p>
           </div>
         );
@@ -71,7 +73,15 @@ export function TracePanelDetail() {
         projectId={trace.projectId}
       />
     );
-  }, [selectedNodeId, nodeMap, trace, observations, scores, corrections]);
+  }, [
+    selectedNodeId,
+    nodeMap,
+    trace,
+    observations,
+    scores,
+    corrections,
+    tAuto,
+  ]);
 
   return (
     <div className="bg-background h-full w-full overflow-y-auto">{content}</div>

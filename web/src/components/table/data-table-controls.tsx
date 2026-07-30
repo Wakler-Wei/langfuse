@@ -80,6 +80,7 @@ import {
 import { DataTableAIFilters } from "@/src/components/table/data-table-ai-filters";
 import { type FilterState } from "@langfuse/shared";
 import { useLangfuseCloudRegion } from "@/src/features/organizations/hooks";
+import { useAutoText, useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 interface ControlsContextType {
   open: boolean;
@@ -192,6 +193,9 @@ export function DataTableControls({
   blockedColumnReason,
   layout = "panel",
 }: DataTableControlsProps) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
+  const translateAutoText = useAutoText();
   const { isLangfuseCloud } = useLangfuseCloudRegion();
   const { setOpen, tableName, isMobile } = useDataTableControls();
   const capture = usePostHogClientCapture();
@@ -613,7 +617,7 @@ export function DataTableControls({
         >
           {displayedFilters.length === 0 && (
             <p className="text-muted-foreground pb-2 text-xs">
-              No active filters.
+              {tAuto("no_active_filters_557e60c")}{" "}
             </p>
           )}
           <DropdownMenu>
@@ -625,7 +629,7 @@ export function DataTableControls({
                 disabled={addableFilters.length === 0}
               >
                 <Plus className="mr-1.5 h-3.5 w-3.5" />
-                Add filter
+                {tAuto("add_filter_85425f9")}{" "}
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
@@ -646,7 +650,7 @@ export function DataTableControls({
                     onClick={() => handleAddFilter(filter.column)}
                     className="cursor-pointer"
                   >
-                    {filter.label}
+                    {translateAutoText(filter.label)}
                   </DropdownMenuItem>
                 );
               })}
@@ -675,13 +679,15 @@ export function DataTableControls({
                   setOpen(true);
                   emitSidebarToggled(true, "rail");
                 }}
-                aria-label="Show filters"
+                aria-label={tAuto("show_filters_b1ad23e")}
                 className="h-6 w-6"
               >
                 <PanelLeftOpen className="h-3.5 w-3.5" />
               </Button>
             </TooltipTrigger>
-            <TooltipContent side="right">Show filters</TooltipContent>
+            <TooltipContent side="right">
+              {tAuto("show_filters_b1ad23e")}
+            </TooltipContent>
           </Tooltip>
         </div>
         {activeFilterCount > 0 && (
@@ -696,9 +702,13 @@ export function DataTableControls({
                   setOpen(true);
                   emitSidebarToggled(true, "rail_badge");
                 }}
-                aria-label={`Show ${activeFilterCount} active ${
-                  activeFilterCount === 1 ? "filter" : "filters"
-                }`}
+                aria-label={tAuto("show_value0_active_value1_217f6a9", {
+                  value0: activeFilterCount,
+                  value1:
+                    activeFilterCount === 1
+                      ? tAuto("filter_4bb4ca7")
+                      : tAuto("filters_96e5782"),
+                })}
                 className="mt-2 cursor-pointer"
               >
                 <Badge variant="secondary" className="h-5 px-1.5 text-xs">
@@ -708,15 +718,17 @@ export function DataTableControls({
             </TooltipTrigger>
             <TooltipContent side="right" className="max-w-64 text-xs">
               <p className="font-bold">
-                {activeFilterCount} active{" "}
-                {activeFilterCount === 1 ? "filter" : "filters"}
+                {activeFilterCount} {tAutoI18n("active_2bb6b98")}{" "}
+                {activeFilterCount === 1
+                  ? tAuto("filter_4bb4ca7")
+                  : tAuto("filters_96e5782")}
               </p>
               {queryFilter.filters
                 .filter((filter) => filter.isActive)
                 .slice(0, 6)
                 .map((filter) => {
-                  const line = `${filter.label}: ${
-                    getFacetSummary(filter) ?? "filtered"
+                  const line = `${translateAutoText(filter.label)}: ${
+                    getFacetSummary(filter) ?? tAuto("filtered_config_01")
                   }`;
                   return (
                     <p key={filter.column} className="truncate" title={line}>
@@ -724,7 +736,11 @@ export function DataTableControls({
                     </p>
                   );
                 })}
-              {activeFilterCount > 6 && <p>+{activeFilterCount - 6} more</p>}
+              {activeFilterCount > 6 && (
+                <p>
+                  +{activeFilterCount - 6} {tAutoI18n("more_e7c95b4")}
+                </p>
+              )}
             </TooltipContent>
           </Tooltip>
         )}
@@ -757,7 +773,7 @@ export function DataTableControls({
                   setOpen(false);
                   emitSidebarToggled(false, "header");
                 }}
-                aria-label="Close filters"
+                aria-label={tAuto("close_filters_c2db1e0")}
                 className="-ml-1 h-6 w-6"
               >
                 <X className="h-4 w-4" />
@@ -772,17 +788,19 @@ export function DataTableControls({
                       setOpen(false);
                       emitSidebarToggled(false, "header");
                     }}
-                    aria-label="Hide filters"
+                    aria-label={tAuto("hide_filters_4b97b05")}
                     className="-ml-1 h-6 w-6"
                   >
                     <PanelLeftClose className="h-3.5 w-3.5" />
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent>Hide filters</TooltipContent>
+                <TooltipContent>{tAuto("hide_filters_4b97b05")}</TooltipContent>
               </Tooltip>
             )}
             {layout !== "inline" && (
-              <span className="text-sm font-bold">Filters</span>
+              <span className="text-sm font-bold">
+                {tAuto("filters_96e5782")}
+              </span>
             )}
             {/* Inline: the count already shows on the sheet's Filters trigger
                 and footer, so a bare number here (title hidden) is just noise. */}
@@ -803,7 +821,9 @@ export function DataTableControls({
                       </Button>
                     </PopoverTrigger>
                   </TooltipTrigger>
-                  <TooltipContent>Filter with AI</TooltipContent>
+                  <TooltipContent>
+                    {tAuto("filter_with_ai_a4886ad")}
+                  </TooltipContent>
                 </Tooltip>
                 <PopoverContent align="center" className="w-[400px]">
                   <DataTableAIFilters
@@ -829,8 +849,8 @@ export function DataTableControls({
                   }
                   aria-label={
                     queryFilter.expanded.length === 0
-                      ? "Expand all filters"
-                      : "Collapse all filters"
+                      ? tAuto("expand_all_filters_48c7d92")
+                      : tAuto("collapse_all_filters_cf6d75a")
                   }
                 >
                   {queryFilter.expanded.length === 0 ? (
@@ -842,8 +862,8 @@ export function DataTableControls({
               </TooltipTrigger>
               <TooltipContent>
                 {queryFilter.expanded.length === 0
-                  ? "Expand all filters"
-                  : "Collapse all filters"}
+                  ? tAutoI18n("expand_all_filters_48c7d92")
+                  : tAutoI18n("collapse_all_filters_cf6d75a")}
               </TooltipContent>
             </Tooltip>
             <DropdownMenu>
@@ -854,13 +874,15 @@ export function DataTableControls({
                       variant="ghost"
                       size="icon"
                       className="h-6 w-6"
-                      aria-label="Filter options"
+                      aria-label={tAuto("filter_options_c3c949f")}
                     >
                       <MoreVertical className="h-3.5 w-3.5" />
                     </Button>
                   </DropdownMenuTrigger>
                 </TooltipTrigger>
-                <TooltipContent>Filter options</TooltipContent>
+                <TooltipContent>
+                  {tAuto("filter_options_c3c949f")}
+                </TooltipContent>
               </Tooltip>
               <DropdownMenuContent align="end" className="w-48">
                 <DropdownMenuItem
@@ -879,7 +901,7 @@ export function DataTableControls({
                   }}
                   className="cursor-pointer"
                 >
-                  Clear all filters
+                  {tAuto("clear_all_filters_7dd6d19")}{" "}
                 </DropdownMenuItem>
                 {/* Plain item with a TRAILING check instead of
                     DropdownMenuCheckboxItem: its reserved leading indicator
@@ -900,7 +922,7 @@ export function DataTableControls({
                     });
                   }}
                 >
-                  Show only active
+                  {tAutoI18n("show_only_active_3a714b8")}{" "}
                   {showOnlyActive && <Check className="ml-auto h-3.5 w-3.5" />}
                 </DropdownMenuItem>
                 {/* "Collapse sidebar" is desktop-rail chrome — there's no rail
@@ -917,7 +939,7 @@ export function DataTableControls({
                       }}
                       className="cursor-pointer"
                     >
-                      Collapse sidebar
+                      {tAuto("collapse_sidebar_9e68762")}{" "}
                     </DropdownMenuItem>
                   </>
                 )}
@@ -1119,6 +1141,12 @@ export function FilterAccordionItem({
   disabledReason,
   onReset,
 }: FilterAccordionItemProps) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
+  const translateAutoText = useAutoText();
+  const displayLabel = translateAutoText(label);
+  const displaySummary =
+    summary === "All" ? translateAutoText(summary) : summary;
   return (
     <FilterAccordionItemPrimitive
       value={filterKey}
@@ -1146,8 +1174,8 @@ export function FilterAccordionItem({
             <Tooltip delayDuration={80}>
               <TooltipTrigger asChild>
                 <span className="flex min-w-0 items-center gap-1">
-                  <span className="min-w-0 truncate" title={label}>
-                    {label}
+                  <span className="min-w-0 truncate" title={displayLabel}>
+                    {displayLabel}
                   </span>
                 </span>
               </TooltipTrigger>
@@ -1157,8 +1185,8 @@ export function FilterAccordionItem({
             </Tooltip>
           ) : help ? (
             <div className="flex min-w-0 items-center gap-1">
-              <span className="min-w-0 truncate" title={label}>
-                {label}
+              <span className="min-w-0 truncate" title={displayLabel}>
+                {displayLabel}
               </span>
               <DocPopup description={help.description} href={help.href} />
             </div>
@@ -1166,8 +1194,8 @@ export function FilterAccordionItem({
             // The tooltip triggers on the ⓘ icon only — hovering the label
             // itself must not pop explanatory text.
             <span className="flex min-w-0 items-center gap-1">
-              <span className="min-w-0 truncate" title={label}>
-                {label}
+              <span className="min-w-0 truncate" title={displayLabel}>
+                {displayLabel}
               </span>
               <Tooltip delayDuration={80}>
                 <TooltipTrigger asChild>
@@ -1180,8 +1208,8 @@ export function FilterAccordionItem({
             </span>
           ) : (
             <span className="flex min-w-0 items-center gap-1">
-              <span className="min-w-0 truncate" title={label}>
-                {label}
+              <span className="min-w-0 truncate" title={displayLabel}>
+                {displayLabel}
               </span>
             </span>
           )}
@@ -1204,14 +1232,14 @@ export function FilterAccordionItem({
                   ? "bg-background text-foreground rounded px-1 font-bold"
                   : "text-muted-foreground/60 font-normal",
               )}
-              title={summary}
+              title={displaySummary ?? undefined}
             >
               {summaryIcon && (
                 <span className="mr-1 inline-flex align-text-bottom">
                   {summaryIcon}
                 </span>
               )}
-              {summary}
+              {displaySummary}
             </span>
           )}
         </div>
@@ -1240,14 +1268,17 @@ export function FilterAccordionItem({
                   }
                 }}
                 className="text-muted-foreground hover:text-foreground flex shrink-0 cursor-pointer items-center gap-0.5 self-start rounded-sm px-1 py-0.5 text-[11px] leading-4 font-normal transition-colors hover:underline focus-visible:underline focus-visible:outline-none"
-                aria-label={`Clear ${label} filter`}
+                aria-label={tAuto("clear_value0_filter_776847a", {
+                  value0: displayLabel,
+                })}
               >
                 <IconX className="h-3 w-3 shrink-0" />
-                Clear
+                {tAuto("clear_719ea39")}{" "}
               </div>
             </TooltipTrigger>
             <TooltipContent side="right" className="text-xs">
-              Clear {label.toLowerCase()} filter
+              {tAutoI18n("clear_719ea39")} {displayLabel}{" "}
+              {tAutoI18n("filter_4bb4ca7")}{" "}
             </TooltipContent>
           </Tooltip>
         )}
@@ -1419,12 +1450,18 @@ function CategoricalSelectContent({
   | "operator"
   | "onOperatorChange"
 >) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
+  const translateAutoText = useAutoText();
   // "Show more values" reveals the next PORTION (it does what it says — not
   // expand-everything: value lists can run to 1000+ user IDs); "Show fewer
   // values" collapses back to the cap. Resets by unmounting on collapse.
   const [visibleCount, setVisibleCount] = useState(MAX_VISIBLE_OPTIONS);
   const [searchQuery, setSearchQuery] = useState("");
   const { tableName = "data" } = useContext(ControlsContext) ?? {};
+  const localizedTableName = translateAutoText(
+    tableName.charAt(0).toUpperCase() + tableName.slice(1),
+  );
   const visibleOptionValues = Array.from(
     new Set([...options, ...value.filter((option) => option.length > 0)]),
   );
@@ -1553,10 +1590,10 @@ function CategoricalSelectContent({
           >
             <TabsList className="grid h-6 w-full grid-cols-3 p-0.5">
               <TabsTrigger value="any of" className="h-5 px-1 text-xs">
-                Any of
+                {tAuto("any_of_8a6e0a4")}{" "}
               </TabsTrigger>
               <TabsTrigger value="all of" className="h-5 px-1 text-xs">
-                All of
+                {tAuto("all_of_7178a90")}{" "}
               </TabsTrigger>
               {/* Without a persisted selection, switching to "none of" is a
                   deliberate no-op in the state model (an empty exclusion
@@ -1572,14 +1609,15 @@ function CategoricalSelectContent({
                       disabled={operator === undefined}
                       className="h-5 w-full px-1 text-xs disabled:cursor-not-allowed disabled:opacity-50"
                     >
-                      None of
+                      {tAuto("none_of_89627da")}{" "}
                     </TabsTrigger>
                   </span>
                 </TooltipTrigger>
                 {operator === undefined && (
                   <TooltipContent className="max-w-64 text-xs">
-                    Nothing to exclude yet — uncheck a value to exclude it, or
-                    select values first.
+                    {tAuto(
+                      "nothing_to_exclude_yet_uncheck_a_value_to_exclude_it_e8fa082",
+                    )}{" "}
                   </TooltipContent>
                 )}
               </Tooltip>
@@ -1609,36 +1647,45 @@ function CategoricalSelectContent({
         <div className="text-muted-foreground px-2 py-1 text-xs">
           {filterKey === "sessionId" ? (
             <span>
-              Sessions group {tableName} together, which is useful for tracing
-              multi-step workflows.{" "}
+              {tAutoI18n("sessions_group_0dcb38f")} {localizedTableName}{" "}
+              {tAutoI18n(
+                "together_which_is_useful_for_tracing_multi_step_work_005152a",
+              )}{" "}
               <a
                 href="https://langfuse.com/docs/observability/features/sessions"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-foreground underline"
               >
-                See docs
+                {tAuto("see_docs_f409003")}{" "}
               </a>{" "}
-              to learn how to add sessions to your {tableName}.
+              {tAutoI18n("to_learn_how_to_add_sessions_to_your_2e203b8")}{" "}
+              {localizedTableName}.
             </span>
           ) : filterKey === "name" ? (
-            <span>No {tableName} names found in the given time range.</span>
+            <span>
+              {tAutoI18n("no_816c52f")} {localizedTableName}{" "}
+              {tAutoI18n("names_found_in_the_given_time_range_1971dd4")}
+            </span>
           ) : filterKey === "tags" ? (
             <span>
-              Tags let you filter {tableName} according to custom categories
-              (e.g. feature flags).{" "}
+              {tAutoI18n("tags_let_you_filter_ef5e785")} {localizedTableName}{" "}
+              {tAutoI18n(
+                "according_to_custom_categories_e_g_feature_flags_f11a656",
+              )}{" "}
               <a
                 href="https://langfuse.com/docs/observability/features/tags"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-foreground underline"
               >
-                See docs
+                {tAuto("see_docs_f409003")}{" "}
               </a>{" "}
-              to learn how to add tags to your {tableName}.
+              {tAutoI18n("to_learn_how_to_add_tags_to_your_8db0e5f")}{" "}
+              {localizedTableName}.
             </span>
           ) : (
-            "No options found"
+            tAuto("no_options_found_087ff18")
           )}
         </div>
       ) : (
@@ -1649,7 +1696,7 @@ function CategoricalSelectContent({
               <div className="relative">
                 <Search className="text-muted-foreground absolute top-1/2 left-2 h-3.5 w-3.5 -translate-y-1/2" />
                 <Input
-                  placeholder="Filter values"
+                  placeholder={tAuto("filter_values_cbe9b3f")}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="h-8 pl-7 text-xs"
@@ -1661,7 +1708,7 @@ function CategoricalSelectContent({
           {/* Checkbox list */}
           {filteredOptions.length === 0 ? (
             <div className="text-muted-foreground py-1 text-center text-sm">
-              No matches found
+              {tAuto("no_matches_found_a68d28f")}{" "}
             </div>
           ) : (
             <>
@@ -1690,7 +1737,7 @@ function CategoricalSelectContent({
                       className="mt-1 h-auto w-full justify-start py-1 pl-7 text-xs"
                     >
                       <ChevronUp className="mr-1 h-3 w-3" />
-                      Show fewer values
+                      {tAuto("show_fewer_values_f356f08")}{" "}
                     </Button>
                   )}
                   {canShowMore && (
@@ -1705,7 +1752,7 @@ function CategoricalSelectContent({
                       className="mt-0.5 h-auto w-full justify-start py-1 pl-7 text-xs"
                     >
                       <ChevronDown className="mr-1 h-3 w-3" />
-                      Show more values
+                      {tAuto("show_more_values_66c7446")}{" "}
                     </Button>
                   )}
                 </div>
@@ -1722,9 +1769,11 @@ function CategoricalSelectContent({
                 rel="noopener noreferrer"
                 className="hover:text-foreground underline"
               >
-                See docs
+                {tAuto("see_docs_f409003")}{" "}
               </a>{" "}
-              on how to add environments to your {tableName}.
+              {tAuto("learn_how_to_add_environments_to_your_value0_bb7b691", {
+                value0: localizedTableName,
+              })}
             </div>
           ) : null}
         </>
@@ -1751,6 +1800,7 @@ export function NumericFacet({
   disabledReason,
   onReset,
 }: NumericFacetProps) {
+  const tAuto = useAutoTranslations();
   const [localValue, setLocalValue] = useState<[number, number]>(value);
   // Adopt external value changes (reset, URL navigation) during render — the
   // "adjust state when a prop changes" pattern — rather than via a mirror
@@ -1835,7 +1885,9 @@ export function NumericFacet({
     >
       <div className="px-4 py-2">
         {loading ? (
-          <div className="text-muted-foreground text-sm">Loading...</div>
+          <div className="text-muted-foreground text-sm">
+            {tAuto("loading_b04ba49")}
+          </div>
         ) : (
           <div className="grid gap-4">
             <div className="flex items-center gap-4">
@@ -1844,7 +1896,7 @@ export function NumericFacet({
                   htmlFor={`min-${filterKey}`}
                   className="text-muted-foreground text-xs"
                 >
-                  Min.
+                  {tAuto("min_023a4db")}{" "}
                 </Label>
                 <div className="flex items-center gap-1">
                   <Input
@@ -1869,7 +1921,7 @@ export function NumericFacet({
                   htmlFor={`max-${filterKey}`}
                   className="text-muted-foreground text-xs"
                 >
-                  Max.
+                  {tAuto("max_ea17cf9")}{" "}
                 </Label>
                 <div className="flex items-center gap-1">
                   <Input
@@ -1919,6 +1971,7 @@ export function StringFacet({
   disabledReason,
   onReset,
 }: StringFacetProps) {
+  const tAuto = useAutoTranslations();
   const [localValue, setLocalValue] = useState<string>(value);
   // Same render-time adoption as NumericFacet above (no mirror effect).
   const [lastValue, setLastValue] = useState<string>(value);
@@ -1969,13 +2022,15 @@ export function StringFacet({
     >
       <div className="px-4">
         {loading ? (
-          <div className="text-muted-foreground text-sm">Loading...</div>
+          <div className="text-muted-foreground text-sm">
+            {tAuto("loading_b04ba49")}
+          </div>
         ) : (
           <Input
             type="text"
             id={`string-${filterKey}`}
             value={localValue}
-            placeholder="Search"
+            placeholder={tAuto("search_bce0641")}
             onChange={handleInputChange}
             className="h-8"
           />
@@ -2004,6 +2059,7 @@ export function KeyValueFacet({
   onReset,
   keyPlaceholder,
 }: KeyValueFacetProps) {
+  const tAuto = useAutoTranslations();
   return (
     <FilterAccordionItem
       label={label}
@@ -2018,7 +2074,7 @@ export function KeyValueFacet({
     >
       {loading ? (
         <div className="text-muted-foreground px-4 py-2 text-sm">
-          Loading...
+          {tAuto("loading_b04ba49")}{" "}
         </div>
       ) : (
         <KeyValueFilterBuilder
@@ -2053,6 +2109,7 @@ export function NumericKeyValueFacet({
   onReset,
   keyPlaceholder,
 }: NumericKeyValueFacetProps) {
+  const tAuto = useAutoTranslations();
   return (
     <FilterAccordionItem
       label={label}
@@ -2067,7 +2124,7 @@ export function NumericKeyValueFacet({
     >
       {loading ? (
         <div className="text-muted-foreground px-4 py-2 text-sm">
-          Loading...
+          {tAuto("loading_b04ba49")}{" "}
         </div>
       ) : (
         <KeyValueFilterBuilder
@@ -2101,6 +2158,7 @@ export function BooleanKeyValueFacet({
   onReset,
   keyPlaceholder,
 }: BooleanKeyValueFacetProps) {
+  const tAuto = useAutoTranslations();
   return (
     <FilterAccordionItem
       label={label}
@@ -2115,7 +2173,7 @@ export function BooleanKeyValueFacet({
     >
       {loading ? (
         <div className="text-muted-foreground px-4 py-2 text-sm">
-          Loading...
+          {tAuto("loading_b04ba49")}{" "}
         </div>
       ) : (
         <KeyValueFilterBuilder
@@ -2148,6 +2206,7 @@ export function StringKeyValueFacet({
   onReset,
   keyPlaceholder,
 }: StringKeyValueFacetProps) {
+  const tAuto = useAutoTranslations();
   return (
     <FilterAccordionItem
       label={label}
@@ -2162,7 +2221,7 @@ export function StringKeyValueFacet({
     >
       {loading ? (
         <div className="text-muted-foreground px-4 py-2 text-sm">
-          Loading...
+          {tAuto("loading_b04ba49")}{" "}
         </div>
       ) : (
         <KeyValueFilterBuilder
@@ -2184,6 +2243,7 @@ interface FilterModeTabsProps {
 }
 
 function FilterModeTabs({ mode, onModeChange }: FilterModeTabsProps) {
+  const tAuto = useAutoTranslations();
   return (
     // mt-1 evens the rhythm: content opens with pt-1, so the tabs sit 8px
     // from the header band and 8px (mb-2) from the list below.
@@ -2194,10 +2254,10 @@ function FilterModeTabs({ mode, onModeChange }: FilterModeTabsProps) {
       >
         <TabsList className="grid h-6 w-full grid-cols-2 p-0.5">
           <TabsTrigger value="select" className="h-5 px-2 text-xs">
-            Select
+            {tAuto("select_8598222")}{" "}
           </TabsTrigger>
           <TabsTrigger value="text" className="h-5 px-2 text-xs">
-            Text
+            {tAuto("text_c3328c3")}{" "}
           </TabsTrigger>
         </TabsList>
       </Tabs>
@@ -2216,6 +2276,7 @@ function TextFilterSection({
   onAdd?: (op: "contains" | "does not contain", val: string) => void;
   onRemove?: (op: "contains" | "does not contain", val: string) => void;
 }) {
+  const tAuto = useAutoTranslations();
   const [inputValue, setInputValue] = useState("");
   const [selectedOperator, setSelectedOperator] = useState<
     "contains" | "does not contain"
@@ -2244,10 +2305,10 @@ function TextFilterSection({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="contains" className="text-xs">
-              contains
+              {tAuto("contains_caeb909")}{" "}
             </SelectItem>
             <SelectItem value="does not contain" className="text-xs">
-              does not contain
+              {tAuto("does_not_contain_28a8c9d")}{" "}
             </SelectItem>
           </SelectContent>
         </Select>
@@ -2264,7 +2325,7 @@ function TextFilterSection({
               handleAdd();
             }
           }}
-          placeholder="Enter value..."
+          placeholder={tAuto("enter_value_d66913e")}
           className="h-7 flex-1 text-xs"
         />
         <Button
@@ -2274,7 +2335,7 @@ function TextFilterSection({
           disabled={inputValue.length === 0}
           className="h-7 shrink-0 px-2 text-xs"
         >
-          Add
+          {tAuto("add_61cc55a")}{" "}
         </Button>
       </div>
 
@@ -2287,7 +2348,9 @@ function TextFilterSection({
               className="group/textfilter border-border/40 bg-muted/30 flex items-center gap-2 rounded border px-2 py-1 text-xs"
             >
               <span className="text-muted-foreground shrink-0 text-[11px] font-bold">
-                {f.operator === "contains" ? "contains" : "does not contain"}
+                {f.operator === "contains"
+                  ? tAuto("contains_caeb909")
+                  : tAuto("does_not_contain_28a8c9d")}
               </span>
               <span
                 className="min-w-0 flex-1 truncate font-bold"
@@ -2334,12 +2397,16 @@ export function FilterValueCheckbox({
   totalSelected,
   disabled = false,
 }: FilterValueCheckboxProps) {
+  const tAuto = useAutoTranslations();
   // Show "All" when clicking would reverse selection (only one item selected)
-  const labelText = checked && totalSelected === 1 ? "All" : "Only";
+  const labelText =
+    checked && totalSelected === 1
+      ? tAuto("all_6a72085")
+      : tAuto("only_8737f09");
 
   // Display placeholder for empty strings to ensure clickable area
-  const displayLabel = label === "" ? "(empty)" : label;
-  const displayTitle = label === "" ? "(empty)" : label;
+  const displayLabel = label === "" ? tAuto("empty_48b2f05") : label;
+  const displayTitle = label === "" ? tAuto("empty_48b2f05") : label;
 
   return (
     <div

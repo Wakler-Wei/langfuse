@@ -14,6 +14,7 @@ import { showSuccessToast } from "@/src/features/notifications/showSuccessToast"
 import { showErrorToast } from "@/src/features/notifications/showErrorToast";
 import { api } from "@/src/utils/api";
 import Spinner from "@/src/components/design-system/Spinner/Spinner";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 /**
  * Props for the SlackDisconnectButton component
@@ -81,6 +82,8 @@ export const SlackDisconnectButton: React.FC<SlackDisconnectButtonProps> = ({
   showConfirmation = true,
   showText = true,
 }) => {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const [isDisconnecting, setIsDisconnecting] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -91,8 +94,10 @@ export const SlackDisconnectButton: React.FC<SlackDisconnectButtonProps> = ({
       setIsDialogOpen(false);
 
       showSuccessToast({
-        title: "Slack Disconnected",
-        description: "Successfully disconnected from your Slack workspace.",
+        title: tAuto("slack_disconnected_047d906"),
+        description: tAuto(
+          "successfully_disconnected_from_your_slack_workspace_7d4762e",
+        ),
       });
 
       onSuccess?.();
@@ -102,7 +107,7 @@ export const SlackDisconnectButton: React.FC<SlackDisconnectButtonProps> = ({
 
       const errorMessage = error.message || "Failed to disconnect from Slack";
 
-      showErrorToast("Disconnection Failed", errorMessage);
+      showErrorToast(tAutoI18n("disconnection_failed_6cd18ea"), errorMessage);
 
       onError?.(new Error(errorMessage));
     },
@@ -161,20 +166,31 @@ export const SlackDisconnectButton: React.FC<SlackDisconnectButtonProps> = ({
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <AlertTriangle className="text-destructive h-5 w-5" />
-              Disconnect Slack Integration
+              {tAuto("disconnect_slack_integration_1da24e7")}{" "}
             </DialogTitle>
             <DialogDescription className="space-y-2">
               <p>
-                Are you sure you want to disconnect your Slack workspace from
-                this project?
+                {tAuto(
+                  "are_you_sure_you_want_to_disconnect_your_slack_works_ed8ce78",
+                )}{" "}
               </p>
               <div className="bg-muted space-y-2 rounded-md p-3">
-                <p className="text-sm font-bold">This will:</p>
+                <p className="text-sm font-bold">
+                  {tAuto("this_will_a291220")}
+                </p>
                 <ul className="ml-4 space-y-1 text-sm">
-                  <li>• Remove the bot from your Slack workspace</li>
-                  <li>• Disable all existing Slack automations</li>
-                  <li>• Stop all future Slack notifications</li>
-                  <li>• Delete stored workspace credentials</li>
+                  <li>
+                    {tAuto("remove_the_bot_from_your_slack_workspace_6f3c3ea")}
+                  </li>
+                  <li>
+                    {tAuto("disable_all_existing_slack_automations_84e7012")}
+                  </li>
+                  <li>
+                    {tAuto("stop_all_future_slack_notifications_befe7e3")}
+                  </li>
+                  <li>
+                    {tAuto("delete_stored_workspace_credentials_d9e24ec")}
+                  </li>
                 </ul>
               </div>
               <p className="text-muted-foreground text-sm">
@@ -189,7 +205,7 @@ export const SlackDisconnectButton: React.FC<SlackDisconnectButtonProps> = ({
               onClick={() => setIsDialogOpen(false)}
               disabled={isDisconnecting}
             >
-              Cancel
+              {tAuto("cancel_77dfd21")}{" "}
             </Button>
             <Button
               variant="destructive"
@@ -201,12 +217,12 @@ export const SlackDisconnectButton: React.FC<SlackDisconnectButtonProps> = ({
                   <div className="mr-2">
                     <Spinner size="sm" />
                   </div>
-                  Disconnecting...
+                  {tAuto("disconnecting_257ea73")}{" "}
                 </>
               ) : (
                 <>
                   <Unlink className="mr-2 h-4 w-4" />
-                  Disconnect
+                  {tAuto("disconnect_ed28e06")}{" "}
                 </>
               )}
             </Button>

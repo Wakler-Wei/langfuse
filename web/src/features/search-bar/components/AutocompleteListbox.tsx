@@ -13,6 +13,7 @@ import type {
   CompletionPlan,
 } from "@/src/features/search-bar/lib/completions";
 import { optionDomId } from "@/src/features/search-bar/components/presentation";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 function OptionIcon({ kind }: { kind: CompletionOption["kind"] }) {
   const cls = "h-3.5 w-3.5 flex-none opacity-55";
@@ -37,6 +38,7 @@ export function AutocompleteListbox({
   onHighlight,
   listboxId = "search-bar-listbox",
 }: AutocompleteListboxProps) {
+  const tAuto = useAutoTranslations();
   // Hover may only highlight on REAL pointer movement. When the list
   // re-renders under a stationary mouse (typing/pasting grows the popover),
   // Chromium fires synthetic mouseover events — honoring those would arm
@@ -68,7 +70,7 @@ export function AutocompleteListbox({
     <div
       id={listboxId}
       role="listbox"
-      aria-label="Search suggestions"
+      aria-label={tAuto("search_suggestions_0363909")}
       data-testid="search-bar-autocomplete"
       data-stage={plan.stage}
       className={cn(
@@ -82,12 +84,12 @@ export function AutocompleteListbox({
           data-testid="search-bar-autocomplete-loading"
           className="text-muted-foreground mx-1 flex min-h-8 items-center gap-2 px-3 text-xs"
         >
-          Loading values…
+          {tAuto("loading_values_301f3b9")}{" "}
         </div>
       )}
       {!plan.loading && plan.sections.length === 0 && (
         <div className="text-muted-foreground mx-1 flex min-h-8 items-center gap-2 px-3 text-xs">
-          No suggestions
+          {tAuto("no_suggestions_2448f66")}{" "}
         </div>
       )}
       {plan.sections.map((sec, i) => (
@@ -141,7 +143,7 @@ export function AutocompleteListbox({
               {o.kind === "value" && o.active && (
                 <Check
                   className="text-foreground/80 h-3.5 w-3.5 flex-none"
-                  aria-label="selected"
+                  aria-label={tAuto("selected_835f3b5")}
                 />
               )}
               {"detail" in o && o.detail !== undefined && (

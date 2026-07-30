@@ -11,6 +11,7 @@ import type {
   SchemaValidationError,
 } from "./types";
 import { wizardReducer, initialWizardState } from "./wizardReducer";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export type UseAddToDatasetWizardProps = {
   projectId: string;
@@ -26,6 +27,7 @@ export type UseAddToDatasetWizardProps = {
 };
 
 export function useAddToDatasetWizard(props: UseAddToDatasetWizardProps) {
+  const tAuto = useAutoTranslations();
   const {
     projectId,
     selectedObservationIds,
@@ -69,7 +71,7 @@ export function useAddToDatasetWizard(props: UseAddToDatasetWizardProps) {
       dispatch({ type: "SUBMIT_SUCCESS", batchActionId: data.id });
     },
     onError: (error) => {
-      showErrorToast("Failed to schedule action", error.message);
+      showErrorToast(tAuto("failed_to_schedule_action_ae99035"), error.message);
       dispatch({ type: "SUBMIT_ERROR" });
     },
   });

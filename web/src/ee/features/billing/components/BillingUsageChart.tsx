@@ -6,8 +6,11 @@ import { Card } from "@/src/components/ui/card";
 import { numberFormatter, compactNumberFormatter } from "@/src/utils/numbers";
 import { type Plan } from "@langfuse/shared";
 import { MAX_EVENTS_FREE_PLAN } from "@/src/ee/features/billing/constants";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export const BillingUsageChart = () => {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const organization = useQueryOrganization();
 
   const usage = api.cloudBilling.getUsage.useQuery(
@@ -45,8 +48,13 @@ export const BillingUsageChart = () => {
           <>
             <p className="text-muted-foreground text-sm">
               {usage.data.billingPeriod
-                ? `Consumed ${usageType} in current billing period (updated about once every 60 minutes)`
-                : `Consumed ${usageType} / last 30d`}
+                ? tAutoI18n(
+                    "consumed_value0_in_current_billing_period_updated_ab_814d55a",
+                    { value0: String((usageType as unknown) ?? "") },
+                  )
+                : tAutoI18n("consumed_value0_last_30d_f3c7256", {
+                    value0: String((usageType as unknown) ?? ""),
+                  })}
             </p>
             <div className="text-3xl font-bold">
               {numberFormatter(usage.data.usageCount, 0)}
@@ -56,7 +64,8 @@ export const BillingUsageChart = () => {
                 <div className="mt-4 flex justify-between">
                   <span className="text-sm">{`${numberFormatter((usage.data.usageCount / hobbyPlanLimit) * 100)}%`}</span>
                   <span className="text-sm">
-                    Plan limit: {compactNumberFormatter(hobbyPlanLimit)}
+                    {tAutoI18n("plan_limit_750c4cf")}{" "}
+                    {compactNumberFormatter(hobbyPlanLimit)}
                   </span>
                 </div>
                 <div
@@ -84,7 +93,7 @@ export const BillingUsageChart = () => {
           </>
         ) : (
           <span className="text-muted-foreground text-sm">
-            Loading (might take a moment) ...
+            {tAuto("loading_might_take_a_moment_3198fdd")}{" "}
           </span>
         )}
       </Card>

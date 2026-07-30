@@ -3,9 +3,11 @@ import { useRouter } from "next/router";
 import Page from "@/src/components/layouts/page";
 import { MonitorForm } from "@/src/features/monitors/components/MonitorForm";
 import { MonitorPagePermissions } from "@/src/features/monitors/components/MonitorPagePermissions";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 /** NewMonitorPage renders the create-monitor form for a project. */
 export default function NewMonitorPage() {
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const projectId = router.query.projectId as string;
 
@@ -14,7 +16,7 @@ export default function NewMonitorPage() {
       <Page
         withPadding
         headerProps={{
-          title: "New Monitor",
+          title: tAuto("new_monitor_4bd2799"),
           breadcrumb: [
             { name: "Monitors", href: `/project/${projectId}/monitors` },
           ],

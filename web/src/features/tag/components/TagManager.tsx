@@ -13,6 +13,7 @@ import { Command, CommandList, CommandGroup } from "cmdk";
 import { cn } from "@/src/utils/tailwind";
 import { usePostHogClientCapture } from "@/src/features/posthog-analytics/usePostHogClientCapture";
 import { Label } from "@/src/components/ui/label";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type TagManagerProps = {
   itemName: "prompt" | "trace" | "monitor";
@@ -41,6 +42,7 @@ const TagManager = ({
   triggerButton,
   alignPopover,
 }: TagManagerProps) => {
+  const tAuto = useAutoTranslations();
   const {
     selectedTags,
     inputValue,
@@ -143,7 +145,9 @@ const TagManager = ({
           }
         }}
       >
-        <Label className="text-base capitalize">{itemName} Tags</Label>
+        <Label className="text-base capitalize">
+          {itemName} {tAuto("tags_848eed0")}
+        </Label>
         <Command
           shouldFilter={false} // we do not use cmdk's filter feature as it does not support virtualization for large lists
         >

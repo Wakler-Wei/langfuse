@@ -8,6 +8,7 @@ import {
   DialogTitle,
 } from "@/src/components/ui/dialog";
 import { AIFeaturesDisabledNotice } from "@/src/features/organizations/components/AIFeaturesDisabledNotice";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export function InAppAgentDisabledDialog({
   open,
@@ -18,16 +19,18 @@ export function InAppAgentDisabledDialog({
   onOpenChange: (open: boolean) => void;
   organizationId?: string;
 }) {
+  const tAuto = useAutoTranslations();
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>AI features are disabled</DialogTitle>
+          <DialogTitle>{tAuto("ai_features_are_disabled_58d7f74")}</DialogTitle>
         </DialogHeader>
         <DialogBody>
           <AIFeaturesDisabledNotice organizationId={organizationId}>
-            The Langfuse Assistant requires AI features to be enabled for this
-            organization.
+            {tAuto(
+              "the_langfuse_assistant_requires_ai_features_to_be_en_8df9c29",
+            )}{" "}
           </AIFeaturesDisabledNotice>
         </DialogBody>
         <DialogFooter>
@@ -39,7 +42,7 @@ export function InAppAgentDisabledDialog({
                 onOpenChange(false);
               }}
             >
-              Close
+              {tAuto("close_bbfa773")}{" "}
             </Button>
           </div>
         </DialogFooter>

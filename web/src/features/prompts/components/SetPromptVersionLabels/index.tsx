@@ -26,6 +26,7 @@ import { usePostHogClientCapture } from "@/src/features/posthog-analytics/usePos
 import { isReservedPromptLabel } from "@/src/features/prompts/utils";
 import { TruncatedLabels } from "@/src/components/TruncatedLabels";
 import { cn } from "@/src/utils/tailwind";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export function SetPromptVersionLabels({
   promptLabels,
@@ -44,6 +45,8 @@ export function SetPromptVersionLabels({
   showOnlyOnHover?: boolean;
   maxVisibleLabels?: number;
 }) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const projectId = useProjectIdFromURL();
   const utils = api.useUtils();
   const capture = usePostHogClientCapture();
@@ -183,7 +186,7 @@ export function SetPromptVersionLabels({
           />
           <Button
             variant="outline"
-            title="Add prompt label"
+            title={tAuto("add_prompt_label_71041db")}
             className={cn(
               "bg-muted-gray text-primary h-6 w-6",
               showOnlyOnHover && "opacity-0 group-hover:opacity-100",
@@ -204,11 +207,11 @@ export function SetPromptVersionLabels({
           onClick={(event) => event.stopPropagation()}
           className="flex flex-col"
         >
-          <h2 className="mb-3 font-bold">Prompt labels</h2>
+          <h2 className="mb-3 font-bold">{tAuto("prompt_labels_0a225e0")}</h2>
           <h2 className="mb-3 text-xs">
-            Use labels to fetch prompts via SDKs. The{" "}
-            <strong>production</strong> labeled prompt will be served by
-            default.
+            {tAutoI18n("use_labels_to_fetch_prompts_via_sdks_the_479414b")}{" "}
+            <strong>{tAuto("production_90a8834")}</strong>{" "}
+            {tAutoI18n("labeled_prompt_will_be_served_by_default_d226df0")}{" "}
           </h2>
           <InputCommand className="mx-0 my-3 px-0">
             <InputCommandList className="max-h-full overflow-hidden">
@@ -227,7 +230,7 @@ export function SetPromptVersionLabels({
                 {/* Search + create input */}
                 <div className="px-2 pt-1 pb-2">
                   <Input
-                    placeholder="Search or create label…"
+                    placeholder={tAuto("search_or_create_label_6b3ea93")}
                     value={searchValue}
                     onChange={(e) => setSearchValue(e.target.value)}
                     onKeyDown={(e) => {
@@ -255,8 +258,12 @@ export function SetPromptVersionLabels({
                       }
                     >
                       {filteredUnselectedCount > 0
-                        ? `Select all ${filteredUnselectedCount}`
-                        : "Select all"}
+                        ? tAutoI18n("select_all_value0_f18f49a", {
+                            value0: String(
+                              (filteredUnselectedCount as unknown) ?? "",
+                            ),
+                          })
+                        : tAutoI18n("select_all_913afff")}
                     </button>
                     <span className="text-muted-foreground text-xs">·</span>
                     <button
@@ -277,7 +284,7 @@ export function SetPromptVersionLabels({
                         )
                       }
                     >
-                      Clear
+                      {tAuto("clear_719ea39")}{" "}
                     </button>
                   </div>
                 )}
@@ -309,9 +316,11 @@ export function SetPromptVersionLabels({
                     >
                       <span
                         className="truncate"
-                        title={`Create a new label: ${trimmedSearch}`}
+                        title={tAuto("create_a_new_label_value0_d1bf9f8", {
+                          value0: trimmedSearch,
+                        })}
                       >
-                        Create a new label:{" "}
+                        {tAutoI18n("create_a_new_label_35eca28")}{" "}
                         <strong className="text-foreground">
                           {trimmedSearch}
                         </strong>
@@ -335,10 +344,10 @@ export function SetPromptVersionLabels({
             onClick={handleSubmitLabels}
           >
             {isPromotingToProduction
-              ? "Save and promote to production"
+              ? tAutoI18n("save_and_promote_to_production_13b96a8")
               : isDemotingFromProduction
-                ? "Save and remove from production"
-                : "Save"}
+                ? tAutoI18n("save_and_remove_from_production_4bff8b9")
+                : tAutoI18n("save_efc007a")}
           </Button>
         </div>
       </PopoverContent>

@@ -22,6 +22,7 @@ import { cn } from "@/src/utils/tailwind";
 import { useViewPreferences } from "@/src/components/trace/contexts/ViewPreferencesContext";
 import { useSelection } from "@/src/components/trace/contexts/SelectionContext";
 import { resolveEffectiveWidthFraction } from "@/src/components/table/peek/store/peekPanelStore";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 // Full-page trace view's layout group. v3: the full-page view gets the same
 // computed info-favoring default + localStorage persistence as the peek
@@ -558,6 +559,7 @@ TraceLayoutDesktop.DetailPanel = function Detail({
 }: {
   children: ReactNode;
 }) {
+  const tAuto = useAutoTranslations();
   const {
     detailPanelRef,
     setIsDetailPanelCollapsed,
@@ -594,8 +596,8 @@ TraceLayoutDesktop.DetailPanel = function Detail({
           <Button
             variant="ghost"
             size="icon"
-            title="Show detail panel"
-            aria-label="Show detail panel"
+            title={tAuto("show_detail_panel_66488e6")}
+            aria-label={tAuto("show_detail_panel_66488e6")}
             onClick={expandDetailPanel}
             className="h-7 w-7 shrink-0"
           >

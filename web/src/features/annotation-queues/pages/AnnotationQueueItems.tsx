@@ -19,8 +19,10 @@ import {
 } from "@/src/components/ui/side-panel";
 import { SubHeaderLabel } from "@/src/components/layouts/header";
 import { getScoreDataTypeIcon } from "@/src/features/scores/lib/scoreColumns";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export default function QueueItems() {
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const projectId = router.query.projectId as string;
   const queueId = router.query.queueId as string;
@@ -44,7 +46,10 @@ export default function QueueItems() {
   return (
     <Page
       headerProps={{
-        title: `${queue.data?.name}: ${queueId}`,
+        title: tAuto("value0_value1_0f13dbb", {
+          value0: queue.data?.name ?? "",
+          value1: queueId,
+        }),
         itemType: "ANNOTATION_QUEUE",
         breadcrumb: [
           {
@@ -55,7 +60,7 @@ export default function QueueItems() {
         actionButtonsRight: !hasWriteAccess ? (
           <Button disabled>
             <Lock className="mr-1 h-4 w-4" />
-            <span className="text-sm">Process queue</span>
+            <span className="text-sm">{tAuto("process_queue_4a4ed7f")}</span>
           </Button>
         ) : (
           <Button asChild>
@@ -63,7 +68,7 @@ export default function QueueItems() {
               href={`/project/${projectId}/annotation-queues/${queueId}/items`}
             >
               <ClipboardPen className="mr-1 h-4 w-4" />
-              <span className="text-sm">Process queue</span>
+              <span className="text-sm">{tAuto("process_queue_4a4ed7f")}</span>
             </Link>
           </Button>
         ),
@@ -97,7 +102,7 @@ export default function QueueItems() {
                   </CardDescription>
                 )}
                 <div className="flex flex-col gap-2">
-                  <SubHeaderLabel title="Score Configs" />
+                  <SubHeaderLabel title={tAuto("score_configs_c78e87c")} />
                   <div className="flex flex-wrap gap-2">
                     {queue.data?.scoreConfigs.map((scoreConfig) => (
                       <Badge key={scoreConfig.id} variant="outline">

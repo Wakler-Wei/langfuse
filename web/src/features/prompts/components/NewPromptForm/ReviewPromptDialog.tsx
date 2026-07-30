@@ -13,6 +13,7 @@ import {
 import { type Prompt } from "@langfuse/shared";
 import { type NewPromptFormSchemaType } from "./validation";
 import DiffViewer from "@/src/components/DiffViewer";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type ReviewPromptDialogProps = {
   initialPrompt: Prompt;
@@ -43,6 +44,8 @@ const formatMessages = (messages: any[], excludeKeys: string[] = []) => {
 export const ReviewPromptDialog: React.FC<ReviewPromptDialogProps> = (
   props,
 ) => {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const { initialPrompt, children, getNewPromptValues, onConfirm, isLoading } =
     props;
   const [newPromptValue, setNewPromptValues] =
@@ -76,7 +79,7 @@ export const ReviewPromptDialog: React.FC<ReviewPromptDialogProps> = (
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent size="xl">
         <DialogHeader>
-          <DialogTitle>Review Prompt Changes</DialogTitle>
+          <DialogTitle>{tAuto("review_prompt_changes_52f96de")}</DialogTitle>
           <DialogDescription className="flex items-center gap-2">
             <span className="font-bold">{initialPrompt.name}</span>
           </DialogDescription>
@@ -87,7 +90,9 @@ export const ReviewPromptDialog: React.FC<ReviewPromptDialogProps> = (
             <div className="space-y-6">
               <div className="space-y-4">
                 <div>
-                  <h3 className="mb-2 text-base font-bold">Content</h3>
+                  <h3 className="mb-2 text-base font-bold">
+                    {tAuto("content_4f9be05")}
+                  </h3>
                   <DiffViewer
                     oldString={initialPromptContent}
                     newString={newPromptContent}
@@ -96,7 +101,9 @@ export const ReviewPromptDialog: React.FC<ReviewPromptDialogProps> = (
                   />
                 </div>
                 <div>
-                  <h3 className="mb-2 text-base font-bold">Config</h3>
+                  <h3 className="mb-2 text-base font-bold">
+                    {tAuto("config_8851142")}
+                  </h3>
                   <DiffViewer
                     oldString={JSON.stringify(initialPrompt.config, null, 2)}
                     newString={newConfig ?? "failed"}
@@ -116,7 +123,7 @@ export const ReviewPromptDialog: React.FC<ReviewPromptDialogProps> = (
             onClick={() => setOpen(false)}
             className="min-w-32"
           >
-            Cancel
+            {tAuto("cancel_77dfd21")}{" "}
           </Button>
           <Button
             onClick={onConfirm}
@@ -124,8 +131,10 @@ export const ReviewPromptDialog: React.FC<ReviewPromptDialogProps> = (
             variant={newPromptValue?.isActive ? "destructive" : "default"}
             className="min-w-32"
           >
-            Save new version
-            {newPromptValue?.isActive ? " and promote to production" : ""}
+            {tAutoI18n("save_new_version_371b9aa")}{" "}
+            {newPromptValue?.isActive
+              ? tAutoI18n("and_promote_to_production_aa60202")
+              : ""}
           </Button>
         </DialogFooter>
       </DialogContent>

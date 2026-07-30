@@ -9,6 +9,7 @@ import {
   PopoverTrigger,
 } from "@/src/components/ui/popover";
 import { useHasProjectAccess } from "@/src/features/rbac/utils/checkProjectAccess";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 interface DeleteAutomationButtonProps {
   projectId: string;
@@ -23,6 +24,7 @@ export const DeleteAutomationButton: React.FC<DeleteAutomationButtonProps> = ({
   onSuccess,
   variant = "icon",
 }) => {
+  const tAuto = useAutoTranslations();
   const [isOpen, setIsOpen] = useState(false);
   const utils = api.useUtils();
   const hasAccess = useHasProjectAccess({
@@ -34,8 +36,10 @@ export const DeleteAutomationButton: React.FC<DeleteAutomationButtonProps> = ({
     {
       onSuccess: () => {
         showSuccessToast({
-          title: "Automation deleted",
-          description: "The automation has been deleted successfully.",
+          title: tAuto("automation_deleted_b842ddd"),
+          description: tAuto(
+            "the_automation_has_been_deleted_successfully_dbbd13b",
+          ),
         });
 
         if (onSuccess) {
@@ -58,7 +62,7 @@ export const DeleteAutomationButton: React.FC<DeleteAutomationButtonProps> = ({
             disabled={!hasAccess}
           >
             <Trash className="h-4 w-4" />
-            <span className="sr-only">Delete</span>
+            <span className="sr-only">{tAuto("delete_f6fdbe4")}</span>
           </Button>
         ) : (
           <Button
@@ -67,15 +71,16 @@ export const DeleteAutomationButton: React.FC<DeleteAutomationButtonProps> = ({
             className="border-light-red flex items-center"
             disabled={!hasAccess}
           >
-            <span className="text-dark-red">Delete</span>
+            <span className="text-dark-red">{tAuto("delete_f6fdbe4")}</span>
           </Button>
         )}
       </PopoverTrigger>
       <PopoverContent>
-        <h2 className="mb-3 font-bold">Please confirm</h2>
+        <h2 className="mb-3 font-bold">{tAuto("please_confirm_3a799cc")}</h2>
         <p className="mb-3 text-sm">
-          This action permanently deletes this automation and execution history.
-          This cannot be undone.
+          {tAuto(
+            "this_action_permanently_deletes_this_automation_and__b210948",
+          )}{" "}
         </p>
         <div className="flex justify-end space-x-4">
           <Button
@@ -90,7 +95,7 @@ export const DeleteAutomationButton: React.FC<DeleteAutomationButtonProps> = ({
               setIsOpen(false);
             }}
           >
-            Delete Automation
+            {tAuto("delete_automation_06d6caa")}{" "}
           </Button>
         </div>
       </PopoverContent>

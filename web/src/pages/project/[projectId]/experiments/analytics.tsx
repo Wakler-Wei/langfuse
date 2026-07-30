@@ -9,8 +9,10 @@ import {
 import useSessionStorage from "@/src/components/useSessionStorage";
 import Spinner from "@/src/components/design-system/Spinner/Spinner";
 import { useEffect } from "react";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export default function ExperimentAnalytics() {
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const projectId = router.query.projectId as string;
 
@@ -34,7 +36,7 @@ export default function ExperimentAnalytics() {
 
   if (!isExperimentsBetaActive) {
     return (
-      <Page headerProps={{ title: "Analytics" }}>
+      <Page headerProps={{ title: tAuto("analytics_25bc962") }}>
         <div className="flex h-full items-center justify-center">
           <Spinner size="xl" variant="muted" />
         </div>
@@ -45,7 +47,7 @@ export default function ExperimentAnalytics() {
   return (
     <Page
       headerProps={{
-        title: "Analytics",
+        title: tAuto("analytics_25bc962"),
         itemType: "EXPERIMENT",
         breadcrumb: [
           { name: "Experiments", href: `/project/${projectId}/experiments` },
@@ -63,11 +65,12 @@ export default function ExperimentAnalytics() {
           </div>
           <div className="space-y-2">
             <h3 className="text-xl font-bold tracking-tight">
-              Analytics Coming Soon
+              {tAuto("analytics_coming_soon_6fcdecd")}{" "}
             </h3>
             <p className="text-muted-foreground text-sm leading-relaxed">
-              We are working on adding advanced analytics capabilities for
-              experiments.
+              {tAuto(
+                "we_are_working_on_adding_advanced_analytics_capabili_c0d05c0",
+              )}{" "}
             </p>
           </div>
         </div>

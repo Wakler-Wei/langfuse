@@ -12,6 +12,7 @@ import {
   useInAppAiAgent,
 } from "@/src/features/in-app-agent/components/InAppAiAgentProvider";
 import { useEvalUpgradeAssistantPlan } from "@/src/features/v4-migration/useV4UpgradeAssistantSupport";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 function BadgeContent({
   handleClick,
@@ -44,6 +45,7 @@ function BadgeContent({
 }
 
 export function V4MigrationDelayBadge() {
+  const tAuto = useAutoTranslations();
   const v4UpgradeUiEnabled = useV4UpgradeUiEnabled();
   const openMigrationPanel = useOpenV4MigrationPanel();
   const { project, organization } = useQueryProject();
@@ -66,8 +68,8 @@ export function V4MigrationDelayBadge() {
   return (
     <BadgeContent
       handleClick={handleClick}
-      title="New data in ~15 min"
-      description="Update your SDK for real-time data"
+      title={tAuto("new_data_in_15_min_eec9663")}
+      description={tAuto("update_your_sdk_for_real_time_data_b504739")}
     />
   );
 }
@@ -95,6 +97,7 @@ function useEvalUpdateRequiredBadgeState() {
 
 /** Opens the v4 migration drawer if no in-app agent is available, otherwise opens the in-app agent */
 export function V4MigrationUpdateRequiredBadge() {
+  const tAuto = useAutoTranslations();
   const openMigrationPanel = useOpenV4MigrationPanel();
   const capture = usePostHogClientCapture();
   const canUseAgent = useCanUseInAppAgent();
@@ -127,8 +130,8 @@ export function V4MigrationUpdateRequiredBadge() {
   return (
     <BadgeContent
       handleClick={handleClick}
-      title="Action required"
-      description="Start the upgrade now"
+      title={tAuto("action_required_a5f995a")}
+      description={tAuto("start_the_upgrade_now_9a3e697")}
     />
   );
 }

@@ -18,8 +18,11 @@ import { showErrorToast } from "@/src/features/notifications/showErrorToast";
 import { api } from "@/src/utils/api";
 import type { SurveyFormData } from "../lib/surveyTypes";
 import { useWatchedPromiseCallback } from "@/src/hooks/useWatchedPromiseCallback";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export function OnboardingSurvey() {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const { update: updateSession } = useSession();
   const utils = api.useUtils();
@@ -51,8 +54,10 @@ export function OnboardingSurvey() {
       } catch (error) {
         setHasStartedOnboardingCompletion(false);
         showErrorToast(
-          "Failed to finish onboarding",
-          error instanceof Error ? error.message : "Please try again.",
+          tAutoI18n("failed_to_finish_onboarding_605e39a"),
+          error instanceof Error
+            ? error.message
+            : tAutoI18n("please_try_again_83a6fd7"),
         );
       }
     },
@@ -69,8 +74,10 @@ export function OnboardingSurvey() {
         } catch (error) {
           setHasStartedOnboardingCompletion(false);
           showErrorToast(
-            "Failed to continue onboarding",
-            error instanceof Error ? error.message : "Please try again.",
+            tAutoI18n("failed_to_continue_onboarding_90eb1b5"),
+            error instanceof Error
+              ? error.message
+              : tAutoI18n("please_try_again_83a6fd7"),
           );
         }
       },
@@ -121,9 +128,11 @@ export function OnboardingSurvey() {
         <div className="bg-background mt-6 rounded-lg px-6 py-10 shadow-sm sm:mx-auto sm:mt-16 sm:w-full sm:max-w-[480px] sm:px-12 sm:py-12">
           <div className="flex flex-col items-center text-center">
             <Spinner size="xl" variant="muted" />
-            <h1 className="mt-6 text-xl font-bold">Setting up your project</h1>
+            <h1 className="mt-6 text-xl font-bold">
+              {tAuto("setting_up_your_project_1eacfe6")}
+            </h1>
             <p className="text-muted-foreground mt-2 text-sm">
-              Taking you to tracing...
+              {tAuto("taking_you_to_tracing_87daf16")}{" "}
             </p>
           </div>
         </div>
@@ -140,9 +149,11 @@ export function OnboardingSurvey() {
 
         <div className="bg-background mt-6 rounded-lg px-6 py-10 shadow-sm sm:mx-auto sm:mt-16 sm:w-full sm:max-w-[480px] sm:px-12 sm:py-12">
           <div className="flex flex-col items-center text-center">
-            <h1 className="text-xl font-bold">Failed to load onboarding</h1>
+            <h1 className="text-xl font-bold">
+              {tAuto("failed_to_load_onboarding_128cabe")}
+            </h1>
             <p className="text-muted-foreground mt-2 text-sm">
-              Refresh the page to try again.
+              {tAuto("refresh_the_page_to_try_again_51a6d65")}{" "}
             </p>
           </div>
         </div>
@@ -175,13 +186,15 @@ export function OnboardingSurvey() {
                 render={({ field }) => (
                   <FormItem className="flex flex-col gap-2">
                     <FormLabel className="text-xl font-bold">
-                      Where did you hear about us?
+                      {tAuto("where_did_you_hear_about_us_ef198b8")}{" "}
                     </FormLabel>
                     <FormControl>
                       <Input
                         autoFocus
                         maxLength={500}
-                        placeholder="Colleague, Word of Mouth, X, Reddit, Event"
+                        placeholder={tAuto(
+                          "colleague_word_of_mouth_x_reddit_event_62395c9",
+                        )}
                         {...field}
                         value={field.value ?? ""}
                       />
@@ -203,7 +216,7 @@ export function OnboardingSurvey() {
                   className="w-20"
                   disabled={isBusy}
                 >
-                  Skip
+                  {tAuto("skip_3da4745")}{" "}
                 </Button>
               ) : (
                 <Button
@@ -212,7 +225,7 @@ export function OnboardingSurvey() {
                   className="w-20"
                   disabled={isBusy}
                 >
-                  Finish
+                  {tAuto("finish_b74bdee")}{" "}
                 </Button>
               )}
             </div>

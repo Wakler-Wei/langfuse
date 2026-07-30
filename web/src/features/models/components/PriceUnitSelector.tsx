@@ -15,8 +15,10 @@ import {
 } from "@/src/components/ui/select";
 import { PriceUnit } from "@/src/features/models/validation";
 import { usePriceUnitMultiplier } from "@/src/features/models/hooks/usePriceUnitMultiplier";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export const PriceUnitSelector = () => {
+  const tAuto = useAutoTranslations();
   const { priceUnit, setPriceUnit } = usePriceUnitMultiplier();
 
   return (
@@ -32,7 +34,7 @@ export const PriceUnitSelector = () => {
           onValueChange={(value: PriceUnit) => setPriceUnit(value)}
         >
           <SelectTrigger className="w-full">
-            <SelectValue placeholder="Select unit" />
+            <SelectValue placeholder={tAuto("select_unit_bc6df6d")} />
           </SelectTrigger>
           <SelectContent>
             {Object.values(PriceUnit).map((unit) => (

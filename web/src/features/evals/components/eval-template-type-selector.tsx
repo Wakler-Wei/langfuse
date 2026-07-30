@@ -19,6 +19,7 @@ import {
   type CodeEvalSourceCodeLanguage,
   getDefaultCodeEvalSource,
 } from "@/src/features/evals/utils/code-eval-template-validation";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type EvalTemplateFormInput = z.input<typeof templateFormSchema>;
 type EvalTemplateFormOutput = z.output<typeof templateFormSchema>;
@@ -48,6 +49,7 @@ export function EvalTemplateTypeSelector({
   hasExistingTemplate: boolean;
   onChange?: () => void;
 }) {
+  const tAuto = useAutoTranslations();
   const sourceCodeDraftsRef = useRef<CodeEvalSourceDrafts>({});
   const evalTemplateType = form.watch("type");
   const sourceCodeLanguage =
@@ -101,7 +103,7 @@ export function EvalTemplateTypeSelector({
       name="type"
       render={() => (
         <FormItem>
-          <FormLabel>Type</FormLabel>
+          <FormLabel>{tAuto("type_3deb745")}</FormLabel>
           <FormControl>
             <Tabs
               value={selectedValue}
@@ -119,14 +121,14 @@ export function EvalTemplateTypeSelector({
                     value={EvalTemplateType.LLM_AS_JUDGE}
                     className="min-w-[100px]"
                   >
-                    LLM-as-judge
+                    {tAuto("llm_as_judge_6eb5542")}{" "}
                   </TabsTrigger>
                 ) : null}
                 <TabsTrigger
                   value={EvalTemplateSourceCodeLanguage.TYPESCRIPT}
                   className="min-w-[100px]"
                 >
-                  TypeScript
+                  {tAuto("typescript_d4a86cb")}{" "}
                 </TabsTrigger>
                 {codeEvalCapabilities.supportedSourceCodeLanguages.includes(
                   EvalTemplateSourceCodeLanguage.PYTHON,
@@ -135,7 +137,7 @@ export function EvalTemplateTypeSelector({
                     value={EvalTemplateSourceCodeLanguage.PYTHON}
                     className="min-w-[100px]"
                   >
-                    Python
+                    {tAuto("python_6e36048")}{" "}
                   </TabsTrigger>
                 ) : null}
               </TabsList>

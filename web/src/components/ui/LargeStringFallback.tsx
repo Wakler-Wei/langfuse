@@ -5,6 +5,7 @@ import { compactNumberFormatter } from "@/src/utils/numbers";
 import { LARGE_STRING_PREVIEW_CHARS } from "@/src/components/ui/largeStringGate";
 import { usePostHogClientCapture } from "@/src/features/posthog-analytics/usePostHogClientCapture";
 import { decodeUnicodeInJson } from "@/src/utils/decodeUnicodeInJson";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 /**
  * Head slice bounded to `maxChars` UTF-16 units, backed off by one unit if the
@@ -37,6 +38,8 @@ export function LargeStringFallback({
   title?: string;
   value: string;
 }) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const capture = usePostHogClientCapture();
 
   const previewText = useMemo(() => {
@@ -63,8 +66,11 @@ export function LargeStringFallback({
             <span className="text-foreground font-bold">{title}</span>
           ) : null}
           <span>
-            Large string — {compactNumberFormatter(value.length, 1)} characters,
-            truncated to keep the tab responsive
+            {tAutoI18n("large_string_106f1d5")}{" "}
+            {compactNumberFormatter(value.length, 1)}{" "}
+            {tAutoI18n(
+              "characters_truncated_to_keep_the_tab_responsive_de3d3b4",
+            )}{" "}
           </span>
         </div>
         <pre className="bg-muted/50 max-h-40 overflow-hidden rounded-md border p-2 font-mono text-xs break-all whitespace-pre-wrap">
@@ -73,7 +79,7 @@ export function LargeStringFallback({
         <div>
           <Button variant="outline" size="sm" onClick={onDownload}>
             <Download className="mr-1 h-3.5 w-3.5" />
-            Download full value
+            {tAuto("download_full_value_8acd661")}{" "}
           </Button>
         </div>
       </div>

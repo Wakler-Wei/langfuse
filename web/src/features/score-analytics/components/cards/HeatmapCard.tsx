@@ -15,6 +15,7 @@ import { useCallback } from "react";
 import { SamplingDetailsHoverCard } from "../SamplingDetailsHoverCard";
 import { type ScoreDataTypeType } from "@langfuse/shared";
 import Spinner from "@/src/components/design-system/Spinner/Spinner";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 interface HeatmapTooltipContentProps {
   cell: HeatmapCell;
@@ -42,6 +43,7 @@ function HeatmapTooltipContent({
   score2Color,
   totalMatchedPairs,
 }: HeatmapTooltipContentProps) {
+  const tAuto = useAutoTranslations();
   const percentage = (cell.metadata?.percentage as number) ?? 0;
 
   return (
@@ -50,7 +52,10 @@ function HeatmapTooltipContent({
       <div className="border-border border-b pb-2">
         <p className="text-muted-foreground text-sm font-bold">
           {dataType === "NUMERIC"
-            ? `Bin ${cell.row}×${cell.col}`
+            ? tAuto("bin_value0_value1_9510e88", {
+                value0: String((cell.row as unknown) ?? ""),
+                value1: String((cell.col as unknown) ?? ""),
+              })
             : `${cell.metadata?.rowCategory as string} → ${cell.metadata?.colCategory as string}`}
         </p>
       </div>
@@ -58,11 +63,12 @@ function HeatmapTooltipContent({
       {/* Primary Metrics Section */}
       <div className="space-y-1">
         <p className="text-foreground text-base font-bold">
-          {cell.value.toLocaleString()} observations
+          {cell.value.toLocaleString()} {tAuto("observations_1943334")}{" "}
         </p>
         <p className="text-muted-foreground text-xs">
-          {percentage.toFixed(1)}% of {totalMatchedPairs.toLocaleString()}{" "}
-          matched pairs
+          {percentage.toFixed(1)}
+          {tAuto("of_0f9771a")} {totalMatchedPairs.toLocaleString()}{" "}
+          {tAuto("matched_pairs_42ba318")}{" "}
         </p>
       </div>
 
@@ -139,6 +145,7 @@ function HeatmapTooltipContent({
  * - Numeric vs categorical data types
  */
 export function HeatmapCard() {
+  const tAuto = useAutoTranslations();
   const { data, isLoading, params, getColorForScore } = useScoreAnalytics();
 
   // Compute max value for color scaling (must be before early returns)
@@ -162,8 +169,8 @@ export function HeatmapCard() {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Score Comparison</CardTitle>
-          <CardDescription>Loading heatmap...</CardDescription>
+          <CardTitle>{tAuto("score_comparison_a3d85b2")}</CardTitle>
+          <CardDescription>{tAuto("loading_heatmap_018d818")}</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-1 flex-col items-center justify-center pl-1">
           <Spinner size="xl" variant="muted" />
@@ -177,11 +184,13 @@ export function HeatmapCard() {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Score Comparison</CardTitle>
-          <CardDescription>No data available</CardDescription>
+          <CardTitle>{tAuto("score_comparison_a3d85b2")}</CardTitle>
+          <CardDescription>
+            {tAuto("no_data_available_0cfc430")}
+          </CardDescription>
         </CardHeader>
         <CardContent className="text-muted-foreground flex flex-1 flex-col items-center justify-center pl-0 text-sm">
-          Select a score to view comparison
+          {tAuto("select_a_score_to_view_comparison_f7c7b9e")}{" "}
         </CardContent>
       </Card>
     );
@@ -195,16 +204,26 @@ export function HeatmapCard() {
   const totalMatchedPairs = statistics.comparison?.matchedCount ?? 0;
 
   const title =
-    dataType === "NUMERIC" ? "Score Comparison Heatmap" : "Confusion Matrix";
+    dataType === "NUMERIC"
+      ? tAuto("score_comparison_heatmap_1cdb534")
+      : tAuto("confusion_matrix_97825df");
 
   const description =
     mode === "single"
       ? dataType === "NUMERIC"
-        ? "Distribution of matched score pairs showing correlation patterns"
-        : "Agreement matrix between categorical scores"
+        ? tAuto("distribution_of_matched_score_pairs_showing_correlat_a84e4aa")
+        : tAuto("agreement_matrix_between_categorical_scores_c3fc103")
       : dataType === "NUMERIC"
-        ? `${totalMatchedPairs.toLocaleString()} matched pairs showing correlation patterns`
-        : `${totalMatchedPairs.toLocaleString()} matched pairs showing agreement`;
+        ? tAuto("value0_matched_pairs_showing_correlation_patterns_5fb14f3", {
+            value0: String(
+              (totalMatchedPairs.toLocaleString() as unknown) ?? "",
+            ),
+          })
+        : tAuto("value0_matched_pairs_showing_agreement_495a65b", {
+            value0: String(
+              (totalMatchedPairs.toLocaleString() as unknown) ?? "",
+            ),
+          });
 
   // Single score mode - show placeholder
   if (mode === "single") {
@@ -223,7 +242,9 @@ export function HeatmapCard() {
             showAxisLabels={true}
           />
           <p className="text-muted-foreground text-center text-sm">
-            Select a second score to view comparison heatmap
+            {tAuto(
+              "select_a_second_score_to_view_comparison_heatmap_446a296",
+            )}{" "}
           </p>
         </CardContent>
       </Card>

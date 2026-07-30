@@ -10,6 +10,7 @@ import { usePostHogClientCapture } from "@/src/features/posthog-analytics/usePos
 import { useHasProjectAccess } from "@/src/features/rbac/utils/checkProjectAccess";
 import { api } from "@/src/utils/api";
 import { useEmptyScoreConfigs } from "@/src/features/scores/hooks/useEmptyConfigs";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export const ArchiveScoreConfigButton = ({
   configId,
@@ -22,6 +23,8 @@ export const ArchiveScoreConfigButton = ({
   isArchived: boolean;
   name: string;
 }) => {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const capture = usePostHogClientCapture();
   const { emptySelectedConfigIds, setEmptySelectedConfigIds } =
     useEmptyScoreConfigs();
@@ -49,7 +52,7 @@ export const ArchiveScoreConfigButton = ({
           }}
         >
           <Archive className="mr-2 h-4 w-4"></Archive>
-          Archive
+          {tAuto("archive_2621c6f")}{" "}
         </Button>
       </PopoverTrigger>
       <PopoverContent
@@ -57,13 +60,24 @@ export const ArchiveScoreConfigButton = ({
         className="max-w-[500px]"
       >
         <h2 className="mb-3 font-bold">
-          {isArchived ? "Restore config" : "Archive config"}
+          {isArchived
+            ? tAutoI18n("restore_config_f7b595e")
+            : tAutoI18n("archive_config_3be87b0")}
         </h2>
         <p className="mb-3 text-sm">
-          Your config is currently{" "}
+          {tAutoI18n("your_config_is_currently_923d159")}{" "}
           {isArchived
-            ? `archived. Restore if you want to use "${name}" in annotation again.`
-            : `active. Archive if you no longer want to use "${name}" in annotation. Historic "${name}" scores will still be shown and can be deleted. You can restore your config at any point.`}
+            ? tAutoI18n(
+                "archived_restore_if_you_want_to_use_value0_in_annota_0406e82",
+                { value0: String((name as unknown) ?? "") },
+              )
+            : tAutoI18n(
+                "active_archive_if_you_no_longer_want_to_use_value0_i_e2aa468",
+                {
+                  value0: String((name as unknown) ?? ""),
+                  value1: String((name as unknown) ?? ""),
+                },
+              )}
         </p>
         <div className="flex justify-end space-x-4">
           <Button
@@ -82,7 +96,7 @@ export const ArchiveScoreConfigButton = ({
               capture("score_configs:archive_form_submit");
             }}
           >
-            Confirm
+            {tAuto("confirm_04a2122")}{" "}
           </Button>
         </div>
       </PopoverContent>

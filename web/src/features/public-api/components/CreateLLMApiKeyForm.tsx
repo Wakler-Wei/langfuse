@@ -45,6 +45,7 @@ import {
   BedrockAuthMethodSchema,
   type BedrockAuthMethod,
 } from "@/src/features/llm-api-key/types";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const isLangfuseCloud = Boolean(env.NEXT_PUBLIC_LANGFUSE_CLOUD_REGION);
 
@@ -266,6 +267,8 @@ export function CreateLLMApiKeyForm({
   mode = "create",
   existingKey,
 }: CreateLLMApiKeyFormProps) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const [showAdvancedSettings, setShowAdvancedSettings] = useState(false);
   // When the "Other model" option is selected we hide the form fields and show
   // guidance instead. This is purely UI state and never reaches the form value.
@@ -411,15 +414,17 @@ export function CreateLLMApiKeyForm({
       name="customModels"
       render={() => (
         <FormItem>
-          <FormLabel>Custom models</FormLabel>
+          <FormLabel>{tAuto("custom_models_3166910")}</FormLabel>
           <FormDescription>
-            Custom model names accepted by given endpoint.
+            {tAuto(
+              "custom_model_names_accepted_by_given_endpoint_c0d9fdd",
+            )}{" "}
           </FormDescription>
           {currentAdapter === LLMAdapter.Azure && (
             <FormDescription className="text-dark-yellow">
-              For Azure, the model name should be the same as the deployment
-              name in Azure. For evals, choose a model with function calling
-              capabilities.
+              {tAuto(
+                "for_azure_the_model_name_should_be_the_same_as_the_d_0818ba6",
+              )}{" "}
             </FormDescription>
           )}
 
@@ -435,7 +440,9 @@ export function CreateLLMApiKeyForm({
             <span key={customModel.id} className="flex flex-row space-x-2">
               <Input
                 {...form.register(`customModels.${index}.value`)}
-                placeholder={`Custom model name ${index + 1}`}
+                placeholder={tAuto("custom_model_name_value0_fb8355b", {
+                  value0: index + 1,
+                })}
               />
               <Button
                 type="button"
@@ -453,7 +460,7 @@ export function CreateLLMApiKeyForm({
             className="w-full"
           >
             <PlusIcon className="mr-1.5 -ml-0.5 h-5 w-5" aria-hidden="true" />
-            Add custom model name
+            {tAuto("add_custom_model_name_dc47b01")}{" "}
           </Button>
         </FormItem>
       )}
@@ -466,18 +473,22 @@ export function CreateLLMApiKeyForm({
       name="extraHeaders"
       render={() => (
         <FormItem>
-          <FormLabel>Extra Headers</FormLabel>
+          <FormLabel>{tAuto("extra_headers_07cfd31")}</FormLabel>
           <FormDescription>
-            Optional additional HTTP headers to include with requests towards
-            LLM provider. All header values stored encrypted{" "}
-            {isLangfuseCloud ? "on our servers" : "in your database"}.
+            {tAutoI18n(
+              "optional_additional_http_headers_to_include_with_req_a35c70c",
+            )}{" "}
+            {isLangfuseCloud
+              ? tAutoI18n("on_our_servers_b8af8fd")
+              : tAutoI18n("in_your_database_c5db6d9")}
+            .
           </FormDescription>
 
           {headerFields.map((header, index) => (
             <div key={header.id} className="flex flex-row space-x-2">
               <Input
                 {...form.register(`extraHeaders.${index}.key`)}
-                placeholder="Header name"
+                placeholder={tAuto("header_name_b46f85a")}
               />
               <Input
                 {...form.register(`extraHeaders.${index}.value`)}
@@ -486,7 +497,7 @@ export function CreateLLMApiKeyForm({
                   existingKey?.extraHeaderKeys &&
                   existingKey.extraHeaderKeys[index]
                     ? "***"
-                    : "Header value"
+                    : tAuto("header_value_418adf0")
                 }
               />
               <Button
@@ -506,7 +517,7 @@ export function CreateLLMApiKeyForm({
             className="w-full"
           >
             <PlusIcon className="mr-1.5 -ml-0.5 h-5 w-5" aria-hidden="true" />
-            Add Header
+            {tAuto("add_header_42b9490")}{" "}
           </Button>
         </FormItem>
       )}
@@ -680,9 +691,11 @@ export function CreateLLMApiKeyForm({
             name="adapter"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>LLM adapter</FormLabel>
+                <FormLabel>{tAuto("llm_adapter_5366622")}</FormLabel>
                 <FormDescription>
-                  Schema that is accepted at that provider endpoint.
+                  {tAuto(
+                    "schema_that_is_accepted_at_that_provider_endpoint_98c7a0a",
+                  )}{" "}
                 </FormDescription>
                 <Select
                   open={adapterSelectOpen}
@@ -711,7 +724,9 @@ export function CreateLLMApiKeyForm({
                 >
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select a LLM provider" />
+                      <SelectValue
+                        placeholder={tAuto("select_a_llm_provider_f55153b")}
+                      />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -722,7 +737,7 @@ export function CreateLLMApiKeyForm({
                     ))}
                     {mode === "create" && (
                       <SelectItem value={OTHER_MODEL_OPTION}>
-                        other model
+                        {tAuto("other_model_57964ee")}{" "}
                       </SelectItem>
                     )}
                   </SelectContent>
@@ -749,7 +764,7 @@ export function CreateLLMApiKeyForm({
                   rel="noopener noreferrer"
                   className="text-blue-600 underline hover:text-blue-800"
                 >
-                  Learn more about supported providers
+                  {tAuto("learn_more_about_supported_providers_b060f4e")}{" "}
                 </a>
               </p>
             </div>
@@ -763,15 +778,18 @@ export function CreateLLMApiKeyForm({
                 name="provider"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Provider name</FormLabel>
+                    <FormLabel>{tAuto("provider_name_34ea99e")}</FormLabel>
                     <FormDescription>
-                      Key to identify the connection within Langfuse. Cannot
-                      contain colons.
+                      {tAuto(
+                        "key_to_identify_the_connection_within_langfuse_canno_b81a0be",
+                      )}{" "}
                     </FormDescription>
                     <FormControl>
                       <Input
                         {...field}
-                        placeholder={`e.g. ${currentAdapter}`}
+                        placeholder={tAuto("e_g_value0_a09536b", {
+                          value0: currentAdapter,
+                        })}
                         disabled={isFieldDisabled("provider")}
                       />
                     </FormControl>
@@ -788,9 +806,13 @@ export function CreateLLMApiKeyForm({
                     name="authMethod"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Authentication Method</FormLabel>
+                        <FormLabel>
+                          {tAuto("authentication_method_09d8b93")}
+                        </FormLabel>
                         <FormDescription>
-                          Select how Langfuse should authenticate to Bedrock.
+                          {tAuto(
+                            "select_how_langfuse_should_authenticate_to_bedrock_2ac94cb",
+                          )}{" "}
                         </FormDescription>
                         <FormControl>
                           <Tabs
@@ -810,13 +832,13 @@ export function CreateLLMApiKeyForm({
                                 value={AuthMethod.AccessKeys}
                                 className="text-xs"
                               >
-                                AWS access keys
+                                {tAuto("aws_access_keys_6bc8cdc")}{" "}
                               </TabsTrigger>
                               <TabsTrigger
                                 value={AuthMethod.ApiKey}
                                 className="text-xs"
                               >
-                                API key
+                                {tAuto("api_key_cf678ca")}{" "}
                               </TabsTrigger>
                             </TabsList>
                           </Tabs>
@@ -830,13 +852,13 @@ export function CreateLLMApiKeyForm({
                     name="awsRegion"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>AWS Region</FormLabel>
+                        <FormLabel>{tAuto("aws_region_1a6fcaf")}</FormLabel>
                         <FormDescription>
                           {mode === "update" &&
                             existingKey?.config &&
                             (existingKey.config as BedrockConfig).region && (
                               <span className="text-sm">
-                                Current:{" "}
+                                {tAutoI18n("current_19889c9")}{" "}
                                 <code className="bg-muted rounded px-1 py-0.5">
                                   {(existingKey.config as BedrockConfig).region}
                                 </code>
@@ -850,7 +872,7 @@ export function CreateLLMApiKeyForm({
                               mode === "update" && existingKey?.config
                                 ? ((existingKey.config as BedrockConfig)
                                     .region ?? "")
-                                : "e.g., us-east-1"
+                                : tAuto("e_g_us_east_1_a9681ad")
                             }
                             data-1p-ignore
                           />
@@ -865,31 +887,39 @@ export function CreateLLMApiKeyForm({
                       name="bedrockApiKey"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Bedrock API Key</FormLabel>
+                          <FormLabel>
+                            {tAuto("bedrock_api_key_f0af955")}
+                          </FormLabel>
                           <FormDescription>
                             {mode === "update" ? (
                               <>
-                                Use{" "}
+                                {tAuto("use_1d4d43c")}{" "}
                                 <a
                                   href="https://docs.aws.amazon.com/bedrock/latest/userguide/api-keys.html"
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   className="text-blue-600 underline hover:text-blue-800"
                                 >
-                                  Amazon Bedrock API keys
+                                  {tAuto(
+                                    "amazon_bedrock_api_keys_23f8f23",
+                                  )}{" "}
                                 </a>{" "}
-                                to replace the current authentication.
+                                {tAuto(
+                                  "to_replace_the_current_authentication_160df4c",
+                                )}{" "}
                               </>
                             ) : (
                               <>
-                                Use{" "}
+                                {tAuto("use_1d4d43c")}{" "}
                                 <a
                                   href="https://docs.aws.amazon.com/bedrock/latest/userguide/api-keys.html"
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   className="text-blue-600 underline hover:text-blue-800"
                                 >
-                                  Amazon Bedrock API keys
+                                  {tAuto(
+                                    "amazon_bedrock_api_keys_23f8f23",
+                                  )}{" "}
                                 </a>
                                 .
                               </>
@@ -903,8 +933,13 @@ export function CreateLLMApiKeyForm({
                                 mode === "update"
                                   ? isKeepingCurrentBedrockAuthMethod &&
                                     existingKey?.displaySecretKey
-                                    ? `${existingKey.displaySecretKey} (preserved unless replaced)`
-                                    : "Enter Bedrock API key"
+                                    ? tAuto(
+                                        "value0_preserved_unless_replaced_dbdbd0f",
+                                        {
+                                          value0: existingKey.displaySecretKey,
+                                        },
+                                      )
+                                    : tAuto("enter_bedrock_api_key_81d36de")
                                   : undefined
                               }
                               autoComplete="new-password"
@@ -924,22 +959,30 @@ export function CreateLLMApiKeyForm({
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>
-                              AWS Access Key ID
+                              {tAutoI18n("aws_access_key_id_800021b")}{" "}
                               {!isLangfuseCloud && (
                                 <span className="text-muted-foreground font-normal">
                                   {" "}
-                                  (optional)
+                                  {tAutoI18n("optional_b16c7ac")}{" "}
                                 </span>
                               )}
                             </FormLabel>
                             <FormDescription>
                               {mode === "update"
                                 ? isKeepingCurrentBedrockAuthMethod
-                                  ? "Leave empty to keep existing credentials. To update, provide both Access Key ID and Secret Access Key."
-                                  : "Provide both Access Key ID and Secret Access Key."
+                                  ? tAutoI18n(
+                                      "leave_empty_to_keep_existing_credentials_to_update_p_a6508ae",
+                                    )
+                                  : tAutoI18n(
+                                      "provide_both_access_key_id_and_secret_access_key_4a8858a",
+                                    )
                                 : isLangfuseCloud
-                                  ? "These should be long-lived credentials for an AWS user with `bedrock:InvokeModel` permission."
-                                  : "For self-hosted deployments, AWS credentials are optional. When omitted, authentication will use the AWS SDK default credential provider chain."}
+                                  ? tAutoI18n(
+                                      "these_should_be_long_lived_credentials_for_an_aws_us_f88d09a",
+                                    )
+                                  : tAutoI18n(
+                                      "for_self_hosted_deployments_aws_credentials_are_opti_54f497a",
+                                    )}
                             </FormDescription>
                             <FormControl>
                               <Input
@@ -947,10 +990,16 @@ export function CreateLLMApiKeyForm({
                                 placeholder={
                                   mode === "update"
                                     ? isUsingDefaultAwsCredentialsForCurrentAuthMethod
-                                      ? "Using default AWS credentials"
+                                      ? tAuto(
+                                          "using_default_aws_credentials_289ae2c",
+                                        )
                                       : isKeepingCurrentBedrockAuthMethod
-                                        ? "•••••••• (existing credentials preserved if empty)"
-                                        : "Enter AWS access key ID"
+                                        ? tAuto(
+                                            "existing_credentials_preserved_if_empty_b8776b3",
+                                          )
+                                        : tAuto(
+                                            "enter_aws_access_key_id_9f66d21",
+                                          )
                                     : undefined
                                 }
                                 autoComplete="off"
@@ -967,11 +1016,11 @@ export function CreateLLMApiKeyForm({
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>
-                              AWS Secret Access Key
+                              {tAutoI18n("aws_secret_access_key_8b9bdfe")}{" "}
                               {!isLangfuseCloud && (
                                 <span className="text-muted-foreground font-normal">
                                   {" "}
-                                  (optional)
+                                  {tAutoI18n("optional_b16c7ac")}{" "}
                                 </span>
                               )}
                             </FormLabel>
@@ -982,11 +1031,21 @@ export function CreateLLMApiKeyForm({
                                 placeholder={
                                   mode === "update"
                                     ? isUsingDefaultAwsCredentialsForCurrentAuthMethod
-                                      ? "Using default AWS credentials"
+                                      ? tAuto(
+                                          "using_default_aws_credentials_289ae2c",
+                                        )
                                       : isKeepingCurrentBedrockAuthMethod &&
                                           existingKey?.displaySecretKey
-                                        ? `${existingKey.displaySecretKey} (preserved if empty)`
-                                        : "Enter AWS secret access key"
+                                        ? tAuto(
+                                            "value0_preserved_if_empty_af6b0e2",
+                                            {
+                                              value0:
+                                                existingKey.displaySecretKey,
+                                            },
+                                          )
+                                        : tAuto(
+                                            "enter_aws_secret_access_key_689ba9d",
+                                          )
                                     : undefined
                                 }
                                 autoComplete="new-password"
@@ -1003,18 +1062,28 @@ export function CreateLLMApiKeyForm({
                     currentAuthMethod === AuthMethod.AccessKeys && (
                       <div className="text-muted-foreground space-y-2 border-l-2 border-blue-200 pl-4 text-sm">
                         <p>
-                          <strong>Default credential provider chain:</strong>{" "}
-                          When AWS credentials are omitted, the system will
-                          automatically check for credentials in this order:
+                          <strong>
+                            {tAuto("default_credential_provider_chain_178798b")}
+                          </strong>{" "}
+                          {tAutoI18n(
+                            "when_aws_credentials_are_omitted_the_system_will_aut_01f4760",
+                          )}{" "}
                         </p>
                         <ul className="ml-2 list-inside list-disc space-y-1">
                           <li>
-                            Environment variables (AWS_ACCESS_KEY_ID,
-                            AWS_SECRET_ACCESS_KEY)
+                            {tAuto(
+                              "environment_variables_aws_access_key_id_aws_secret_a_308b080",
+                            )}{" "}
                           </li>
-                          <li>AWS credentials file (~/.aws/credentials)</li>
-                          <li>IAM roles for EC2 instances</li>
-                          <li>IAM roles for ECS tasks</li>
+                          <li>
+                            {tAuto(
+                              "aws_credentials_file_aws_credentials_db0b660",
+                            )}
+                          </li>
+                          <li>
+                            {tAuto("iam_roles_for_ec2_instances_e08c279")}
+                          </li>
+                          <li>{tAuto("iam_roles_for_ecs_tasks_4d39421")}</li>
                         </ul>
                         <p>
                           <a
@@ -1023,7 +1092,9 @@ export function CreateLLMApiKeyForm({
                             rel="noopener noreferrer"
                             className="text-blue-600 underline hover:text-blue-800"
                           >
-                            Learn more about AWS credential providers →
+                            {tAuto(
+                              "learn_more_about_aws_credential_providers_d916a69",
+                            )}{" "}
                           </a>
                         </p>
                       </div>
@@ -1037,7 +1108,9 @@ export function CreateLLMApiKeyForm({
                       <span className="flex">
                         <span className="flex-1">
                           <FormLabel>
-                            Use Application Default Credentials (ADC)
+                            {tAuto(
+                              "use_application_default_credentials_adc_19ecfb2",
+                            )}{" "}
                           </FormLabel>
                           <FormDescription>
                             When enabled, authentication uses the GCP
@@ -1076,16 +1149,22 @@ export function CreateLLMApiKeyForm({
                       name="secretKey"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>GCP Service Account Key (JSON)</FormLabel>
+                          <FormLabel>
+                            {tAuto("gcp_service_account_key_json_3fc4ce8")}
+                          </FormLabel>
                           <FormDescription>
                             {isLangfuseCloud
-                              ? "Your API keys are stored encrypted on our servers."
-                              : "Your API keys are stored encrypted in your database."}
+                              ? tAutoI18n(
+                                  "your_api_keys_are_stored_encrypted_on_our_servers_10cfd6c",
+                                )
+                              : tAutoI18n(
+                                  "your_api_keys_are_stored_encrypted_in_your_database_f94a778",
+                                )}
                           </FormDescription>
                           <FormDescription className="text-dark-yellow">
-                            Paste your GCP service account JSON key here. The
-                            service account must have `Vertex AI User` role
-                            permissions. Example JSON:
+                            {tAuto(
+                              "paste_your_gcp_service_account_json_key_here_the_ser_926c02f",
+                            )}{" "}
                             <pre className="text-xs">
                               {`{
   "type": "service_account",
@@ -1107,7 +1186,7 @@ export function CreateLLMApiKeyForm({
                               placeholder={
                                 mode === "update"
                                   ? existingKey?.displaySecretKey
-                                  : '{"type": "service_account", ...}'
+                                  : tAuto("type_service_account_91e5146")
                               }
                               autoComplete="off"
                               spellCheck="false"
@@ -1127,24 +1206,31 @@ export function CreateLLMApiKeyForm({
                       <div className="text-muted-foreground space-y-2 border-l-2 border-blue-200 pl-4 text-sm">
                         <p>
                           <strong>
-                            Application Default Credentials (ADC):
+                            {tAuto(
+                              "application_default_credentials_adc_6036a88",
+                            )}{" "}
                           </strong>{" "}
-                          When enabled, the system will automatically check for
-                          credentials in this order:
+                          {tAutoI18n(
+                            "when_enabled_the_system_will_automatically_check_for_b14d6df",
+                          )}{" "}
                         </p>
                         <ul className="ml-2 list-inside list-disc space-y-1">
                           <li>
-                            Environment variable
-                            (GOOGLE_APPLICATION_CREDENTIALS)
+                            {tAuto(
+                              "environment_variable_google_application_credentials_6b98d2a",
+                            )}{" "}
                           </li>
                           <li>
-                            gcloud CLI credentials (gcloud auth
-                            application-default login)
+                            {tAuto(
+                              "gcloud_cli_credentials_gcloud_auth_application_defau_df624de",
+                            )}{" "}
                           </li>
-                          <li>GKE Workload Identity</li>
-                          <li>Cloud Run service account</li>
+                          <li>{tAuto("gke_workload_identity_f2e4a47")}</li>
+                          <li>{tAuto("cloud_run_service_account_2a9dbff")}</li>
                           <li>
-                            GCE instance service account (metadata service)
+                            {tAuto(
+                              "gce_instance_service_account_metadata_service_00870eb",
+                            )}{" "}
                           </li>
                         </ul>
                         <p>
@@ -1154,8 +1240,9 @@ export function CreateLLMApiKeyForm({
                             rel="noopener noreferrer"
                             className="text-blue-600 underline hover:text-blue-800"
                           >
-                            Learn more about GCP Application Default Credentials
-                            →
+                            {tAuto(
+                              "learn_more_about_gcp_application_default_credentials_ddb1932",
+                            )}{" "}
                           </a>
                         </p>
                       </div>
@@ -1167,11 +1254,15 @@ export function CreateLLMApiKeyForm({
                   name="secretKey"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>API Key</FormLabel>
+                      <FormLabel>{tAuto("api_key_47acd20")}</FormLabel>
                       <FormDescription>
                         {isLangfuseCloud
-                          ? "Your API keys are stored encrypted on our servers."
-                          : "Your API keys are stored encrypted in your database."}
+                          ? tAutoI18n(
+                              "your_api_keys_are_stored_encrypted_on_our_servers_10cfd6c",
+                            )
+                          : tAutoI18n(
+                              "your_api_keys_are_stored_encrypted_in_your_database_f94a778",
+                            )}
                       </FormDescription>
                       <FormControl>
                         <Input
@@ -1199,7 +1290,7 @@ export function CreateLLMApiKeyForm({
                   name="baseURL"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>API Base URL</FormLabel>
+                      <FormLabel>{tAuto("api_base_url_51cdd42")}</FormLabel>
                       <FormDescription>
                         Please add the base URL in the following format (or
                         compatible API):
@@ -1237,8 +1328,8 @@ export function CreateLLMApiKeyForm({
                   >
                     <span>
                       {showAdvancedSettings
-                        ? "Hide advanced settings"
-                        : "Show advanced settings"}
+                        ? tAutoI18n("hide_advanced_settings_266f399")
+                        : tAutoI18n("show_advanced_settings_065144e")}
                     </span>
                     <ChevronDown
                       className={`ml-1 h-4 w-4 transition-transform ${showAdvancedSettings ? "rotate-180" : "rotate-0"}`}
@@ -1255,10 +1346,11 @@ export function CreateLLMApiKeyForm({
                     name="baseURL"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>API Base URL</FormLabel>
+                        <FormLabel>{tAuto("api_base_url_51cdd42")}</FormLabel>
                         <FormDescription>
-                          Leave blank to use the default base URL for the given
-                          LLM adapter.{" "}
+                          {tAutoI18n(
+                            "leave_blank_to_use_the_default_base_url_for_the_give_a5f5829",
+                          )}{" "}
                           {currentAdapter === LLMAdapter.OpenAI && (
                             <span>
                               OpenAI default: https://api.openai.com/v1
@@ -1273,7 +1365,10 @@ export function CreateLLMApiKeyForm({
                         </FormDescription>
 
                         <FormControl>
-                          <Input {...field} placeholder="default" />
+                          <Input
+                            {...field}
+                            placeholder={tAuto("default_7505d64")}
+                          />
                         </FormControl>
 
                         <FormMessage />
@@ -1288,15 +1383,25 @@ export function CreateLLMApiKeyForm({
                       name="vertexAILocation"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Location (Optional)</FormLabel>
+                          <FormLabel>
+                            {tAuto("location_optional_1fb67e5")}
+                          </FormLabel>
                           <FormDescription>
-                            Google Cloud region (e.g., global, us-central1,
-                            europe-west4). Defaults to{" "}
-                            <span className="font-bold">global</span> as
-                            required for Gemini 3 models.
+                            {tAutoI18n(
+                              "google_cloud_region_e_g_global_us_central1_europe_we_4c30297",
+                            )}{" "}
+                            <span className="font-bold">
+                              {tAuto("global_9027cc5")}
+                            </span>{" "}
+                            {tAutoI18n(
+                              "as_required_for_gemini_3_models_049da18",
+                            )}{" "}
                           </FormDescription>
                           <FormControl>
-                            <Input {...field} placeholder="global" />
+                            <Input
+                              {...field}
+                              placeholder={tAuto("global_9027cc5")}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -1313,10 +1418,13 @@ export function CreateLLMApiKeyForm({
                         <FormItem>
                           <span className="flex">
                             <span className="flex-1">
-                              <FormLabel>Use Responses API</FormLabel>
+                              <FormLabel>
+                                {tAuto("use_responses_api_5dbf5d3")}
+                              </FormLabel>
                               <FormDescription>
-                                Route OpenAI requests through the Responses API
-                                instead of Chat Completions.
+                                {tAuto(
+                                  "route_openai_requests_through_the_responses_api_inst_5a842f9",
+                                )}{" "}
                               </FormDescription>
                             </span>
 
@@ -1347,10 +1455,13 @@ export function CreateLLMApiKeyForm({
                       <FormItem>
                         <span className="flex">
                           <span className="flex-1">
-                            <FormLabel>Enable default models</FormLabel>
+                            <FormLabel>
+                              {tAuto("enable_default_models_01178ff")}
+                            </FormLabel>
                             <FormDescription>
-                              Default models for the selected adapter will be
-                              available in Langfuse features.
+                              {tAuto(
+                                "default_models_for_the_selected_adapter_will_be_avai_e327317",
+                              )}{" "}
                             </FormDescription>
                           </span>
 
@@ -1384,7 +1495,7 @@ export function CreateLLMApiKeyForm({
                 className="w-full"
                 onClick={() => setAdapterSelectOpen(true)}
               >
-                Select an adapter
+                {tAuto("select_an_adapter_b0a508b")}{" "}
               </Button>
             ) : (
               <Button
@@ -1392,7 +1503,9 @@ export function CreateLLMApiKeyForm({
                 className="w-full"
                 loading={form.formState.isSubmitting}
               >
-                {mode === "create" ? "Create connection" : "Save changes"}
+                {mode === "create"
+                  ? tAutoI18n("create_connection_31751ee")
+                  : tAutoI18n("save_changes_179359b")}
               </Button>
             )}
             {form.formState.errors.root && (

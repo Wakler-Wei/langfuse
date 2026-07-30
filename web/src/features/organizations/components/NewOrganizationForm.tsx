@@ -15,12 +15,14 @@ import { api } from "@/src/utils/api";
 import { useSession } from "next-auth/react";
 import { organizationFormSchema } from "@/src/features/organizations/utils/organizationNameSchema";
 import { usePostHogClientCapture } from "@/src/features/posthog-analytics/usePostHogClientCapture";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export const NewOrganizationForm = ({
   onSuccess,
 }: {
   onSuccess: (orgId: string) => void | Promise<void>;
 }) => {
+  const tAuto = useAutoTranslations();
   const { update: updateSession } = useSession();
 
   const form = useForm({
@@ -71,10 +73,10 @@ export const NewOrganizationForm = ({
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Organization name</FormLabel>
+              <FormLabel>{tAuto("organization_name_9eab9ee")}</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="my-org"
+                  placeholder={tAuto("my_org_063b06c")}
                   {...field}
                   data-testid="new-org-name-input"
                 />
@@ -84,7 +86,7 @@ export const NewOrganizationForm = ({
           )}
         />
         <Button type="submit" loading={createOrgMutation.isPending}>
-          Create
+          {tAuto("create_6e157c5")}{" "}
         </Button>
       </form>
     </Form>

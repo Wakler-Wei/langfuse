@@ -27,12 +27,14 @@ import { api } from "@/src/utils/api";
 import { StripeCancellationButton } from "./StripeCancellationButton";
 import { StripeSwitchPlanButton } from "./StripeSwitchPlanButton";
 import { StripeKeepPlanButton } from "./StripeKeepPlanButton";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export const BillingSwitchPlanDialog = ({
   disabled = false,
 }: {
   disabled?: boolean;
 }) => {
+  const tAuto = useAutoTranslations();
   const [processingPlanId, setProcessingPlanId] = useState<string | null>(null);
   const [_opId, setOpId] = useState<string | null>(null);
 
@@ -56,7 +58,7 @@ export const BillingSwitchPlanDialog = ({
       onError: () => {
         setProcessingPlanId(null);
         setOpId(null);
-        toast.error("Failed to start checkout session");
+        toast.error(tAuto("failed_to_start_checkout_session_457136f"));
       },
     });
 
@@ -69,17 +71,17 @@ export const BillingSwitchPlanDialog = ({
       }}
     >
       <DialogTrigger asChild>
-        <Button disabled={disabled}>Change plan</Button>
+        <Button disabled={disabled}>{tAuto("change_plan_5dccc31")}</Button>
       </DialogTrigger>
       <DialogContent className="max-w-5xl">
         <DialogHeader>
           <div className="flex flex-row items-center justify-between">
-            <DialogTitle>Plans</DialogTitle>
+            <DialogTitle>{tAuto("plans_cf2e5f2")}</DialogTitle>
             <ActionButton
               variant="secondary"
               href="https://langfuse.com/pricing"
             >
-              Comparison of plans ↗
+              {tAuto("comparison_of_plans_f6b1b82")}{" "}
             </ActionButton>
           </div>
         </DialogHeader>
@@ -104,22 +106,30 @@ export const BillingSwitchPlanDialog = ({
                     <div className="mb-4">
                       {/* Labels above plan title */}
                       <div className="mb-1 h-5 text-xs font-bold text-blue-700">
-                        {isCurrentPlan && <span>Current Plan</span>}
+                        {isCurrentPlan && (
+                          <span>{tAuto("current_plan_440a9f2")}</span>
+                        )}
                         {scheduledPlanSwitch &&
                           scheduledPlanSwitch.newPlanId ===
                             product.stripeProductId && (
-                            <span className="ml-1">Starts next period</span>
+                            <span className="ml-1">
+                              {tAuto("starts_next_period_3f449c3")}
+                            </span>
                           )}
                         {scheduledPlanSwitch &&
                           organization?.cloudConfig?.stripe?.activeProductId ===
                             product.stripeProductId && (
-                            <span className="ml-1">(Until next period)</span>
+                            <span className="ml-1">
+                              {tAuto("until_next_period_105ff3e")}
+                            </span>
                           )}
                         {!scheduledPlanSwitch &&
                           cancellation?.isCancelled &&
                           organization?.cloudConfig?.stripe?.activeProductId ===
                             product.stripeProductId && (
-                            <span className="ml-1">(Until next period)</span>
+                            <span className="ml-1">
+                              {tAuto("until_next_period_105ff3e")}
+                            </span>
                           )}
                       </div>
                       <h3 className="text-2xl font-bold">
@@ -137,7 +147,7 @@ export const BillingSwitchPlanDialog = ({
                             rel="noreferrer"
                             className="underline"
                           >
-                            usage calculator ↗
+                            {tAuto("usage_calculator_28922c0")}{" "}
                           </a>
                         </div>
                       </div>
@@ -146,7 +156,9 @@ export const BillingSwitchPlanDialog = ({
                       {product.checkout?.description}
                     </div>
                     <div className="space-y-2">
-                      <div className="text-sm font-bold">Main features:</div>
+                      <div className="text-sm font-bold">
+                        {tAuto("main_features_e9979a0")}
+                      </div>
                       <ul className="text-muted-foreground list-inside list-disc space-y-1 text-sm">
                         {product.checkout?.mainFeatures.map(
                           (feature, index) => (
@@ -160,7 +172,7 @@ export const BillingSwitchPlanDialog = ({
                       target="_blank"
                       className="text-muted-foreground hover:text-foreground mt-auto block py-4 text-sm"
                     >
-                      Learn more about plan →
+                      {tAuto("learn_more_about_plan_aeef39d")}{" "}
                     </Link>
                     {/* The default behavior the user is on a paid plan.*/}
                     {organization?.cloudConfig?.stripe?.activeProductId ? (
@@ -191,8 +203,8 @@ export const BillingSwitchPlanDialog = ({
                               !scheduledPlanSwitch && (
                                 <Button className="w-full" disabled>
                                   {!hasValidPaymentMethod
-                                    ? "Payment method required"
-                                    : "Current plan"}
+                                    ? tAuto("payment_method_required_146d09b")
+                                    : tAuto("current_plan_ec5cfba")}
                                 </Button>
                               )}
                           </>
@@ -203,7 +215,7 @@ export const BillingSwitchPlanDialog = ({
                           scheduledPlanSwitch.newPlanId ===
                             product.stripeProductId && (
                             <Button className="w-full" disabled>
-                              Scheduled
+                              {tAuto("scheduled_1cd1bda")}{" "}
                             </Button>
                           )}
 
@@ -227,7 +239,7 @@ export const BillingSwitchPlanDialog = ({
                             />
                           ) : (
                             <Button className="w-full" disabled>
-                              Payment method required
+                              {tAuto("payment_method_required_146d09b")}{" "}
                             </Button>
                           ))}
 
@@ -249,7 +261,7 @@ export const BillingSwitchPlanDialog = ({
                             />
                           ) : (
                             <Button className="w-full" disabled>
-                              Payment method required
+                              {tAuto("payment_method_required_146d09b")}{" "}
                             </Button>
                           ))}
                       </div>
@@ -284,7 +296,9 @@ export const BillingSwitchPlanDialog = ({
                               processingPlanId === product.stripeProductId
                             }
                           >
-                            {product.checkout?.cta ? "Select" : "Select plan"}
+                            {product.checkout?.cta
+                              ? tAuto("select_8598222")
+                              : tAuto("select_plan_4e6b814")}
                           </ActionButton>
                         </div>
                         {/* Optional checkout CTA button for non-paid plan users */}

@@ -8,6 +8,7 @@ import {
   V4MigrationDetailsContent,
 } from "@/src/features/v4-migration/V4MigrationContent";
 import { cn } from "@/src/utils/tailwind";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export const V4MigrationPanel = ({
   showCloseButton = true,
@@ -16,6 +17,7 @@ export const V4MigrationPanel = ({
   showCloseButton?: boolean;
   className?: string;
 }) => {
+  const tAuto = useAutoTranslations();
   const { open, setOpen, targetProject } = useV4MigrationPanel();
   const { project: routeProject } = useQueryProject();
 
@@ -37,13 +39,13 @@ export const V4MigrationPanel = ({
     >
       <div className="bg-background">
         <div className="flex min-h-11 w-full items-center justify-between gap-1 px-4 py-1">
-          <span className="text-sm font-bold">Update</span>
+          <span className="text-sm font-bold">{tAuto("update_fb91e24")}</span>
           {showCloseButton && (
             <Button
               variant="ghost"
               size="icon"
               onClick={() => setOpen(false)}
-              aria-label="Close"
+              aria-label={tAuto("close_bbfa773")}
             >
               <X className="h-4 w-4" />
             </Button>

@@ -54,6 +54,7 @@ import {
   getStandaloneMediaReferenceStrings,
 } from "@/src/components/ui/markdown-media.utils";
 import { exceedsMarkdownRenderLimits } from "@/src/components/ui/markdown-render-limits";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type ReactMarkdownNode = ReactMarkdownExtraProps["node"];
 type ReactMarkdownNodeChildren = Exclude<
@@ -226,6 +227,7 @@ function MarkdownRenderer({
   theme?: string;
   className?: string;
 }) {
+  const tAuto = useAutoTranslations();
   const promptReferenceProjectId = usePromptReferenceProjectId();
 
   // Guard against payloads that would overflow the JS call stack while
@@ -242,8 +244,9 @@ function MarkdownRenderer({
       <div className={cn("space-y-2 overflow-x-auto text-sm", className)}>
         <div className="text-muted-foreground flex items-center gap-1 text-xs">
           <Info className="h-3 w-3" />
-          Content is too large or deeply nested to render as markdown.
-          Displaying as plain text.
+          {tAuto(
+            "content_is_too_large_or_deeply_nested_to_render_as_m_0263229",
+          )}{" "}
         </div>
         <pre className="text-sm break-words whitespace-pre-wrap">
           {markdown}
@@ -449,7 +452,7 @@ function MarkdownRenderer({
       <>
         <div className="text-muted-foreground flex items-center gap-1 text-xs">
           <Info className="h-3 w-3" />
-          Markdown parsing failed. Displaying raw JSON.
+          {tAuto("markdown_parsing_failed_displaying_raw_json_d5a8f7c")}{" "}
         </div>
         <JSONView json={markdown} className="min-w-0" />
       </>
@@ -497,6 +500,7 @@ export function MarkdownView({
       role. Falls back to matching the title for callers without role data. */
   isSystemPrompt?: boolean;
 }) {
+  const tAuto = useAutoTranslations();
   const capture = usePostHogClientCapture();
   const { forcedTheme, resolvedTheme } = useTheme();
   const theme = forcedTheme ?? resolvedTheme;
@@ -554,7 +558,9 @@ export function MarkdownView({
       onClick={toggleCollapsed}
       className="w-fit text-xs underline"
     >
-      {isCollapsed ? "Expand system prompt" : "Collapse system prompt"}
+      {isCollapsed
+        ? tAuto("expand_system_prompt_6765d15")
+        : tAuto("collapse_system_prompt_a347f30")}
     </Button>
   ) : null;
 
@@ -672,7 +678,7 @@ export function MarkdownView({
       {remainingMedia.length > 0 && (
         <>
           <div className="text-muted-foreground mx-3 border-t px-2 py-1 text-xs">
-            Media
+            {tAuto("media_0c77aee")}{" "}
           </div>
           <div className="mx-3 flex flex-wrap gap-2 pt-1 pb-4">
             {remainingMedia.map((m) => (

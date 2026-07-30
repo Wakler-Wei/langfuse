@@ -8,6 +8,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/src/components/ui/command";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 interface User {
   id: string;
@@ -32,6 +33,8 @@ export function MentionAutocomplete({
   onClose: _onClose,
   onSelectedIndexChange,
 }: MentionAutocompleteProps) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const selectedItemRef = useRef<HTMLDivElement>(null);
 
   // Scroll selected item into view
@@ -51,12 +54,12 @@ export function MentionAutocomplete({
     <div
       className="absolute right-0 bottom-full left-0 z-50 mb-1"
       role="region"
-      aria-label="User mention suggestions"
+      aria-label={tAuto("user_mention_suggestions_d43cf08")}
     >
       <Command
         className="max-h-60 rounded-md border shadow-md"
         value={selectedUserId}
-        aria-label="Mention user autocomplete"
+        aria-label={tAuto("mention_user_autocomplete_c61d72b")}
       >
         <CommandList
           role="listbox"
@@ -69,11 +72,13 @@ export function MentionAutocomplete({
               aria-live="polite"
             >
               <Spinner size="sm" />
-              <span className="sr-only">Loading users...</span>
+              <span className="sr-only">{tAuto("loading_users_37282b6")}</span>
             </div>
           )}
           {!isLoading && users.length === 0 && (
-            <CommandEmpty role="status">No users found</CommandEmpty>
+            <CommandEmpty role="status">
+              {tAuto("no_users_found_612eb3c")}
+            </CommandEmpty>
           )}
           {!isLoading && users.length > 0 && (
             <>
@@ -121,7 +126,8 @@ export function MentionAutocomplete({
                   role="status"
                   aria-live="polite"
                 >
-                  and {remainingCount} more...
+                  {tAutoI18n("and_cffa50a")} {remainingCount}{" "}
+                  {tAutoI18n("more_4fd94bf")}{" "}
                 </div>
               )}
             </>

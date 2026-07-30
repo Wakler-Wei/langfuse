@@ -3,6 +3,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/src/components/ui/hover-card";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type EvaluatorPromptPreviewProps = {
   trigger: React.ReactNode;
@@ -10,6 +11,7 @@ type EvaluatorPromptPreviewProps = {
 };
 
 export function EvaluatorPromptPreview(props: EvaluatorPromptPreviewProps) {
+  const tAuto = useAutoTranslations();
   const { trigger, previewContent } = props;
 
   return (
@@ -21,7 +23,9 @@ export function EvaluatorPromptPreview(props: EvaluatorPromptPreviewProps) {
         onWheel={(event) => event.stopPropagation()}
       >
         <p className="text-muted-foreground mb-2 text-xs">
-          Prompt preview with the first selected observation
+          {tAuto(
+            "prompt_preview_with_the_first_selected_observation_39b65a1",
+          )}{" "}
         </p>
         <pre
           className="bg-muted/20 max-h-[320px] overflow-y-auto rounded-md border p-2 text-xs wrap-break-word whitespace-pre-wrap"

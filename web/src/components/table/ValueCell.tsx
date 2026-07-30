@@ -19,6 +19,11 @@ import {
   type MetadataFilterOperator,
 } from "@/src/features/events/lib/eventsTablePaths";
 import { Copy, Check, EllipsisVertical, Filter, FilterX } from "lucide-react";
+import {
+  I18nText,
+  type AutoTranslator,
+  useAutoTranslations,
+} from "@/src/features/i18n/I18nText";
 
 /**
  * Enables the per-row actions menu in a metadata JSON view: copy value/
@@ -84,9 +89,13 @@ function getValueType(value: unknown): JsonTableRow["type"] {
   return typeof value as JsonTableRow["type"];
 }
 
-function renderArrayValue(arr: unknown[]): JSX.Element {
+function renderArrayValue(arr: unknown[], tAuto: AutoTranslator): JSX.Element {
   if (arr.length === 0) {
-    return <span className={PREVIEW_TEXT_CLASSES}>empty list</span>;
+    return (
+      <span className={PREVIEW_TEXT_CLASSES}>
+        <I18nText id="empty_list_a7e06f6" />
+      </span>
+    );
   }
 
   if (arr.length <= SMALL_ARRAY_THRESHOLD) {
@@ -123,17 +132,31 @@ function renderArrayValue(arr: unknown[]): JSX.Element {
     .join(", ");
   return (
     <span className={PREVIEW_TEXT_CLASSES}>
-      [{preview}, ...{arr.length - ARRAY_PREVIEW_ITEMS} more]
+      {tAuto("array_preview_more_6f8298d", {
+        preview,
+        count: arr.length - ARRAY_PREVIEW_ITEMS,
+      })}
     </span>
   );
 }
 
-function renderObjectValue(obj: Record<string, unknown>): JSX.Element {
+function renderObjectValue(
+  obj: Record<string, unknown>,
+  tAuto: AutoTranslator,
+): JSX.Element {
   const keys = Object.keys(obj);
   if (keys.length === 0) {
-    return <span className={PREVIEW_TEXT_CLASSES}>empty object</span>;
+    return (
+      <span className={PREVIEW_TEXT_CLASSES}>
+        <I18nText id="empty_object_565e3f9" />
+      </span>
+    );
   }
-  return <span className={PREVIEW_TEXT_CLASSES}>{keys.length} items</span>;
+  return (
+    <span className={PREVIEW_TEXT_CLASSES}>
+      {tAuto("item_count_29d38ba", { count: keys.length })}
+    </span>
+  );
 }
 
 function getValueStringLength(value: unknown): number {
@@ -215,6 +238,7 @@ function ValueCellActionsMenu({
   row: Row<JsonTableRow>;
   metadataActions: MetadataFilterActions;
 }) {
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const { value, type, hasChildren, level } = row.original;
 
@@ -279,8 +303,8 @@ function ValueCellActionsMenu({
         <Button
           variant="ghost"
           size="icon"
-          aria-label="Value actions"
-          title="Actions"
+          aria-label={tAuto("value_actions_9924fcd")}
+          title={tAuto("actions_c3cd636")}
           className="bg-background/80 hover:bg-background absolute top-1/2 right-1 h-4 w-4 -translate-y-1/2 border p-0 opacity-0 shadow-xs transition-opacity duration-200 group-hover:opacity-100 data-[state=open]:opacity-100"
           onClick={(e) => e.stopPropagation()}
         >
@@ -294,11 +318,13 @@ function ValueCellActionsMenu({
       >
         <DropdownMenuItem className="text-xs" onSelect={handleCopyData}>
           <Copy className="mr-2 h-3.5 w-3.5 shrink-0" />
-          {hasChildren ? "Copy structure" : "Copy value"}
+          {hasChildren
+            ? tAuto("copy_structure_126478a")
+            : tAuto("copy_value_4c924dc")}
         </DropdownMenuItem>
         <DropdownMenuItem className="text-xs" onSelect={handleCopyPath}>
           <Copy className="mr-2 h-3.5 w-3.5 shrink-0" />
-          Copy path
+          {tAuto("copy_path_9804556")}{" "}
         </DropdownMenuItem>
         {isScalarLeaf && (
           <>
@@ -309,7 +335,7 @@ function ValueCellActionsMenu({
             >
               <Filter className="mr-2 h-3.5 w-3.5 shrink-0" />
               <span className="flex min-w-0 flex-col">
-                <span>Include in filter</span>
+                <span>{tAuto("include_in_filter_70ce216")}</span>
                 <span
                   className="text-muted-foreground truncate font-mono"
                   title={includeFilterText}
@@ -324,7 +350,7 @@ function ValueCellActionsMenu({
             >
               <FilterX className="mr-2 h-3.5 w-3.5 shrink-0" />
               <span className="flex min-w-0 flex-col">
-                <span>Exclude from filter</span>
+                <span>{tAuto("exclude_from_filter_f3f6f78")}</span>
                 <span
                   className="text-muted-foreground truncate font-mono"
                   title={excludeFilterText}
@@ -354,6 +380,7 @@ export const ValueCell = memo(
     preserveStringWhitespace?: boolean;
     metadataActions?: MetadataFilterActions;
   }) => {
+    const tAuto = useAutoTranslations();
     const { value, type } = row.original;
     const cellId = `${row.id}-value`;
     const isCellExpanded = expandedCells.has(cellId);
@@ -430,7 +457,7 @@ export const ValueCell = memo(
           return {
             content: (
               <span className="text-gray-500 italic dark:text-gray-400">
-                null
+                {tAuto("null_2be88ca")}{" "}
               </span>
             ),
             needsTruncation: false,
@@ -439,7 +466,7 @@ export const ValueCell = memo(
           return {
             content: (
               <span className="text-gray-500 dark:text-gray-400">
-                undefined
+                {tAuto("undefined_d5d4cd0")}{" "}
               </span>
             ),
             needsTruncation: false,
@@ -448,7 +475,7 @@ export const ValueCell = memo(
           const arrayValue = value as unknown[];
           // Arrays always show previews, never truncate
           return {
-            content: renderArrayValue(arrayValue),
+            content: renderArrayValue(arrayValue, tAuto),
             needsTruncation: false,
           };
         }
@@ -456,7 +483,7 @@ export const ValueCell = memo(
           const objectValue = value as Record<string, unknown>;
           // Objects always show previews, never truncate
           return {
-            content: renderObjectValue(objectValue),
+            content: renderObjectValue(objectValue, tAuto),
             needsTruncation: false,
           };
         }
@@ -509,8 +536,8 @@ export const ValueCell = memo(
             size="icon"
             className="bg-background/80 hover:bg-background absolute top-0 right-0 h-5 w-5 border p-0.5 opacity-0 shadow-xs transition-opacity duration-200 group-hover:opacity-100"
             onClick={handleCopy}
-            title="Copy value"
-            aria-label="Copy cell value"
+            title={tAuto("copy_value_4c924dc")}
+            aria-label={tAuto("copy_cell_value_6343990")}
           >
             {showCopySuccess ? (
               <Check className="h-2.5 w-2.5 text-green-600" />

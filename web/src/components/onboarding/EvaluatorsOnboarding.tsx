@@ -6,41 +6,48 @@ import {
 import { Bot, Gauge, Zap, BarChart4 } from "lucide-react";
 import { useIsCodeEvalEnabled } from "@/src/features/evals/hooks/useIsCodeEvalEnabled";
 import { EvalTemplateSourceCodeLanguage } from "@langfuse/shared";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 interface EvaluatorsOnboardingProps {
   projectId: string;
 }
 
 export function EvaluatorsOnboarding({ projectId }: EvaluatorsOnboardingProps) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const { enabled, supportedSourceCodeLanguages } = useIsCodeEvalEnabled();
   const codeEvaluatorLanguageDescription =
     supportedSourceCodeLanguages.includes(EvalTemplateSourceCodeLanguage.PYTHON)
-      ? "TypeScript or Python"
-      : "TypeScript";
+      ? tAuto("typescript_or_python_3a2da6a")
+      : tAutoI18n("typescript_d4a86cb");
 
   const llmAsJudgeValuePropositions: ValueProposition[] = [
     {
-      title: "Automate evaluations",
-      description:
-        "Use LLM-as-a-judge to automatically evaluate your traces without manual review",
+      title: tAuto("automate_evaluations_8e55cfa"),
+      description: tAuto(
+        "use_llm_as_a_judge_to_automatically_evaluate_your_tr_b5ab156",
+      ),
       icon: <Bot className="h-4 w-4" />,
     },
     {
-      title: "Measure quality",
-      description:
-        "Create custom evaluation criteria to measure the quality of your LLM outputs",
+      title: tAuto("measure_quality_e88ae14"),
+      description: tAuto(
+        "create_custom_evaluation_criteria_to_measure_the_qua_e28bb27",
+      ),
       icon: <Gauge className="h-4 w-4" />,
     },
     {
-      title: "Scale efficiently",
-      description:
-        "Evaluate thousands of traces automatically with customizable sampling rates",
+      title: tAuto("scale_efficiently_ac12761"),
+      description: tAuto(
+        "evaluate_thousands_of_traces_automatically_with_cust_d9f2863",
+      ),
       icon: <Zap className="h-4 w-4" />,
     },
     {
-      title: "Track performance",
-      description:
-        "Monitor evaluation metrics over time to identify trends and improvements",
+      title: tAuto("track_performance_fa6925b"),
+      description: tAuto(
+        "monitor_evaluation_metrics_over_time_to_identify_tre_beb7c1e",
+      ),
       icon: <BarChart4 className="h-4 w-4" />,
     },
   ];
@@ -48,34 +55,39 @@ export function EvaluatorsOnboarding({ projectId }: EvaluatorsOnboardingProps) {
   if (enabled) {
     return (
       <SplashScreen
-        title="Get started with evaluations"
+        title={tAuto("get_started_with_evaluations_cc35abd")}
         description={
           <>
-            Use evaluators to score traces and observations automatically.
-            Langfuse supports two evaluator types:
+            {tAuto(
+              "use_evaluators_to_score_traces_and_observations_auto_b24f29d",
+            )}{" "}
             <ul className="text-muted-foreground mx-auto mt-2 max-w-2xl list-disc space-y-2 pl-5 text-left text-sm">
               <li>
                 <span className="text-foreground font-bold">
-                  LLM-as-a-judge evaluators
+                  {tAuto("llm_as_a_judge_evaluators_a3a9664")}{" "}
                 </span>{" "}
-                use an LLM to score outputs against natural-language criteria.
+                {tAutoI18n(
+                  "use_an_llm_to_score_outputs_against_natural_language_dfce444",
+                )}{" "}
               </li>
               <li>
                 <span className="text-foreground font-bold">
-                  Code evaluators
+                  {tAuto("code_evaluators_98df2cb")}{" "}
                 </span>{" "}
-                use {codeEvaluatorLanguageDescription} logic for deterministic,
-                custom scoring.
+                {tAuto(
+                  "use_value0_logic_for_deterministic_custom_scoring_3756630",
+                  { value0: codeEvaluatorLanguageDescription },
+                )}{" "}
               </li>
             </ul>
           </>
         }
         primaryAction={{
-          label: "Create Evaluator",
+          label: tAuto("create_evaluator_2fa1ea6"),
           href: `/project/${projectId}/evals/new`,
         }}
         secondaryAction={{
-          label: "Learn More",
+          label: tAuto("learn_more_378cbbf"),
           href: "https://langfuse.com/docs/evaluation",
         }}
       />
@@ -84,15 +96,17 @@ export function EvaluatorsOnboarding({ projectId }: EvaluatorsOnboardingProps) {
 
   return (
     <SplashScreen
-      title="Get Started with LLM-as-a-Judge Evaluations"
-      description="Create evaluation templates and evaluators to automatically score your traces with LLM-as-a-judge. Set up custom evaluation criteria and let AI help you measure the quality of your outputs."
+      title={tAuto("get_started_with_llm_as_a_judge_evaluations_cf4b79b")}
+      description={tAuto(
+        "create_evaluation_templates_and_evaluators_to_automa_f1da44d",
+      )}
       valuePropositions={llmAsJudgeValuePropositions}
       primaryAction={{
-        label: "Create Evaluator",
+        label: tAuto("create_evaluator_2fa1ea6"),
         href: `/project/${projectId}/evals/new`,
       }}
       secondaryAction={{
-        label: "Learn More",
+        label: tAuto("learn_more_378cbbf"),
         href: "https://langfuse.com/docs/evaluation/evaluation-methods/llm-as-a-judge",
       }}
       videoSrc="https://static.langfuse.com/prod-assets/onboarding/scores-llm-as-a-judge-overview-v1.mp4"

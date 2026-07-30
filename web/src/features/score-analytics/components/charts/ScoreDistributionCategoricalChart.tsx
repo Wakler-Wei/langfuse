@@ -8,6 +8,7 @@ import {
 } from "@/src/components/ui/chart";
 import { ScoreChartLegendContent } from "./ScoreChartLegendContent";
 import { ScoreChartTooltip } from "../../lib/ScoreChartTooltip";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 interface CategoricalChartProps {
   distribution1: Array<{ binIndex: number; count: number }>;
@@ -40,6 +41,7 @@ export function ScoreDistributionCategoricalChart({
   score2Source,
   colors,
 }: CategoricalChartProps) {
+  const tAuto = useAutoTranslations();
   const hasStackedData = Boolean(
     stackedDistribution && stackedDistribution.length > 0,
   );
@@ -179,7 +181,7 @@ export function ScoreDistributionCategoricalChart({
         // Special handling for unmatched category
         if (key === "__unmatched__") {
           stackConfig[key] = {
-            label: "no match",
+            label: tAuto("no_match_b6ca966"),
             color: "hsl(var(--muted))", // Light grey for unmatched
           };
           return;
@@ -230,6 +232,8 @@ export function ScoreDistributionCategoricalChart({
     score2Source,
     colors,
     categories,
+    ,
+    tAuto,
   ]);
 
   return (

@@ -11,6 +11,7 @@ import { deriveSyncStatus } from "@/src/features/blobstorage-integration/deriveS
 import { type BlobStorageSyncStatus } from "@/src/features/blobstorage-integration/types";
 import { BlobStorageIntegrationContainer } from "@/src/features/blobstorage-integration/components/BlobStorageIntegrationContainer";
 import { BlobStorageStatusSection } from "@/src/features/blobstorage-integration/components/BlobStorageStatusSection";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const syncStatusToBadge: Record<BlobStorageSyncStatus, string> = {
   up_to_date: "active",
@@ -33,6 +34,7 @@ const syncStatusFromConfig = (
   });
 
 export default function BlobStorageIntegrationSettings() {
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const projectId = router.query.projectId as string;
   const hasAccess = useHasProjectAccess({
@@ -64,7 +66,7 @@ export default function BlobStorageIntegrationSettings() {
   return (
     <ContainerPage
       headerProps={{
-        title: "Blob Storage Integration",
+        title: tAuto("blob_storage_integration_104da75"),
         breadcrumb: [
           { name: "Settings", href: `/project/${projectId}/settings` },
         ],
@@ -79,7 +81,7 @@ export default function BlobStorageIntegrationSettings() {
               href="https://langfuse.com/docs/api-and-data-platform/features/export-to-blob-storage"
               target="_blank"
             >
-              Integration Docs ↗
+              {tAuto("integration_docs_aca3483")}{" "}
             </Link>
           </Button>
         ),
@@ -95,8 +97,9 @@ export default function BlobStorageIntegrationSettings() {
       </p>
       {!hasAccess && (
         <p className="text-sm">
-          Your current role does not grant you access to these settings, please
-          reach out to your project admin or owner.
+          {tAuto(
+            "your_current_role_does_not_grant_you_access_to_these_9dfff7c",
+          )}{" "}
         </p>
       )}
       {state.data?.config && (
@@ -104,7 +107,7 @@ export default function BlobStorageIntegrationSettings() {
       )}
       {hasAccess && (
         <>
-          <Header title="Configuration" className="mt-8" />
+          <Header title={tAuto("configuration_7541648")} className="mt-8" />
           <Card className="p-3">
             <BlobStorageIntegrationContainer
               config={state.data?.config ?? null}

@@ -20,6 +20,7 @@ import { api } from "@/src/utils/api";
 import { JsonSkeleton } from "@/src/components/ui/CodeJsonViewer";
 import { CommentDrawerButton } from "@/src/features/comments/CommentDrawerButton";
 import { getNumberFromMap } from "@/src/utils/map-utils";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type SessionAnnotationQueueItem = AnnotationQueueItem & {
   parentTraceId?: string | null;
@@ -42,6 +43,8 @@ const EMPTY_FILTER_STATE: [] = [];
 export const SessionAnnotationProcessor: React.FC<
   SessionAnnotationProcessorProps
 > = ({ item, data, configs, projectId }) => {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const [visibleTraces, setVisibleTraces] = useState(PAGE_SIZE);
   const { isBetaEnabled } = useV4Beta();
 
@@ -144,10 +147,12 @@ export const SessionAnnotationProcessor: React.FC<
           <div className="flex max-w-full min-w-0 shrink flex-col">
             <div className="flex max-w-full min-w-0 flex-wrap items-center gap-1">
               {data?.environment && (
-                <Badge variant="tertiary">Env: {data.environment}</Badge>
+                <Badge variant="tertiary">
+                  {tAutoI18n("env_9b9526d")} {data.environment}
+                </Badge>
               )}
               <Badge variant="outline">
-                Total traces: {totalTracesForBadge}
+                {tAutoI18n("total_traces_d0fba9f")} {totalTracesForBadge}
               </Badge>
             </div>
           </div>
@@ -177,7 +182,7 @@ export const SessionAnnotationProcessor: React.FC<
           {/* Error state for v4 beta traces */}
           {isBetaEnabled && tracesFromEventsQuery.isError && (
             <div className="text-destructive p-2 text-sm">
-              Failed to load traces for this session.
+              {tAuto("failed_to_load_traces_for_this_session_6e1c158")}{" "}
             </div>
           )}
           {/* Trace list - v4 path uses LazyTraceEventsRow for deferred loading */}
@@ -212,7 +217,8 @@ export const SessionAnnotationProcessor: React.FC<
                     href={`/project/${projectId}/traces/${trace.id}`}
                     className="text-xs hover:underline"
                   >
-                    Trace: {trace.name} ({trace.id})&nbsp;↗
+                    {tAutoI18n("trace_2ccf698")} {trace.name} ({trace.id}
+                    )&nbsp;↗
                   </Link>
                   <div className="text-muted-foreground text-xs">
                     {trace.timestamp.toLocaleString()}

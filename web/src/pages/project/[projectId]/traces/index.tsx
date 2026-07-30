@@ -11,8 +11,10 @@ import { useV4Beta } from "@/src/features/events/hooks/useV4Beta";
 import ObservationsEventsTable from "@/src/features/events/components/EventsTable";
 import { useQueryProject } from "@/src/features/projects/hooks";
 import { V4MigrationDelayBadge } from "@/src/features/v4-migration/V4MigrationDelayBadge";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export default function Traces() {
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const projectId = router.query.projectId as string;
   const { isBetaEnabled, isInitializing } = useV4Beta();
@@ -42,7 +44,7 @@ export default function Traces() {
     return (
       <Page
         headerProps={{
-          title: "Tracing",
+          title: tAuto("tracing_68c5084"),
           help: {
             description:
               "A trace represents a single function/api invocation. Traces contain observations. See [docs](https://langfuse.com/docs/observability/data-model) to learn more.",
@@ -59,13 +61,14 @@ export default function Traces() {
   return (
     <Page
       headerProps={{
-        title: "Tracing",
+        title: tAuto("tracing_68c5084"),
         titleBadges: <V4MigrationDelayBadge />,
         help: {
           description: (
             <>
-              A trace represents a single function/api invocation. Traces
-              contain observations. See{" "}
+              {tAuto(
+                "a_trace_represents_a_single_function_api_invocation__b25245c",
+              )}{" "}
               <a
                 href="https://langfuse.com/docs/observability/data-model"
                 target="_blank"
@@ -73,9 +76,9 @@ export default function Traces() {
                 className="decoration-primary/30 hover:decoration-primary underline"
                 onClick={(e) => e.stopPropagation()}
               >
-                docs
+                {tAuto("docs_71ab8b6")}{" "}
               </a>{" "}
-              to learn more.
+              {tAuto("to_learn_more_3d1d2de")}{" "}
             </>
           ),
           href: "https://langfuse.com/docs/observability/data-model",

@@ -19,8 +19,10 @@ import {
   getExperimentRunTabs,
 } from "@/src/features/navigation/utils/experiment-run-tabs";
 import Spinner from "@/src/components/design-system/Spinner/Spinner";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export default function ExperimentResults() {
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const projectId = router.query.projectId as string;
 
@@ -74,7 +76,7 @@ export default function ExperimentResults() {
   // Show spinner while session loads or while redirecting when beta is off
   if (!isExperimentsBetaActive) {
     return (
-      <Page headerProps={{ title: "Experiments" }}>
+      <Page headerProps={{ title: tAuto("experiments_e8f296b") }}>
         <div className="flex h-full items-center justify-center">
           <Spinner size="xl" variant="muted" />
         </div>
@@ -86,8 +88,8 @@ export default function ExperimentResults() {
     <Page
       headerProps={{
         title: hasBaseline
-          ? (experiment?.name ?? baselineId ?? "Results")
-          : "Results",
+          ? (experiment?.name ?? baselineId ?? tAuto("results_612e12d"))
+          : tAuto("results_612e12d"),
         itemType: "EXPERIMENT",
         breadcrumb: [
           { name: "Experiments", href: `/project/${projectId}/experiments` },
@@ -101,7 +103,9 @@ export default function ExperimentResults() {
             {hasBaseline && comparisonIds.length > 0 && (
               <Button variant="outline" onClick={clearBaseline}>
                 <X className="h-4 w-4" />
-                <span className="ml-2 hidden md:inline">Clear baseline</span>
+                <span className="ml-2 hidden md:inline">
+                  {tAuto("clear_baseline_31a196e")}
+                </span>
               </Button>
             )}
 

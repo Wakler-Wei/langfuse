@@ -14,6 +14,8 @@ import { mapLegacyUiTableFilterToView } from "@/src/features/dashboard/lib/dashb
 import { DashboardLineTimeSeriesChart } from "@/src/features/dashboard/components/DashboardLineTimeSeriesChart";
 import { useScheduledDashboardExecuteQuery } from "@/src/hooks/useDashboardQueryScheduler";
 import { useMemo } from "react";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
+import { useTranslations } from "next-intl";
 
 export const TracesAndObservationsTimeSeriesChart = ({
   className,
@@ -38,6 +40,8 @@ export const TracesAndObservationsTimeSeriesChart = ({
   schedulerId?: string;
   syncId?: string;
 }) => {
+  const tAuto = useAutoTranslations();
+  const tDashboard = useTranslations("Dashboard");
   const isV2 = metricsVersion === "v2";
 
   const tracesQuery: QueryType = {
@@ -79,10 +83,15 @@ export const TracesAndObservationsTimeSeriesChart = ({
       traces.data
         ? traces.data.map((item) => ({
             ts: new Date(item.time_dimension as any).getTime(),
-            values: [{ label: "Traces", value: Number(item.count_count) }],
+            values: [
+              {
+                label: tAuto("traces_194e807"),
+                value: Number(item.count_count),
+              },
+            ],
           }))
         : [],
-    [traces.data],
+    [traces.data, tAuto],
   );
 
   const total = traces.data?.reduce((acc, item) => {
@@ -159,26 +168,26 @@ export const TracesAndObservationsTimeSeriesChart = ({
   const data = isV2
     ? [
         {
-          tabTitle: "Observations by Level",
+          tabTitle: tDashboard("observationsByLevel"),
           data: transformedObservations,
           totalMetric: totalObservations,
-          metricDescription: `Observations tracked`,
+          metricDescription: tDashboard("observationsTracked"),
           chartMetricLabel: "Observations",
         },
       ]
     : [
         {
-          tabTitle: "Traces",
+          tabTitle: tDashboard("traces"),
           data: transformedTraces,
           totalMetric: total,
-          metricDescription: `Traces tracked`,
+          metricDescription: tDashboard("tracesTracked"),
           chartMetricLabel: "Traces",
         },
         {
-          tabTitle: "Observations by Level",
+          tabTitle: tDashboard("observationsByLevel"),
           data: transformedObservations,
           totalMetric: totalObservations,
-          metricDescription: `Observations tracked`,
+          metricDescription: tDashboard("observationsTracked"),
           chartMetricLabel: "Observations",
         },
       ];
@@ -186,7 +195,11 @@ export const TracesAndObservationsTimeSeriesChart = ({
   return (
     <DashboardCard
       className={className}
-      title={isV2 ? "Observations by time" : "Traces by time"}
+      title={
+        isV2
+          ? tAuto("observations_by_time_679fade")
+          : tAuto("traces_by_time_d7276d4")
+      }
       isLoading={
         isLoading || observations.isPending || (!isV2 && traces.isPending)
       }
@@ -230,7 +243,9 @@ export const TracesAndObservationsTimeSeriesChart = ({
                       observations.isPending ||
                       (!isV2 && traces.isPending)
                     }
-                    description="Traces contain details about LLM applications and can be created using the SDK."
+                    description={tAuto(
+                      "traces_contain_details_about_llm_applications_and_ca_cdb7d30",
+                    )}
                     href="https://langfuse.com/docs/observability/overview"
                     className="h-auto grow"
                   />

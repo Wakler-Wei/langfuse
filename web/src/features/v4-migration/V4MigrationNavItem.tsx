@@ -6,8 +6,10 @@ import { useQueryProject } from "@/src/features/projects/hooks";
 import { useProjectV4MigrationData } from "@/src/features/v4-migration/hooks/useV4MigrationData";
 import { getProjectMigrationReadiness } from "@/src/features/v4-migration/migrationData";
 import { useOpenV4MigrationPanel } from "@/src/features/v4-migration/hooks/useOpenV4MigrationPanel";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export function V4MigrationNavItem() {
+  const tAuto = useAutoTranslations();
   const v4UpgradeUiEnabled = useV4UpgradeUiEnabled();
   const openMigrationPanel = useOpenV4MigrationPanel();
   const { isMobile, setOpenMobile: setOpenMobileSidebar } = useSidebar();
@@ -34,10 +36,10 @@ export function V4MigrationNavItem() {
 
   const label =
     readiness === "checking"
-      ? "Checking"
+      ? tAuto("checking_97876b8")
       : readiness === "unavailable"
-        ? "Check status"
-        : "Action required";
+        ? tAuto("check_status_07adf97")
+        : tAuto("action_required_a5f995a");
 
   const handleClick = () => {
     capture("sidebar:v4_migration_card_clicked");

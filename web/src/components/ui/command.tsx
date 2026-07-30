@@ -16,6 +16,7 @@ import {
   DialogContent,
   DialogHeader,
 } from "@/src/components/ui/dialog";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const commandDialogSurfaceClass = "bg-popover";
 
@@ -41,6 +42,7 @@ const CommandDialog = ({
 }: DialogProps & {
   filter?: React.ComponentProps<typeof CommandPrimitive>["filter"];
 }) => {
+  const tAuto = useAutoTranslations();
   return (
     <Dialog {...props}>
       <DialogContent
@@ -55,7 +57,7 @@ const CommandDialog = ({
         overlayMode="invisible"
       >
         <DialogHeader className="sr-only p-0">
-          <DialogTitle>Search</DialogTitle>
+          <DialogTitle>{tAuto("search_bce0641")}</DialogTitle>
         </DialogHeader>
         <DialogBody className="p-0">
           <Command

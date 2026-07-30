@@ -2,6 +2,7 @@ import { type ScoreDomain } from "@langfuse/shared";
 import { type WithStringifiedMetadata } from "@/src/utils/clientSideDomainTypes";
 import { AnnotationForm } from "@/src/features/scores/components/AnnotationForm";
 import { Separator } from "@/src/components/ui/separator";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 interface DualAnnotationContentProps {
   projectId: string;
@@ -22,6 +23,7 @@ export function DualAnnotationContent({
   observationScores,
   traceScores,
 }: DualAnnotationContentProps) {
+  const tAuto = useAutoTranslations();
   const hasNonAnnotationScores = [...observationScores, ...traceScores].some(
     (score) => score.source !== "ANNOTATION",
   );
@@ -31,7 +33,7 @@ export function DualAnnotationContent({
       {/* Observation-level scores */}
       <div>
         <div className="text-muted-foreground mb-2 text-xs font-bold tracking-wide uppercase">
-          Observation Scores
+          {tAuto("observation_scores_b5b5535")}{" "}
         </div>
         <AnnotationForm
           serverScores={observationScores}
@@ -56,7 +58,7 @@ export function DualAnnotationContent({
       {/* Trace-level scores */}
       <div>
         <div className="text-muted-foreground mb-2 text-xs font-bold tracking-wide uppercase">
-          Trace Scores
+          {tAuto("trace_scores_991110a")}{" "}
         </div>
         <AnnotationForm
           serverScores={traceScores}
@@ -77,8 +79,9 @@ export function DualAnnotationContent({
 
       {hasNonAnnotationScores && (
         <div className="text-muted-foreground text-xs">
-          API and eval scores are hidden from this annotation drawer. Add manual
-          annotations above.
+          {tAuto(
+            "api_and_eval_scores_are_hidden_from_this_annotation__80eba76",
+          )}{" "}
         </div>
       )}
     </div>

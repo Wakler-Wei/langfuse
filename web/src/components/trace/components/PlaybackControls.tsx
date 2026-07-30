@@ -29,6 +29,7 @@ import { useTraceData } from "../contexts/TraceDataContext";
 import { useTraceGraphData } from "../contexts/TraceGraphDataContext";
 import { useSearch } from "../contexts/SearchContext";
 import { useViewPreferences } from "../contexts/ViewPreferencesContext";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 // A 22px ring around the ~28px (h-7) button; 2px stroke reads at this size.
 const RING_SIZE = 22;
@@ -37,6 +38,7 @@ const RING_R = (RING_SIZE - RING_STROKE) / 2;
 const RING_C = 2 * Math.PI * RING_R;
 
 export function PlaybackControls() {
+  const tAuto = useAutoTranslations();
   const { traceDuration } = useTraceData();
   const { isGraphViewAvailable, isLoading: isGraphDataLoading } =
     useTraceGraphData();
@@ -84,8 +86,16 @@ export function PlaybackControls() {
         variant="ghost"
         size="icon"
         onClick={isPlaying ? pause : play}
-        title={isPlaying ? "Pause playback" : "Play trace over time"}
-        aria-label={isPlaying ? "Pause playback" : "Play trace over time"}
+        title={
+          isPlaying
+            ? tAuto("pause_playback_d4bbd27")
+            : tAuto("play_trace_over_time_9c4d0b7")
+        }
+        aria-label={
+          isPlaying
+            ? tAuto("pause_playback_d4bbd27")
+            : tAuto("play_trace_over_time_9c4d0b7")
+        }
         className="relative h-7 w-7"
       >
         <svg
@@ -128,8 +138,8 @@ export function PlaybackControls() {
         variant="ghost"
         size="icon"
         onClick={stop}
-        title="Stop playback"
-        aria-label="Stop playback"
+        title={tAuto("stop_playback_3ee7638")}
+        aria-label={tAuto("stop_playback_3ee7638")}
         className="h-7 w-7"
       >
         <Square className="h-2.5 w-2.5" />

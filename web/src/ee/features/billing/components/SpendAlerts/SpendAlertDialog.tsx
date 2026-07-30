@@ -22,6 +22,7 @@ import { api } from "@/src/utils/api";
 import { usePostHogClientCapture } from "@/src/features/posthog-analytics/usePostHogClientCapture";
 import { toast } from "sonner";
 import { Info } from "lucide-react";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const spendAlertSchema = z.object({
   title: z
@@ -56,6 +57,7 @@ export function SpendAlertDialog({
   onOpenChange,
   onSuccess,
 }: SpendAlertDialogProps) {
+  const tAuto = useAutoTranslations();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const capture = usePostHogClientCapture();
 
@@ -86,7 +88,7 @@ export function SpendAlertDialog({
           alertId: alert.id,
           limit: data.limit,
         });
-        toast.success("Spend alert updated successfully");
+        toast.success(tAuto("spend_alert_updated_successfully_89738f4"));
       } else {
         // Create new alert
         await createMutation.mutateAsync({
@@ -98,13 +100,15 @@ export function SpendAlertDialog({
           orgId,
           limit: data.limit,
         });
-        toast.success("Spend alert created successfully");
+        toast.success(tAuto("spend_alert_created_successfully_ea171b8"));
       }
       onSuccess();
     } catch (error) {
       console.error("Failed to save spend alert:", error);
       toast.error(
-        `Failed to ${alert ? "update" : "create"} spend alert. Please try again.`,
+        tAuto("failed_to_value0_spend_alert_please_try_again_25c970a", {
+          value0: alert ? "update" : "create",
+        }),
       );
     } finally {
       setIsSubmitting(false);
@@ -115,7 +119,7 @@ export function SpendAlertDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="p-4 sm:max-w-[425px]">
         <DialogTitle>
-          {alert ? "Edit Spend Alert" : "Create Spend Alert"}
+          {alert ? tAuto("edit_spend_alert_6621068") : tAuto("create_spend_alert_8dae0e9")}
         </DialogTitle>
         <DialogDescription className="text-muted-foreground pt-1 pb-2 text-sm">
           Get notified when your organization&apos;s spending exceeds a limit.
@@ -127,9 +131,12 @@ export function SpendAlertDialog({
               name="title"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Alert Title</FormLabel>
+                  <FormLabel>{tAuto("alert_title_46c6fa4")}</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g., Production Alert" {...field} />
+                    <Input
+                      placeholder={tAuto("e_g_production_alert_b224e11")}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -140,7 +147,7 @@ export function SpendAlertDialog({
               name="limit"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Limit (USD)</FormLabel>
+                  <FormLabel>{tAuto("limit_usd_3a489c2")}</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -167,16 +174,27 @@ export function SpendAlertDialog({
             <div className="text-muted-foreground text-xs">
               <div className="flex flex-row items-center">
                 <Info className="mr-2 h-3 w-3" />
-                <span className="font-bold">How it works</span>
+                <span className="font-bold">
+                  {tAuto("how_it_works_1dd6a17")}
+                </span>
               </div>
               <ul className="list-disc pl-5">
                 <li>
-                  The limit is evaluated against your upcoming invoice total,
-                  including base fee, running usage fees, discounts, and taxes.
+                  {tAuto(
+                    "the_limit_is_evaluated_against_your_upcoming_invoice_51991ad",
+                  )}{" "}
                 </li>
-                <li>Alerts trigger once per billing cycle.</li>
-                <li>You will receive an email when the alert is triggered.</li>
-                <li>Alerts are evaluated with a 90 minute delay.</li>
+                <li>
+                  {tAuto("alerts_trigger_once_per_billing_cycle_81b8f40")}
+                </li>
+                <li>
+                  {tAuto(
+                    "you_will_receive_an_email_when_the_alert_is_triggere_9874c0a",
+                  )}
+                </li>
+                <li>
+                  {tAuto("alerts_are_evaluated_with_a_90_minute_delay_d09be50")}
+                </li>
               </ul>
             </div>
             <div className="flex flex-row items-center justify-end gap-2">
@@ -186,16 +204,16 @@ export function SpendAlertDialog({
                 onClick={() => onOpenChange(false)}
                 disabled={isSubmitting}
               >
-                Cancel
+                {tAuto("cancel_77dfd21")}{" "}
               </Button>
               <Button type="submit" disabled={isSubmitting}>
                 {isSubmitting
                   ? alert
-                    ? "Updating..."
-                    : "Creating..."
+                    ? tAuto("updating_e349e5c")
+                    : tAuto("creating_28ea766")
                   : alert
-                    ? "Update Alert"
-                    : "Create Alert"}
+                    ? tAuto("update_alert_42e0c2e")
+                    : tAuto("create_alert_2263828")}
               </Button>
             </div>
           </form>

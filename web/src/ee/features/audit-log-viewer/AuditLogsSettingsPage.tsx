@@ -3,8 +3,10 @@ import { Alert, AlertDescription, AlertTitle } from "@/src/components/ui/alert";
 import { AuditLogsTable } from "@/src/ee/features/audit-log-viewer/AuditLogsTable";
 import { useHasEntitlement } from "@/src/features/entitlements/hooks";
 import { useHasProjectAccess } from "@/src/features/rbac/utils/checkProjectAccess";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export function AuditLogsSettingsPage(props: { projectId: string }) {
+  const tAuto = useAutoTranslations();
   const hasAccess = useHasProjectAccess({
     projectId: props.projectId,
     scope: "auditLogs:read",
@@ -13,14 +15,17 @@ export function AuditLogsSettingsPage(props: { projectId: string }) {
 
   const body = !hasEntitlement ? (
     <p className="text-muted-foreground text-sm">
-      Audit logs are an Enterprise feature. Upgrade your plan to track all
-      changes made to your project.
+      {tAuto(
+        "audit_logs_are_an_enterprise_feature_upgrade_your_pl_8705f76",
+      )}{" "}
     </p>
   ) : !hasAccess ? (
     <Alert>
-      <AlertTitle>Access Denied</AlertTitle>
+      <AlertTitle>{tAuto("access_denied_1647b9d")}</AlertTitle>
       <AlertDescription>
-        Contact your project administrator to request access.
+        {tAuto(
+          "contact_your_project_administrator_to_request_access_301816c",
+        )}{" "}
       </AlertDescription>
     </Alert>
   ) : (
@@ -29,11 +34,11 @@ export function AuditLogsSettingsPage(props: { projectId: string }) {
 
   return (
     <>
-      <Header title="Audit Logs" />
+      <Header title={tAuto("audit_logs_344c7ff")} />
       <p className="text-muted-foreground mb-2 text-sm">
-        Track who changed what in your project and when. Monitor settings,
-        configurations, and data changes over time. Reach out to the Langfuse
-        team if you require more detailed/filtered audit logs.
+        {tAuto(
+          "track_who_changed_what_in_your_project_and_when_moni_e71aed3",
+        )}{" "}
       </p>
       {body}
     </>

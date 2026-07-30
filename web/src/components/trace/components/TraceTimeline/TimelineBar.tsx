@@ -18,6 +18,7 @@ import {
   getSubtreeDurationOverflowMs,
 } from "@/src/components/trace/lib/helpers";
 import { isPresent } from "@langfuse/shared";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const SUBTREE_DURATION_TITLE =
   "Subtree wall-clock duration (first start → last end)";
@@ -40,6 +41,7 @@ export function TimelineBar({
   commentCount,
   scores,
 }: TimelineBarProps) {
+  const tAuto = useAutoTranslations();
   const { startOffset, itemWidth, firstTokenTimeOffset, latency } = metrics;
   const duration = latency ? latency * 1000 : undefined;
 
@@ -137,7 +139,7 @@ export function TimelineBar({
           <div
             className="bg-muted h-full border-r border-gray-400 opacity-60"
             style={{ width: `${firstTokenWidth}px` }}
-            title="Time to first token"
+            title={tAuto("time_to_first_token_062c8e2")}
           />
           <div
             className="bg-muted h-full"

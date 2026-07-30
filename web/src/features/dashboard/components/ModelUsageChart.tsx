@@ -25,6 +25,8 @@ import { type DatabaseRow } from "@/src/server/api/services/sqlInterface";
 import { DashboardLineTimeSeriesChart } from "@/src/features/dashboard/components/DashboardLineTimeSeriesChart";
 import { useScheduledDashboardExecuteQuery } from "@/src/hooks/useDashboardQueryScheduler";
 import { useMemo } from "react";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
+import { useTranslations } from "next-intl";
 
 export const ModelUsageChart = ({
   className,
@@ -51,6 +53,8 @@ export const ModelUsageChart = ({
   schedulerId?: string;
   syncId?: string;
 }) => {
+  const tAuto = useAutoTranslations();
+  const tDashboard = useTranslations("Dashboard");
   const {
     allModels,
     selectedModels,
@@ -314,38 +318,38 @@ export const ModelUsageChart = ({
 
   const data = [
     {
-      tabTitle: "Cost by model",
+      tabTitle: tDashboard("costByModel"),
       data: costByModel,
       totalMetric: costFormatter(totalCost),
-      metricDescription: `Cost`,
+      metricDescription: tDashboard("cost"),
       chartMetricLabel: "USD",
       chartUnit: "USD",
     },
     {
-      tabTitle: "Cost by type",
+      tabTitle: tDashboard("costByType"),
       data: costByType,
       totalMetric: costFormatter(totalCost),
-      metricDescription: `Cost`,
+      metricDescription: tDashboard("cost"),
       chartMetricLabel: "USD",
       chartUnit: "USD",
     },
     {
-      tabTitle: "Usage by model",
+      tabTitle: tDashboard("usageByModel"),
       data: unitsByModel,
       totalMetric: totalTokens
         ? compactNumberFormatter(totalTokens)
         : compactNumberFormatter(0),
-      metricDescription: `Units`,
+      metricDescription: tDashboard("units"),
       chartMetricLabel: "Tokens",
       chartUnit: "tokens",
     },
     {
-      tabTitle: "Usage by type",
+      tabTitle: tDashboard("usageByType"),
       data: unitsByType,
       totalMetric: totalTokens
         ? compactNumberFormatter(totalTokens)
         : compactNumberFormatter(0),
-      metricDescription: `Units`,
+      metricDescription: tDashboard("units"),
       chartMetricLabel: "Tokens",
       chartUnit: "tokens",
     },
@@ -354,7 +358,7 @@ export const ModelUsageChart = ({
   return (
     <DashboardCard
       className={className}
-      title="Model Usage"
+      title={tAuto("model_usage_37179a3")}
       isLoading={
         isLoading || (queryResult.isPending && selectedModels.length > 0)
       }

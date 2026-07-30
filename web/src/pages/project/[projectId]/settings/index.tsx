@@ -34,15 +34,21 @@ import { PersonalNotificationSettings } from "@/src/features/notifications/compo
 import { ProjectNotificationChannels } from "@/src/features/notifications/components/ProjectNotificationChannels";
 import { WebCalloutIntegrationCard } from "@/src/features/web-callouts/components/WebCalloutSettingsPage";
 import { DeveloperToolsSettings } from "@/src/features/developer-tools/components/DeveloperToolsSettings";
+import {
+  I18nText,
+  type AutoTranslator,
+  useAutoTranslations,
+} from "@/src/features/i18n/I18nText";
 
 type ProjectSettingsPage = {
-  title: string;
+  title: React.ReactNode;
   slug: string;
   show?: boolean | (() => boolean);
   cmdKKeywords?: string[];
 } & ({ content: React.ReactNode } | { href: string });
 
 export function useProjectSettingsPages(): ProjectSettingsPage[] {
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const { project, organization } = useQueryProject();
   const showBillingSettings = useHasEntitlement("cloud-billing");
@@ -55,6 +61,7 @@ export function useProjectSettingsPages(): ProjectSettingsPage[] {
   }
 
   return getProjectSettingsPages({
+    tAuto,
     project,
     organization,
     showBillingSettings,
@@ -65,6 +72,7 @@ export function useProjectSettingsPages(): ProjectSettingsPage[] {
 }
 
 export const getProjectSettingsPages = ({
+  tAuto,
   project,
   organization,
   showBillingSettings,
@@ -72,6 +80,7 @@ export const getProjectSettingsPages = ({
   showLLMConnectionsSettings,
   showProtectedLabelsSettings,
 }: {
+  tAuto: AutoTranslator;
   project: { id: string; name: string; metadata: Record<string, unknown> };
   organization: { id: string; name: string; metadata: Record<string, unknown> };
   showBillingSettings: boolean;
@@ -80,7 +89,7 @@ export const getProjectSettingsPages = ({
   showProtectedLabelsSettings: boolean;
 }): ProjectSettingsPage[] => [
   {
-    title: "General",
+    title: tAuto("general_9239ee2"),
     slug: "index",
     cmdKKeywords: ["name", "id", "delete", "transfer", "ownership"],
     content: (
@@ -89,9 +98,9 @@ export const getProjectSettingsPages = ({
         <RenameProject />
         {showRetentionSettings && <ConfigureRetention />}
         <div>
-          <Header title="Debug Information" />
+          <Header title={tAuto("debug_information_431bd43")} />
           <JSONView
-            title="Metadata"
+            title={tAuto("metadata_251edc0")}
             json={{
               project: {
                 name: project.name,
@@ -112,15 +121,17 @@ export const getProjectSettingsPages = ({
         <SettingsDangerZone
           items={[
             {
-              title: "Transfer ownership",
-              description:
-                "Transfer this project to another organization where you have the ability to create projects.",
+              title: <I18nText id="transfer_ownership_a6819ec" />,
+              description: (
+                <I18nText id="transfer_this_project_to_another_organization_where__bc1c45c" />
+              ),
               button: <TransferProjectButton />,
             },
             {
-              title: "Delete this project",
-              description:
-                "Once you delete a project, there is no going back. Please be certain.",
+              title: <I18nText id="delete_this_project_a4da9b6" />,
+              description: (
+                <I18nText id="once_you_delete_a_project_there_is_no_going_back_ple_43d01a4" />
+              ),
               button: <DeleteProjectButton />,
             },
           ]}
@@ -129,7 +140,7 @@ export const getProjectSettingsPages = ({
     ),
   },
   {
-    title: "API Keys",
+    title: tAuto("api_keys_e18ffc8"),
     slug: "api-keys",
     cmdKKeywords: ["auth", "public key", "secret key"],
     content: (
@@ -139,7 +150,7 @@ export const getProjectSettingsPages = ({
     ),
   },
   {
-    title: "MCP & CLI",
+    title: tAuto("mcp_cli_38b1ba7"),
     slug: "developer-tools",
     cmdKKeywords: [
       "mcp",
@@ -154,7 +165,7 @@ export const getProjectSettingsPages = ({
     content: <DeveloperToolsSettings projectId={project.id} />,
   },
   {
-    title: "LLM Connections",
+    title: tAuto("llm_connections_96dfc0b"),
     slug: "llm-connections",
     cmdKKeywords: [
       "llm",
@@ -175,31 +186,31 @@ export const getProjectSettingsPages = ({
     show: showLLMConnectionsSettings,
   },
   {
-    title: "Model Definitions",
+    title: tAuto("model_definitions_77038cb"),
     slug: "models",
     cmdKKeywords: ["cost", "token"],
     content: <ModelsSettings projectId={project.id} />,
   },
   {
-    title: "Protected Prompt Labels",
+    title: tAuto("protected_prompt_labels_b2fccc6"),
     slug: "protected-prompt-labels",
     cmdKKeywords: ["prompt", "label", "protect", "lock"],
     content: <ProtectedLabelsSettings projectId={project.id} />,
     show: showProtectedLabelsSettings,
   },
   {
-    title: "Scores Configs",
+    title: tAuto("scores_configs_b6a4844"),
     slug: "scores",
     cmdKKeywords: ["config"],
     content: <ScoreConfigSettings projectId={project.id} />,
   },
   {
-    title: "Members",
+    title: tAuto("members_1cb449c"),
     slug: "members",
     cmdKKeywords: ["invite", "user"],
     content: (
       <div>
-        <Header title="Project Members" />
+        <Header title={tAuto("project_members_75fd3aa")} />
         <MembersTable
           orgId={organization.id}
           project={{ id: project.id, name: project.name }}
@@ -215,31 +226,31 @@ export const getProjectSettingsPages = ({
     ),
   },
   {
-    title: "Integrations",
+    title: tAuto("integrations_a7881ca"),
     slug: "integrations",
     cmdKKeywords: ["posthog", "mixpanel", "analytics", "callback", "webhook"],
     content: <Integrations projectId={project.id} />,
   },
   {
-    title: "Exports",
+    title: tAuto("exports_0e16537"),
     slug: "exports",
     cmdKKeywords: ["csv", "download", "json", "batch"],
     content: <BatchExportsSettingsPage projectId={project.id} />,
   },
   {
-    title: "Batch Actions",
+    title: tAuto("batch_actions_494f6a3"),
     slug: "batch-actions",
     cmdKKeywords: ["bulk", "batch", "action", "dataset", "delete"],
     content: <BatchActionsSettingsPage projectId={project.id} />,
   },
   {
-    title: "Audit Logs",
+    title: tAuto("audit_logs_344c7ff"),
     slug: "audit-logs",
     cmdKKeywords: ["trail"],
     content: <AuditLogsSettingsPage projectId={project.id} />,
   },
   {
-    title: "Notifications",
+    title: tAuto("notifications_753a22b"),
     slug: "notifications",
     cmdKKeywords: ["inbox", "email", "mention", "alert", "slack", "webhook"],
     content: (
@@ -250,19 +261,20 @@ export const getProjectSettingsPages = ({
     ),
   },
   {
-    title: "Billing",
+    title: tAuto("billing_abaec45"),
     slug: "billing",
     href: `/organization/${organization.id}/settings/billing`,
     show: showBillingSettings,
   },
   {
-    title: "Organization Settings",
+    title: tAuto("organization_settings_514d77c"),
     slug: "organization",
     href: `/organization/${organization.id}/settings`,
   },
 ];
 
 export default function SettingsPage() {
+  const tAuto = useAutoTranslations();
   const { project, organization } = useQueryProject();
   const router = useRouter();
   const pages = useProjectSettingsPages();
@@ -272,7 +284,7 @@ export default function SettingsPage() {
   return (
     <ContainerPage
       headerProps={{
-        title: "Project Settings",
+        title: tAuto("project_settings_6461d2a"),
       }}
     >
       <PagedSettingsContainer
@@ -284,6 +296,7 @@ export default function SettingsPage() {
 }
 
 const Integrations = (props: { projectId: string }) => {
+  const tAuto = useAutoTranslations();
   const hasAccess = useHasProjectAccess({
     projectId: props.projectId,
     scope: "integrations:CRUD",
@@ -295,14 +308,15 @@ const Integrations = (props: { projectId: string }) => {
 
   return (
     <div>
-      <Header title="Integrations" />
+      <Header title={tAuto("integrations_a7881ca")} />
       <div className="space-y-6">
         <Card className="p-3">
           {}
           <PostHogLogo className="text-foreground mb-4 w-40" />
           <p className="text-primary mb-4 text-sm">
-            We have teamed up with PostHog (OSS product analytics) to make
-            Langfuse Events/Metrics available in your Posthog Dashboards.
+            {tAuto(
+              "we_have_teamed_up_with_posthog_oss_product_analytics_ca88b01",
+            )}{" "}
           </p>
           <div className="flex items-center gap-2">
             <ActionButton
@@ -310,14 +324,14 @@ const Integrations = (props: { projectId: string }) => {
               hasAccess={hasAccess}
               href={`/project/${props.projectId}/settings/integrations/posthog`}
             >
-              Configure
+              {tAuto("configure_792c81a")}{" "}
             </ActionButton>
             <Button asChild variant="ghost">
               <Link
                 href="https://langfuse.com/integrations/analytics/posthog"
                 target="_blank"
               >
-                Integration Docs ↗
+                {tAuto("integration_docs_aca3483")}{" "}
               </Link>
             </Button>
           </div>
@@ -326,8 +340,9 @@ const Integrations = (props: { projectId: string }) => {
         <Card className="p-3">
           <MixpanelLogo className="text-foreground mb-4 w-20" />
           <p className="text-primary mb-4 text-sm">
-            Integrate with Mixpanel to sync your Langfuse traces, generations,
-            and scores for advanced product analytics and insights.
+            {tAuto(
+              "integrate_with_mixpanel_to_sync_your_langfuse_traces_37e583e",
+            )}{" "}
           </p>
           <div className="flex items-center gap-2">
             <ActionButton
@@ -335,25 +350,25 @@ const Integrations = (props: { projectId: string }) => {
               hasAccess={hasAccess}
               href={`/project/${props.projectId}/settings/integrations/mixpanel`}
             >
-              Configure
+              {tAuto("configure_792c81a")}{" "}
             </ActionButton>
             <Button asChild variant="ghost">
               <Link
                 href="https://langfuse.com/integrations/analytics/mixpanel"
                 target="_blank"
               >
-                Integration Docs ↗
+                {tAuto("integration_docs_aca3483")}{" "}
               </Link>
             </Button>
           </div>
         </Card>
 
         <Card className="p-3">
-          <span className="font-bold">Blob Storage</span>
+          <span className="font-bold">{tAuto("blob_storage_79bffc1")}</span>
           <p className="text-primary mb-4 text-sm">
-            Configure scheduled exports of your trace data to S3 compatible
-            storages or Azure Blob Storage. Set up a scheduled export to your
-            own storage for data analysis or backup purposes.
+            {tAuto(
+              "configure_scheduled_exports_of_your_trace_data_to_s3_1e41e80",
+            )}{" "}
           </p>
           <div className="flex items-center gap-2">
             <ActionButton
@@ -362,14 +377,14 @@ const Integrations = (props: { projectId: string }) => {
               hasEntitlement={allowBlobStorageIntegration}
               href={`/project/${props.projectId}/settings/integrations/blobstorage`}
             >
-              Configure
+              {tAuto("configure_792c81a")}{" "}
             </ActionButton>
             <Button asChild variant="ghost">
               <Link
                 href="https://langfuse.com/docs/query-traces#blob-storage"
                 target="_blank"
               >
-                Integration Docs ↗
+                {tAuto("integration_docs_aca3483")}{" "}
               </Link>
             </Button>
           </div>
@@ -381,8 +396,9 @@ const Integrations = (props: { projectId: string }) => {
             <span className="font-bold">Slack</span>
           </div>
           <p className="text-primary mb-4 text-sm">
-            Connect a Slack workspace and create channel automations to receive
-            Langfuse alerts natively in Slack.
+            {tAuto(
+              "connect_a_slack_workspace_and_create_channel_automat_7d00cd2",
+            )}{" "}
           </p>
           <div className="flex items-center gap-2">
             <ActionButton
@@ -390,7 +406,7 @@ const Integrations = (props: { projectId: string }) => {
               hasAccess={hasAccess}
               href={`/project/${props.projectId}/settings/integrations/slack`}
             >
-              Configure
+              {tAuto("configure_792c81a")}{" "}
             </ActionButton>
           </div>
         </Card>

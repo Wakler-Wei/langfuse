@@ -61,6 +61,7 @@ import { PYLON_MAX_FILE_SIZE_BYTES } from "./pylon/pylonConstants";
 import Spinner from "@/src/components/design-system/Spinner/Spinner";
 import { useSupportDrawer } from "@/src/features/support-chat/SupportDrawerProvider";
 import { useV4UpgradeUiEnabled } from "@/src/features/v4-migration/useV4UpgradeUiEnabled";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 /** Make RHF generics match the resolver (Zod defaults => input can be undefined) */
 type SupportFormInput = z.input<typeof SupportFormSchema>;
@@ -176,6 +177,8 @@ export function SupportFormSection({
   onCancel: () => void;
   onSuccess: () => void;
 }) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const { organization, project } = useQueryProjectOrOrganization();
 
   // The support drawer is mounted globally and reachable from pages without an
@@ -242,8 +245,8 @@ export function SupportFormSection({
         // attachments) intact so the user can retry instead of wiping it.
         if (data.pylonIssueFailed) {
           showErrorToast(
-            "Support request was not sent",
-            "Please contact support@langfuse.com",
+            tAutoI18n("support_request_was_not_sent_6a32183"),
+            tAutoI18n("please_contact_support_langfuse_com_bb9e599"),
           );
           return;
         }
@@ -375,11 +378,12 @@ export function SupportFormSection({
   return (
     <div className="mt-1 flex flex-col gap-3">
       <div className="flex items-center gap-2 text-base font-bold">
-        E-Mail a Support Engineer
+        {tAuto("e_mail_a_support_engineer_7b9c972")}{" "}
       </div>
       <p className="text-muted-foreground text-sm">
-        Details speed things up. The clearer your request, the quicker you get
-        the answer you need.
+        {tAuto(
+          "details_speed_things_up_the_clearer_your_request_the_c0571fb",
+        )}{" "}
       </p>
 
       <Form {...form}>
@@ -393,7 +397,7 @@ export function SupportFormSection({
             name="messageType"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Message Type</FormLabel>
+                <FormLabel>{tAuto("message_type_9e5ca24")}</FormLabel>
                 <FormControl>
                   <RadioGroup
                     className="grid grid-cols-3 gap-2"
@@ -416,7 +420,7 @@ export function SupportFormSection({
                   </RadioGroup>
                 </FormControl>
                 <FormDescription className="sr-only">
-                  Choose the type of your message.
+                  {tAuto("choose_the_type_of_your_message_2c2aa92")}{" "}
                 </FormDescription>
                 <FormMessage />
               </FormItem>
@@ -430,11 +434,13 @@ export function SupportFormSection({
             name="severity"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Priority</FormLabel>
+                <FormLabel>{tAuto("priority_886cbff")}</FormLabel>
                 <FormControl>
                   <Select value={field.value} onValueChange={field.onChange}>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select a priority" />
+                      <SelectValue
+                        placeholder={tAuto("select_a_priority_e7ba0d1")}
+                      />
                     </SelectTrigger>
                     <SelectContent>
                       {SEVERITIES.map((s) =>
@@ -458,8 +464,12 @@ export function SupportFormSection({
                             </TooltipTrigger>
                             <TooltipContent className="max-w-xs">
                               {s === SEVERITY_1
-                                ? "Severity 1 is available on the Enterprise plan."
-                                : "Severity 2 is available on the Enterprise plan."}
+                                ? tAutoI18n(
+                                    "severity_1_is_available_on_the_enterprise_plan_4e5d2f9",
+                                  )
+                                : tAutoI18n(
+                                    "severity_2_is_available_on_the_enterprise_plan_fbdb310",
+                                  )}
                             </TooltipContent>
                           </Tooltip>
                         ),
@@ -478,19 +488,21 @@ export function SupportFormSection({
             name="topic"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Topic</FormLabel>
+                <FormLabel>{tAuto("topic_7e13bd1")}</FormLabel>
                 <FormControl>
                   <Select
                     value={(field.value as string | undefined) ?? undefined}
                     onValueChange={field.onChange}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select a topic" />
+                      <SelectValue
+                        placeholder={tAuto("select_a_topic_804196f")}
+                      />
                     </SelectTrigger>
                     <SelectContent>
                       <div className="p-2">
                         <div className="text-muted-foreground mb-2 text-xs font-bold">
-                          Product Features
+                          {tAuto("product_features_1aa2b4f")}{" "}
                         </div>
                         {productFeatureTopics.map((t) => (
                           <SelectItem key={t} value={t}>
@@ -500,7 +512,7 @@ export function SupportFormSection({
                       </div>
                       <div className="border-t p-2">
                         <div className="text-muted-foreground mb-2 text-xs font-bold">
-                          Operations
+                          {tAuto("operations_a1fdaa6")}{" "}
                         </div>
                         {TopicGroups.Operations.map((t) => (
                           <SelectItem key={t} value={t}>
@@ -523,11 +535,15 @@ export function SupportFormSection({
               name="integrationType"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Integration Type (optional)</FormLabel>
+                  <FormLabel>
+                    {tAuto("integration_type_optional_6194b9f")}
+                  </FormLabel>
                   <FormControl>
                     <Select value={field.value} onValueChange={field.onChange}>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select integration type" />
+                        <SelectValue
+                          placeholder={tAuto("select_integration_type_ba9e680")}
+                        />
                       </SelectTrigger>
                       <SelectContent>
                         {INTEGRATION_TYPES.map((it) => (
@@ -550,10 +566,11 @@ export function SupportFormSection({
             name="message"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Message</FormLabel>
+                <FormLabel>{tAuto("message_68f4145")}</FormLabel>
                 <div className="text-muted-foreground text-xs">
-                  We will email you at your account address. Replies may take up
-                  to one business day.
+                  {tAuto(
+                    "we_will_email_you_at_your_account_address_replies_ma_7164278",
+                  )}{" "}
                 </div>
                 <FormControl>
                   <div className="relative w-full">
@@ -562,8 +579,12 @@ export function SupportFormSection({
                       rows={8}
                       placeholder={
                         isProductFeatureTopic
-                          ? "Please explain as fully as possible what you're aiming to do, and what you'd like help with.\n\nIf your question involves a specific trace, prompt, score, etc. please include a link to it."
-                          : "Please explain as fully as possible what you're aiming to do, and what you'd like help with."
+                          ? tAuto(
+                              "please_explain_as_fully_as_possible_what_you_re_aimi_c19f7c2",
+                            )
+                          : tAuto(
+                              "please_explain_as_fully_as_possible_what_you_re_aimi_b19637f",
+                            )
                       }
                     />
                   </div>
@@ -575,9 +596,9 @@ export function SupportFormSection({
                     role="status"
                     aria-live="polite"
                   >
-                    The message seems short — adding a bit more context can help
-                    us get you a quicker, smarter answer. You can submit again
-                    as is, or add more details.
+                    {tAuto(
+                      "the_message_seems_short_adding_a_bit_more_context_ca_35b9e25",
+                    )}{" "}
                   </p>
                 )}
 
@@ -601,7 +622,7 @@ export function SupportFormSection({
                     onError={(error) => {
                       const userMessage = formatFileError(error);
                       showErrorToast(
-                        "File Upload Error",
+                        tAutoI18n("file_upload_error_62a1332"),
                         userMessage,
                         "WARNING",
                       );
@@ -614,7 +635,7 @@ export function SupportFormSection({
                 {files && files.length > 0 && (
                   <div className="p-0 text-left text-sm font-bold">
                     <div className="text-muted-foreground mb-2 text-xs font-bold">
-                      Attached files
+                      {tAuto("attached_files_a5a109e")}{" "}
                     </div>
                     {files?.map((file) => (
                       <div
@@ -630,7 +651,9 @@ export function SupportFormSection({
                           }
                           className="p-0"
                         >
-                          <span className="sr-only">Remove file</span>
+                          <span className="sr-only">
+                            {tAuto("remove_file_304b14b")}
+                          </span>
                           <Trash2 className="h-3.5 w-3.5" />
                         </Button>
                         {file.name}
@@ -654,7 +677,7 @@ export function SupportFormSection({
               }}
               className="w-full"
             >
-              Cancel
+              {tAuto("cancel_77dfd21")}{" "}
             </Button>
 
             <Button
@@ -665,20 +688,21 @@ export function SupportFormSection({
               {isSubmittingLocal ? (
                 <span className="inline-flex items-center gap-2">
                   <Spinner size="sm" />
-                  Submitting…
+                  {tAuto("submitting_25bdf98")}{" "}
                 </span>
               ) : messageIsShortAfterWarning ? (
-                "Submit Anyways"
+                tAutoI18n("submit_anyways_5aef799")
               ) : (
-                "Submit"
+                tAutoI18n("submit_2dacf65")
               )}
             </Button>
           </div>
 
           {isSubmittingLocal && (
             <div className="text-muted-foreground text-xs">
-              This can take a few seconds — hang tight while we submit your
-              request.
+              {tAuto(
+                "this_can_take_a_few_seconds_hang_tight_while_we_subm_adb8f79",
+              )}{" "}
             </div>
           )}
         </form>
@@ -689,17 +713,18 @@ export function SupportFormSection({
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              Confirm Severity 1 (Critical Business Impact)
+              {tAuto(
+                "confirm_severity_1_critical_business_impact_995a242",
+              )}{" "}
             </AlertDialogTitle>
             <AlertDialogDescription>
-              Please confirm that your issue has critical business impact. This
-              means it severely impacts your use of Langfuse in production, such
-              as loss of production data, ingestion issues, or prompt fetching
-              issues.
+              {tAuto(
+                "please_confirm_that_your_issue_has_critical_business_2e6aef5",
+              )}{" "}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{tAuto("cancel_77dfd21")}</AlertDialogCancel>
             <AlertDialogAction onClick={() => submitForm(form.getValues())}>
               Confirm &amp; Submit
             </AlertDialogAction>

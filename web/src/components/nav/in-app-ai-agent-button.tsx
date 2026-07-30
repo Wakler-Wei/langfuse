@@ -9,6 +9,7 @@ import {
   type InAppAgentEntryPoint,
 } from "@/src/features/in-app-agent/components/InAppAiAgentProvider";
 import { cn } from "@/src/utils/tailwind";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 /** Launcher only — the assistant window itself is rendered by
  * InAppAgentWindowHost from the persistent authenticated layout, so it
@@ -23,6 +24,7 @@ export const InAppAiAgentButton = ({
 }: {
   prominent?: boolean;
 } = {}) => {
+  const tAuto = useAutoTranslations();
   const { open, setOpen, openAssistant } = useInAppAiAgent();
   const canUseAssistant = useCanUseInAppAgent();
 
@@ -70,7 +72,11 @@ export const InAppAiAgentButton = ({
     <Button
       type="button"
       variant="outline"
-      aria-label={open ? "Close assistant" : "Open assistant"}
+      aria-label={
+        open
+          ? tAuto("close_assistant_a53c5ca")
+          : tAuto("open_assistant_15df436")
+      }
       aria-pressed={open}
       data-ignore-outside-interaction
       onClick={() => toggleAssistant("top_nav")}
@@ -104,7 +110,7 @@ export const InAppAiAgentButton = ({
           reveal in the 640–767px band and overflow the box. */}
       {!prominent && (
         <>
-          <span className="hidden sm:inline">Assistant</span>
+          <span className="hidden sm:inline">{tAuto("assistant_8010d1f")}</span>
           <KeyboardShortcut
             className="bg-transparent shadow-none"
             keys={[

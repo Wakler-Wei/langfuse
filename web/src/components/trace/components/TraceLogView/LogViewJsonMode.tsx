@@ -12,6 +12,7 @@ import { JSONView } from "@/src/components/ui/CodeJsonViewer";
 import { type FlatLogItem } from "./log-view-types";
 import { useLogViewAllObservationsIO } from "./useLogViewAllObservationsIO";
 import Spinner from "@/src/components/design-system/Spinner/Spinner";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export interface LogViewJsonModeProps {
   items: FlatLogItem[];
@@ -34,6 +35,8 @@ export const LogViewJsonMode = memo(function LogViewJsonMode({
   isCollapsed,
   onToggleCollapse,
 }: LogViewJsonModeProps) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const { data, isLoading, isError, loadAllData, totalCount } =
     useLogViewAllObservationsIO({
       items,
@@ -55,7 +58,8 @@ export const LogViewJsonMode = memo(function LogViewJsonMode({
         <div className="flex flex-1 items-center justify-center">
           <Spinner size="md" variant="muted" />
           <span className="text-muted-foreground ml-2 text-sm">
-            Loading observations (0/{totalCount})...
+            {tAutoI18n("loading_observations_0_0f39b92")}
+            {totalCount})...
           </span>
         </div>
       )}
@@ -64,7 +68,7 @@ export const LogViewJsonMode = memo(function LogViewJsonMode({
       {isError && !isLoading && (
         <div className="flex flex-1 items-center justify-center">
           <div className="border-destructive/50 bg-destructive/10 text-destructive rounded border p-4 text-sm">
-            Failed to load observation data
+            {tAuto("failed_to_load_observation_data_1ccbc00")}{" "}
           </div>
         </div>
       )}
@@ -93,7 +97,7 @@ export const LogViewJsonMode = memo(function LogViewJsonMode({
       {!data && !isLoading && !isError && (
         <div className="flex flex-1 items-center justify-center">
           <div className="text-muted-foreground text-sm">
-            No observation data available
+            {tAuto("no_observation_data_available_5ab88b4")}{" "}
           </div>
         </div>
       )}

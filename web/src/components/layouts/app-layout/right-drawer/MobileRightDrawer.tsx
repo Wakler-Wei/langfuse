@@ -10,8 +10,10 @@ import { useSupportDrawer } from "@/src/features/support-chat/SupportDrawerProvi
 import { SupportDrawer } from "@/src/features/support-chat/SupportDrawer";
 import { useV4MigrationPanel } from "@/src/features/v4-migration/V4MigrationPanelProvider";
 import { V4MigrationPanel } from "@/src/features/v4-migration/V4MigrationPanel";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export function MobileRightDrawer({ children }: PropsWithChildren) {
+  const tAuto = useAutoTranslations();
   const { open: supportOpen, setOpen: setSupportOpen } = useSupportDrawer();
   const { open: migrationOpen, setOpen: setMigrationOpen } =
     useV4MigrationPanel();
@@ -41,9 +43,13 @@ export function MobileRightDrawer({ children }: PropsWithChildren) {
               <div className="bg-muted h-2 w-20 rounded-full" />
             </div>
             {/* sr-only for screen readers and accessibility */}
-            <DrawerTitle className="sr-only">Support</DrawerTitle>
+            <DrawerTitle className="sr-only">
+              {tAuto("support_f32d5a3")}
+            </DrawerTitle>
             <DrawerDescription className="sr-only">
-              A list of resources and options to help you with your questions.
+              {tAuto(
+                "a_list_of_resources_and_options_to_help_you_with_you_a35ed6b",
+              )}{" "}
             </DrawerDescription>
           </DrawerHeader>
           <div className="mt-4 max-h-full">
@@ -71,10 +77,13 @@ export function MobileRightDrawer({ children }: PropsWithChildren) {
               <div className="bg-muted h-2 w-20 rounded-full" />
             </div>
             {/* sr-only for screen readers and accessibility */}
-            <DrawerTitle className="sr-only">Migrate to v4</DrawerTitle>
+            <DrawerTitle className="sr-only">
+              {tAuto("migrate_to_v4_5967566")}
+            </DrawerTitle>
             <DrawerDescription className="sr-only">
-              Information about migrating to Langfuse v4 and upcoming
-              deprecations.
+              {tAuto(
+                "information_about_migrating_to_langfuse_v4_and_upcom_6f692c9",
+              )}{" "}
             </DrawerDescription>
           </DrawerHeader>
           <div className="mt-4 max-h-full">

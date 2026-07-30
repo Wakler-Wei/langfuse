@@ -5,6 +5,7 @@ import { type QueryProgress } from "@/src/hooks/useSSEDashboardQuery";
 import { QueryProgressBar } from "@/src/features/widgets/chart-library/QueryProgressBar";
 import { Button } from "@/src/components/ui/button";
 import Spinner from "@/src/components/design-system/Spinner/Spinner";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const DEFAULT_HINT_DELAY_MS = 2000;
 const PROGRESS_REVEAL_DELAY_MS = 1000;
@@ -38,6 +39,7 @@ export function ChartLoadingState({
   onRetry,
   retryLabel = "Retry",
 }: ChartLoadingStateProps) {
+  const tAuto = useAutoTranslations();
   const [showHint, setShowHint] = useState(false);
   const [showProgressPhase, setShowProgressPhase] = useState(false);
   const shouldShowProgress = progress !== undefined;
@@ -109,10 +111,10 @@ export function ChartLoadingState({
 
   const statusTitle =
     isPendingProgressState || shouldShowProgress
-      ? "Running query"
+      ? tAuto("running_query_516eafd")
       : showSpinner
-        ? "Loading widget"
-        : "Query needs attention";
+        ? tAuto("loading_widget_06f208a")
+        : tAuto("query_needs_attention_b203eab");
 
   return (
     <div

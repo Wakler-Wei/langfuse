@@ -5,6 +5,7 @@ import {
   DialogBody,
   DialogFooter,
 } from "@/src/components/ui/dialog";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export function V4IntroDialog({
   open,
@@ -15,23 +16,27 @@ export function V4IntroDialog({
   onConfirm: () => void;
   onDismiss: () => void;
 }) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onDismiss()}>
       <DialogContent
         className="[&>div:last-child]:hidden"
-        aria-label="Welcome to a faster Langfuse"
+        aria-label={tAuto("welcome_to_a_faster_langfuse_cc3bcc5")}
       >
         <DialogBody>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/assets/v4-beta-intro.jpg"
-            alt="Langfuse gets Faster — performance comparison showing 5x to 165x speedups"
+            alt={tAuto(
+              "langfuse_gets_faster_performance_comparison_showing__cf6a8b6",
+            )}
             className="w-full rounded-md"
           />
           <ul className="flex flex-col gap-3">
             <li className="text-muted-foreground text-sm">
               <span className="text-foreground block font-bold">
-                Welcome to a faster Langfuse
+                {tAuto("welcome_to_a_faster_langfuse_cc3bcc5")}{" "}
               </span>{" "}
               We&apos;ve rebuilt the data model around observations rather than
               traces, which means charts, filters, and APIs are dramatically
@@ -39,19 +44,21 @@ export function V4IntroDialog({
             </li>
             <li className="text-muted-foreground text-sm">
               <span className="text-foreground block font-bold">
-                New Observations table
+                {tAuto("new_observations_table_c758020")}{" "}
               </span>{" "}
-              Your traces are still here. The default view now shows all
-              observations. To see a table with just your root traces, filter by{" "}
+              {tAutoI18n(
+                "your_traces_are_still_here_the_default_view_now_show_a036f8a",
+              )}{" "}
               <span className="font-bold">Is Root Observation &rarr; True</span>
               .
             </li>
             <li className="text-muted-foreground text-sm">
               <span className="text-foreground block font-bold">
-                New Saved Table Views
+                {tAuto("new_saved_table_views_671de75")}{" "}
               </span>{" "}
-              Save your table filters as an org-wide saved view so your whole
-              team starts from the same place.{" "}
+              {tAutoI18n(
+                "save_your_table_filters_as_an_org_wide_saved_view_so_b488c33",
+              )}{" "}
               <a
                 href="https://langfuse.com/faq/all/explore-observations-in-v4"
                 target="_blank"
@@ -64,9 +71,12 @@ export function V4IntroDialog({
           </ul>
           <div className="mt-3 rounded-md border border-yellow-300 bg-yellow-50 p-3 text-sm dark:border-yellow-700 dark:bg-yellow-950">
             <p className="text-yellow-900 dark:text-yellow-200">
-              <span className="font-bold">Want traces to appear live?</span>{" "}
-              Upgrade your SDK to the latest version. Older SDKs still work but
-              traces may take ~10 minutes to appear.{" "}
+              <span className="font-bold">
+                {tAuto("want_traces_to_appear_live_a6ef92a")}
+              </span>{" "}
+              {tAutoI18n(
+                "upgrade_your_sdk_to_the_latest_version_older_sdks_st_f8af47b",
+              )}{" "}
               <a
                 href="https://langfuse.com/docs/observability/sdk/upgrade-path"
                 target="_blank"

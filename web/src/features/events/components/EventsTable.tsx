@@ -142,6 +142,7 @@ import {
   useObservedMetadataPaths,
   useObservedMetadataRecorder,
 } from "@/src/features/search-bar/hooks/useObservedMetadata";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export type EventsTableRow = {
   // Identity fields
@@ -281,6 +282,7 @@ export default function ObservationsEventsTable({
   enableAppRootDefault = false,
   isolateTableState = false,
 }: EventsTableProps) {
+  const tAuto = useAutoTranslations();
   const peekContext = usePeekTableState();
   const eventsFilterConfig = useMemo(
     () => getObservationEventsFilterConfig(omittedFilter),
@@ -916,9 +918,10 @@ export default function ObservationsEventsTable({
   const traceDeleteMutation = api.traces.deleteMany.useMutation({
     onSuccess: () => {
       showSuccessToast({
-        title: "Traces deleted",
-        description:
-          "Selected traces will be deleted. Traces are removed asynchronously and may continue to be visible for up to 15 minutes.",
+        title: tAuto("traces_deleted_2dd7bf7"),
+        description: tAuto(
+          "selected_traces_will_be_deleted_traces_are_removed_a_d83122f",
+        ),
       });
     },
     onSettled: () => {
@@ -1015,8 +1018,16 @@ export default function ObservationsEventsTable({
           {
             id: ActionId.TraceDelete,
             type: BatchActionType.Delete,
-            label: "Delete Traces",
-            description: `${itemCountDisplay} ${selectedItemCount === 1 ? "item is" : "items are"} selected, spanning ${traceCountDisplay} unique ${selectedUniqueTraceCount === 1 ? "trace" : "traces"}. A trace is always deleted as a whole — if at least one of its observations is selected, all of its observations are deleted with it. This action cannot be undone. Trace deletion happens asynchronously and may take up to 24 hours.`,
+            label: tAuto("delete_traces_c571b83"),
+            description: tAuto(
+              "value0_value1_selected_spanning_value2_unique_value3_c9ce459",
+              {
+                value0: itemCountDisplay,
+                value1: selectedItemCount === 1 ? "item is" : "items are",
+                value2: traceCountDisplay,
+                value3: selectedUniqueTraceCount === 1 ? "trace" : "traces",
+              },
+            ),
             // Select-all is not gated on the visible-page selection; if that
             // selection drained to empty, dispatch fails loudly with the
             // server's min-1 traceIds rejection (as in the v3 traces table).
@@ -1048,8 +1059,10 @@ export default function ObservationsEventsTable({
     {
       id: ActionId.ObservationAddToAnnotationQueue,
       type: BatchActionType.Create,
-      label: "Add to Annotation Queue",
-      description: "Add selected observations to an annotation queue.",
+      label: tAuto("add_to_annotation_queue_adf3e2c"),
+      description: tAuto(
+        "add_selected_observations_to_an_annotation_queue_9149d35",
+      ),
       targetLabel: "Annotation Queue",
       execute: handleAddToAnnotationQueue,
       accessCheck: {
@@ -1059,8 +1072,8 @@ export default function ObservationsEventsTable({
     {
       id: ActionId.ObservationAddToDataset,
       type: BatchActionType.Create,
-      label: "Add to Dataset",
-      description: "Add selected observations to a dataset",
+      label: tAuto("add_to_dataset_355f66d"),
+      description: tAuto("add_selected_observations_to_a_dataset_bb57cb9"),
       customDialog: true,
       disabled: isSelectAllCountUnavailable,
       disabledReason: selectAllCountUnavailableReason,
@@ -1071,8 +1084,8 @@ export default function ObservationsEventsTable({
     {
       id: ActionId.ObservationBatchEvaluation,
       type: BatchActionType.Create,
-      label: "Evaluate",
-      description: "Run evaluations on selected observations.",
+      label: tAuto("evaluate_d713258"),
+      description: tAuto("run_evaluations_on_selected_observations_7bdca59"),
       customDialog: true,
       icon: <LightbulbIcon className="h-4 w-4 sm:mr-2" />,
       disabled: isSelectAllCountUnavailable,
@@ -1211,7 +1224,7 @@ export default function ObservationsEventsTable({
     },
     {
       accessorKey: "metadata",
-      header: "Metadata",
+      header: tAuto("metadata_251edc0"),
       size: 300,
       loadingCell: () => (
         <JsonSkeleton
@@ -1221,7 +1234,9 @@ export default function ObservationsEventsTable({
         />
       ),
       headerTooltip: {
-        description: "Add metadata to traces to track additional information.",
+        description: tAuto(
+          "add_metadata_to_traces_to_track_additional_informati_8f0aa49",
+        ),
         href: "https://langfuse.com/docs/observability/features/metadata",
       },
       cell: ({ row }) => {
@@ -1251,8 +1266,9 @@ export default function ObservationsEventsTable({
       header: getEventsColumnName("level"),
       size: 100,
       headerTooltip: {
-        description:
-          "You can differentiate the importance of observations with the level attribute to control the verbosity of your traces and highlight errors and warnings.",
+        description: tAuto(
+          "you_can_differentiate_the_importance_of_observations_bb16803",
+        ),
         href: "https://langfuse.com/docs/observability/features/log-levels",
       },
       enableHiding: true,
@@ -1278,8 +1294,9 @@ export default function ObservationsEventsTable({
       id: "statusMessage",
       size: 150,
       headerTooltip: {
-        description:
-          "Use a statusMessage to e.g. provide additional information on a status such as level=ERROR.",
+        description: tAuto(
+          "use_a_statusmessage_to_e_g_provide_additional_inform_1fc7233",
+        ),
         href: "https://langfuse.com/docs/observability/features/log-levels",
       },
       enableHiding: true,
@@ -1335,7 +1352,7 @@ export default function ObservationsEventsTable({
     },
     {
       accessorKey: "cost",
-      header: "Cost",
+      header: tAuto("cost_64ae43e"),
       id: "cost",
       enableHiding: true,
       defaultHidden: true,
@@ -1437,7 +1454,7 @@ export default function ObservationsEventsTable({
     },
     {
       accessorKey: "usage",
-      header: "Usage",
+      header: tAuto("usage_0bb1864"),
       id: "usage",
       enableHiding: true,
       defaultHidden: true,
@@ -1450,7 +1467,7 @@ export default function ObservationsEventsTable({
         {
           accessorKey: "tokensPerSecond",
           id: "tokensPerSecond",
-          header: "Tokens per second",
+          header: tAuto("tokens_per_second_855cdaa"),
           size: 200,
           cell: ({ row }) => {
             const latency: number | undefined = row.getValue("latency");
@@ -1554,7 +1571,9 @@ export default function ObservationsEventsTable({
       id: "promptName",
       header: getEventsColumnName("promptName"),
       headerTooltip: {
-        description: "Link to prompt version in Langfuse prompt management.",
+        description: tAuto(
+          "link_to_prompt_version_in_langfuse_prompt_management_f3fa0d5",
+        ),
         href: "https://langfuse.com/docs/prompt-management/get-started",
       },
       size: 200,
@@ -1614,7 +1633,7 @@ export default function ObservationsEventsTable({
     },
     {
       accessorKey: "scores",
-      header: "Scores",
+      header: tAuto("scores_126cb93"),
       id: "scores",
       enableHiding: true,
       defaultHidden: true,
@@ -1665,7 +1684,7 @@ export default function ObservationsEventsTable({
       header: getEventsColumnName("version"),
       size: 100,
       headerTooltip: {
-        description: "Track changes via the version tag.",
+        description: tAuto("track_changes_via_the_version_tag_bbe1448"),
         href: "https://langfuse.com/docs/experimentation",
       },
       enableHiding: true,

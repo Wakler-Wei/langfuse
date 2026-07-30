@@ -8,7 +8,7 @@ export function InAppAgentToolPayload({
   value,
   variant,
 }: {
-  label: string;
+  label: React.ReactNode;
   value: string;
   variant: "default" | "failed" | "denied";
 }) {

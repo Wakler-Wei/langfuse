@@ -15,6 +15,7 @@ import { planLabels } from "@langfuse/shared";
 import { api } from "@/src/utils/api";
 import { toast } from "sonner";
 import { nanoid } from "nanoid";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export const StripeSwitchPlanButton = ({
   orgId,
@@ -35,12 +36,14 @@ export const StripeSwitchPlanButton = ({
   onProcessing: (id: string | null) => void;
   processing: boolean;
 }) => {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const [_opId, setOpId] = useState<string | null>(null);
 
   const mutChangePlan =
     api.cloudBilling.changeStripeSubscriptionProduct.useMutation({
       onSuccess: () => {
-        toast.success("Plan changed successfully");
+        toast.success(tAuto("plan_changed_successfully_c6ff1a4"));
         onProcessing(null);
         setOpId(null);
         setTimeout(() => window.location.reload(), 500);
@@ -48,7 +51,7 @@ export const StripeSwitchPlanButton = ({
       onError: () => {
         onProcessing(null);
         setOpId(null);
-        toast.error("Failed to change plan");
+        toast.error(tAuto("failed_to_change_plan_c666de7"));
       },
     });
 
@@ -57,69 +60,70 @@ export const StripeSwitchPlanButton = ({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="w-full">Change plan</Button>
+        <Button className="w-full">{tAuto("change_plan_5dccc31")}</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle className="text-lg">
-            Confirm Your Change: {planLabels[currentPlan ?? "cloud:hobby"]} →{" "}
-            {newPlanTitle}
+            {tAutoI18n("confirm_your_change_89bec04")}{" "}
+            {planLabels[currentPlan ?? "cloud:hobby"]} → {newPlanTitle}
           </DialogTitle>
         </DialogHeader>
         <DialogBody className="text-sm">
           {isLegacySubscription ? (
             <>
               <p>
-                We will end your current subscription now and start a new one
-                immediately.
+                {tAuto(
+                  "we_will_end_your_current_subscription_now_and_start__82eb020",
+                )}{" "}
               </p>
               <p>
-                You will receive an invoice today that includes (1) the base fee
-                for the new plan for a fresh billing period starting today and
-                (2) your base-fee and usage to date on the previous
-                subscription.
+                {tAuto(
+                  "you_will_receive_an_invoice_today_that_includes_1_th_6c6ac15",
+                )}{" "}
               </p>
               <p>
-                By confirming, you accept the immediate invoice and plan
-                activation starting now.
+                {tAuto(
+                  "by_confirming_you_accept_the_immediate_invoice_and_p_10f1e4c",
+                )}{" "}
               </p>
             </>
           ) : isUpgrade ? (
             <>
               <p>
-                You will be charged a prorated base fee today for the remainder
-                of this billing period. Features update immediately; usage-based
-                charges continue for the rest of the billing period.
+                {tAuto(
+                  "you_will_be_charged_a_prorated_base_fee_today_for_th_86a6a34",
+                )}{" "}
               </p>
               <p>
-                Example: if your plan is $199/month and you upgrade halfway
-                through the month to a $499/month plan, the prorated charge is
-                roughly $99.5 + $249.5 (plus taxes). Exact amounts depend on
-                timing and tax.
+                {tAuto(
+                  "example_if_your_plan_is_199_month_and_you_upgrade_ha_e7935f3",
+                )}{" "}
               </p>
               <p>
-                By confirming, you accept the prorated charge and immediate plan
-                change.
+                {tAuto(
+                  "by_confirming_you_accept_the_prorated_charge_and_imm_fba849e",
+                )}{" "}
               </p>
             </>
           ) : (
             <>
               <p>
-                No charge is made today. You stay on your current plan until the
-                end of this billing period, then we switch you to the new plan.
-                You can switch back anytime.
+                {tAuto(
+                  "no_charge_is_made_today_you_stay_on_your_current_pla_909c153",
+                )}{" "}
               </p>
               <p>
-                Usage continues to be billed under your current plan until the
-                switch. By confirming, you schedule the change at period end and
-                understand features will adjust at that time.
+                {tAuto(
+                  "usage_continues_to_be_billed_under_your_current_plan_60d5319",
+                )}{" "}
               </p>
             </>
           )}
         </DialogBody>
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="secondary">Cancel</Button>
+            <Button variant="secondary">{tAuto("cancel_77dfd21")}</Button>
           </DialogClose>
           <ActionButton
             onClick={() => {
@@ -134,7 +138,7 @@ export const StripeSwitchPlanButton = ({
             }}
             loading={processing}
           >
-            Confirm
+            {tAuto("confirm_04a2122")}{" "}
           </ActionButton>
         </DialogFooter>
       </DialogContent>

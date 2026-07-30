@@ -36,6 +36,7 @@ import {
   JSON_VIEW_RENDER_ROW_LIMIT,
   probeJsonField,
 } from "./lib/jsonViewSizeGate";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 // A field needing windowing is gated to the lazy byte-engine viewer, so the
 // gate row limit IS the virtualization threshold (single source of truth). The
@@ -127,6 +128,8 @@ function IOPreviewJSONInner({
   onExpansionChange,
   showCorrections = true,
 }: IOPreviewJSONProps) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const selectionContext = useInlineCommentSelectionOptional();
 
   const handleAddComment = useCallback(() => {
@@ -475,7 +478,7 @@ function IOPreviewJSONInner({
           ? gatedSection("input", "Input", inputBgColor, inputProbe, inputRows)
           : {
               key: "input",
-              title: "Input",
+              title: tAuto("input_b568d47"),
               data: effectiveInput,
               backgroundColor: inputBgColor,
               minHeight: "200px",
@@ -494,7 +497,7 @@ function IOPreviewJSONInner({
             )
           : {
               key: "output",
-              title: "Output",
+              title: tAuto("output_4bed336"),
               data: effectiveOutput,
               backgroundColor: outputBgColor,
               minHeight: "200px",
@@ -504,7 +507,7 @@ function IOPreviewJSONInner({
     if (showCorrections) {
       result.push({
         key: "corrections",
-        title: "Output correction",
+        title: tAuto("output_correction_7d5e1f4"),
         data: null,
         hideData: true, // Hide key/value display, only show header/footer
         backgroundColor: outputBgColor,
@@ -543,7 +546,7 @@ function IOPreviewJSONInner({
             )
           : {
               key: "metadata",
-              title: "Metadata",
+              title: tAuto("metadata_251edc0"),
               data: effectiveMetadata,
               backgroundColor: metadataBgColor,
               minHeight: "200px",
@@ -577,6 +580,8 @@ function IOPreviewJSONInner({
     projectId,
     traceId,
     environment,
+    ,
+    tAuto,
   ]);
 
   // Wait for parsing to complete before rendering to avoid flicker
@@ -584,7 +589,9 @@ function IOPreviewJSONInner({
     return (
       <div className="flex min-h-0 flex-1 flex-col border-t border-b">
         <div className="flex h-full items-center justify-center">
-          <div className="text-muted-foreground text-sm">Parsing data...</div>
+          <div className="text-muted-foreground text-sm">
+            {tAuto("parsing_data_1e87066")}
+          </div>
         </div>
       </div>
     );
@@ -629,7 +636,7 @@ function IOPreviewJSONInner({
         <Command className="flex-1 rounded-none border-0 bg-transparent">
           <CommandInput
             showBorder={false}
-            placeholder="Search across all sections..."
+            placeholder={tAuto("search_across_all_sections_faf951b")}
             className="h-7 border-0 focus:ring-0"
             value={searchQuery}
             onValueChange={setSearchQuery}
@@ -652,8 +659,11 @@ function IOPreviewJSONInner({
         {searchQuery && (
           <span className="text-muted-foreground text-xs whitespace-nowrap">
             {searchMatchCount > 0
-              ? `${currentMatchIndex + 1} of ${searchMatchCount}`
-              : "No matches"}
+              ? tAutoI18n("value0_of_value1_f38ef4e", {
+                  value0: String(currentMatchIndex + 1),
+                  value1: String(searchMatchCount),
+                })
+              : tAutoI18n("no_matches_cd0af6c")}
           </span>
         )}
 
@@ -665,7 +675,7 @@ function IOPreviewJSONInner({
               size="icon"
               className="h-7 w-7"
               onClick={handlePreviousMatch}
-              title="Previous match (Shift+Enter)"
+              title={tAuto("previous_match_shift_enter_e39569e")}
             >
               <ChevronUp className="h-3.5 w-3.5" />
             </Button>
@@ -674,7 +684,7 @@ function IOPreviewJSONInner({
               size="icon"
               className="h-7 w-7"
               onClick={handleNextMatch}
-              title="Next match (Enter)"
+              title={tAuto("next_match_enter_a974ff5")}
             >
               <ChevronDown className="h-3.5 w-3.5" />
             </Button>
@@ -687,7 +697,9 @@ function IOPreviewJSONInner({
           size="icon"
           className="h-7 w-7"
           onClick={handleCycleWrapMode}
-          title={`String wrap mode: ${stringWrapMode}`}
+          title={tAuto("string_wrap_mode_value0_d74453c", {
+            value0: stringWrapMode,
+          })}
         >
           {wrapIcon}
         </Button>
@@ -698,7 +710,7 @@ function IOPreviewJSONInner({
           size="icon"
           className="h-7 w-7"
           onClick={handleCopy}
-          title="Copy to clipboard"
+          title={tAuto("copy_to_clipboard_d8f482e")}
         >
           <Copy className="h-3.5 w-3.5" />
         </Button>
@@ -706,7 +718,9 @@ function IOPreviewJSONInner({
 
       {/* Section navigation hint bar */}
       <div className="bg-background flex h-6 shrink-0 items-center gap-1.5 border-b px-2">
-        <span className="text-muted-foreground text-xs">Jump to:</span>
+        <span className="text-muted-foreground text-xs">
+          {tAuto("jump_to_9733483")}
+        </span>
         {sections.map((section, index) => (
           <span key={section.key} className="flex items-center">
             <button
@@ -724,18 +738,26 @@ function IOPreviewJSONInner({
           <HoverCard>
             <HoverCardTrigger asChild>
               <span className="bg-muted text-muted-foreground ml-auto cursor-help rounded px-1.5 py-px text-[10px] font-bold">
-                Virtualized
+                {tAuto("virtualized_8e8a0f7")}{" "}
               </span>
             </HoverCardTrigger>
             <HoverCardContent className="w-80" side="bottom" align="end">
               <div className="space-y-2">
-                <p className="text-sm font-bold">Virtualized View</p>
+                <p className="text-sm font-bold">
+                  {tAuto("virtualized_view_e433afc")}
+                </p>
                 <p className="text-muted-foreground text-xs">
-                  This view is using virtualization due to a large number of
-                  keys ({rowCounts.input.toLocaleString()} input,{" "}
-                  {rowCounts.output.toLocaleString()} output,{" "}
-                  {rowCounts.metadata.toLocaleString()} metadata). Only visible
-                  rows are rendered for optimal performance.
+                  {tAutoI18n(
+                    "this_view_is_using_virtualization_due_to_a_large_num_bd8edd5",
+                  )}
+                  {rowCounts.input.toLocaleString()}{" "}
+                  {tAutoI18n("input_96a3126")}{" "}
+                  {rowCounts.output.toLocaleString()}{" "}
+                  {tAutoI18n("output_8313e05")}{" "}
+                  {rowCounts.metadata.toLocaleString()}{" "}
+                  {tAutoI18n(
+                    "metadata_only_visible_rows_are_rendered_for_optimal__80d14e7",
+                  )}{" "}
                 </p>
               </div>
             </HoverCardContent>

@@ -9,6 +9,7 @@ import { useMemo } from "react";
 import { usePriceUnitMultiplier } from "@/src/features/models/hooks/usePriceUnitMultiplier";
 import Decimal from "decimal.js";
 import { getMaxDecimals } from "@/src/features/models/utils";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type MatchedTierCardProps = {
   tier: {
@@ -23,6 +24,8 @@ type MatchedTierCardProps = {
 export type { MatchedTierCardProps };
 
 export function MatchedTierCard({ tier }: MatchedTierCardProps) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const { priceUnit, priceUnitMultiplier } = usePriceUnitMultiplier();
 
   const maxDecimals = useMemo(
@@ -39,7 +42,7 @@ export function MatchedTierCard({ tier }: MatchedTierCardProps) {
     <Card>
       <CardHeader className="pb-3">
         <CardTitle className="text-muted-foreground text-xs font-bold tracking-wide uppercase">
-          Matched Pricing Tier
+          {tAuto("matched_pricing_tier_3afc5e7")}{" "}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -47,17 +50,17 @@ export function MatchedTierCard({ tier }: MatchedTierCardProps) {
           <span className="text-base font-bold">{tier.name}</span>
           {tier.isDefault && (
             <Badge variant="secondary" className="text-xs">
-              Default
+              {tAuto("default_808d7dc")}{" "}
             </Badge>
           )}
           <span className="text-muted-foreground text-xs">
-            Priority: {tier.priority}
+            {tAutoI18n("priority_01eb224")} {tier.priority}
           </span>
         </div>
 
         <div>
           <div className="text-muted-foreground mb-2 text-xs font-bold">
-            Prices (per {priceUnit}):
+            {tAutoI18n("prices_per_1a85c5c")} {priceUnit}):
           </div>
           <div className="space-y-1.5">
             {Object.entries(tier.prices).map(([usageType, price]) => (

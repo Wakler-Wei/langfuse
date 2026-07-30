@@ -14,6 +14,7 @@ import {
   type ObservationFieldGroupFull,
 } from "@langfuse/shared";
 import { type BlobStorageFormControl } from "@/src/features/blobstorage-integration/components/formValues";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 // Field-group checkboxes; descriptions and available groups depend on the
 // selected export source and file type.
@@ -22,6 +23,8 @@ export const ExportFieldGroupsField = ({
 }: {
   control: BlobStorageFormControl;
 }) => {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const [watchedExportSource, watchedFileType] = useWatch({
     control,
     name: ["exportSource", "fileType"],
@@ -48,17 +51,20 @@ export const ExportFieldGroupsField = ({
       name="exportFieldGroups"
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Export Field Groups</FormLabel>
+          <FormLabel>{tAuto("export_field_groups_4266e62")}</FormLabel>
           <FormDescription>
-            Choose which field groups to include in the observation exports.
-            Deselect large groups (e.g. Input / Output) to reduce export size,
-            or privacy-sensitive groups (e.g. Metadata) to avoid storing user
-            data.
+            {tAutoI18n(
+              "choose_which_field_groups_to_include_in_the_observat_f6b7850",
+            )}{" "}
             {includesLegacyExport
               ? isLegacyOnlyExport
-                ? " Traces and scores are always exported in full. Field groups that only exist on the enriched observations (e.g. Trace Context) are not available for this export source."
-                : " Traces and scores are always exported in full. Fields that only exist on the enriched observations (e.g. Trace Context) are omitted from the legacy observations export."
-              : " Scores are always exported in full."}
+                ? tAutoI18n(
+                    "traces_and_scores_are_always_exported_in_full_field__d480b93",
+                  )
+                : tAutoI18n(
+                    "traces_and_scores_are_always_exported_in_full_fields_fcbcdb1",
+                  )
+              : tAutoI18n("scores_are_always_exported_in_full_77b016d")}
           </FormDescription>
           <div className="mt-2 space-y-2">
             {EXPORT_FIELD_GROUP_OPTIONS.filter(
@@ -104,7 +110,7 @@ export const ExportFieldGroupsField = ({
                       {option.label}
                       {isCore && (
                         <span className="text-muted-foreground ml-1 font-normal">
-                          (required)
+                          {tAuto("required_0002fd2")}{" "}
                         </span>
                       )}
                     </div>

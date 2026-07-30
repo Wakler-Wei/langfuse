@@ -10,6 +10,7 @@ import { Check, Copy } from "lucide-react";
 import { useMemo, useState } from "react";
 import { type z } from "zod";
 import { MARKDOWN_RENDER_CHARACTER_LIMIT } from "@/src/utils/constants";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type MarkdownJsonViewHeaderProps = {
   title: string | React.ReactNode;
@@ -28,6 +29,7 @@ export function MarkdownJsonViewHeader({
   canEnableMarkdown: _canEnableMarkdown = true,
   controlButtons,
 }: MarkdownJsonViewHeaderProps) {
+  const tAuto = useAutoTranslations();
   const [isCopied, setIsCopied] = useState(false);
 
   return (
@@ -39,7 +41,7 @@ export function MarkdownJsonViewHeader({
       <div className="mr-1 flex min-w-0 shrink flex-row items-center gap-1">
         {controlButtons}
         <Button
-          title="Copy to clipboard"
+          title={tAuto("copy_to_clipboard_d8f482e")}
           variant="ghost"
           size="icon-xs"
           type="button"

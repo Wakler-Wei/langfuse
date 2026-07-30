@@ -1,5 +1,6 @@
 import * as React from "react";
 import { cn } from "@/src/utils/tailwind";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export interface InlineEditTextProps {
   value: string;
@@ -27,6 +28,7 @@ export const InlineEditText = ({
   placeholder,
   "aria-label": ariaLabel,
 }: InlineEditTextProps) => {
+  const tAuto = useAutoTranslations();
   const [editing, setEditing] = React.useState(false);
   const [draft, setDraft] = React.useState(value);
 
@@ -61,7 +63,7 @@ export const InlineEditText = ({
         ref={focusInput}
         value={draft}
         placeholder={placeholder}
-        aria-label={ariaLabel ?? "Edit text"}
+        aria-label={ariaLabel ?? tAuto("edit_text_6597b9e")}
         onChange={(e) => setDraft(e.target.value)}
         onBlur={commit}
         onKeyDown={(e) => {
@@ -89,8 +91,8 @@ export const InlineEditText = ({
         setDraft(value);
         setEditing(true);
       }}
-      aria-label={ariaLabel ?? "Edit text"}
-      title="Click to edit"
+      aria-label={ariaLabel ?? tAuto("edit_text_6597b9e")}
+      title={tAuto("click_to_edit_25c26ab")}
       className="hover:bg-accent/50 focus-visible:ring-ring inline-flex h-[1lh] max-w-full items-center rounded-sm px-1 text-left align-bottom [font:inherit] focus-visible:ring-2 focus-visible:outline-hidden"
     >
       <span

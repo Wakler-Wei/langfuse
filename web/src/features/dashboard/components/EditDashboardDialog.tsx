@@ -13,6 +13,7 @@ import { Input } from "@/src/components/ui/input";
 import { Label } from "@/src/components/ui/label";
 import { Textarea } from "@/src/components/ui/textarea";
 import { showErrorToast } from "@/src/features/notifications/showErrorToast";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 interface EditDashboardDialogProps {
   open: boolean;
@@ -31,6 +32,8 @@ export function EditDashboardDialog({
   initialName,
   initialDescription,
 }: EditDashboardDialogProps) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const [name, setName] = useState(initialName);
   const [description, setDescription] = useState(initialDescription);
   const utils = api.useUtils();
@@ -41,13 +44,19 @@ export function EditDashboardDialog({
       onOpenChange(false);
     },
     onError: (e) => {
-      showErrorToast("Failed to update dashboard", e.message);
+      showErrorToast(
+        tAutoI18n("failed_to_update_dashboard_f2b9c8e"),
+        e.message,
+      );
     },
   });
 
   const handleSave = () => {
     if (!name.trim()) {
-      showErrorToast("Validation error", "Dashboard name is required");
+      showErrorToast(
+        tAutoI18n("validation_error_e157cd0"),
+        tAutoI18n("dashboard_name_is_required_8428939"),
+      );
       return;
     }
 
@@ -63,26 +72,28 @@ export function EditDashboardDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>Edit Dashboard</DialogTitle>
+          <DialogTitle>{tAuto("edit_dashboard_25b1a7d")}</DialogTitle>
         </DialogHeader>
         <DialogBody>
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
-              <Label htmlFor="name">Name</Label>
+              <Label htmlFor="name">{tAuto("name_709a232")}</Label>
               <Input
                 id="name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="Dashboard name"
+                placeholder={tAuto("dashboard_name_466f3af")}
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="description">Description</Label>
+              <Label htmlFor="description">
+                {tAuto("description_55f8ebc")}
+              </Label>
               <Textarea
                 id="description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder="Dashboard description"
+                placeholder={tAuto("dashboard_description_4f4d20f")}
                 rows={3}
               />
             </div>
@@ -95,14 +106,14 @@ export function EditDashboardDialog({
               variant="outline"
               type="button"
             >
-              Cancel
+              {tAuto("cancel_77dfd21")}{" "}
             </Button>
             <Button
               onClick={handleSave}
               type="button"
               loading={updateDashboard.isPending}
             >
-              Save Changes
+              {tAuto("save_changes_fa2984b")}{" "}
             </Button>
           </div>
         </DialogFooter>

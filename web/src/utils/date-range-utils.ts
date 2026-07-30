@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { addMinutes, format } from "date-fns";
+import { addMinutes, format, type Locale } from "date-fns";
 
 // Time-range presets, table aggregation options, and the TimeRange type
 // moved to @langfuse/shared (utils/dateRanges); re-exported here for the
@@ -227,7 +227,7 @@ export const isFullDayRange = (from: Date, to: Date) => {
 };
 
 // Format date range with smart year display and time inclusion
-export const formatDateRange = (from: Date, to: Date) => {
+export const formatDateRange = (from: Date, to: Date, locale?: Locale) => {
   const currentYear = new Date().getFullYear();
   const fromYear = from.getFullYear();
   const toYear = to.getFullYear();
@@ -239,12 +239,12 @@ export const formatDateRange = (from: Date, to: Date) => {
     // Show just dates for full day ranges
     const fromPattern = showFromYear ? "LLL dd, yyyy" : "LLL dd";
     const toPattern = showToYear ? "LLL dd, yyyy" : "LLL dd";
-    return `${format(from, fromPattern)} - ${format(to, toPattern)}`;
+    return `${format(from, fromPattern, { locale })} - ${format(to, toPattern, { locale })}`;
   }
   // Show dates with times for partial day ranges
   const fromPattern = showFromYear ? "LLL dd yyyy, HH:mm" : "LLL dd, HH:mm";
   const toPattern = showToYear ? "LLL dd yyyy, HH:mm" : "LLL dd, HH:mm";
-  return `${format(from, fromPattern)} - ${format(to, toPattern)}`;
+  return `${format(from, fromPattern, { locale })} - ${format(to, toPattern, { locale })}`;
 };
 
 /**

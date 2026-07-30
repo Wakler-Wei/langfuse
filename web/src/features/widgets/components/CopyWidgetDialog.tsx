@@ -8,6 +8,7 @@ import {
   DialogBody,
 } from "@/src/components/ui/dialog";
 import { Button } from "@/src/components/ui/button";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 /**
  * Copy-first flow for Langfuse-managed widgets on a project dashboard:
@@ -27,6 +28,7 @@ export function CopyWidgetDialog({
   onConfirm: () => void;
   isPending: boolean;
 }) {
+  const tAuto = useAutoTranslations();
   return (
     <Dialog
       open={open}
@@ -39,7 +41,9 @@ export function CopyWidgetDialog({
     >
       <DialogContent className="sm:max-w-[480px]">
         <DialogHeader>
-          <DialogTitle>Edit your copy of this widget</DialogTitle>
+          <DialogTitle>
+            {tAuto("edit_your_copy_of_this_widget_aec77aa")}
+          </DialogTitle>
         </DialogHeader>
         <DialogBody>
           <p className="text-muted-foreground py-4 text-sm">
@@ -59,10 +63,10 @@ export function CopyWidgetDialog({
               type="button"
               disabled={isPending}
             >
-              Cancel
+              {tAuto("cancel_77dfd21")}{" "}
             </Button>
             <Button onClick={onConfirm} type="button" loading={isPending}>
-              Create my copy
+              {tAuto("create_my_copy_fda008e")}{" "}
             </Button>
           </div>
         </DialogFooter>

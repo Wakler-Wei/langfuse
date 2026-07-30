@@ -29,6 +29,7 @@ import { useAuthGuard } from "./hooks/useAuthGuard";
 import { useProjectAccess } from "./hooks/useProjectAccess";
 import { useFilteredNavigation } from "./hooks/useFilteredNavigation";
 import { useLayoutMetadata } from "./hooks/useLayoutMetadata";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 /**
  * Main layout component
@@ -39,6 +40,7 @@ import { useLayoutMetadata } from "./hooks/useLayoutMetadata";
  * - User permissions
  */
 export function AppLayout(props: PropsWithChildren) {
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const session = useAuthSession();
   const { organization } = useQueryProjectOrOrganization();
@@ -95,10 +97,12 @@ export function AppLayout(props: PropsWithChildren) {
     // every mount (thousands of events / hundreds of users of pure noise).
     return (
       <ErrorPage
-        title="Project Not Found"
-        message="The project you are trying to access does not exist or you do not have access to it."
+        title={tAuto("project_not_found_27c616f")}
+        message={tAuto(
+          "the_project_you_are_trying_to_access_does_not_exist__bd2fef9",
+        )}
         additionalButton={{
-          label: "Go to Home",
+          label: tAuto("go_to_home_c05b389"),
           href: "/",
         }}
       />
@@ -127,7 +131,7 @@ export function AppLayout(props: PropsWithChildren) {
   // The authGuard hook ensures we don't reach here without a valid session
   if (!session.data) {
     // This should never happen due to guards above, but TypeScript needs this
-    return <LoadingLayout message="Loading" />;
+    return <LoadingLayout message={tAuto("loading_8f26c65")} />;
   }
 
   return (

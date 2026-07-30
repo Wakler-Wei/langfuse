@@ -42,6 +42,7 @@ import {
   useEvalUpgradeAssistantPlan,
   V4_CODING_AGENT_PROMPT,
 } from "@/src/features/v4-migration/useV4UpgradeAssistantSupport";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 // Single source of truth for the v4-migration copy and content. Both surfaces
 // (side panel and modal) render these components — edit copy here only.
@@ -67,14 +68,17 @@ const DEPRECATED_INTEGRATION_MIGRATION_URLS: Record<string, string> = {
 // Copies the agent migration prompt to the clipboard with toast + analytics;
 // shared by the panel/modal header CTA and the status page.
 export function useCopyMigrationPrompt() {
+  const tAuto = useAutoTranslations();
   const capture = usePostHogClientCapture();
 
   return async () => {
     capture("v4_migration:coding_agent_prompt_copied");
     await navigator.clipboard.writeText(V4_CODING_AGENT_PROMPT);
     showSuccessToast({
-      title: "Prompt copied",
-      description: "Paste it into Cursor, Codex, or another coding agent.",
+      title: tAuto("prompt_copied_cbd262b"),
+      description: tAuto(
+        "paste_it_into_cursor_codex_or_another_coding_agent_522a9d9",
+      ),
     });
   };
 }
@@ -155,14 +159,15 @@ function MigrationCountChip({
   state: MigrationCountState;
   affectedLabel: string;
 }) {
+  const tAuto = useAutoTranslations();
   if (state.status === "loading") {
-    return <Chip variant="warning">Checking</Chip>;
+    return <Chip variant="warning">{tAuto("checking_97876b8")}</Chip>;
   }
   if (state.status === "error") {
-    return <Chip variant="warning">Check failed</Chip>;
+    return <Chip variant="warning">{tAuto("check_failed_0ddb840")}</Chip>;
   }
   if (state.count === 0) {
-    return <Chip variant="success">Up to date</Chip>;
+    return <Chip variant="success">{tAuto("up_to_date_82fb1d5")}</Chip>;
   }
   return (
     <Chip variant="warning">
@@ -172,63 +177,84 @@ function MigrationCountChip({
 }
 
 function V4MigrationSdkSection({ sdk }: { sdk: V4MigrationSdkState }) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const detectedSdkSeries = sdk.sdkUsageSeries.filter(
     (series) => series.canonicalSdkName !== null,
   );
   const chip =
     sdk.status === "latest" ? (
-      <Chip variant="success">Up to date</Chip>
+      <Chip variant="success">{tAuto("up_to_date_82fb1d5")}</Chip>
     ) : sdk.status === "otel_realtime" ? (
-      <Chip variant="success">OTel real-time</Chip>
+      <Chip variant="success">{tAuto("otel_real_time_c9d51a9")}</Chip>
     ) : sdk.status === "no_data" ? (
-      <Chip variant="success">No data detected</Chip>
+      <Chip variant="success">{tAuto("no_data_detected_05ecc63")}</Chip>
     ) : sdk.status === "checking" ? (
-      <Chip variant="warning">Checking</Chip>
+      <Chip variant="warning">{tAuto("checking_97876b8")}</Chip>
     ) : sdk.status === "otel_header_required" ? (
-      <Chip variant="warning">OTel header required</Chip>
+      <Chip variant="warning">{tAuto("otel_header_required_be25ba5")}</Chip>
     ) : sdk.status === "unknown" ? (
-      <Chip variant="warning">Needs review</Chip>
+      <Chip variant="warning">{tAuto("needs_review_33a506c")}</Chip>
     ) : sdk.status === "error" ? (
-      <Chip variant="warning">Check failed</Chip>
+      <Chip variant="warning">{tAuto("check_failed_0ddb840")}</Chip>
     ) : (
-      <Chip variant="warning">{sdk.upgradeRequiredCount} outdated</Chip>
+      <Chip variant="warning">
+        {sdk.upgradeRequiredCount} {tAutoI18n("outdated_b85a517")}
+      </Chip>
     );
 
   return (
-    <Section title="Tracing Instrumentation" chip={chip}>
+    <Section title={tAuto("tracing_instrumentation_177ec8c")} chip={chip}>
       <p className="text-muted-foreground text-sm leading-relaxed">
         {sdk.status === "checking" ? (
-          "Checking the latest traces for this project…"
+          tAutoI18n("checking_the_latest_traces_for_this_project_76a5a59")
         ) : sdk.status === "otel_header_required" ? (
           <>
-            OTel data is arriving through the delayed ingestion path. Set the{" "}
-            <MonoValue>x-langfuse-ingestion-version</MonoValue> header to{" "}
-            <MonoValue>4</MonoValue> on the OTLP exporter to use real-time
-            ingestion.{" "}
+            {tAuto(
+              "otel_data_is_arriving_through_the_delayed_ingestion__a9a3ab8",
+            )}{" "}
+            <MonoValue>
+              {tAuto("x_langfuse_ingestion_version_281df5b")}
+            </MonoValue>{" "}
+            {tAuto("header_to_72e3e99")} <MonoValue>4</MonoValue>{" "}
+            {tAuto("on_the_otlp_exporter_to_use_real_time_ingestion_2d682c8")}{" "}
             <ExternalLink href={OTEL_V4_MIGRATION_URL}>
-              OpenTelemetry migration guide
+              {tAuto("opentelemetry_migration_guide_2f8b206")}{" "}
             </ExternalLink>
             .
           </>
         ) : sdk.status === "otel_realtime" ? (
-          "OTel data is using real-time ingestion. No ingestion header update is required."
+          tAutoI18n(
+            "otel_data_is_using_real_time_ingestion_no_ingestion__7417d49",
+          )
         ) : sdk.status === "no_data" ? (
-          `No ingestion data was detected in the last ${V4_MIGRATION_LOOKBACK_DAYS} days.`
+          tAutoI18n(
+            "no_ingestion_data_was_detected_in_the_last_value0_da_03f09e6",
+            { value0: String((V4_MIGRATION_LOOKBACK_DAYS as unknown) ?? "") },
+          )
         ) : sdk.status === "unknown" ? (
-          "We could not recognize every detected SDK version. Verify that these SDKs are up to date."
+          tAutoI18n(
+            "we_could_not_recognize_every_detected_sdk_version_ve_f5b0c7d",
+          )
         ) : sdk.status === "error" ? (
-          "We could not check the latest traces for this project. Try again later."
+          tAutoI18n(
+            "we_could_not_check_the_latest_traces_for_this_projec_7a67462",
+          )
         ) : sdk.status === "latest" ? (
-          "All detected Langfuse SDK versions are up to date."
+          tAutoI18n("all_detected_langfuse_sdk_versions_are_up_to_date_0c24a50")
         ) : (
           <>
-            {sdk.upgradeRequiredCount} detected SDK{" "}
+            {sdk.upgradeRequiredCount} {tAuto("detected_sdk_ee1a3f7")}{" "}
             {sdk.upgradeRequiredCount === 1
-              ? "configuration needs"
-              : "configurations need"}{" "}
-            an update.{" "}
-            <ExternalLink href={SDK_UPGRADE_URL}>Upgrade the SDK</ExternalLink>{" "}
-            for real-time data and the latest tracing experience.
+              ? tAutoI18n("configuration_needs_a59ec99")
+              : tAutoI18n("configurations_need_a87c9e9")}{" "}
+            {tAuto("an_update_a3c42c5")}{" "}
+            <ExternalLink href={SDK_UPGRADE_URL}>
+              {tAuto("upgrade_the_sdk_87209f1")}
+            </ExternalLink>{" "}
+            {tAuto(
+              "for_real_time_data_and_the_latest_tracing_experience_c098242",
+            )}{" "}
           </>
         )}
       </p>
@@ -252,7 +278,7 @@ function V4MigrationSdkSection({ sdk }: { sdk: V4MigrationSdkState }) {
                 <MonoValue>{sdkLabel}</MonoValue>
                 <span title={series.publicKey || undefined}>{publicKey}</span>
                 <span>
-                  · last seen{" "}
+                  {tAutoI18n("last_seen_f8bfa44")}{" "}
                   {formatCompactRelativeTime(new Date(series.lastSeen))}
                 </span>
                 {series.v4MigrationStatus === "upgrade_required" &&
@@ -261,10 +287,12 @@ function V4MigrationSdkSection({ sdk }: { sdk: V4MigrationSdkState }) {
                       · {formatSdkUpgradeRequirement(series.canonicalSdkName)}
                     </span>
                   )}
-                {series.upgradeCompleted && <span>· upgrade completed</span>}
+                {series.upgradeCompleted && (
+                  <span>{tAuto("upgrade_completed_2722d43")}</span>
+                )}
                 {series.v4MigrationStatus === "unknown" && (
                   <span className="text-dark-yellow">
-                    · version not recognized
+                    {tAuto("version_not_recognized_e4537ab")}{" "}
                   </span>
                 )}
               </li>
@@ -295,6 +323,8 @@ export function V4MigrationHeaderContent({
    *  would otherwise overlap the right-aligned status link. */
   titleRowClassName?: string;
 }) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const capture = usePostHogClientCapture();
   const handleCopyPrompt = useCopyMigrationPrompt();
   const [promptVisible, setPromptVisible] = useState(false);
@@ -326,7 +356,13 @@ export function V4MigrationHeaderContent({
         )}
       >
         <p className="min-w-0 text-lg font-bold">
-          {projectName ? <>Migrate {projectName} to v4</> : "Migrate to v4"}
+          {projectName ? (
+            <>
+              {tAuto("migrate_929ecd9")} {projectName} {tAuto("to_v4_5a366fb")}
+            </>
+          ) : (
+            tAutoI18n("migrate_to_v4_5967566")
+          )}
         </p>
         <Link
           href="/v4-migration"
@@ -336,15 +372,16 @@ export function V4MigrationHeaderContent({
           }}
           className="shrink-0 text-sm underline"
         >
-          View Status
+          {tAuto("view_status_0efd573")}{" "}
         </Link>
       </div>
       <p className="text-muted-foreground mb-3 text-sm leading-relaxed">
         <ExternalLink href={V4_DOCS_URL} className="text-inherit underline">
-          Langfuse v4
+          {tAuto("langfuse_v4_98d761d")}{" "}
         </ExternalLink>{" "}
-        is here: real-time, up to 165× faster, plus new dashboards, alerting,
-        sessions, and trace view.
+        {tAutoI18n(
+          "is_here_real_time_up_to_165_faster_plus_new_dashboar_236e1f0",
+        )}{" "}
         {needsMigration &&
           " This project still uses the previous setup, which stops working soon."}
       </p>
@@ -363,13 +400,19 @@ export function V4MigrationHeaderContent({
           {promptVisible ? (
             <>
               <Copy className="mr-1.5 h-4 w-4 shrink-0" />
-              <span className="min-w-0 truncate" title="Copy prompt">
-                Copy prompt
+              <span
+                className="min-w-0 truncate"
+                title={tAuto("copy_prompt_dcf5b41")}
+              >
+                {tAuto("copy_prompt_dcf5b41")}{" "}
               </span>
             </>
           ) : (
-            <span className="min-w-0 truncate" title="Update SDK with agents">
-              Update SDK with agents
+            <span
+              className="min-w-0 truncate"
+              title={tAuto("update_sdk_with_agents_434d5a6")}
+            >
+              {tAuto("update_sdk_with_agents_434d5a6")}{" "}
             </span>
           )}
         </RainbowButton>
@@ -389,6 +432,8 @@ export function V4MigrationDetailsContent({
   /** Project the content links point at; falls back to the route project. */
   projectId?: string;
 }) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const capture = usePostHogClientCapture();
   const { openWithMode: openSupportDrawerWithMode } = useSupportDrawer();
@@ -445,18 +490,20 @@ export function V4MigrationDetailsContent({
           <div className="flex flex-col gap-3">
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-2 text-base font-bold">
-                <LibraryBig className="h-4 w-4 shrink-0" /> Want to review
-                first?
+                <LibraryBig className="h-4 w-4 shrink-0" />{" "}
+                {tAuto("want_to_review_first_90df113")}{" "}
               </div>
               <V4PreviewToggleRow projectId={projectId} />
             </div>
             <p className="text-muted-foreground text-sm">
-              The latest SDK no longer sets trace input and output; v4{" "}
+              {tAutoI18n(
+                "the_latest_sdk_no_longer_sets_trace_input_and_output_7ebeff0",
+              )}{" "}
               <ExternalLink
                 href={OBSERVATIONS_DATA_MODEL_URL}
                 className="text-inherit underline"
               >
-                infers them from observations
+                {tAuto("infers_them_from_observations_12cbd7c")}{" "}
               </ExternalLink>
               . Use this toggle to compare both views while you upgrade.
             </p>
@@ -479,17 +526,17 @@ export function V4MigrationDetailsContent({
             onClick={() => capture("v4_migration:panel_docs_link_clicked")}
             className="text-foreground shrink-0 text-sm underline"
           >
-            Documentation
+            {tAuto("documentation_9e9cf32")}{" "}
           </a>
         </div>
         <p className="text-muted-foreground text-sm">
-          Some features will stop working soon.
+          {tAuto("some_features_will_stop_working_soon_be6da4b")}{" "}
         </p>
         <div>
           <V4MigrationSdkSection sdk={migrationData.sdk} />
 
           <Section
-            title="Evals"
+            title={tAuto("evals_40b90ed")}
             chip={
               <MigrationCountChip
                 state={migrationData.evals}
@@ -499,30 +546,41 @@ export function V4MigrationDetailsContent({
           >
             {migrationData.evals.status === "loading" ? (
               <p className="text-muted-foreground text-sm">
-                Checking configured evals…
+                {tAuto("checking_configured_evals_44c50cb")}{" "}
               </p>
             ) : migrationData.evals.status === "error" ? (
               <p className="text-muted-foreground text-sm">
-                We could not check configured evals. Try again later.
+                {tAuto(
+                  "we_could_not_check_configured_evals_try_again_later_62bbe06",
+                )}{" "}
               </p>
             ) : migrationData.evals.count > 0 ? (
               <>
                 <p className="text-muted-foreground mb-2 text-sm">
-                  {migrationData.evals.count} configured{" "}
+                  {migrationData.evals.count} {tAutoI18n("configured_3be9f95")}{" "}
                   {migrationData.evals.count === 1
-                    ? "eval targets"
-                    : "evals target"}{" "}
-                  trace input/output, which{" "}
+                    ? tAutoI18n("eval_targets_a13b057")
+                    : tAutoI18n("evals_target_3589123")}{" "}
+                  {tAutoI18n("trace_input_output_which_d31d177")}{" "}
                   <span className="text-dark-yellow">
-                    {migrationData.evals.count === 1 ? "stops" : "stop"} running
-                    soon
+                    {migrationData.evals.count === 1
+                      ? tAutoI18n("stops_2a45249")
+                      : tAutoI18n("stop_1b48015")}{" "}
+                    {tAutoI18n("running_soon_2bd4c39")}{" "}
                   </span>
-                  . Repointing {migrationData.evals.count === 1 ? "it" : "them"}{" "}
-                  at observations or experiments requires minimal changes
+                  . Repointing{" "}
+                  {migrationData.evals.count === 1
+                    ? tAutoI18n("it_6c5522c")
+                    : tAutoI18n("them_98910a6")}{" "}
+                  {tAutoI18n(
+                    "at_observations_or_experiments_requires_minimal_chan_2f9f848",
+                  )}{" "}
                   {upgradePlan.showAssistantButton
                     ? upgradePlan.mode === "evals-ready"
-                      ? " — the assistant can do it for you"
-                      : " — the assistant can help you choose the upgrade order"
+                      ? tAutoI18n("the_assistant_can_do_it_for_you_02659bc")
+                      : tAutoI18n(
+                          "the_assistant_can_help_you_choose_the_upgrade_order_d836d88",
+                        )
                     : ""}
                   .
                 </p>
@@ -534,7 +592,7 @@ export function V4MigrationDetailsContent({
                       onClick={handleMigrateEvalsWithAgent}
                     >
                       <BotMessageSquare className="mr-1.5 h-4 w-4" />
-                      Migrate with assistant
+                      {tAuto("migrate_with_assistant_136b04d")}{" "}
                     </Button>
                   )}
                   {evalsUrl ? (
@@ -543,20 +601,20 @@ export function V4MigrationDetailsContent({
                       onClick={onNavigate}
                       className="text-dark-blue text-sm hover:underline"
                     >
-                      Review deprecated evals
+                      {tAuto("review_deprecated_evals_419cbb1")}{" "}
                     </Link>
                   ) : null}
                 </div>
               </>
             ) : (
               <p className="text-muted-foreground text-sm">
-                No deprecated evals detected.
+                {tAuto("no_deprecated_evals_detected_dd7ac47")}{" "}
               </p>
             )}
           </Section>
 
           <Section
-            title="Deprecated APIs"
+            title={tAuto("deprecated_apis_600c4c3")}
             chip={
               <MigrationCountChip
                 state={migrationData.apis}
@@ -566,21 +624,26 @@ export function V4MigrationDetailsContent({
           >
             {migrationData.apis.status === "loading" ? (
               <p className="text-muted-foreground text-sm">
-                Checking public API usage…
+                {tAuto("checking_public_api_usage_9070546")}{" "}
               </p>
             ) : migrationData.apis.status === "error" ? (
               <p className="text-muted-foreground text-sm">
-                We could not check public API usage. Try again later.
+                {tAuto(
+                  "we_could_not_check_public_api_usage_try_again_later_877c4a7",
+                )}{" "}
               </p>
             ) : migrationData.apiUsage.length > 0 ? (
               <>
                 <p className="text-muted-foreground mb-2 text-sm">
                   You&apos;ve called these deprecated endpoints in the last{" "}
-                  {V4_MIGRATION_LOOKBACK_DAYS} days. They stop working soon; the{" "}
+                  {V4_MIGRATION_LOOKBACK_DAYS}{" "}
+                  {tAutoI18n("days_they_stop_working_soon_the_fe175c3")}{" "}
                   <ExternalLink href={DEPRECATED_API_MIGRATION_URL}>
-                    migration guide
+                    {tAuto("migration_guide_ff2f398")}{" "}
                   </ExternalLink>{" "}
-                  maps each endpoint to its replacement.
+                  {tAutoI18n(
+                    "maps_each_endpoint_to_its_replacement_06d2346",
+                  )}{" "}
                 </p>
                 <div className="flex flex-col">
                   {migrationData.apiUsage.map((usage) => (
@@ -595,7 +658,8 @@ export function V4MigrationDetailsContent({
                         {usage.endpoint}
                       </ExternalLink>
                       <span className="text-muted-foreground text-xs whitespace-nowrap">
-                        {numberFormatter(usage.count, 0, 2)} calls
+                        {numberFormatter(usage.count, 0, 2)}{" "}
+                        {tAutoI18n("calls_51b6cb2")}{" "}
                       </span>
                     </div>
                   ))}
@@ -603,14 +667,16 @@ export function V4MigrationDetailsContent({
               </>
             ) : (
               <p className="text-muted-foreground text-sm">
-                No deprecated public API usage detected in the last{" "}
-                {V4_MIGRATION_LOOKBACK_DAYS} days.
+                {tAutoI18n(
+                  "no_deprecated_public_api_usage_detected_in_the_last_e804054",
+                )}{" "}
+                {V4_MIGRATION_LOOKBACK_DAYS} {tAutoI18n("days_f927163")}{" "}
               </p>
             )}
           </Section>
 
           <Section
-            title="Deprecated Integrations"
+            title={tAuto("deprecated_integrations_cf5eee9")}
             chip={
               <MigrationCountChip
                 state={migrationData.exports}
@@ -620,18 +686,20 @@ export function V4MigrationDetailsContent({
           >
             {migrationData.exports.status === "loading" ? (
               <p className="text-muted-foreground text-sm">
-                Checking integrations…
+                {tAuto("checking_integrations_216e11f")}{" "}
               </p>
             ) : migrationData.exports.status === "error" ? (
               <p className="text-muted-foreground text-sm">
-                We could not check integrations. Try again later.
+                {tAuto(
+                  "we_could_not_check_integrations_try_again_later_382ccfc",
+                )}{" "}
               </p>
             ) : migrationData.legacyIntegrations.length > 0 ? (
               <>
                 <p className="text-muted-foreground mb-2 text-sm">
-                  These exports still read from the old data source. Switching
-                  them over can change what downstream consumers receive, so
-                  worth a quick check.
+                  {tAuto(
+                    "these_exports_still_read_from_the_old_data_source_sw_cda797e",
+                  )}{" "}
                 </p>
                 <div className="flex flex-col">
                   {migrationData.legacyIntegrations.map((name) => (
@@ -658,7 +726,7 @@ export function V4MigrationDetailsContent({
                         }
                         className="text-xs"
                       >
-                        Migration guide
+                        {tAuto("migration_guide_c25bf8d")}{" "}
                       </ExternalLink>
                     </div>
                   ))}
@@ -666,7 +734,9 @@ export function V4MigrationDetailsContent({
               </>
             ) : (
               <p className="text-muted-foreground text-sm">
-                No deprecated integration exports detected.
+                {tAuto(
+                  "no_deprecated_integration_exports_detected_73ecd5e",
+                )}{" "}
               </p>
             )}
           </Section>
@@ -677,7 +747,8 @@ export function V4MigrationDetailsContent({
 
       <div className="flex flex-col gap-3">
         <div className="flex items-center gap-2 text-base font-bold">
-          <LifeBuoy className="h-4 w-4 shrink-0" /> Contact us
+          <LifeBuoy className="h-4 w-4 shrink-0" />{" "}
+          {tAuto("contact_us_4832e45")}{" "}
         </div>
         <p className="text-muted-foreground text-sm">
           Need a hand with the update? We&apos;re here to help!
@@ -690,8 +761,11 @@ export function V4MigrationDetailsContent({
               rel="noopener noreferrer"
               onClick={() => capture("v4_migration:contact_book_call_clicked")}
             >
-              <span className="min-w-0 truncate" title="Book a call">
-                Book a call
+              <span
+                className="min-w-0 truncate"
+                title={tAuto("book_a_call_4e0f5e5")}
+              >
+                {tAuto("book_a_call_4e0f5e5")}{" "}
               </span>
             </a>
           </Button>
@@ -700,8 +774,11 @@ export function V4MigrationDetailsContent({
             className="min-w-0 flex-1"
             onClick={handleEmailEngineer}
           >
-            <span className="min-w-0 truncate" title="Email an Engineer">
-              Email an Engineer
+            <span
+              className="min-w-0 truncate"
+              title={tAuto("email_an_engineer_fc4bcd6")}
+            >
+              {tAuto("email_an_engineer_fc4bcd6")}{" "}
             </span>
           </Button>
         </div>

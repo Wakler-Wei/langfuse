@@ -37,6 +37,7 @@ import { useDebounce } from "@/src/hooks/useDebounce";
 import { useFullTextSearch } from "@/src/components/table/use-cases/useFullTextSearch";
 import { useDatasetVersion } from "../hooks/useDatasetVersion";
 import { EditDatasetItemDialog } from "./EditDatasetItemDialog";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type RowData = {
   id: string;
@@ -60,6 +61,7 @@ export function DatasetItemsTable({
   datasetId: string;
   menuItems?: React.ReactNode;
 }) {
+  const tAuto = useAutoTranslations();
   const { setDetailPageList } = useDetailPageLists();
   const utils = api.useUtils();
   const capture = usePostHogClientCapture();
@@ -144,7 +146,7 @@ export function DatasetItemsTable({
   const columns: LangfuseColumnDef<RowData>[] = [
     {
       accessorKey: "id",
-      header: "Item id",
+      header: tAuto("item_id_acb87e9"),
       id: "id",
       size: 90,
       isFixedPosition: true,
@@ -163,10 +165,11 @@ export function DatasetItemsTable({
     },
     {
       accessorKey: "source",
-      header: "Source",
+      header: tAuto("source_6da13ad"),
       headerTooltip: {
-        description:
-          "Link to the source trace based on which this item was added",
+        description: tAuto(
+          "link_to_the_source_trace_based_on_which_this_item_wa_78dcf9e",
+        ),
       },
       id: "source",
       size: 90,
@@ -190,7 +193,7 @@ export function DatasetItemsTable({
     },
     {
       accessorKey: "status",
-      header: "Status",
+      header: tAuto("status_bae7d5b"),
       id: "status",
       size: 80,
       cell: ({ row }) => {
@@ -200,7 +203,7 @@ export function DatasetItemsTable({
     },
     {
       accessorKey: "createdAt",
-      header: "Created At",
+      header: tAuto("created_at_5db1542"),
       id: "createdAt",
       size: 150,
       enableHiding: true,
@@ -211,7 +214,7 @@ export function DatasetItemsTable({
     },
     {
       accessorKey: "input",
-      header: "Input",
+      header: tAuto("input_b568d47"),
       id: "input",
       size: 200,
       enableHiding: true,
@@ -224,7 +227,7 @@ export function DatasetItemsTable({
     },
     {
       accessorKey: "expectedOutput",
-      header: "Expected Output",
+      header: tAuto("expected_output_395c41e"),
       id: "expectedOutput",
       size: 200,
       enableHiding: true,
@@ -243,7 +246,7 @@ export function DatasetItemsTable({
     },
     {
       accessorKey: "metadata",
-      header: "Metadata",
+      header: tAuto("metadata_251edc0"),
       id: "metadata",
       size: 200,
       enableHiding: true,
@@ -257,7 +260,7 @@ export function DatasetItemsTable({
     {
       id: "actions",
       accessorKey: "actions",
-      header: "Actions",
+      header: tAuto("actions_c3cd636"),
       size: 70,
       cell: ({ row }) => {
         const id: string = row.getValue("id");
@@ -266,12 +269,14 @@ export function DatasetItemsTable({
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only relative">Open menu</span>
+                <span className="sr-only relative">
+                  {tAuto("open_menu_197101e")}
+                </span>
                 <MoreVertical className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuLabel>{tAuto("actions_c3cd636")}</DropdownMenuLabel>
               <DropdownMenuItem
                 disabled={!hasAccess || !!selectedVersion}
                 onClick={() => {
@@ -280,7 +285,7 @@ export function DatasetItemsTable({
                 }}
               >
                 <Edit className="mr-2 h-4 w-4" />
-                Edit
+                {tAuto("edit_5301648")}{" "}
               </DropdownMenuItem>
               <DropdownMenuItem
                 disabled={!hasAccess || !!selectedVersion}
@@ -303,7 +308,9 @@ export function DatasetItemsTable({
                 }}
               >
                 <Archive className="mr-2 h-4 w-4" />
-                {status === DatasetStatus.ARCHIVED ? "Unarchive" : "Archive"}
+                {status === DatasetStatus.ARCHIVED
+                  ? tAuto("unarchive_35e71c2")
+                  : tAuto("archive_2621c6f")}
               </DropdownMenuItem>
               <DropdownMenuItem
                 disabled={!hasAccess || !!selectedVersion}
@@ -324,7 +331,7 @@ export function DatasetItemsTable({
                 }}
               >
                 <Trash2 className="mr-2 h-4 w-4" />
-                Delete
+                {tAuto("delete_f6fdbe4")}{" "}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

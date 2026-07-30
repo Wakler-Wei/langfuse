@@ -5,8 +5,10 @@ import Page from "@/src/components/layouts/page";
 import { SessionsOnboarding } from "@/src/components/onboarding/SessionsOnboarding";
 import { api } from "@/src/utils/api";
 import { useV4Beta } from "@/src/features/events/hooks/useV4Beta";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export default function Sessions() {
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const projectId = router.query.projectId as string;
   const { isBetaEnabled } = useV4Beta();
@@ -45,13 +47,13 @@ export default function Sessions() {
   return (
     <Page
       headerProps={{
-        title: "Sessions",
+        title: tAuto("sessions_e11e37a"),
         help: {
           description: (
             <>
-              A session is a collection of related traces, such as a
-              conversation or thread. To begin, add a sessionId to the trace.
-              See{" "}
+              {tAuto(
+                "a_session_is_a_collection_of_related_traces_such_as__4c90cd4",
+              )}{" "}
               <a
                 href="https://langfuse.com/docs/observability/features/sessions"
                 target="_blank"
@@ -59,9 +61,9 @@ export default function Sessions() {
                 className="decoration-primary/30 hover:decoration-primary underline"
                 onClick={(e) => e.stopPropagation()}
               >
-                docs
+                {tAuto("docs_71ab8b6")}{" "}
               </a>{" "}
-              to learn more.
+              {tAuto("to_learn_more_3d1d2de")}{" "}
             </>
           ),
           href: "https://langfuse.com/docs/observability/features/sessions",

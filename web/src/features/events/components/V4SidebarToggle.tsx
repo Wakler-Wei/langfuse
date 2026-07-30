@@ -18,10 +18,8 @@ import {
   toExperimentsResultsUrl,
 } from "@/src/features/experiments/utils/experimentUrlTranslation";
 
-import {
-  V4_PREVIEW_LABEL,
-  V4_PREVIEW_DESCRIPTION,
-} from "@/src/features/events/lib/v4PreviewLabel";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
+import { useTranslations } from "next-intl";
 
 function asSingleValue(value: string | string[] | undefined) {
   return Array.isArray(value) ? value[0] : value;
@@ -118,6 +116,10 @@ function useV4PreviewToggle(source: "sidebar" | "migration_panel") {
 }
 
 export function V4SidebarToggle() {
+  const tAuto = useAutoTranslations();
+  const tPreview = useTranslations("V4Preview");
+  const previewLabel = tPreview("label");
+  const previewDescription = tPreview("description");
   const {
     isBetaEnabled,
     canToggleV4,
@@ -146,9 +148,9 @@ export function V4SidebarToggle() {
             <Label
               htmlFor="v4-beta-toggle"
               className="block min-w-0 flex-1 cursor-pointer truncate text-sm font-normal"
-              title={V4_PREVIEW_LABEL}
+              title={previewLabel}
             >
-              {V4_PREVIEW_LABEL}
+              {previewLabel}
             </Label>
           </div>
           <Tooltip>
@@ -160,17 +162,17 @@ export function V4SidebarToggle() {
                   checked={isBetaEnabled}
                   onCheckedChange={handleToggle}
                   disabled={isLoading}
-                  aria-label="Toggle V4 Preview"
+                  aria-label={tAuto("toggle_v4_preview_bdd0831")}
                   aria-describedby="v4-preview-sidebar-description"
                 />
               </div>
             </TooltipTrigger>
             <TooltipContent side="right" className="max-w-xs text-xs">
-              {V4_PREVIEW_DESCRIPTION}
+              {previewDescription}
             </TooltipContent>
           </Tooltip>
           <span id="v4-preview-sidebar-description" className="sr-only">
-            {V4_PREVIEW_DESCRIPTION}
+            {previewDescription}
           </span>
         </div>
       </SidebarMenuButton>
@@ -188,6 +190,10 @@ export function V4SidebarToggle() {
 // project's traces page (the panel stays open across the navigation) so users
 // see the switched experience immediately.
 export function V4PreviewToggleRow({ projectId }: { projectId?: string }) {
+  const tAuto = useAutoTranslations();
+  const tPreview = useTranslations("V4Preview");
+  const previewLabel = tPreview("label");
+  const previewDescription = tPreview("description");
   const router = useRouter();
   // Panel and modal can render this row at the same time, so ids must be
   // instance-scoped for the label/description associations to hold.
@@ -224,18 +230,18 @@ export function V4PreviewToggleRow({ projectId }: { projectId?: string }) {
           checked={isBetaEnabled}
           onCheckedChange={handlePanelToggle}
           disabled={isLoading}
-          aria-label="Toggle V4 Preview"
+          aria-label={tAuto("toggle_v4_preview_bdd0831")}
           aria-describedby={descriptionId}
         />
         <Label
           htmlFor={toggleId}
           className="block min-w-0 cursor-pointer truncate text-sm font-normal"
-          title={V4_PREVIEW_LABEL}
+          title={previewLabel}
         >
-          {V4_PREVIEW_LABEL}
+          {previewLabel}
         </Label>
         <span id={descriptionId} className="sr-only">
-          {V4_PREVIEW_DESCRIPTION}
+          {previewDescription}
         </span>
       </div>
       <V4IntroDialog

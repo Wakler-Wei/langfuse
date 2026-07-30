@@ -23,6 +23,7 @@ import { type FilterOption } from "@langfuse/shared";
 import { Input } from "@/src/components/ui/input";
 import { useRef, useState, useMemo, useCallback } from "react";
 import { PropertyHoverCard } from "@/src/features/widgets/components/WidgetPropertySelectItem";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const getFreeTextInput = (
   isCustomSelectEnabled: boolean,
@@ -54,6 +55,8 @@ export function MultiSelect({
   isCustomSelectEnabled?: boolean;
   labelTruncateCutOff?: number;
 }) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const selectedValues = useMemo(() => new Set(values), [values]);
   const optionValues = new Set(options.map((option) => option.value));
   const freeTextInput = getFreeTextInput(
@@ -164,7 +167,7 @@ export function MultiSelect({
                     variant="secondary"
                     className="rounded-sm px-1 font-normal"
                   >
-                    {selectedValues.size} selected
+                    {selectedValues.size} {tAutoI18n("selected_835f3b5")}{" "}
                   </Badge>
                 ) : (
                   getSelectedOptions().map((option) => {
@@ -198,7 +201,9 @@ export function MultiSelect({
           <InputCommandList>
             {/* if isCustomSelectEnabled we always show custom select hence never empty */}
             {!isCustomSelectEnabled && (
-              <InputCommandEmpty>No results found.</InputCommandEmpty>
+              <InputCommandEmpty>
+                {tAuto("no_results_found_e9cc6d0")}
+              </InputCommandEmpty>
             )}
             <InputCommandGroup>
               {selectableOptions.length > 0 && (
@@ -215,7 +220,9 @@ export function MultiSelect({
                       <Check className="h-4 w-4" />
                     </div>
                     <div className="font-bold">
-                      {allSelectedState ? "Deselect All" : "Select All"}
+                      {allSelectedState
+                        ? tAutoI18n("deselect_all_bc03949")
+                        : tAutoI18n("select_all_86a599e")}
                     </div>
                   </InputCommandItem>
                   <InputCommandSeparator />
@@ -337,7 +344,7 @@ export function MultiSelect({
                     onClick={(e) => {
                       e.stopPropagation();
                     }}
-                    placeholder="Enter custom value"
+                    placeholder={tAuto("enter_custom_value_96ef06f")}
                     className="h-6 w-full rounded-none border-t-0 border-r-0 border-b-2 border-l-0 border-dotted p-0 text-sm"
                   />
                 </InputCommandItem>
@@ -351,7 +358,7 @@ export function MultiSelect({
                     onSelect={() => onValueChange([])}
                     className="justify-center text-center"
                   >
-                    Clear filters
+                    {tAuto("clear_filters_4122267")}{" "}
                   </InputCommandItem>
                 </InputCommandGroup>
               </>

@@ -66,6 +66,7 @@ import {
 } from "@/src/features/scores/lib/scoreColumns";
 import { getScoreLabelFromKey } from "@/src/features/scores/lib/aggregateScores";
 import { NoDataOrLoading } from "@/src/components/NoDataOrLoading";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export type DatasetRunRowData = {
   id: string;
@@ -93,6 +94,8 @@ const DatasetRunTableMultiSelectAction = ({
   datasetId: string;
   setRowSelection: (value: Record<string, boolean>) => void;
 }) => {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const capture = usePostHogClientCapture();
   const utils = api.useUtils();
@@ -111,7 +114,8 @@ const DatasetRunTableMultiSelectAction = ({
             disabled={selectedRunIds.length < 1}
             onClick={() => capture("dataset_run:compare_view_click")}
           >
-            Actions ({selectedRunIds.length} selected)
+            {tAutoI18n("actions_b0889f2")}
+            {selectedRunIds.length} {tAutoI18n("selected_23f30de")}{" "}
             <ChevronDown className="h-5 w-5" />
           </Button>
         </DropdownMenuTrigger>
@@ -125,7 +129,7 @@ const DatasetRunTableMultiSelectAction = ({
           >
             <DropdownMenuItem>
               <Columns3 className="mr-2 h-4 w-4" />
-              <span>Compare</span>
+              <span>{tAuto("compare_8d105cf")}</span>
             </DropdownMenuItem>
           </Link>
           <DropdownMenuItem
@@ -133,7 +137,7 @@ const DatasetRunTableMultiSelectAction = ({
             onClick={() => setIsDeleteDialogOpen(true)}
           >
             <Trash className="mr-2 h-4 w-4" />
-            <span>Delete</span>
+            <span>{tAuto("delete_f6fdbe4")}</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -149,10 +153,14 @@ const DatasetRunTableMultiSelectAction = ({
       >
         <DialogContent className="sm:max-w-xl">
           <DialogHeader>
-            <DialogTitle className="mb-4">Please confirm</DialogTitle>
+            <DialogTitle className="mb-4">
+              {tAuto("please_confirm_3a799cc")}
+            </DialogTitle>
             <DialogDescription className="p-0">
-              This action cannot be undone and removes all the data associated
-              with {selectedRunIds.length} dataset run
+              {tAutoI18n(
+                "this_action_cannot_be_undone_and_removes_all_the_dat_5f42652",
+              )}{" "}
+              {selectedRunIds.length} {tAutoI18n("dataset_run_b29f0ff")}{" "}
               {selectedRunIds.length > 1 ? "s" : ""}.
             </DialogDescription>
           </DialogHeader>
@@ -172,7 +180,7 @@ const DatasetRunTableMultiSelectAction = ({
                 setIsDeleteDialogOpen(false);
               }}
             >
-              Delete Experiments
+              {tAuto("delete_experiments_7ca2923")}{" "}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -187,6 +195,7 @@ export function DatasetRunsTable(props: {
   selectedMetrics: string[];
   setScoreOptions: (options: { key: string; value: string }[]) => void;
 }) {
+  const tAuto = useAutoTranslations();
   const [paginationState, setPaginationState] = useQueryParams({
     pageIndex: withDefault(NumberParam, 0),
     pageSize: withDefault(NumberParam, 50),
@@ -363,7 +372,7 @@ export function DatasetRunsTable(props: {
                   setSelectedRows({});
                 }
               }}
-              aria-label="Select all"
+              aria-label={tAuto("select_all_913afff")}
               variant="muted"
             />
           </div>
@@ -374,7 +383,7 @@ export function DatasetRunsTable(props: {
           <Checkbox
             checked={row.getIsSelected()}
             onCheckedChange={(value) => row.toggleSelected(!!value)}
-            aria-label="Select row"
+            aria-label={tAuto("select_row_80eff36")}
             variant="muted"
           />
         );
@@ -382,7 +391,7 @@ export function DatasetRunsTable(props: {
     },
     {
       accessorKey: "name",
-      header: "Name",
+      header: tAuto("name_709a232"),
       id: "name",
       size: 150,
       isFixedPosition: true,
@@ -400,7 +409,7 @@ export function DatasetRunsTable(props: {
     },
     {
       accessorKey: "id",
-      header: "Id",
+      header: tAuto("id_474ae52"),
       id: "id",
       size: 150,
       enableHiding: true,
@@ -417,7 +426,7 @@ export function DatasetRunsTable(props: {
     },
     {
       accessorKey: "description",
-      header: "Description",
+      header: tAuto("description_55f8ebc"),
       id: "description",
       size: 300,
       enableHiding: true,
@@ -429,7 +438,7 @@ export function DatasetRunsTable(props: {
     },
     {
       accessorKey: "countRunItems",
-      header: "Run Items",
+      header: tAuto("run_items_b207ed6"),
       id: "countRunItems",
       size: 90,
       enableHiding: true,
@@ -443,7 +452,7 @@ export function DatasetRunsTable(props: {
     },
     {
       accessorKey: "avgLatency",
-      header: "Latency (avg)",
+      header: tAuto("latency_avg_0b2bd67"),
       id: "avgLatency",
       size: 120,
       enableHiding: true,
@@ -457,7 +466,7 @@ export function DatasetRunsTable(props: {
     },
     {
       accessorKey: "avgTotalCost",
-      header: "Trace Cost (avg)",
+      header: tAuto("trace_cost_avg_237b5da"),
       id: "avgTotalCost",
       size: 130,
       enableHiding: true,
@@ -471,7 +480,7 @@ export function DatasetRunsTable(props: {
     },
     {
       accessorKey: "totalCost",
-      header: "Trace Cost (sum)",
+      header: tAuto("trace_cost_sum_f89be0a"),
       id: "totalCost",
       size: 130,
       enableHiding: true,
@@ -485,7 +494,7 @@ export function DatasetRunsTable(props: {
     },
     {
       accessorKey: "runScores",
-      header: "Run-Level Scores",
+      header: tAuto("run_level_scores_55933a8"),
       id: "runScores",
       enableHiding: true,
       defaultHidden: true,
@@ -498,7 +507,7 @@ export function DatasetRunsTable(props: {
     },
     {
       accessorKey: "runItemScores",
-      header: "Run Item Scores",
+      header: tAuto("run_item_scores_b08e437"),
       id: "runItemScores",
       enableHiding: true,
       defaultHidden: true,
@@ -509,7 +518,7 @@ export function DatasetRunsTable(props: {
     },
     {
       accessorKey: "createdAt",
-      header: "Created",
+      header: tAuto("created_accf40c"),
       id: "createdAt",
       size: 150,
       enableHiding: true,
@@ -520,7 +529,7 @@ export function DatasetRunsTable(props: {
     },
     {
       accessorKey: "metadata",
-      header: "Metadata",
+      header: tAuto("metadata_251edc0"),
       id: "metadata",
       size: 200,
       enableHiding: true,
@@ -535,7 +544,7 @@ export function DatasetRunsTable(props: {
     {
       id: "actions",
       accessorKey: "actions",
-      header: "Actions",
+      header: tAuto("actions_c3cd636"),
       size: 70,
       cell: ({ row }) => {
         const id: DatasetRunRowData["id"] = row.getValue("id");
@@ -544,12 +553,14 @@ export function DatasetRunsTable(props: {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only relative">Open menu</span>
+                <span className="sr-only relative">
+                  {tAuto("open_menu_197101e")}
+                </span>
                 <MoreVertical className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuLabel>{tAuto("actions_c3cd636")}</DropdownMenuLabel>
               <DeleteDatasetRunButton
                 projectId={props.projectId}
                 datasetRunId={id}
@@ -669,7 +680,9 @@ export function DatasetRunsTable(props: {
                         </span>
                         <NoDataOrLoading
                           isLoading={runsMetrics.isPending}
-                          description="No chart data available for the selected runs."
+                          description={tAuto(
+                            "no_chart_data_available_for_the_selected_runs_a94e7a6",
+                          )}
                           className="min-h-[200px]"
                         />
                       </div>

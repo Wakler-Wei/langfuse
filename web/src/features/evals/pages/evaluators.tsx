@@ -14,8 +14,10 @@ import { SupportOrUpgradePage } from "@/src/ee/features/billing/components/Suppo
 import { EvaluatorsOnboarding } from "@/src/components/onboarding/EvaluatorsOnboarding";
 import { ManageDefaultEvalModel } from "@/src/features/evals/components/manage-default-eval-model";
 import { V4MigrationUpdateRequiredBadge } from "@/src/features/v4-migration/V4MigrationDelayBadge";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export default function EvaluatorsPage() {
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const projectId = router.query.projectId as string;
 
@@ -59,10 +61,11 @@ export default function EvaluatorsPage() {
     return (
       <Page
         headerProps={{
-          title: "Evaluators",
+          title: tAuto("evaluators_03488ee"),
           help: {
-            description:
-              "Configure a langfuse managed or custom evaluator to evaluate incoming traces.",
+            description: tAuto(
+              "configure_a_langfuse_managed_or_custom_evaluator_to__efbec50",
+            ),
             href: "https://langfuse.com/docs/evaluation/evaluation-methods/llm-as-a-judge",
           },
         }}
@@ -76,11 +79,12 @@ export default function EvaluatorsPage() {
   return (
     <Page
       headerProps={{
-        title: "Evaluators",
+        title: tAuto("evaluators_03488ee"),
         titleBadges: <V4MigrationUpdateRequiredBadge />,
         help: {
-          description:
-            "Configure a langfuse managed or custom evaluator to evaluate incoming traces.",
+          description: tAuto(
+            "configure_a_langfuse_managed_or_custom_evaluator_to__efbec50",
+          ),
           href: "https://langfuse.com/docs/evaluation/evaluation-methods/llm-as-a-judge",
         },
         tabsProps: {
@@ -105,7 +109,7 @@ export default function EvaluatorsPage() {
                   : undefined
               }
             >
-              Set up evaluator
+              {tAuto("set_up_evaluator_12086ef")}{" "}
             </ActionButton>
           </>
         ),

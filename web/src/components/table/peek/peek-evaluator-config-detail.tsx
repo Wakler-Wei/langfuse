@@ -28,12 +28,14 @@ import { LangfuseIcon } from "@/src/components/design-system/LangfuseIcon/Langfu
 import { useEvalCapabilities } from "@/src/features/evals/hooks/useEvalCapabilities";
 import { useCanUseInAppAgent } from "@/src/features/in-app-agent/components/InAppAiAgentProvider";
 import { isLegacyEvalTarget } from "@/src/features/evals/utils/typeHelpers";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const PeekViewEvaluatorConfigDetail = ({
   projectId,
 }: {
   projectId: string;
 }) => {
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const peekId = router.query.peek as string | undefined;
   const [isEditMode, setIsEditMode] = useState(false);
@@ -69,7 +71,9 @@ const PeekViewEvaluatorConfigDetail = ({
     <div className="grid h-full flex-1 grid-rows-[auto_auto_1fr] gap-2 overflow-hidden p-3 contain-layout">
       <div className="flex items-center justify-between">
         <div className="flex flex-row items-center gap-2">
-          <span className="max-h-fit text-lg font-bold">Configuration</span>
+          <span className="max-h-fit text-lg font-bold">
+            {tAuto("configuration_7541648")}
+          </span>
           <div className="flex items-center gap-2">
             <StatusBadge type={displayStatus.toLowerCase()} isLive />
             <DeactivateEvalConfig
@@ -84,13 +88,13 @@ const PeekViewEvaluatorConfigDetail = ({
         <div className="flex items-center gap-2">
           {evaluatorRequiresMigration && (
             <span className="bg-light-yellow text-dark-yellow inline-flex w-fit shrink-0 items-center rounded-full px-2 py-0.5 text-xs font-bold whitespace-nowrap">
-              Deprecated
+              {tAuto("deprecated_527600b")}{" "}
             </span>
           )}
           <span
             className={cn("text-sm", isEditMode ? "" : "text-muted-foreground")}
           >
-            Edit Mode
+            {tAuto("edit_mode_ea5d444")}{" "}
           </span>
           <Switch
             disabled={
@@ -101,12 +105,14 @@ const PeekViewEvaluatorConfigDetail = ({
             onCheckedChange={setIsEditMode}
             title={
               isLegacyEvalTarget(evalConfig.targetObject) && !allowLegacy
-                ? "Deprecated evaluators are only available in read-only mode"
+                ? tAuto(
+                    "deprecated_evaluators_are_only_available_in_read_onl_171d300",
+                  )
                 : undefined
             }
           />
           <DeleteEvalConfigButton
-            aria-label="delete"
+            aria-label={tAuto("delete_9485989")}
             itemId={evalConfig.id}
             projectId={projectId}
             deleteConfirmation={evalConfig.scoreName}
@@ -116,7 +122,7 @@ const PeekViewEvaluatorConfigDetail = ({
             icon
             variant="ghost"
             size="icon-xs"
-            title="Delete"
+            title={tAuto("delete_f6fdbe4")}
           />
         </div>
       </div>
@@ -128,7 +134,9 @@ const PeekViewEvaluatorConfigDetail = ({
       <EvaluatorPausedCallout projectId={projectId} evalConfig={evalConfig} />
 
       <CardDescription className="flex items-center text-sm">
-        <span className="mr-2 text-sm font-bold">Referenced Evaluator</span>
+        <span className="mr-2 text-sm font-bold">
+          {tAuto("referenced_evaluator_c932f89")}
+        </span>
         {evalConfig.evalTemplate && (
           <TableLink
             path={`/project/${projectId}/evals/templates/${evalConfig.evalTemplate.id}`}
@@ -174,8 +182,10 @@ const PeekViewEvaluatorConfigDetail = ({
             setIsEditMode(false);
             utils.evals.invalidate();
             showSuccessToast({
-              title: "Running Evaluator updated",
-              description: "The evaluator configuration has been updated.",
+              title: tAuto("running_evaluator_updated_791be08"),
+              description: tAuto(
+                "the_evaluator_configuration_has_been_updated_1d06146",
+              ),
             });
           }}
         />

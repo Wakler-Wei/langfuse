@@ -12,6 +12,7 @@ import {
   useChart,
   getPayloadConfigFromPayload,
 } from "@/src/components/ui/chart";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export interface ScoreChartLegendContentProps extends Pick<
   DefaultLegendContentProps,
@@ -51,13 +52,17 @@ const LegendItem = ({
   onClick,
   noTruncate = false,
 }: LegendItemProps) => {
+  const tAuto = useAutoTranslations();
   return (
     <button
       type="button"
       onClick={onClick}
       disabled={!interactive}
       aria-pressed={visible}
-      aria-label={`${visible ? "Hide" : "Show"} ${label}`}
+      aria-label={tAuto("value0_value1_dca59cc", {
+        value0: visible ? "Hide" : "Show",
+        value1: label,
+      })}
       className={cn(
         "flex items-center gap-1.5 text-sm transition-opacity",
         interactive && "cursor-pointer hover:opacity-80",
@@ -118,6 +123,8 @@ export const ScoreChartLegendContent = React.forwardRef<
     },
     ref,
   ) => {
+    const tAutoI18n = useAutoTranslations();
+    const tAuto = useAutoTranslations();
     const { config } = useChart();
     const containerRef = useRef<HTMLDivElement>(null);
     const buttonRef = useRef<HTMLButtonElement>(null);
@@ -444,9 +451,13 @@ export const ScoreChartLegendContent = React.forwardRef<
                   variant="ghost"
                   size="sm"
                   className="text-muted-foreground hover:bg-accent h-6 shrink-0 gap-1 px-2 text-xs"
-                  aria-label={`Show all ${payload.length} categories`}
+                  aria-label={tAuto("show_all_value0_categories_c1b821a", {
+                    value0: payload.length,
+                  })}
                 >
-                  <span>Show all {payload.length}</span>
+                  <span>
+                    {tAutoI18n("show_all_50a279d")} {payload.length}
+                  </span>
                   {hiddenCount > 0 && (
                     <span className="font-bold">(+{hiddenCount})</span>
                   )}
@@ -460,9 +471,11 @@ export const ScoreChartLegendContent = React.forwardRef<
               >
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <p className="text-sm font-bold">All Categories</p>
+                    <p className="text-sm font-bold">
+                      {tAuto("all_categories_1fd266c")}
+                    </p>
                     <span className="text-muted-foreground text-xs">
-                      {payload.length} total
+                      {payload.length} {tAutoI18n("total_5a537e2")}{" "}
                     </span>
                   </div>
                   <div className="space-y-3">

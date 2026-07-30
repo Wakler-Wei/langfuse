@@ -14,13 +14,14 @@ import { Popup } from "@/src/components/layouts/doc-popup";
 import { type QueryType, type ViewVersion } from "@langfuse/shared/query";
 import { mapLegacyUiTableFilterToView } from "@/src/features/dashboard/lib/dashboardUiTableToViewMapping";
 import { useScheduledDashboardExecuteQuery } from "@/src/hooks/useDashboardQueryScheduler";
+import { I18nText, useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export type LatencyTableKind = "traces" | "generations" | "observations";
 
 const LATENCY_TABLE_KINDS: Record<
   LatencyTableKind,
   {
-    title: string;
+    title: React.ReactNode;
     nameHeader: string;
     buildQuery: (
       globalFilterState: FilterState,
@@ -30,7 +31,7 @@ const LATENCY_TABLE_KINDS: Record<
   }
 > = {
   traces: {
-    title: "Trace latency percentiles",
+    title: <I18nText id="trace_latency_percentiles_5e2c5f0" />,
     nameHeader: "Trace Name",
     buildQuery: (globalFilterState, fromTimestamp, toTimestamp) => ({
       view: "traces",
@@ -50,7 +51,7 @@ const LATENCY_TABLE_KINDS: Record<
     }),
   },
   generations: {
-    title: "Generation latency percentiles",
+    title: <I18nText id="generation_latency_percentiles_0f63cd7" />,
     nameHeader: "Generation Name",
     buildQuery: (globalFilterState, fromTimestamp, toTimestamp) => ({
       view: "observations",
@@ -78,7 +79,7 @@ const LATENCY_TABLE_KINDS: Record<
     }),
   },
   observations: {
-    title: "Observation latency percentiles",
+    title: <I18nText id="observation_latency_percentiles_7bd75fd" />,
     nameHeader: "Observation",
     buildQuery: (globalFilterState, fromTimestamp, toTimestamp) => ({
       view: "observations",
@@ -178,6 +179,7 @@ export const LatencyTable = ({
   metricsVersion?: ViewVersion;
   schedulerId?: string;
 }) => {
+  const tAuto = useAutoTranslations();
   const { title, nameHeader, buildQuery } = LATENCY_TABLE_KINDS[kind];
 
   const latencies = useScheduledDashboardExecuteQuery(
@@ -210,12 +212,13 @@ export const LatencyTable = ({
       <DashboardTable
         headers={[
           nameHeader,
-          <RightAlignedCell key="p50">p50</RightAlignedCell>,
-          <RightAlignedCell key="p90">p90</RightAlignedCell>,
+          <RightAlignedCell key="p50">{tAuto("p50_42e3121")}</RightAlignedCell>,
+          <RightAlignedCell key="p90">{tAuto("p90_8359621")}</RightAlignedCell>,
           <RightAlignedCell key="p95">
-            p95<span className="ml-1">▼</span>
+            {tAuto("p95_e375f5b")}
+            <span className="ml-1">▼</span>
           </RightAlignedCell>,
-          <RightAlignedCell key="p99">p99</RightAlignedCell>,
+          <RightAlignedCell key="p99">{tAuto("p99_70e80eb")}</RightAlignedCell>,
         ]}
         rows={generateLatencyData(latencies.data)}
         isLoading={isLoading || latencies.isPending}

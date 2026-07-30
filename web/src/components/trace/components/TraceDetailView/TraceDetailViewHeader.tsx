@@ -52,6 +52,7 @@ import {
   PopoverTrigger,
 } from "@/src/components/ui/popover";
 import { cn } from "@/src/utils/tailwind";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export interface TraceDetailViewHeaderProps {
   trace: Omit<WithStringifiedMetadata<TraceDomain>, "input" | "output"> & {
@@ -83,6 +84,7 @@ export const TraceDetailViewHeader = memo(function TraceDetailViewHeader({
   isCommentDrawerOpen,
   onCommentDrawerOpenChange,
 }: TraceDetailViewHeaderProps) {
+  const tAuto = useAutoTranslations();
   const { isAnnotationMode } = useViewPreferences();
   const isMobile = useIsMobile();
   const aggregatedMetrics = useMemo(
@@ -125,7 +127,7 @@ export const TraceDetailViewHeader = memo(function TraceDetailViewHeader({
                 <Button
                   variant="outline"
                   size="icon"
-                  aria-label="More actions"
+                  aria-label={tAuto("more_actions_a1e34f9")}
                   className="ml-auto shrink-0"
                 >
                   <MoreHorizontal className="h-4 w-4" />

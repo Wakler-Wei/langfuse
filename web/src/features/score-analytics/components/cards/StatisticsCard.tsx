@@ -21,6 +21,7 @@ import {
   interpretRMSE,
 } from "@/src/features/score-analytics/lib/statistics-utils";
 import Spinner from "@/src/components/design-system/Spinner/Spinner";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 /**
  * StatisticsCard - Smart card component for displaying score statistics
@@ -37,6 +38,8 @@ import Spinner from "@/src/components/design-system/Spinner/Spinner";
  * - Numeric vs categorical data types
  */
 export function StatisticsCard() {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const { data, isLoading, params } = useScoreAnalytics();
 
   // Loading state
@@ -44,8 +47,10 @@ export function StatisticsCard() {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Statistics</CardTitle>
-          <CardDescription>Loading statistics...</CardDescription>
+          <CardTitle>{tAuto("statistics_2086b21")}</CardTitle>
+          <CardDescription>
+            {tAuto("loading_statistics_58271a8")}
+          </CardDescription>
         </CardHeader>
         <CardContent className="flex items-center justify-center py-12">
           <Spinner size="xl" variant="muted" />
@@ -59,11 +64,13 @@ export function StatisticsCard() {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Statistics</CardTitle>
-          <CardDescription>No data available</CardDescription>
+          <CardTitle>{tAuto("statistics_2086b21")}</CardTitle>
+          <CardDescription>
+            {tAuto("no_data_available_0cfc430")}
+          </CardDescription>
         </CardHeader>
         <CardContent className="text-muted-foreground py-12 text-center text-sm">
-          Select a score to view statistics
+          {tAuto("select_a_score_to_view_statistics_594991c")}{" "}
         </CardContent>
       </Card>
     );
@@ -109,7 +116,7 @@ export function StatisticsCard() {
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          Statistics
+          {tAutoI18n("statistics_2086b21")}{" "}
           {data.samplingMetadata.isSampled && (
             <SamplingDetailsHoverCard
               samplingMetadata={data.samplingMetadata}
@@ -120,8 +127,13 @@ export function StatisticsCard() {
         </CardTitle>
         <CardDescription>
           {score2
-            ? `${score1.name} vs ${score2.name}`
-            : `${score1.name} - Select a second score for comparison`}
+            ? tAutoI18n("value0_vs_value1_cee0764", {
+                value0: String((score1.name as unknown) ?? ""),
+                value1: String((score2.name as unknown) ?? ""),
+              })
+            : tAutoI18n("value0_select_a_second_score_for_comparison_eaac04b", {
+                value0: String((score1.name as unknown) ?? ""),
+              })}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -133,7 +145,7 @@ export function StatisticsCard() {
           {dataType === "NUMERIC" ? (
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
               <MetricCard
-                label="Total"
+                label={tAuto("total_b25928c")}
                 value={
                   showScore1Data
                     ? statistics.score1.total.toLocaleString()
@@ -144,7 +156,7 @@ export function StatisticsCard() {
                 isContext
               />
               <MetricCard
-                label="Mean"
+                label={tAuto("mean_51cda54")}
                 value={
                   showScore1Data && statistics.score1.mean !== null
                     ? statistics.score1.mean.toFixed(2)
@@ -157,7 +169,7 @@ export function StatisticsCard() {
                 isContext
               />
               <MetricCard
-                label="Std Dev"
+                label={tAuto("std_dev_9aa171c")}
                 value={
                   showScore1Data && statistics.score1.std !== null
                     ? statistics.score1.std.toFixed(2)
@@ -173,7 +185,7 @@ export function StatisticsCard() {
           ) : (
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
               <MetricCard
-                label="Total"
+                label={tAuto("total_b25928c")}
                 value={
                   showScore1Data
                     ? statistics.score1.total.toLocaleString()
@@ -184,7 +196,7 @@ export function StatisticsCard() {
                 isContext
               />
               <MetricCard
-                label="Mode"
+                label={tAuto("mode_a7b93d2")}
                 value={
                   showScore1Data && statistics.score1.mode
                     ? `${statistics.score1.mode.category} (${statistics.score1.mode.count.toLocaleString()})`
@@ -197,7 +209,7 @@ export function StatisticsCard() {
                 isContext
               />
               <MetricCard
-                label="Mode %"
+                label={tAuto("mode_f9f17e7")}
                 value={
                   showScore1Data && statistics.score1.modePercentage !== null
                     ? `${statistics.score1.modePercentage.toFixed(1)}%`
@@ -223,7 +235,7 @@ export function StatisticsCard() {
             {dataType === "NUMERIC" ? (
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                 <MetricCard
-                  label="Total"
+                  label={tAuto("total_b25928c")}
                   value={
                     showScore2Data && statistics.score2
                       ? statistics.score2.total.toLocaleString()
@@ -234,7 +246,7 @@ export function StatisticsCard() {
                   isContext
                 />
                 <MetricCard
-                  label="Mean"
+                  label={tAuto("mean_51cda54")}
                   value={
                     showScore2Data &&
                     statistics.score2 &&
@@ -249,7 +261,7 @@ export function StatisticsCard() {
                   isContext
                 />
                 <MetricCard
-                  label="Std Dev"
+                  label={tAuto("std_dev_9aa171c")}
                   value={
                     showScore2Data &&
                     statistics.score2 &&
@@ -267,7 +279,7 @@ export function StatisticsCard() {
             ) : (
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                 <MetricCard
-                  label="Total"
+                  label={tAuto("total_b25928c")}
                   value={
                     showScore2Data && statistics.score2
                       ? statistics.score2.total.toLocaleString()
@@ -278,7 +290,7 @@ export function StatisticsCard() {
                   isContext
                 />
                 <MetricCard
-                  label="Mode"
+                  label={tAuto("mode_a7b93d2")}
                   value={
                     showScore2Data && statistics.score2?.mode
                       ? `${statistics.score2.mode.category} (${statistics.score2.mode.count.toLocaleString()})`
@@ -291,7 +303,7 @@ export function StatisticsCard() {
                   isContext
                 />
                 <MetricCard
-                  label="Mode %"
+                  label={tAuto("mode_f9f17e7")}
                   value={
                     showScore2Data &&
                     statistics.score2 &&
@@ -313,13 +325,15 @@ export function StatisticsCard() {
         {/* Section 3: Comparison Metrics - Always show to set expectations */}
         {showComparisonSection && (
           <div>
-            <h4 className="mb-2 text-xs font-bold">Comparison</h4>
+            <h4 className="mb-2 text-xs font-bold">
+              {tAuto("comparison_2dfcf89")}
+            </h4>
             {dataType === "NUMERIC" ? (
               <div className="space-y-4">
                 {/* First row: Matched, Pearson, Spearman */}
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                   <MetricCard
-                    label="Matched"
+                    label={tAuto("matched_1bf3ec5")}
                     value={
                       showComparisonMetrics && statistics.comparison
                         ? statistics.comparison.matchedCount.toLocaleString()
@@ -333,18 +347,18 @@ export function StatisticsCard() {
                             content: (
                               <div className="space-y-2 text-xs">
                                 <p className="font-bold">
-                                  Matched count exceeds individual score counts
-                                  due to Cartesian product
+                                  {tAuto(
+                                    "matched_count_exceeds_individual_score_counts_due_to_6018704",
+                                  )}{" "}
                                 </p>
                                 <p>
-                                  This occurs when multiple scores of the same
-                                  name/source exist on a single attachment point
-                                  (trace/observation/session/run). Each
-                                  combination creates a match.
+                                  {tAuto(
+                                    "this_occurs_when_multiple_scores_of_the_same_name_so_c77eb61",
+                                  )}{" "}
                                 </p>
                                 <p className="text-muted-foreground">
-                                  <strong>Example:</strong> If one trace has 2
-                                  &quot;gpt4&quot; scores and 3
+                                  <strong>{tAuto("example_c63737a")}</strong> If
+                                  one trace has 2 &quot;gpt4&quot; scores and 3
                                   &quot;gemini&quot; scores, this creates 6
                                   matched pairs (2 × 3 = 6).
                                 </p>
@@ -357,7 +371,7 @@ export function StatisticsCard() {
                     isPlaceholder={!showComparisonMetrics}
                   />
                   <MetricCard
-                    label="Pearson r"
+                    label={tAuto("pearson_r_fe7c854")}
                     value={
                       showComparisonMetrics &&
                       statistics.comparison &&
@@ -380,7 +394,7 @@ export function StatisticsCard() {
                     isPlaceholder={!showComparisonMetrics}
                   />
                   <MetricCard
-                    label="Spearman ρ"
+                    label={tAuto("spearman_6244a98")}
                     value={
                       showComparisonMetrics &&
                       statistics.comparison &&
@@ -455,7 +469,7 @@ export function StatisticsCard() {
                 {/* First row: Matched, Agreement */}
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                   <MetricCard
-                    label="Matched"
+                    label={tAuto("matched_1bf3ec5")}
                     value={
                       showComparisonMetrics && statistics.comparison
                         ? statistics.comparison.matchedCount.toLocaleString()
@@ -469,18 +483,18 @@ export function StatisticsCard() {
                             content: (
                               <div className="space-y-2 text-xs">
                                 <p className="font-bold">
-                                  Matched count exceeds individual score counts
-                                  due to Cartesian product
+                                  {tAuto(
+                                    "matched_count_exceeds_individual_score_counts_due_to_6018704",
+                                  )}{" "}
                                 </p>
                                 <p>
-                                  This occurs when multiple scores of the same
-                                  name/source exist on a single attachment point
-                                  (trace/observation/session/run). Each
-                                  combination creates a match.
+                                  {tAuto(
+                                    "this_occurs_when_multiple_scores_of_the_same_name_so_c77eb61",
+                                  )}{" "}
                                 </p>
                                 <p className="text-muted-foreground">
-                                  <strong>Example:</strong> If one trace has 2
-                                  &quot;gpt4&quot; scores and 3
+                                  <strong>{tAuto("example_c63737a")}</strong> If
+                                  one trace has 2 &quot;gpt4&quot; scores and 3
                                   &quot;gemini&quot; scores, this creates 6
                                   matched pairs (2 × 3 = 6).
                                 </p>
@@ -493,7 +507,7 @@ export function StatisticsCard() {
                     isPlaceholder={!showComparisonMetrics}
                   />
                   <MetricCard
-                    label="Agreement"
+                    label={tAuto("agreement_c8fee8e")}
                     value={
                       showComparisonMetrics && overallAgreement !== null
                         ? `${(overallAgreement * 100).toFixed(1)}%`
@@ -514,7 +528,7 @@ export function StatisticsCard() {
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                   <div />
                   <MetricCard
-                    label="Cohen's κ"
+                    label={tAuto("cohen_s_9891f4e")}
                     value={
                       showComparisonMetrics && cohensKappa !== null
                         ? cohensKappa.toFixed(3)
@@ -531,7 +545,7 @@ export function StatisticsCard() {
                     isPlaceholder={!showComparisonMetrics}
                   />
                   <MetricCard
-                    label="F1 Score"
+                    label={tAuto("f1_score_5a6162f")}
                     value={
                       showComparisonMetrics && f1Score !== null
                         ? f1Score.toFixed(3)

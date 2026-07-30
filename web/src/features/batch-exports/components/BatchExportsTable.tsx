@@ -27,10 +27,13 @@ import {
 } from "@/src/components/ui/alert-dialog";
 import { useState } from "react";
 import { useHasProjectAccess } from "@/src/features/rbac/utils/checkProjectAccess";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type BatchExportRow = RouterOutputs["batchExport"]["all"]["exports"][number];
 
 export function BatchExportsTable(props: { projectId: string }) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const [paginationState, setPaginationState] = useQueryParams({
     pageIndex: withDefault(NumberParam, 0),
     pageSize: withDefault(NumberParam, 10),
@@ -66,7 +69,7 @@ export function BatchExportsTable(props: { projectId: string }) {
     {
       accessorKey: "name",
       id: "name",
-      header: "Name",
+      header: tAuto("name_709a232"),
       size: 200,
       cell: ({ row }) => {
         const name = row.getValue("name") as string;
@@ -81,13 +84,16 @@ export function BatchExportsTable(props: { projectId: string }) {
                 </TooltipTrigger>
                 <TooltipContent>
                   <div className="space-y-1">
-                    <div>Created: {new Date(createdAt).toLocaleString()}</div>
                     <div>
-                      Finished:{" "}
+                      {tAutoI18n("created_0c78dab")}{" "}
+                      {new Date(createdAt).toLocaleString()}
+                    </div>
+                    <div>
+                      {tAutoI18n("finished_4b52fe3")}{" "}
                       {finishedAt ? new Date(finishedAt).toLocaleString() : "-"}
                     </div>
                     <div>
-                      Download expires:{" "}
+                      {tAutoI18n("download_expires_05e38dd")}{" "}
                       {expiresAt ? new Date(expiresAt).toLocaleString() : "-"}
                     </div>
                   </div>
@@ -101,7 +107,7 @@ export function BatchExportsTable(props: { projectId: string }) {
     {
       accessorKey: "status",
       id: "status",
-      header: "Status",
+      header: tAuto("status_bae7d5b"),
       size: 90,
       cell: ({ row }) => {
         const { status, log } = row.original;
@@ -127,7 +133,7 @@ export function BatchExportsTable(props: { projectId: string }) {
     {
       accessorKey: "isDownloadable",
       id: "action",
-      header: "Action",
+      header: tAuto("action_97c89a4"),
       size: 130,
       // One state-dependent action per row: Cancel while queued/processing,
       // Download (or Expired) once completed — the states never coexist.
@@ -159,12 +165,16 @@ export function BatchExportsTable(props: { projectId: string }) {
                 );
               }}
             >
-              Download
+              {tAuto("download_a479c9c")}{" "}
             </ActionButton>
           );
         }
         if (status === "COMPLETED" && isExpired) {
-          return <span className="text-muted-foreground">Expired</span>;
+          return (
+            <span className="text-muted-foreground">
+              {tAuto("expired_a689a99")}
+            </span>
+          );
         }
         if (status === "QUEUED" || status === "PROCESSING") {
           return (
@@ -186,19 +196,24 @@ export function BatchExportsTable(props: { projectId: string }) {
                     setCancelDialogOpen(true);
                   }}
                 >
-                  Cancel
+                  {tAuto("cancel_77dfd21")}{" "}
                 </ActionButton>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>Cancel batch export?</AlertDialogTitle>
+                  <AlertDialogTitle>
+                    {tAuto("cancel_batch_export_ed1ca55")}
+                  </AlertDialogTitle>
                   <AlertDialogDescription>
-                    Are you sure you want to cancel this batch export? This
-                    action cannot be undone.
+                    {tAuto(
+                      "are_you_sure_you_want_to_cancel_this_batch_export_th_caad0bd",
+                    )}{" "}
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel>No, keep it</AlertDialogCancel>
+                  <AlertDialogCancel>
+                    {tAuto("no_keep_it_8644b7f")}
+                  </AlertDialogCancel>
                   <AlertDialogAction
                     onClick={() => {
                       cancelBatchExport.mutate({
@@ -207,7 +222,7 @@ export function BatchExportsTable(props: { projectId: string }) {
                       });
                     }}
                   >
-                    Yes, cancel export
+                    {tAuto("yes_cancel_export_f0ba97b")}{" "}
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
@@ -220,7 +235,7 @@ export function BatchExportsTable(props: { projectId: string }) {
     {
       accessorKey: "expiresAt",
       id: "expiresAt",
-      header: "Expires",
+      header: tAuto("expires_a99be3d"),
       size: 130,
       cell: ({ row }) => {
         const { status, expiresAt, isExpired } = row.original;
@@ -240,13 +255,13 @@ export function BatchExportsTable(props: { projectId: string }) {
     {
       accessorKey: "format",
       id: "format",
-      header: "Format",
+      header: tAuto("format_041a5de"),
       size: 70,
     },
     {
       accessorKey: "user",
       id: "user",
-      header: "Created By",
+      header: tAuto("created_by_43de2bc"),
       size: 150,
       cell: ({ row }) => {
         const user = row.getValue("user") as {
@@ -258,7 +273,7 @@ export function BatchExportsTable(props: { projectId: string }) {
             <Avatar className="h-7 w-7">
               <AvatarImage
                 src={user?.image ?? undefined}
-                alt={user?.name ?? "User Avatar"}
+                alt={user?.name ?? tAuto("user_avatar_32e4f25")}
               />
             </Avatar>
             <span>{user?.name ?? "Unknown"}</span>

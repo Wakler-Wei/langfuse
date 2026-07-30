@@ -7,6 +7,7 @@ import { useUserSearch } from "@/src/hooks/useUserSearch";
 import { useSelectedUsers } from "@/src/features/annotation-queues/hooks/useSelectedUsers";
 import { showSuccessToast } from "@/src/features/notifications/showSuccessToast";
 import { useRef } from "react";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 interface UserAssignmentSectionProps {
   projectId: string;
@@ -21,6 +22,8 @@ export const UserAssignmentSection = ({
   onChange,
   queueId,
 }: UserAssignmentSectionProps) => {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const containerRef = useRef<HTMLDivElement>(null);
   const hasQueueAssignmentsReadAccess = useHasProjectAccess({
     projectId: projectId,
@@ -45,8 +48,8 @@ export const UserAssignmentSection = ({
         utils.annotationQueueAssignments.invalidate();
         utils.annotationQueues.invalidate();
         showSuccessToast({
-          title: "Removed assignment",
-          description: "User removed from queue successfully",
+          title: tAuto("removed_assignment_e999cc3"),
+          description: tAuto("user_removed_from_queue_successfully_de0b915"),
         });
       },
     });
@@ -99,7 +102,7 @@ export const UserAssignmentSection = ({
         searchResults={userSearch.searchResults}
         isLoading={userSearch.isLoading}
         disabled={!hasQueueAssignmentWriteAccess}
-        placeholder="Search users to add..."
+        placeholder={tAuto("search_users_to_add_bffd086")}
         hasMoreResults={userSearch.hasMoreResults}
         getItemKey={(user) => user.id}
         onOpenChange={(open) => {
@@ -165,7 +168,8 @@ export const UserAssignmentSection = ({
         queueAssignmentsQuery.data?.totalCount > 0 && (
           <div className="space-y-2">
             <h4 className="text-muted-foreground text-sm">
-              Assigned to ({queueAssignmentsQuery.data?.totalCount})
+              {tAutoI18n("assigned_to_d6d0502")}
+              {queueAssignmentsQuery.data?.totalCount})
             </h4>
             <div className="bg-background max-h-32 overflow-y-auto rounded-md border">
               {queueAssignmentsQuery.data?.assignments.map(
@@ -219,7 +223,7 @@ export const UserAssignmentSection = ({
                     <p className="text-xs italic">
                       {queueAssignmentsQuery.data.totalCount -
                         queueAssignmentsQuery.data.assignments.length}{" "}
-                      more assigned users
+                      {tAutoI18n("more_assigned_users_115b740")}{" "}
                     </p>
                   </div>
                 </div>

@@ -12,6 +12,7 @@ import {
   HoverCardTrigger,
 } from "@/src/components/ui/hover-card";
 import type { ToolCallInvocation } from "../hooks/useChatMLParser";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 // Tool definition extracted from messages
 export interface ToolDefinition {
@@ -67,6 +68,8 @@ function ToolCallArgumentsList({
   toolCalls: ToolCallInvocation[];
   className?: string;
 }) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   return (
     <div className={cn("flex flex-col gap-3", className)}>
       {toolCalls.map((toolCall) => {
@@ -79,7 +82,7 @@ function ToolCallArgumentsList({
           >
             <div className="mb-1.5 flex min-w-0 items-center justify-between gap-2">
               <div className="text-foreground font-mono text-xs font-bold">
-                Call {toolCall.invocationNumber}
+                {tAutoI18n("call_291a0a5")} {toolCall.invocationNumber}
               </div>
               {toolCall.id && (
                 <div
@@ -98,7 +101,7 @@ function ToolCallArgumentsList({
               />
             ) : (
               <div className="text-muted-foreground rounded-sm border px-2 py-1.5 text-xs">
-                No arguments
+                {tAuto("no_arguments_c83425d")}{" "}
               </div>
             )}
           </div>
@@ -187,10 +190,13 @@ function ToolGroupSummary({
   toolCallCounts: Map<string, number>;
   toolNameToDefinitionNumber?: Map<string, number>;
 }) {
+  const tAuto = useAutoTranslations();
   const isCalledGroup = kind === "called";
   const summaryText = isCalledGroup
-    ? `${tools.length} ${tools.length === 1 ? "tool was" : "tools were"} called`
-    : `${tools.length} available ${tools.length === 1 ? "tool was" : "tools were"} not called`;
+    ? tAuto("tools_called_value0_8021b8f", { value0: tools.length })
+    : tAuto("available_tools_not_called_value0_4bc53be", {
+        value0: tools.length,
+      });
 
   const summaryButton = (
     <button
@@ -229,7 +235,7 @@ function ToolGroupSummary({
               "bg-light-green text-dark-green hover:bg-light-green border-transparent select-none",
           )}
         >
-          {expanded ? "hide" : "show"}
+          {expanded ? tAuto("hide_93c8c96") : tAuto("show_9fb2905")}
         </Badge>
         {expanded ? (
           <ChevronDown className="text-muted-foreground h-3.5 w-3.5" />
@@ -265,6 +271,7 @@ function ToolCallStatusBadge({
   statusText: string;
   toolCalls: ToolCallInvocation[];
 }) {
+  const tAuto = useAutoTranslations();
   const badge = (
     <Badge
       variant={isCalled ? undefined : "secondary"}
@@ -295,10 +302,14 @@ function ToolCallStatusBadge({
       >
         <div className="border-border border-b px-3 py-2">
           <div className="text-foreground text-xs font-bold">
-            Tool call arguments
+            {tAuto("tool_call_arguments_bf117cf")}{" "}
           </div>
           <div className="text-muted-foreground text-xs">
-            {toolCalls.length === 1 ? "1 call" : `${toolCalls.length} calls`}
+            {toolCalls.length === 1
+              ? tAuto("1_call_e66993c")
+              : tAuto("value0_calls_81903b8", {
+                  value0: String((toolCalls.length as unknown) ?? ""),
+                })}
           </div>
         </div>
         <ToolCallArgumentsList toolCalls={toolCalls} className="p-3" />
@@ -326,6 +337,7 @@ function ToolDefinitionRow({
   currentView: "formatted" | "json";
   setCurrentView: (value: "formatted" | "json") => void;
 }) {
+  const tAuto = useAutoTranslations();
   const isCalled = callCount > 0;
   const statusText = getStatusText(callCount);
 
@@ -377,7 +389,7 @@ function ToolDefinitionRow({
             >
               <TabsList className="h-fit p-0.5">
                 <TabsTrigger value="formatted" className="h-fit px-1 text-xs">
-                  Formatted
+                  {tAuto("formatted_f26356d")}{" "}
                 </TabsTrigger>
                 <TabsTrigger value="json" className="h-fit px-1 text-xs">
                   JSON
@@ -391,7 +403,7 @@ function ToolDefinitionRow({
               {tool.description && (
                 <div>
                   <div className="text-muted-foreground mb-1.5 text-xs font-bold">
-                    Description
+                    {tAuto("description_55f8ebc")}{" "}
                   </div>
                   <div className="text-foreground text-sm">
                     {tool.description}
@@ -402,7 +414,7 @@ function ToolDefinitionRow({
               {tool.parameters && (
                 <div>
                   <div className="text-muted-foreground mb-1.5 text-xs font-bold">
-                    Parameters
+                    {tAuto("parameters_a975eea")}{" "}
                   </div>
                   <PrettyJsonView
                     json={tool.parameters}
@@ -415,7 +427,7 @@ function ToolDefinitionRow({
               {toolCalls.length > 0 && (
                 <div>
                   <div className="text-muted-foreground mb-1.5 text-xs font-bold">
-                    Tool call arguments
+                    {tAuto("tool_call_arguments_bf117cf")}{" "}
                   </div>
                   <ToolCallArgumentsList toolCalls={toolCalls} />
                 </div>
@@ -425,7 +437,7 @@ function ToolDefinitionRow({
                 !tool.parameters &&
                 toolCalls.length === 0 && (
                   <div className="text-muted-foreground text-sm">
-                    No additional details available
+                    {tAuto("no_additional_details_available_f5c78aa")}{" "}
                   </div>
                 )}
             </div>

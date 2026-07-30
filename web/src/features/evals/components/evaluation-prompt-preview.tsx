@@ -8,6 +8,7 @@ import Link from "next/link";
 import { Fragment, useMemo } from "react";
 import { isTraceTarget } from "@/src/features/evals/utils/typeHelpers";
 import { type PreviewData } from "@/src/features/evals/hooks/usePreviewData";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const VARIABLE_COLORS = [
   "text-primary-accent",
@@ -131,6 +132,8 @@ export const EvaluationPromptPreview = ({
   className?: string;
   controlButtons?: React.ReactNode;
 }) => {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const memoizedVariables = useMemo(
     () => variableMapping.map(({ templateVariable }) => templateVariable),
     [variableMapping],
@@ -201,7 +204,7 @@ export const EvaluationPromptPreview = ({
     <div className="max-h-full min-h-0 flex-1 overflow-y-auto rounded-md border">
       {isLoading ? (
         <div className="flex items-center justify-center p-8">
-          <p>Loading variables...</p>
+          <p>{tAuto("loading_variables_d4f4bf8")}</p>
         </div>
       ) : (
         <ColoredPromptView fragments={getPromptFragments()} />
@@ -234,7 +237,7 @@ export const EvaluationPromptPreview = ({
     <div className={cn("flex flex-col", className)}>
       <span className="mb-1 flex flex-row items-center justify-between py-0 text-sm font-bold capitalize">
         <div className="flex flex-row items-center gap-2">
-          Evaluation Prompt Preview
+          {tAutoI18n("evaluation_prompt_preview_9304ee3")}{" "}
           {targetLink && (
             <Link
               href={targetLink.href}

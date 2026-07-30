@@ -16,6 +16,7 @@ import { type RouterOutputs } from "@/src/utils/api";
 import { SettingsTableCard } from "@/src/components/layouts/settings-table-card";
 import { BatchExportTableButton } from "@/src/components/BatchExportTableButton";
 import { BatchExportTableName } from "@langfuse/shared";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 // Both endpoints return the same shape
 type AuditLogRow = RouterOutputs["auditLogs"]["all"]["data"][number];
@@ -25,6 +26,7 @@ type AuditLogsTableProps =
   | { scope: "organization"; orgId: string };
 
 export function AuditLogsTable(props: AuditLogsTableProps) {
+  const tAuto = useAutoTranslations();
   const [paginationState, setPaginationState] = useQueryParams({
     pageIndex: withDefault(NumberParam, 0),
     pageSize: withDefault(NumberParam, 50),
@@ -57,7 +59,7 @@ export function AuditLogsTable(props: AuditLogsTableProps) {
   const columns: LangfuseColumnDef<AuditLogRow>[] = [
     {
       accessorKey: "createdAt",
-      header: "Time",
+      header: tAuto("time_6c82e6d"),
       cell: (row) => {
         const date = row.getValue() as Date;
         return date.toLocaleString();
@@ -65,9 +67,11 @@ export function AuditLogsTable(props: AuditLogsTableProps) {
     },
     {
       accessorKey: "actor",
-      header: "Actor",
+      header: tAuto("actor_cbd19b5"),
       headerTooltip: {
-        description: "The actor within Langfuse who performed the action.",
+        description: tAuto(
+          "the_actor_within_langfuse_who_performed_the_action_083665d",
+        ),
       },
       cell: (row) => {
         const actor = row.getValue() as AuditLogRow["actor"];
@@ -77,7 +81,10 @@ export function AuditLogsTable(props: AuditLogsTableProps) {
             <div className="flex items-center gap-2">
               <Avatar className="h-6 w-6">
                 {user?.image && (
-                  <AvatarImage src={user.image} alt={user?.name ?? "User"} />
+                  <AvatarImage
+                    src={user.image}
+                    alt={user?.name ?? tAuto("user_9f8a238")}
+                  />
                 )}
                 <AvatarFallback>
                   {user?.name?.charAt(0) ?? user?.email?.charAt(0) ?? "U"}
@@ -109,19 +116,19 @@ export function AuditLogsTable(props: AuditLogsTableProps) {
     },
     {
       accessorKey: "resourceType",
-      header: "Resource Type",
+      header: tAuto("resource_type_1a48388"),
     },
     {
       accessorKey: "resourceId",
-      header: "Resource ID",
+      header: tAuto("resource_id_542bc18"),
     },
     {
       accessorKey: "action",
-      header: "Action",
+      header: tAuto("action_97c89a4"),
     },
     {
       accessorKey: "before",
-      header: "Before",
+      header: tAuto("before_74f3969"),
       size: 300,
       cell: (row) => {
         const value = row.getValue() as string | null;
@@ -131,7 +138,7 @@ export function AuditLogsTable(props: AuditLogsTableProps) {
     },
     {
       accessorKey: "after",
-      header: "After",
+      header: tAuto("after_79ba5e1"),
       size: 300,
       cell: (row) => {
         const value = row.getValue() as string | null;

@@ -20,6 +20,7 @@ import {
   type ActionTypes,
   type ProjectNotificationEventType,
 } from "@langfuse/shared";
+import { I18nText, useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 /** Project notifications route to webhooks or Slack; GitHub dispatch is not wired for this event source. */
 const PROJECT_NOTIFICATION_ACTION_TYPES: ActionTypes[] = ["WEBHOOK", "SLACK"];
@@ -27,19 +28,22 @@ const PROJECT_NOTIFICATION_ACTION_TYPES: ActionTypes[] = ["WEBHOOK", "SLACK"];
 /** NOTIFIED_EVENTS lists the toggleable project-notification events, keyed by their eventType. */
 const NOTIFIED_EVENTS: {
   value: ProjectNotificationEventType;
-  title: string;
-  description: string;
+  title: React.ReactNode;
+  description: React.ReactNode;
 }[] = [
   {
     value: "blob-export-failed",
-    title: "Blob storage export failed",
-    description: "Sent when a scheduled blob storage export fails.",
+    title: <I18nText id="blob_storage_export_failed_042d4aa" />,
+    description: (
+      <I18nText id="sent_when_a_scheduled_blob_storage_export_fails_e00dae6" />
+    ),
   },
   {
     value: "evaluator-blocked",
-    title: "Evaluator deactivated",
-    description:
-      "Sent when an evaluator is deactivated due to an unrecoverable error, such as a deleted model or LLM connection.",
+    title: <I18nText id="evaluator_deactivated_a14e49a" />,
+    description: (
+      <I18nText id="sent_when_an_evaluator_is_deactivated_due_to_an_unre_0e40314" />
+    ),
   },
 ];
 
@@ -53,6 +57,7 @@ export function ProjectNotificationChannels({
 }: {
   projectId: string;
 }) {
+  const tAuto = useAutoTranslations();
   const {
     hasAccess,
     channels,
@@ -72,10 +77,11 @@ export function ProjectNotificationChannels({
 
   return (
     <div>
-      <Header title="Project Notifications" />
+      <Header title={tAuto("project_notifications_93d8c5d")} />
       <p className="text-muted-foreground mb-4 text-sm">
-        Manage project notifications. Channel notifications are sent in addition
-        to the admin emails.
+        {tAuto(
+          "manage_project_notifications_channel_notifications_a_0e340fb",
+        )}{" "}
       </p>
 
       {mode === "list" ? (
@@ -93,11 +99,15 @@ export function ProjectNotificationChannels({
 
           <div className="flex flex-col gap-4">
             <div>
-              <h3 className="text-lg font-bold">Events</h3>
+              <h3 className="text-lg font-bold">{tAuto("events_c5497bc")}</h3>
               <p className="text-muted-foreground text-sm">
                 {hasChannels
-                  ? "Choose which events are delivered to your channels."
-                  : "Configure a channel above to enable project notifications."}
+                  ? tAuto(
+                      "choose_which_events_are_delivered_to_your_channels_6c44471",
+                    )
+                  : tAuto(
+                      "configure_a_channel_above_to_enable_project_notifica_b9e8a80",
+                    )}
               </p>
             </div>
             {NOTIFIED_EVENTS.map((event) => (
@@ -149,9 +159,11 @@ export function ProjectNotificationChannels({
       >
         <DialogContent className="max-w-4xl">
           <DialogHeader>
-            <DialogTitle>Webhook Secret Created</DialogTitle>
+            <DialogTitle>{tAuto("webhook_secret_created_d8363b1")}</DialogTitle>
             <DialogDescription>
-              Copy the webhook secret below — it will only be shown once.
+              {tAuto(
+                "copy_the_webhook_secret_below_it_will_only_be_shown__852a177",
+              )}{" "}
             </DialogDescription>
           </DialogHeader>
           <DialogBody>

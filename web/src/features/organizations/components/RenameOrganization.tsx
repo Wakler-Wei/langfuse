@@ -19,8 +19,10 @@ import { useQueryOrganization } from "@/src/features/organizations/hooks";
 import { Card } from "@/src/components/ui/card";
 import { LockIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export default function RenameOrganization() {
+  const tAuto = useAutoTranslations();
   const { update: updateSession } = useSession();
   const utils = api.useUtils();
   const capture = usePostHogClientCapture();
@@ -67,19 +69,20 @@ export default function RenameOrganization() {
 
   return (
     <div>
-      <Header title="Organization Name" />
+      <Header title={tAuto("organization_name_1458ffe")} />
       <Card className="mb-4 p-3">
         {form.getValues().name !== "" ? (
           <p className="text-primary mb-4 text-sm">
-            Your Organization will be renamed from &quot;
-            {orgName}
-            &quot; to &quot;
-            <b>{form.watch().name}</b>&quot;.
+            {tAuto("your_organization_will_be_renamed_value0_value1_ba1d709", {
+              value0: orgName,
+              value1: form.watch().name,
+            })}
           </p>
         ) : (
           <p className="mb-4 text-sm">
-            Your Organization is currently named &quot;<b>{orgName}</b>
-            &quot;.
+            {tAuto("your_organization_is_currently_named_value0_784a869", {
+              value0: orgName,
+            })}
           </p>
         )}
         <Form {...form}>
@@ -102,7 +105,7 @@ export default function RenameOrganization() {
                         disabled={!hasAccess}
                       />
                       {!hasAccess && (
-                        <span title="No access">
+                        <span title={tAuto("no_access_63bde5f")}>
                           <LockIcon className="text-muted absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2 transform" />
                         </span>
                       )}
@@ -120,7 +123,7 @@ export default function RenameOrganization() {
                 disabled={form.getValues().name === "" || !hasAccess}
                 className="mt-4"
               >
-                Save
+                {tAuto("save_efc007a")}{" "}
               </Button>
             )}
           </form>

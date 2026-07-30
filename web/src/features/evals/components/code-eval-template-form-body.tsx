@@ -35,6 +35,7 @@ import {
   type CodeEvalSourceCodeLanguage,
   type CodeEvalValidationResult,
 } from "@/src/features/evals/utils/code-eval-template-validation";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type CodeEvalTemplateFormBodyProps = {
   sourceCode: string;
@@ -128,13 +129,15 @@ export function CodeEvalTemplateFormBody({
   validationResult,
   headerAction,
 }: CodeEvalTemplateFormBodyProps) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const { resolvedTheme } = useTheme();
   const [isFormatting, setIsFormatting] = useState(false);
   const codeMirrorTheme = resolvedTheme === "dark" ? darkTheme : lightTheme;
   const languageLabel =
     sourceCodeLanguage === EvalTemplateSourceCodeLanguage.PYTHON
-      ? "Python"
-      : "TypeScript";
+      ? tAutoI18n("python_6e36048")
+      : tAutoI18n("typescript_d4a86cb");
   const shouldShowFormatButton = editable;
   // `onSourceCodeChange` comes from a react-hook-form render prop and changes
   // identity as the field updates. Keep CodeMirror's handler stable so it does
@@ -280,7 +283,7 @@ export function CodeEvalTemplateFormBody({
             {isFormatting && (
               <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />
             )}
-            Format
+            {tAutoI18n("format_041a5de")}{" "}
             <KeyboardShortcut
               className="ml-2 h-4"
               keys={
@@ -303,15 +306,16 @@ export function CodeEvalTemplateFormBody({
         className="overflow-hidden rounded-md border text-xs"
       />
       <p className="text-muted-foreground text-xs">
-        The evaluate function receives an EvaluationContext and returns an
-        EvaluationResult with one or more scores.{" "}
+        {tAutoI18n(
+          "the_evaluate_function_receives_an_evaluationcontext__976dbd2",
+        )}{" "}
         <a
           href={FUNCTION_CONTRACT_DOCS_URL}
           target="_blank"
           rel="noopener noreferrer"
           className="underline"
         >
-          See type definitions.
+          {tAuto("see_type_definitions_44c2ac4")}{" "}
         </a>
       </p>
     </div>

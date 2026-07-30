@@ -2,6 +2,7 @@ import { ChevronRight, ChevronDown, MessageSquare } from "lucide-react";
 import type { SectionContext } from "../types";
 import { type MediaReturnType } from "@/src/features/media/validation";
 import { MediaButtonGroup } from "./MediaButtonGroup";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export interface MultiSectionJsonViewerHeaderProps {
   /** Display title for the section */
@@ -27,6 +28,7 @@ export function MultiSectionJsonViewerHeader({
   media,
   commentCount,
 }: MultiSectionJsonViewerHeaderProps) {
+  const tAuto = useAutoTranslations();
   return (
     <div
       style={{
@@ -64,7 +66,7 @@ export function MultiSectionJsonViewerHeader({
           fontSize: "0.65rem",
         }}
       >
-        {context.rowCount.toLocaleString()} keys
+        {context.rowCount.toLocaleString()} {tAuto("keys_5944ae2")}{" "}
       </span>
       {commentCount !== undefined && commentCount > 0 && (
         <span

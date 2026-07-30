@@ -32,6 +32,7 @@ import {
   type OutlierStripSettings,
 } from "./lib/useOutlierStripSettings";
 import { canApplyOutlierStripFilters } from "./lib/filterCompatibility";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 /**
  * Production container for the outlier strip ("Pulse") above the events table
@@ -92,12 +93,16 @@ const AggDropdown = ({
   options: readonly OutlierStripAggKey[];
   onChange: (agg: OutlierStripAggKey) => void;
 }) => {
+  const tAuto = useAutoTranslations();
   const focusGuard = usePointerSelectionFocusGuard();
   return (
     <span className="flex items-baseline gap-1">
       <DropdownMenu>
         <DropdownMenuTrigger
-          aria-label={`${metricLabel} aggregation: ${value}`}
+          aria-label={tAuto("value0_aggregation_value1_b7fa72a", {
+            value0: metricLabel,
+            value1: value,
+          })}
           className="text-muted-foreground hover:text-foreground flex items-center gap-0.5 text-[13px] leading-none underline-offset-2 hover:underline"
         >
           {value}
@@ -134,11 +139,14 @@ const ModeDropdown = ({
   options: StripMode[];
   onChange: (mode: StripMode) => void;
 }) => {
+  const tAuto = useAutoTranslations();
   const focusGuard = usePointerSelectionFocusGuard();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        aria-label={`Chart mode: ${modeLabel(value)}`}
+        aria-label={tAuto("chart_mode_value0_9e27355", {
+          value0: modeLabel(value),
+        })}
         className="text-foreground hover:text-muted-foreground flex items-center gap-0.5 text-[13px] leading-none font-bold"
       >
         {modeLabel(value)}
@@ -181,6 +189,7 @@ export function EventsOutlierStrip({
   searchIgnored?: boolean;
   onSelectRange: (range: { from: Date; to: Date }) => void;
 }) {
+  const tAuto = useAutoTranslations();
   const capture = usePostHogClientCapture();
   const [wrapperRef, size] = useElementSize<HTMLDivElement>();
   // Transient drag selection (LFE-14532, Grafana-style). Window-keyed: a
@@ -408,7 +417,7 @@ export function EventsOutlierStrip({
             <div className="bg-muted h-[76px] animate-pulse rounded" />
           ) : queryResult.isError ? (
             <div className="text-muted-foreground flex h-[76px] items-center justify-center text-[11px]">
-              No Data
+              {tAuto("no_data_4276e6a")}{" "}
             </div>
           ) : (
             <div

@@ -3,6 +3,7 @@ import { ChevronDown, ChevronRight } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/src/components/ui/alert";
 import { Button } from "@/src/components/ui/button";
 import { type BulkDatasetItemValidationError } from "@langfuse/shared";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type CsvImportValidationErrorProps = {
   errors: BulkDatasetItemValidationError[];
@@ -11,6 +12,8 @@ type CsvImportValidationErrorProps = {
 export const CsvImportValidationError: React.FC<
   CsvImportValidationErrorProps
 > = ({ errors }) => {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const [isExpanded, setIsExpanded] = useState(false);
 
   const errorCount = errors.length;
@@ -19,17 +22,24 @@ export const CsvImportValidationError: React.FC<
   return (
     <Alert variant="destructive" className="mt-4">
       <AlertTitle className="text-base font-bold">
-        Schema Validation Failed
+        {tAuto("schema_validation_failed_7986e4d")}{" "}
       </AlertTitle>
       <AlertDescription className="mt-2 space-y-3">
         <p className="text-sm">
           {hasMoreThan10
-            ? `${errorCount}+ items failed validation. Showing first ${errorCount} errors.`
-            : `${errorCount} item${errorCount === 1 ? "" : "s"} failed validation.`}
+            ? tAutoI18n(
+                "value0_items_failed_validation_showing_first_value1__ce363ed",
+                { value0: String(errorCount), value1: String(errorCount) },
+              )
+            : tAutoI18n("value0_item_value1_failed_validation_8bd56d7", {
+                value0: String(errorCount),
+                value1: errorCount === 1 ? "" : "s",
+              })}
         </p>
         <p className="text-muted-foreground text-sm">
-          The CSV data does not match the required schema for this dataset. Fix
-          the errors in your CSV file and try importing again.
+          {tAuto(
+            "the_csv_data_does_not_match_the_required_schema_for__df66028",
+          )}{" "}
         </p>
 
         <Button
@@ -44,7 +54,8 @@ export const CsvImportValidationError: React.FC<
           ) : (
             <ChevronRight className="mr-1 h-4 w-4" />
           )}
-          {isExpanded ? "Hide" : "Show"} error details
+          {isExpanded ? tAutoI18n("hide_34d8b60") : tAutoI18n("show_d97d1ee")}{" "}
+          {tAutoI18n("error_details_753d1c9")}{" "}
         </Button>
 
         {isExpanded && (
@@ -59,12 +70,12 @@ export const CsvImportValidationError: React.FC<
                     #{idx + 1}
                   </span>
                   <span className="text-sm font-bold">
-                    CSV Row {error.itemIndex + 2}:{" "}
+                    {tAutoI18n("csv_row_20fbed6")} {error.itemIndex + 2}:{" "}
                     {error.field === "input"
-                      ? "Input"
+                      ? tAutoI18n("input_b568d47")
                       : error.field === "metadata"
-                        ? "Metadata"
-                        : "Expected Output"}
+                        ? tAutoI18n("metadata_251edc0")
+                        : tAutoI18n("expected_output_395c41e")}
                   </span>
                 </div>
 
@@ -85,8 +96,9 @@ export const CsvImportValidationError: React.FC<
 
             {hasMoreThan10 && (
               <p className="text-muted-foreground pt-2 text-xs">
-                Fix these errors to see if there are additional validation
-                issues.
+                {tAuto(
+                  "fix_these_errors_to_see_if_there_are_additional_vali_fb17381",
+                )}{" "}
               </p>
             )}
           </div>

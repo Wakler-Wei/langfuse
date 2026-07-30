@@ -20,6 +20,7 @@ import {
 } from "@/src/components/ui/select";
 import type { UseFormReturn } from "react-hook-form";
 import type { FormUpsertModel } from "../../validation";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type TierConditionsEditorProps = {
   tierIndex: number;
@@ -32,6 +33,8 @@ export function TierConditionsEditor({
   tierIndex,
   form,
 }: TierConditionsEditorProps) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: `pricingTiers.${tierIndex}.conditions`,
@@ -40,7 +43,7 @@ export function TierConditionsEditor({
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <FormLabel>Conditions</FormLabel>
+        <FormLabel>{tAuto("conditions_5506eb6")}</FormLabel>
         <Button
           type="button"
           variant="ghost"
@@ -55,14 +58,16 @@ export function TierConditionsEditor({
           }
         >
           <PlusCircle className="mr-1 h-4 w-4" />
-          Add Condition
+          {tAuto("add_condition_4803c23")}{" "}
         </Button>
       </div>
 
       {fields.length === 0 && (
         <div className="bg-destructive/10 text-destructive rounded-md p-3 text-sm">
-          <strong>Warning:</strong> Non-default tiers require at least one
-          condition. This tier will fail validation.
+          <strong>{tAuto("warning_3217f29")}</strong>{" "}
+          {tAuto(
+            "non_default_tiers_require_at_least_one_condition_thi_7ad579a",
+          )}{" "}
         </div>
       )}
 
@@ -70,7 +75,7 @@ export function TierConditionsEditor({
         <div key={condition.id} className="space-y-3 rounded-lg border p-3">
           <div className="flex items-center justify-between">
             <span className="text-sm font-bold">
-              Condition {conditionIndex + 1}
+              {tAutoI18n("condition_2f49793")} {conditionIndex + 1}
             </span>
             <Button
               type="button"
@@ -88,12 +93,16 @@ export function TierConditionsEditor({
             name={`pricingTiers.${tierIndex}.conditions.${conditionIndex}.usageDetailPattern`}
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Usage Detail Pattern (Regex)</FormLabel>
+                <FormLabel>
+                  {tAuto("usage_detail_pattern_regex_04185a3")}
+                </FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="^input" />
+                  <Input {...field} placeholder={tAuto("input_ad7da7f")} />
                 </FormControl>
                 <FormDescription>
-                  Match usage type keys (e.g., ^input, .*cache.*, output_tokens)
+                  {tAuto(
+                    "match_usage_type_keys_e_g_input_cache_output_tokens_c94c87d",
+                  )}{" "}
                 </FormDescription>
                 <FormMessage />
               </FormItem>
@@ -107,7 +116,7 @@ export function TierConditionsEditor({
               name={`pricingTiers.${tierIndex}.conditions.${conditionIndex}.operator`}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Operator</FormLabel>
+                  <FormLabel>{tAuto("operator_d0e687b")}</FormLabel>
                   <Select value={field.value} onValueChange={field.onChange}>
                     <SelectTrigger>
                       <SelectValue />
@@ -119,8 +128,12 @@ export function TierConditionsEditor({
                       </SelectItem>
                       <SelectItem value="lt">&lt; (less than)</SelectItem>
                       <SelectItem value="lte">&lt;= (less or equal)</SelectItem>
-                      <SelectItem value="eq">= (equals)</SelectItem>
-                      <SelectItem value="neq">!= (not equals)</SelectItem>
+                      <SelectItem value="eq">
+                        {tAuto("equals_ebf6c2c")}
+                      </SelectItem>
+                      <SelectItem value="neq">
+                        {tAuto("not_equals_ef75b8e")}
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -133,7 +146,7 @@ export function TierConditionsEditor({
               name={`pricingTiers.${tierIndex}.conditions.${conditionIndex}.value`}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Value</FormLabel>
+                  <FormLabel>{tAuto("value_8dce170")}</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -161,7 +174,9 @@ export function TierConditionsEditor({
                     onCheckedChange={field.onChange}
                   />
                 </FormControl>
-                <FormLabel className="mt-0!">Case sensitive</FormLabel>
+                <FormLabel className="mt-0!">
+                  {tAuto("case_sensitive_c73af7b")}
+                </FormLabel>
               </FormItem>
             )}
           />

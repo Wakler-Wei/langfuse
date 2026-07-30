@@ -4,8 +4,8 @@ import { useTranslations } from "next-intl";
 
 export const SettingsDangerZone: React.FC<{
   items: {
-    title: string;
-    description: string;
+    title: React.ReactNode;
+    description: React.ReactNode;
     button: React.ReactNode;
   }[];
 }> = ({ items }) => {

@@ -3,12 +3,15 @@ import { useHasProjectAccess } from "@/src/features/rbac/utils/checkProjectAcces
 import { Zap } from "lucide-react";
 import { api } from "@/src/utils/api";
 import Spinner from "@/src/components/design-system/Spinner/Spinner";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type AutomationButtonProps = {
   projectId: string;
 };
 
 export const AutomationButton = ({ projectId }: AutomationButtonProps) => {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const hasAccess = useHasProjectAccess({
     projectId,
     scope: "automations:read",
@@ -33,12 +36,11 @@ export const AutomationButton = ({ projectId }: AutomationButtonProps) => {
       href={`/project/${projectId}/automations`}
       icon={<Zap className="h-4 w-4" aria-hidden="true" />}
       hasAccess={hasAccess}
-      title="Automations"
+      title={tAuto("automations_82542d6")}
       variant="outline"
     >
       <span className="hidden md:ml-1 md:inline">
-        Automations
-        {numberIndicator}
+        {tAutoI18n("automations_82542d6")} {numberIndicator}
       </span>
     </ActionButton>
   );

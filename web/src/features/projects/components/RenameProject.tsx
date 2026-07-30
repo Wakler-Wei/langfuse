@@ -19,8 +19,10 @@ import { LockIcon } from "lucide-react";
 import { useQueryProject } from "@/src/features/projects/hooks";
 import { useSession } from "next-auth/react";
 import { useHasProjectAccess } from "@/src/features/rbac/utils/checkProjectAccess";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export default function RenameProject() {
+  const tAuto = useAutoTranslations();
   const { update: updateSession } = useSession();
   const utils = api.useUtils();
   const { project } = useQueryProject();
@@ -64,20 +66,20 @@ export default function RenameProject() {
 
   return (
     <div>
-      <Header title="Project Name" />
+      <Header title={tAuto("project_name_5f95076")} />
       <Card className="mb-4 p-3">
         {form.getValues().name !== "" ? (
           <p className="text-primary mb-4 text-sm">
-            Your Project will be renamed from &quot;
-            {project?.name ?? ""}
-            &quot; to &quot;
-            <b>{form.watch().name}</b>&quot;.
+            {tAuto("your_project_will_be_renamed_value0_value1_4ac37d1", {
+              value0: project?.name ?? "",
+              value1: form.watch().name,
+            })}
           </p>
         ) : (
           <p className="text-primary mb-4 text-sm">
-            Your Project is currently named &quot;
-            <b>{project?.name ?? ""}</b>
-            &quot;.
+            {tAuto("your_project_is_currently_named_value0_b29c4f1", {
+              value0: project?.name ?? "",
+            })}
           </p>
         )}
         <Form {...form}>
@@ -100,7 +102,7 @@ export default function RenameProject() {
                         disabled={!hasAccess}
                       />
                       {!hasAccess && (
-                        <span title="No access">
+                        <span title={tAuto("no_access_63bde5f")}>
                           <LockIcon className="text-muted absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2 transform" />
                         </span>
                       )}
@@ -118,7 +120,7 @@ export default function RenameProject() {
                 disabled={form.getValues().name === "" || !hasAccess}
                 className="mt-4"
               >
-                Save
+                {tAuto("save_efc007a")}{" "}
               </Button>
             )}
           </form>

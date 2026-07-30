@@ -1,5 +1,6 @@
 import { showErrorToast } from "@/src/features/notifications/showErrorToast";
 import type { Prisma } from "@langfuse/shared";
+import { I18nText } from "@/src/features/i18n/I18nText";
 
 /**
  * Converts a dataset item field value to a formatted JSON string.
@@ -12,8 +13,8 @@ export const stringifyDatasetItemData = (data: unknown): string => {
     return JSON.stringify(data, null, 2);
   } catch {
     showErrorToast(
-      "Failed to stringify data",
-      "We are working on fixing this issue.",
+      <I18nText id="failed_to_stringify_data_91cdb42" />,
+      <I18nText id="working_on_fixing_issue_6e15ba1" />,
     );
     return "";
   }

@@ -27,6 +27,7 @@ import { ErrorPage } from "@/src/components/error-page";
 import { usePostHogClientCapture } from "@/src/features/posthog-analytics/usePostHogClientCapture";
 import { passwordSchema } from "@/src/features/auth/lib/signupSchema";
 import { useLangfuseCloudRegion } from "@/src/features/organizations/hooks";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const resetPasswordSchema = z
   .object({
@@ -44,6 +45,8 @@ export function ResetPasswordPage({
 }: {
   passwordResetAvailable: boolean;
 }) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const session = useSession();
   const router = useRouter();
   const { isLangfuseCloud, region } = useLangfuseCloudRegion();
@@ -110,26 +113,36 @@ export function ResetPasswordPage({
   if (!passwordResetAvailable)
     return (
       <ErrorPage
-        title="Not available"
-        message="Password reset is not configured on this instance"
+        title={tAuto("not_available_d1a17af")}
+        message={tAutoI18n(
+          "password_reset_is_not_configured_on_this_instance_2593d77",
+        )}
         additionalButton={{
-          label: "Setup instructions",
+          label: tAuto("setup_instructions_12abb23"),
           href: "https://langfuse.com/self-hosting/security/authentication-and-sso#auth-email-password",
         }}
       />
     );
 
-  const title = isSetMode ? "Set your password" : "Reset your password";
-  const pageTitle = isSetMode ? "Set Password" : "Reset Password";
-  const submitLabel = isSetMode ? "Set password" : "Update Password";
+  const title = isSetMode
+    ? tAutoI18n("set_your_password_4f9f9c1")
+    : tAutoI18n("reset_your_password_bf8804f");
+  const pageTitle = isSetMode
+    ? tAutoI18n("set_password_e8470ca")
+    : tAutoI18n("reset_password_3fb75e3");
+  const submitLabel = isSetMode
+    ? tAutoI18n("set_password_94408e4")
+    : tAutoI18n("update_password_61dcf34");
   const successMessage = isSetMode
-    ? "Password set successfully. Redirecting ..."
-    : "Password successfully updated. Redirecting ...";
+    ? tAutoI18n("password_set_successfully_redirecting_d78bc37")
+    : tAutoI18n("password_successfully_updated_redirecting_e93ad43");
 
   return (
     <>
       <Head>
-        <title>{pageTitle} | Langfuse</title>
+        <title>
+          {pageTitle} {tAutoI18n("langfuse_0fc32b5")}
+        </title>
       </Head>
       <div className="flex flex-1 flex-col py-6 sm:min-h-full sm:justify-center sm:px-6 sm:py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -146,7 +159,7 @@ export function ResetPasswordPage({
               <Button asChild variant="ghost">
                 <Link href="/auth/sign-in">
                   <ArrowLeft className="mr-2 h-3 w-3" />
-                  Back to sign in
+                  {tAuto("back_to_sign_in_4da8216")}{" "}
                 </Link>
               </Button>
             </div>
@@ -165,7 +178,7 @@ export function ResetPasswordPage({
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Email</FormLabel>
+                      <FormLabel>{tAuto("email_84add5b")}</FormLabel>
                       <FormControl>
                         <div className="relative">
                           <Input
@@ -176,7 +189,7 @@ export function ResetPasswordPage({
                             {...field}
                           />
                           {emailVerified.verified && (
-                            <span title="Email verified">
+                            <span title={tAuto("email_verified_82f47c3")}>
                               <ShieldCheck className="text-muted-green absolute top-1/2 right-3 h-5 w-5 -translate-y-1/2 transform" />
                             </span>
                           )}
@@ -194,7 +207,9 @@ export function ResetPasswordPage({
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>
-                            {isSetMode ? "Password" : "New Password"}
+                            {isSetMode
+                              ? tAutoI18n("password_8be3c94")
+                              : tAutoI18n("new_password_4894cb3")}
                           </FormLabel>
                           <FormControl>
                             <PasswordInput
@@ -213,8 +228,8 @@ export function ResetPasswordPage({
                         <FormItem>
                           <FormLabel>
                             {isSetMode
-                              ? "Confirm Password"
-                              : "Confirm New Password"}
+                              ? tAutoI18n("confirm_password_c2d404c")
+                              : tAutoI18n("confirm_new_password_68dcd71")}
                           </FormLabel>
                           <FormControl>
                             <PasswordInput
@@ -274,11 +289,11 @@ export function ResetPasswordPage({
         </div>
         {!isSetMode && session.status !== "authenticated" && (
           <div className="text-muted-foreground mx-auto mt-10 max-w-lg text-center text-xs">
-            You will only receive an email if an account with this email exists
-            and you have signed up with email and password. If you used an
-            authentication provider like Google, Gitlab, Okta, or GitHub, please{" "}
+            {tAutoI18n(
+              "you_will_only_receive_an_email_if_an_account_with_th_6a7aa2a",
+            )}{" "}
             <Link href="/auth/sign-in" className="underline">
-              sign in
+              {tAuto("sign_in_44922d1")}{" "}
             </Link>
             .
           </div>

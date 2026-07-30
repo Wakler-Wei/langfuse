@@ -19,6 +19,7 @@ import {
 import { Input } from "@/src/components/ui/input";
 import { env } from "@/src/env.mjs";
 import { captureUnknownError } from "@/src/utils/captureUnknownError";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const enterpriseSsoFormSchema = z.object({
   email: z.email(),
@@ -42,6 +43,8 @@ const PROVIDER_LABELS: Record<string, string> = {
 };
 
 export default function EnterpriseSsoRequiredPage() {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -110,7 +113,9 @@ export default function EnterpriseSsoRequiredPage() {
 
       if (response.status === 404) {
         setError(
-          "We couldn't find a custom Enterprise SSO configuration for this domain. Double-check your company email or contact your administrator.",
+          tAutoI18n(
+            "we_couldn_t_find_a_custom_enterprise_sso_configurati_73405b1",
+          ),
         );
         return;
       }
@@ -120,12 +125,16 @@ export default function EnterpriseSsoRequiredPage() {
       } | null;
       setError(
         data?.message ??
-          "Unable to start the Enterprise SSO sign-in flow. Please try again.",
+          tAutoI18n(
+            "unable_to_start_the_enterprise_sso_sign_in_flow_plea_98514a4",
+          ),
       );
     } catch (err) {
       captureUnknownError("auth.enterpriseSso", err);
       setError(
-        "Something went wrong while checking your Enterprise SSO configuration. Please try again.",
+        tAutoI18n(
+          "something_went_wrong_while_checking_your_enterprise__5639f3d",
+        ),
       );
     } finally {
       setLoading(false);
@@ -133,13 +142,16 @@ export default function EnterpriseSsoRequiredPage() {
   }
 
   const description = friendlyProviderName
-    ? `You tried signing in with ${friendlyProviderName}, but this domain requires your company's custom Enterprise SSO.`
-    : "This domain requires your company's custom Enterprise SSO.";
+    ? tAutoI18n(
+        "you_tried_signing_in_with_value0_but_this_domain_req_f84d78e",
+        { value0: String((friendlyProviderName as unknown) ?? "") },
+      )
+    : tAutoI18n("this_domain_requires_your_company_s_custom_enterpris_7bfd357");
 
   return (
     <>
       <Head>
-        <title>Enterprise SSO Required | Langfuse</title>
+        <title>{tAuto("enterprise_sso_required_langfuse_743ec1f")}</title>
       </Head>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -147,11 +159,13 @@ export default function EnterpriseSsoRequiredPage() {
             <LangfuseIcon />
           </div>
           <h1 className="text-primary mt-6 text-center text-2xl font-bold">
-            Use your Enterprise SSO
+            {tAuto("use_your_enterprise_sso_ea4ba99")}{" "}
           </h1>
           <p className="text-muted-foreground mt-2 text-center text-sm leading-6">
-            {description} Enter your company email so we can send you to the
-            correct identity provider.
+            {description}{" "}
+            {tAutoI18n(
+              "enter_your_company_email_so_we_can_send_you_to_the_c_81df847",
+            )}{" "}
           </p>
         </div>
 
@@ -163,7 +177,7 @@ export default function EnterpriseSsoRequiredPage() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>{tAuto("email_84add5b")}</FormLabel>
                     <FormControl>
                       <Input
                         placeholder="jsdoe@example.com"
@@ -183,7 +197,7 @@ export default function EnterpriseSsoRequiredPage() {
                 loading={loading}
                 disabled={loading}
               >
-                Continue with Enterprise SSO
+                {tAuto("continue_with_enterprise_sso_1689cdc")}{" "}
               </Button>
             </form>
           </Form>
@@ -191,14 +205,14 @@ export default function EnterpriseSsoRequiredPage() {
             <div className="text-destructive mt-4 text-center text-sm font-bold">
               {error}
               <br />
-              Contact{" "}
+              {tAutoI18n("contact_b37456c")}{" "}
               <a
                 href="mailto:support@langfuse.com"
                 className="text-link hover:text-link-hover"
               >
-                support@langfuse.com
+                {tAuto("support_langfuse_com_94850d7")}{" "}
               </a>{" "}
-              if this keeps happening.
+              {tAutoI18n("if_this_keeps_happening_34d4d55")}{" "}
             </div>
           ) : null}
           <div className="text-muted-foreground mt-6 text-center text-sm">
@@ -206,18 +220,18 @@ export default function EnterpriseSsoRequiredPage() {
               href="/auth/sign-in"
               className="text-link hover:text-link-hover"
             >
-              Back to other sign-in options
+              {tAuto("back_to_other_sign_in_options_1f63abe")}{" "}
             </Link>
           </div>
         </div>
 
         <div className="text-muted-foreground mt-4 text-center text-xs">
-          Need help? Contact{" "}
+          {tAutoI18n("need_help_contact_db9b822")}{" "}
           <a
             href="mailto:support@langfuse.com"
             className="text-link hover:text-link-hover"
           >
-            support@langfuse.com
+            {tAuto("support_langfuse_com_94850d7")}{" "}
           </a>
           .
         </div>

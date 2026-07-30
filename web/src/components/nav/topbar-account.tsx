@@ -18,6 +18,7 @@ import {
 } from "@/src/components/ui/dropdown-menu";
 import { ThemeToggle } from "@/src/features/theming/ThemeToggle";
 import { cn } from "@/src/utils/tailwind";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 /**
  * Compact account affordance for the mobile top bar: the user's avatar opening
@@ -25,6 +26,7 @@ import { cn } from "@/src/utils/tailwind";
  * this is the always-visible shell-level shortcut in the minimal mobile chrome.
  */
 export const TopbarAccount = ({ className }: { className?: string }) => {
+  const tAuto = useAutoTranslations();
   const session = useSession();
   const user = session.data?.user;
 
@@ -49,7 +51,7 @@ export const TopbarAccount = ({ className }: { className?: string }) => {
           "focus-visible:ring-ring rounded-full focus-visible:ring-2 focus-visible:outline-hidden",
           className,
         )}
-        aria-label="Account menu"
+        aria-label={tAuto("account_menu_60f5a30")}
       >
         <Avatar className="h-8 w-8">
           <AvatarImage src={user.image ?? undefined} alt={name} />
@@ -72,7 +74,9 @@ export const TopbarAccount = ({ className }: { className?: string }) => {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
-          <Link href="/account/settings">Account settings</Link>
+          <Link href="/account/settings">
+            {tAuto("account_settings_82cf8a5")}
+          </Link>
         </DropdownMenuItem>
         {/* ThemeToggle stops propagation itself; keep the row from closing the
             menu so the user can flip themes and keep the menu open. */}
@@ -85,7 +89,7 @@ export const TopbarAccount = ({ className }: { className?: string }) => {
             signOutCleanly().catch(() => {});
           }}
         >
-          Sign out
+          {tAuto("sign_out_dc1649a")}{" "}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

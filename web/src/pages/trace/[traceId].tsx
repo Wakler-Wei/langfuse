@@ -6,6 +6,7 @@ import { ErrorPage } from "@/src/components/error-page";
 import { getTracesByIdsForAnyProject } from "@langfuse/shared/src/server";
 import { type GetServerSideProps } from "next";
 import { useRouter } from "next/router";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   if (!context.params) {
@@ -51,18 +52,21 @@ const TraceRedirectPage = ({
   notFound?: boolean;
   duplicatesFound?: boolean;
 }) => {
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   if (router.isFallback) {
-    return <div className="p-3">Loading...</div>;
+    return <div className="p-3">{tAuto("loading_b04ba49")}</div>;
   }
 
   if (notFound) {
     return (
       <ErrorPage
-        title="Trace not found"
-        message="The trace is either still being processed or has been deleted."
+        title={tAuto("trace_not_found_4b38ada")}
+        message={tAuto(
+          "the_trace_is_either_still_being_processed_or_has_bee_7598104",
+        )}
         additionalButton={{
-          label: "Retry",
+          label: tAuto("retry_9f5cd8a"),
           onClick: () => window.location.reload(),
         }}
       />
@@ -72,8 +76,10 @@ const TraceRedirectPage = ({
   if (duplicatesFound) {
     return (
       <ErrorPage
-        title="Trace not found"
-        message="Please upgrade the SDK as the URL schema has changed."
+        title={tAuto("trace_not_found_4b38ada")}
+        message={tAuto(
+          "please_upgrade_the_sdk_as_the_url_schema_has_changed_4b84727",
+        )}
       />
     );
   }

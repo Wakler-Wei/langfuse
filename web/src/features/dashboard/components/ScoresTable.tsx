@@ -21,6 +21,7 @@ import {
 } from "@/src/features/scores/lib/helpers";
 import { type DatabaseRow } from "@/src/server/api/services/sqlInterface";
 import { NoDataOrLoading } from "@/src/components/NoDataOrLoading";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const dropValuesForCategoricalScores = (
   value: number,
@@ -57,6 +58,7 @@ export const ScoresTable = ({
   isLoading?: boolean;
   metricsVersion?: ViewVersion;
 }) => {
+  const tAuto = useAutoTranslations();
   const localFilters = createTracesTimeFilter(
     globalFilterState,
     "scoreTimestamp",
@@ -147,7 +149,7 @@ export const ScoresTable = ({
 
   if (!zeroValueScores || !oneValueScores) {
     return (
-      <DashboardCard title="Scores" isLoading={false}>
+      <DashboardCard title={tAuto("scores_126cb93")} isLoading={false}>
         <NoDataOrLoading isLoading={false} />
       </DashboardCard>
     );
@@ -199,7 +201,7 @@ export const ScoresTable = ({
       // shrink so the row area scrolls internally. (LFE-11035)
       className={cn(className, "h-full")}
       cardContentClassName="min-h-0"
-      title="Scores"
+      title={tAuto("scores_126cb93")}
       isLoading={
         isLoading ||
         metrics.isPending ||
@@ -211,7 +213,9 @@ export const ScoresTable = ({
         headers={[
           "Name",
           <RightAlignedCell key="count">#</RightAlignedCell>,
-          <RightAlignedCell key="average">Avg</RightAlignedCell>,
+          <RightAlignedCell key="average">
+            {tAuto("avg_cdc9314")}
+          </RightAlignedCell>,
           <RightAlignedCell key="zero">0</RightAlignedCell>,
           <RightAlignedCell key="one">1</RightAlignedCell>,
         ]}
@@ -246,14 +250,15 @@ export const ScoresTable = ({
           oneValueScores.isPending
         }
         noDataProps={{
-          description:
-            "Scores evaluate LLM quality and can be created manually or using the SDK.",
+          description: tAuto(
+            "scores_evaluate_llm_quality_and_can_be_created_manua_b34d64a",
+          ),
           href: "https://langfuse.com/docs/evaluation/overview",
         }}
       >
         <TotalMetric
           metric={totalScores ? compactNumberFormatter(totalScores) : "0"}
-          description="Total scores tracked"
+          description={tAuto("total_scores_tracked_163d469")}
         />
       </DashboardTable>
     </DashboardCard>

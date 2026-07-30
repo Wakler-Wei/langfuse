@@ -5,8 +5,10 @@ import Header from "@/src/components/layouts/header";
 import { Label } from "@/src/components/ui/label";
 import { Switch } from "@/src/components/design-system/Switch/Switch";
 import { useHasProjectAccess } from "@/src/features/rbac/utils/checkProjectAccess";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export function PersonalNotificationSettings() {
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const projectId = router.query.projectId as string;
   const [isSaving, setIsSaving] = useState(false);
@@ -45,9 +47,9 @@ export function PersonalNotificationSettings() {
   if (isLoading || !preferences) {
     return (
       <div>
-        <Header title="Personal Notifications" />
+        <Header title={tAuto("personal_notifications_06b86de")} />
         <p className="text-muted-foreground mt-4 text-sm">
-          Loading preferences...
+          {tAuto("loading_preferences_dc2fb44")}{" "}
         </p>
       </div>
     );
@@ -59,23 +61,28 @@ export function PersonalNotificationSettings() {
 
   return (
     <div>
-      <Header title="Personal Notifications" />
+      <Header title={tAuto("personal_notifications_06b86de")} />
       <div className="flex flex-col gap-4">
         <div>
-          <h3 className="text-lg font-bold">Email Notifications</h3>
+          <h3 className="text-lg font-bold">
+            {tAuto("email_notifications_1281130")}
+          </h3>
           <p className="text-muted-foreground text-sm">
-            Manage your personal email notification preferences for this
-            project.
+            {tAuto(
+              "manage_your_personal_email_notification_preferences__6283b5f",
+            )}{" "}
           </p>
         </div>
 
         <div className="flex items-center justify-between rounded-lg border p-4">
           <div className="flex flex-col gap-0.5">
             <Label htmlFor="comment-mention" className="text-base">
-              Comment Mentions
+              {tAuto("comment_mentions_dec12bf")}{" "}
             </Label>
             <p className="text-muted-foreground text-sm">
-              Receive an email when someone mentions you in a comment
+              {tAuto(
+                "receive_an_email_when_someone_mentions_you_in_a_comm_5961ce9",
+              )}{" "}
             </p>
           </div>
           <Switch
@@ -90,7 +97,9 @@ export function PersonalNotificationSettings() {
       {updatePreference.isError && (
         <div className="border-destructive bg-destructive/10 mt-4 rounded-lg border p-4">
           <p className="text-destructive text-sm">
-            Failed to update notification preference. Please try again.
+            {tAuto(
+              "failed_to_update_notification_preference_please_try__53cdf29",
+            )}{" "}
           </p>
         </div>
       )}

@@ -9,6 +9,7 @@ import { showErrorToast } from "@/src/features/notifications/showErrorToast";
 import { SelectDashboardDialog } from "@/src/features/dashboard/components/SelectDashboardDialog";
 import { type ChartViewConfig } from "../types";
 import { chartConfigToWidgetInput } from "../lib/chartConfigToWidget";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 /**
  * "Add to dashboard" — turns the in-view chart into a real dashboard widget by
@@ -27,6 +28,8 @@ export const AddToDashboardButton = React.memo(function AddToDashboardButton({
   config: ChartViewConfig;
   filters: FilterState;
 }) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const hasAccess = useHasProjectAccess({ projectId, scope: "dashboards:CUD" });
@@ -48,11 +51,14 @@ export const AddToDashboardButton = React.memo(function AddToDashboardButton({
           // Surface failures instead of leaving the dialog open with no feedback;
           // keep it open so the user can retry or pick another dashboard.
           onError: (error) =>
-            showErrorToast("Failed to add chart to dashboard", error.message),
+            showErrorToast(
+              tAutoI18n("failed_to_add_chart_to_dashboard_08692e7"),
+              error.message,
+            ),
         },
       );
     },
-    [createWidget, projectId, config, filters, router],
+    [createWidget, projectId, config, filters, router, tAutoI18n],
   );
 
   if (!hasAccess) return null;
@@ -67,7 +73,7 @@ export const AddToDashboardButton = React.memo(function AddToDashboardButton({
         disabled={createWidget.isPending}
       >
         <LayoutDashboard className="h-3.5 w-3.5" />
-        Add to dashboard
+        {tAuto("add_to_dashboard_b350aac")}{" "}
       </Button>
       <SelectDashboardDialog
         open={open}

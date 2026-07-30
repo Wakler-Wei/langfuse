@@ -16,6 +16,7 @@ import { type TimelineGutterRowProps } from "./types";
 import { ItemBadge } from "@/src/components/ItemBadge";
 import { ChevronRight } from "lucide-react";
 import { cn } from "@/src/utils/tailwind";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const INDENT = 14; // px per depth level
 const RAIL = 7; // x of a level's vertical rail within its indent step
@@ -32,6 +33,7 @@ export function TimelineGutterRow({
   isCollapsed,
   maxVisualDepth = Infinity,
 }: TimelineGutterRowProps) {
+  const tAuto = useAutoTranslations();
   const { node, depth, treeLines, isLastSibling } = item;
 
   // Visual depth: real depth capped to the gutter width (see visual-depth.ts)
@@ -130,7 +132,9 @@ export function TimelineGutterRow({
       {hasChildren && (
         <button
           type="button"
-          aria-label={isCollapsed ? "Expand" : "Collapse"}
+          aria-label={
+            isCollapsed ? tAuto("expand_9869e50") : tAuto("collapse_9cf188d")
+          }
           aria-expanded={!isCollapsed}
           onClick={(e) => {
             e.stopPropagation();

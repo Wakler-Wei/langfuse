@@ -32,6 +32,7 @@ import { cn } from "@/src/utils/tailwind";
 import { usePostHogClientCapture } from "@/src/features/posthog-analytics/usePostHogClientCapture";
 import { useViewPreferences } from "../contexts/ViewPreferencesContext";
 import { useTraceAnalyticsDimensions } from "../hooks/useTraceAnalyticsDimensions";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export interface TraceSettingsDropdownProps {
   isGraphViewAvailable: boolean;
@@ -40,13 +41,14 @@ export interface TraceSettingsDropdownProps {
 export function TraceSettingsDropdown({
   isGraphViewAvailable,
 }: TraceSettingsDropdownProps) {
+  const tAuto = useAutoTranslations();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
           size="icon"
-          title="View Options"
+          title={tAuto("view_options_da1aedd")}
           className="h-7 w-7"
         >
           <Settings2 className="h-3.5 w-3.5" />
@@ -72,6 +74,8 @@ export function TraceSettingsDropdown({
 export function TraceViewOptionsMenuItems({
   isGraphViewAvailable,
 }: TraceSettingsDropdownProps) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const capture = usePostHogClientCapture();
   const analyticsDimensions = useTraceAnalyticsDimensions();
 
@@ -109,7 +113,7 @@ export function TraceViewOptionsMenuItems({
             className="space-y-0 px-2 py-1"
           >
             <div className="flex w-full items-center justify-between">
-              <span className="mr-2">Show Graph</span>
+              <span className="mr-2">{tAuto("show_graph_1fee0f1")}</span>
               <Switch
                 size="sm"
                 checked={showGraph}
@@ -132,7 +136,7 @@ export function TraceViewOptionsMenuItems({
           className="px-2 py-1"
         >
           <div className="flex w-full items-center justify-between">
-            <span className="mr-2">Show Comments</span>
+            <span className="mr-2">{tAuto("show_comments_ee25148")}</span>
             <Switch
               size="sm"
               checked={showComments}
@@ -148,7 +152,7 @@ export function TraceViewOptionsMenuItems({
           className="px-2 py-1"
         >
           <div className="flex w-full items-center justify-between">
-            <span className="mr-2">Show Scores</span>
+            <span className="mr-2">{tAuto("show_scores_09f2f7f")}</span>
             <Switch
               size="sm"
               checked={showScores}
@@ -170,7 +174,7 @@ export function TraceViewOptionsMenuItems({
           className="px-2 py-1"
         >
           <div className="flex w-full items-center justify-between">
-            <span className="mr-2">Show Duration</span>
+            <span className="mr-2">{tAuto("show_duration_3217cc5")}</span>
             <Switch
               size="sm"
               checked={showDuration}
@@ -217,7 +221,7 @@ export function TraceViewOptionsMenuItems({
                 !isColorCodeEnabled && "cursor-not-allowed",
               )}
             >
-              Show Color Code Metrics
+              {tAuto("show_color_code_metrics_1e7963f")}{" "}
             </span>
             <Switch
               size="sm"
@@ -235,7 +239,9 @@ export function TraceViewOptionsMenuItems({
           className="px-2 py-1"
         >
           <div className="flex w-full items-center justify-between">
-            <span className="mr-2">Collapse System Prompts</span>
+            <span className="mr-2">
+              {tAuto("collapse_system_prompts_75e5d09")}
+            </span>
             <Switch
               size="sm"
               checked={collapseSystemPrompt}
@@ -258,12 +264,12 @@ export function TraceViewOptionsMenuItems({
       <DropdownMenuSub>
         <DropdownMenuSubTrigger>
           <span className="flex items-center">
-            Min Level: {minObservationLevel}
+            {tAutoI18n("min_level_eaa2916")} {minObservationLevel}
           </span>
         </DropdownMenuSubTrigger>
         <DropdownMenuSubContent>
           <DropdownMenuLabel className="font-bold">
-            Minimum Level
+            {tAuto("minimum_level_9b8f3a2")}{" "}
           </DropdownMenuLabel>
           {Object.values(ObservationLevel).map((level) => (
             <DropdownMenuItem

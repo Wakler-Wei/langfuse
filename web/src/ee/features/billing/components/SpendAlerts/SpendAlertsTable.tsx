@@ -17,6 +17,7 @@ import { DataTable } from "@/src/components/table/data-table";
 import { DataTableToolbar } from "@/src/components/table/data-table-toolbar";
 import { type LangfuseColumnDef } from "@/src/components/table/types";
 import { usdFormatter } from "@/src/utils/numbers";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 interface SpendAlertsTableProps {
   orgId: string;
@@ -31,6 +32,7 @@ type AlertRow = {
 };
 
 export function SpendAlertsTable({ orgId }: SpendAlertsTableProps) {
+  const tAuto = useAutoTranslations();
   const [editingAlert, setEditingAlert] = useState<string | null>(null);
   const [deletingAlert, setDeletingAlert] = useState<string | null>(null);
 
@@ -74,32 +76,32 @@ export function SpendAlertsTable({ orgId }: SpendAlertsTableProps) {
     {
       accessorKey: "title",
       id: "title",
-      header: "Title",
+      header: tAuto("title_768e0c1"),
       cell: ({ row }) => row.original.title,
       size: 160,
     },
     {
       accessorKey: "Limit",
       id: "limit",
-      header: "Limit (USD)",
+      header: tAuto("limit_usd_3a489c2"),
       size: 140,
       cell: ({ row }) => usdFormatter(row.original.threshold, 2, 2),
     },
     {
       accessorKey: "status",
       id: "status",
-      header: "Status",
+      header: tAuto("status_bae7d5b"),
       size: 110,
       cell: ({ row }) => (
         <Badge variant={row.original.triggeredAt ? "destructive" : "secondary"}>
-          {row.original.triggeredAt ? "Triggered" : "Active"}
+          {row.original.triggeredAt ? tAuto("triggered_933f5e3") : tAuto("active_a733b80")}
         </Badge>
       ),
     },
     {
       accessorKey: "lastTriggered",
       id: "lastTriggered",
-      header: "Last Triggered",
+      header: tAuto("last_triggered_bd4b927"),
       size: 160,
       cell: ({ row }) =>
         row.original.triggeredAt
@@ -111,7 +113,7 @@ export function SpendAlertsTable({ orgId }: SpendAlertsTableProps) {
     {
       accessorKey: "actions",
       id: "actions",
-      header: "Actions",
+      header: tAuto("actions_c3cd636"),
       size: 120,
       cell: ({ row }) => (
         <DropdownMenu>
@@ -123,14 +125,14 @@ export function SpendAlertsTable({ orgId }: SpendAlertsTableProps) {
           <DropdownMenuContent align="end">
             <DropdownMenuItem onClick={() => setEditingAlert(row.original.id)}>
               <Edit className="mr-2 h-4 w-4" />
-              Edit
+              {tAuto("edit_5301648")}{" "}
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => setDeletingAlert(row.original.id)}
               className="text-destructive"
             >
               <Trash2 className="mr-2 h-4 w-4" />
-              Delete
+              {tAuto("delete_f6fdbe4")}{" "}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

@@ -2,8 +2,10 @@ import { api } from "@/src/utils/api";
 import { Badge } from "@/src/components/ui/badge";
 import { useBillingInformation } from "@/src/ee/features/billing/components/useBillingInformation";
 import { BillingDiscountCodeButton } from "@/src/ee/features/billing/components/BillingDiscountCodeButton";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export const BillingDiscountView = () => {
+  const tAuto = useAutoTranslations();
   const { organization } = useBillingInformation();
 
   const shouldRenderComponent = Boolean(
@@ -48,7 +50,7 @@ export const BillingDiscountView = () => {
   return (
     <div className="flex flex-col gap-2">
       <div className="text-muted-foreground flex flex-wrap items-center gap-2 text-sm">
-        <span className="mr-1">Discounts:</span>
+        <span className="mr-1">{tAuto("discounts_9c0d9d3")}</span>
         {discounts.map((d) => {
           const labelParts: string[] = [];
           if (d.code) labelParts.push(d.code);

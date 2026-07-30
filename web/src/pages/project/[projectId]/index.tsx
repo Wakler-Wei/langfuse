@@ -44,8 +44,11 @@ import { usePostHogClientCapture } from "@/src/features/posthog-analytics/usePos
 import { Button } from "@/src/components/ui/button";
 import { DashboardGrid } from "@/src/features/widgets/components/DashboardGrid";
 import { HomeDashboardSelect } from "@/src/features/dashboard/components/HomeDashboardSelect";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export default function Dashboard() {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const utils = api.useUtils();
   const capture = usePostHogClientCapture();
@@ -187,7 +190,10 @@ export default function Dashboard() {
       setPeekId(null);
     },
     onError: (e) => {
-      showErrorToast("Failed to set the default Home dashboard", e.message);
+      showErrorToast(
+        tAutoI18n("failed_to_set_the_default_home_dashboard_51a18d1"),
+        e.message,
+      );
     },
   });
 
@@ -266,12 +272,12 @@ export default function Dashboard() {
         withPadding
         scrollable
         headerProps={{
-          title: "Home",
+          title: tAuto("home_70f8bb9"),
           actionButtonsLeft: (
             <>
               <MultiSelect
-                title="Environment"
-                label="Env"
+                title={tAuto("environment_d443a11")}
+                label={tAuto("env_a256269")}
                 values={selectedEnvironments}
                 onValueChange={useDebounce(setSelectedEnvironments)}
                 options={environmentOptions.map((env) => ({
@@ -309,7 +315,9 @@ export default function Dashboard() {
                 <Button
                   variant="outline"
                   loading={setHomeDashboard.isPending}
-                  title="Show this dashboard on Home for everyone in this project"
+                  title={tAuto(
+                    "show_this_dashboard_on_home_for_everyone_in_this_pro_78704dc",
+                  )}
                   onClick={() => {
                     capture("dashboard:home_dashboard_set_default", {
                       dashboard_id: dashboardId,
@@ -324,13 +332,13 @@ export default function Dashboard() {
                     });
                   }}
                 >
-                  Set default
+                  {tAuto("set_default_cddb7f0")}{" "}
                 </Button>
               )}
               <Button
                 variant="outline"
                 size="icon"
-                title="Edit this dashboard in Dashboards"
+                title={tAuto("edit_this_dashboard_in_dashboards_2aeaa54")}
                 asChild
               >
                 <Link
@@ -344,7 +352,7 @@ export default function Dashboard() {
                 >
                   <PencilIcon className="h-4 w-4" />
                   <span className="sr-only">
-                    Edit this dashboard in Dashboards
+                    {tAuto("edit_this_dashboard_in_dashboards_2aeaa54")}{" "}
                   </span>
                 </Link>
               </Button>

@@ -77,6 +77,7 @@ import {
   useEvalCapabilities,
   type EvalCapabilities,
 } from "@/src/features/evals/hooks/useEvalCapabilities";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type PartialEvalTemplate = Partial<EvalTemplate> &
   Pick<EvalTemplate, "name" | "prompt" | "vars" | "outputDefinition">;
@@ -205,6 +206,8 @@ export const InnerEvalTemplateForm = (props: {
   preventRedirect?: boolean;
   cloneSourceId?: string | null;
 }) => {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const capture = usePostHogClientCapture();
   const [formError, setFormError] = useState<string | null>(null);
   const codeEvalCapabilities = useIsCodeEvalEnabled();
@@ -365,9 +368,10 @@ export const InnerEvalTemplateForm = (props: {
       utils.models.invalidate();
       if (data.updatedConfigCount > 0) {
         showSuccessToast({
-          title: "Updated evaluators",
-          description:
-            "Updated referenced evaluators to use new template version.",
+          title: tAuto("updated_evaluators_a8c4f67"),
+          description: tAuto(
+            "updated_referenced_evaluators_to_use_new_template_ve_cc71800",
+          ),
         });
       }
     },
@@ -571,22 +575,29 @@ export const InnerEvalTemplateForm = (props: {
                 );
                 return (
                   <FormItem>
-                    <FormLabel>Name</FormLabel>
+                    <FormLabel>{tAuto("name_709a232")}</FormLabel>
                     <FormControl>
-                      <Input {...field} placeholder="Select a name" />
+                      <Input
+                        {...field}
+                        placeholder={tAuto("select_a_name_6fe9f3b")}
+                      />
                     </FormControl>
                     {existingTemplate && (
                       <p className="text-destructive text-sm font-bold">
-                        Template with this name already exists.{" "}
+                        {tAutoI18n(
+                          "template_with_this_name_already_exists_6756e25",
+                        )}{" "}
                         <Link
                           href={`/project/${props.projectId}/evals/templates/${existingTemplate.id}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="underline"
                         >
-                          Edit this template
+                          {tAuto("edit_this_template_88bd69f")}{" "}
                         </Link>{" "}
-                        or delete it to create a new template with this name.
+                        {tAutoI18n(
+                          "or_delete_it_to_create_a_new_template_with_this_name_03a71bb",
+                        )}{" "}
                       </p>
                     )}
                     <FormMessage />
@@ -637,7 +648,7 @@ export const InnerEvalTemplateForm = (props: {
           {/* Model Selection Section */}
           <Card>
             <CardContent>
-              <p className="my-2 font-bold">Model</p>
+              <p className="my-2 font-bold">{tAuto("model_68c2cc7")}</p>
               <FormField
                 control={form.control}
                 name="shouldUseDefaultModel"
@@ -651,24 +662,23 @@ export const InnerEvalTemplateForm = (props: {
                       />
                     </FormControl>
                     <div className="space-y-0 leading-none">
-                      <FormLabel>Use default evaluation model</FormLabel>
+                      <FormLabel>
+                        {tAuto("use_default_evaluation_model_aed6a85")}
+                      </FormLabel>
                       <FormDescription className="text-xs">
                         <ManageDefaultEvalModel
                           projectId={props.projectId}
                           variant="color-coded"
                           setUpMessage={
                             <>
-                              No default model set. LLM-as-a-judge evaluations
-                              require an LLM connection for scoring. This
-                              default is used by all templates that don&apos;t
-                              specify their own model.{" "}
+                              {tAuto("no_default_model_description_01")}{" "}
                               <a
                                 href="https://langfuse.com/docs/evaluation/evaluation-methods/llm-as-a-judge#how-llm-as-a-judge-works"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="underline"
                               >
-                                Learn more.
+                                {tAuto("learn_more_2a5c6a3")}{" "}
                               </a>
                             </>
                           }
@@ -685,16 +695,18 @@ export const InnerEvalTemplateForm = (props: {
                   <div className="text-destructive mt-2 flex items-center space-x-1 text-sm">
                     <AlertCircle className="h-4 w-4" />
                     <p>
-                      This evaluator is configured to use{" "}
-                      {modelParams.provider.value}s models but no API key
-                      exists. Add a key or choose another provider.
+                      {tAutoI18n("this_evaluator_is_configured_to_use_ecfd877")}{" "}
+                      {modelParams.provider.value}
+                      {tAutoI18n(
+                        "s_models_but_no_api_key_exists_add_a_key_or_choose_a_9f221bd",
+                      )}{" "}
                     </p>
                   </div>
                 ) : (
                   <ModelParameters
                     customHeader={
                       <p className="text-sm leading-none font-bold">
-                        Custom model configuration
+                        {tAuto("custom_model_configuration_72cf02d")}{" "}
                       </p>
                     }
                     {...{
@@ -716,18 +728,24 @@ export const InnerEvalTemplateForm = (props: {
           <Card>
             <CardContent className="space-y-6">
               <div className="space-y-2">
-                <p className="my-2 font-bold">Prompt</p>
+                <p className="my-2 font-bold">{tAuto("prompt_a817d7e")}</p>
                 <FormField
                   control={form.control}
                   name="prompt"
                   render={({ field }) => (
                     <>
                       <FormItem>
-                        <FormLabel>Evaluation prompt</FormLabel>
+                        <FormLabel>
+                          {tAuto("evaluation_prompt_c7d67c0")}
+                        </FormLabel>
                         <FormDescription>
-                          Define your llm-as-a-judge evaluation template. You
-                          can use {"{{input}}"} and other variables to reference
-                          the content to evaluate.
+                          {tAutoI18n(
+                            "define_your_llm_as_a_judge_evaluation_template_you_c_7e2a879",
+                          )}{" "}
+                          {"{{input}}"}{" "}
+                          {tAutoI18n(
+                            "and_other_variables_to_reference_the_content_to_eval_a6a8cc3",
+                          )}{" "}
                         </FormDescription>
                         <FormControl>
                           <CodeMirrorEditor
@@ -754,11 +772,11 @@ export const InnerEvalTemplateForm = (props: {
                 name="scoreDataType"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Score type</FormLabel>
+                    <FormLabel>{tAuto("score_type_fb546cf")}</FormLabel>
                     <FormDescription>
-                      Choose whether the evaluator should return a numeric
-                      score, a boolean verdict, or one of a fixed set of
-                      categories.
+                      {tAuto(
+                        "choose_whether_the_evaluator_should_return_a_numeric_82bc2c8",
+                      )}{" "}
                     </FormDescription>
                     <Select
                       value={field.value}
@@ -802,18 +820,20 @@ export const InnerEvalTemplateForm = (props: {
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select a score type" />
+                          <SelectValue
+                            placeholder={tAuto("select_a_score_type_6534cd0")}
+                          />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
                         <SelectItem value={ScoreDataTypeEnum.NUMERIC}>
-                          Numeric
+                          {tAuto("numeric_30a6238")}{" "}
                         </SelectItem>
                         <SelectItem value={ScoreDataTypeEnum.BOOLEAN}>
-                          Boolean
+                          {tAuto("boolean_b76ff49")}{" "}
                         </SelectItem>
                         <SelectItem value={ScoreDataTypeEnum.CATEGORICAL}>
-                          Categorical
+                          {tAuto("categorical_8528ae9")}{" "}
                         </SelectItem>
                       </SelectContent>
                     </Select>
@@ -829,7 +849,7 @@ export const InnerEvalTemplateForm = (props: {
                   render={() => (
                     <FormItem>
                       <div>
-                        <FormLabel>Categories</FormLabel>
+                        <FormLabel>{tAuto("categories_6ccb600")}</FormLabel>
                         <FormDescription>
                           Add the allowed category values the model may return.
                           Categories must be exhaustive. If you need a catch-all
@@ -849,7 +869,7 @@ export const InnerEvalTemplateForm = (props: {
                               render={({ field }) => (
                                 <FormItem>
                                   <FormLabel className="text-muted-foreground text-xs">
-                                    Category
+                                    {tAuto("category_a3c686e")}{" "}
                                   </FormLabel>
                                   <FormControl>
                                     <Input {...field} />
@@ -880,7 +900,7 @@ export const InnerEvalTemplateForm = (props: {
                         onClick={() => append({ value: "" })}
                       >
                         <PlusIcon className="mr-1.5 h-4 w-4" />
-                        Add category
+                        {tAuto("add_category_d169b7f")}{" "}
                       </Button>
                       <FormField
                         control={form.control}
@@ -903,11 +923,13 @@ export const InnerEvalTemplateForm = (props: {
                               />
                             </FormControl>
                             <div className="space-y-0.5 leading-none">
-                              <FormLabel>Allow multiple matches</FormLabel>
+                              <FormLabel>
+                                {tAuto("allow_multiple_matches_1ad3a85")}
+                              </FormLabel>
                               <FormDescription>
-                                Lets the model return more than one category.
-                                One score will be created for each selected
-                                match.
+                                {tAuto(
+                                  "lets_the_model_return_more_than_one_category_one_sco_eb93705",
+                                )}{" "}
                               </FormDescription>
                             </div>
                           </FormItem>
@@ -927,11 +949,13 @@ export const InnerEvalTemplateForm = (props: {
                 name="reasoningDescription"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Score reasoning prompt</FormLabel>
+                    <FormLabel>
+                      {tAuto("score_reasoning_prompt_9ad3ae5")}
+                    </FormLabel>
                     <FormDescription>
-                      Define how the LLM should explain its evaluation. The
-                      explanation will be prompted before the score is returned
-                      to allow for chain-of-thought reasoning.
+                      {tAuto(
+                        "define_how_the_llm_should_explain_its_evaluation_the_32b721c",
+                      )}{" "}
                     </FormDescription>
                     <FormControl>
                       <Input {...field} />
@@ -948,19 +972,27 @@ export const InnerEvalTemplateForm = (props: {
                   <FormItem>
                     <FormLabel>
                       {isCategoricalOutput
-                        ? "Category selection prompt"
+                        ? tAutoI18n("category_selection_prompt_d05f620")
                         : isBooleanOutput
-                          ? "Boolean verdict prompt"
-                          : "Score output prompt"}
+                          ? tAutoI18n("boolean_verdict_prompt_3298eeb")
+                          : tAutoI18n("score_output_prompt_52bed82")}
                     </FormLabel>
                     <FormDescription>
                       {isCategoricalOutput
                         ? shouldAllowMultipleMatches
-                          ? "Define how the LLM should choose one or more categories from the list below."
-                          : "Define how the LLM should choose exactly one category from the list below."
+                          ? tAutoI18n(
+                              "define_how_the_llm_should_choose_one_or_more_categor_c9025c4",
+                            )
+                          : tAutoI18n(
+                              "define_how_the_llm_should_choose_exactly_one_categor_8c8e5cf",
+                            )
                         : isBooleanOutput
-                          ? "Define how the LLM should return either true or false based on the evaluation criteria."
-                          : "Define how the LLM should return the evaluation score in natural language. Needs to yield a numeric value."}
+                          ? tAutoI18n(
+                              "define_how_the_llm_should_return_either_true_or_fals_fc88811",
+                            )
+                          : tAutoI18n(
+                              "define_how_the_llm_should_return_the_evaluation_scor_f05468e",
+                            )}
                     </FormDescription>
                     <FormControl>
                       <Input {...field} />
@@ -985,7 +1017,7 @@ export const InnerEvalTemplateForm = (props: {
           disabled={showCodeTemplateForm && !isCodeEvalSourceValid}
           className="w-full"
         >
-          Save
+          {tAuto("save_efc007a")}{" "}
         </Button>
       )}
       {formError ? (
@@ -1017,6 +1049,8 @@ function CodeEvalSdkVersionCallout({
 }: {
   evalCapabilities: EvalCapabilities;
 }) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   if (
     evalCapabilities.isLoading ||
     !evalCapabilities.compatibilityCheckWasPerformed ||
@@ -1034,19 +1068,19 @@ function CodeEvalSdkVersionCallout({
       <AlertDescription>
         <div className="flex flex-col gap-1">
           <span className="text-foreground font-bold">
-            Please verify your SDK version
+            {tAuto("please_verify_your_sdk_version_d6fd5a1")}{" "}
           </span>
           <span className="text-foreground text-sm">
-            Code evaluators require JS SDK v4+ or Python SDK v3+. You can create
-            this evaluator now, but it will only run once your project ingests
-            data with a compatible SDK.{" "}
+            {tAutoI18n(
+              "code_evaluators_require_js_sdk_v4_or_python_sdk_v3_y_c9ff75d",
+            )}{" "}
             <a
               href="https://langfuse.com/docs/observability/sdk/upgrade-path"
               target="_blank"
               rel="noopener noreferrer"
               className="text-dark-blue font-bold hover:opacity-80"
             >
-              Learn more
+              {tAuto("learn_more_824d76b")}{" "}
             </a>
             .
           </span>

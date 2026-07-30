@@ -2,8 +2,10 @@ import { api } from "@/src/utils/api";
 import Link from "next/link";
 import { SidebarMenuButton } from "@/src/components/ui/sidebar";
 import { useLangfuseCloudRegion } from "@/src/features/organizations/hooks";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export function CloudStatusMenu() {
+  const tAuto = useAutoTranslations();
   const { isLangfuseCloud } = useLangfuseCloudRegion();
   const { data, isLoading } = api.cloudStatus.getStatus.useQuery(undefined, {
     refetchOnMount: false,
@@ -26,7 +28,7 @@ export function CloudStatusMenu() {
   }
 
   return (
-    <SidebarMenuButton asChild tooltip="Status">
+    <SidebarMenuButton asChild tooltip={tAuto("status_bae7d5b")}>
       <Link
         href="https://status.langfuse.com"
         target="_blank"
@@ -36,7 +38,7 @@ export function CloudStatusMenu() {
           <span className="absolute inline-flex h-2 w-2 animate-ping rounded-full bg-yellow-500 opacity-75"></span>
           <span className="relative inline-flex h-2 w-2 rounded-full bg-yellow-600"></span>
         </div>
-        Status
+        {tAuto("status_bae7d5b")}{" "}
       </Link>
     </SidebarMenuButton>
   );

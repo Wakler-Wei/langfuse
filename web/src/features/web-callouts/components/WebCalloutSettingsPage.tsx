@@ -52,6 +52,7 @@ import {
   WEB_CALLOUT_HEADER_NAME_PATTERN,
 } from "@/src/features/web-callouts/headerRules";
 import { api, type RouterOutputs } from "@/src/utils/api";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type WebCalloutEndpoint = RouterOutputs["webCallouts"]["all"][number];
 
@@ -112,6 +113,8 @@ const webCalloutFormSchema = z
 type WebCalloutFormValues = z.infer<typeof webCalloutFormSchema>;
 
 export function WebCalloutSettingsPage(props: { projectId: string }) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingEndpoint, setEditingEndpoint] =
     useState<WebCalloutEndpoint | null>(null);
@@ -131,12 +134,17 @@ export function WebCalloutSettingsPage(props: { projectId: string }) {
     onSuccess: async () => {
       await utils.webCallouts.invalidate();
       showSuccessToast({
-        title: "Callout endpoint deleted",
-        description: "The endpoint was removed from this project.",
+        title: tAuto("callout_endpoint_deleted_b70c563"),
+        description: tAuto(
+          "the_endpoint_was_removed_from_this_project_d8d3f53",
+        ),
       });
     },
     onError: (error) => {
-      showErrorToast("Failed to delete callout endpoint", error.message);
+      showErrorToast(
+        tAutoI18n("failed_to_delete_callout_endpoint_588078f"),
+        error.message,
+      );
     },
   });
 
@@ -144,9 +152,11 @@ export function WebCalloutSettingsPage(props: { projectId: string }) {
     return (
       <div>
         <Alert>
-          <AlertTitle>Access Denied</AlertTitle>
+          <AlertTitle>{tAuto("access_denied_1647b9d")}</AlertTitle>
           <AlertDescription>
-            You do not have permission to manage integrations for this project.
+            {tAuto(
+              "you_do_not_have_permission_to_manage_integrations_fo_8c728c1",
+            )}{" "}
           </AlertDescription>
         </Alert>
       </div>
@@ -174,18 +184,18 @@ export function WebCalloutSettingsPage(props: { projectId: string }) {
   return (
     <div>
       <p className="text-primary mb-4 text-sm">
-        Configure a project-level callout. Your users can trigger a POST to an
-        endpoint on trace, observation, and session detail screens. This can be
-        used to integrate with your services to trigger workflows. See the docs{" "}
+        {tAutoI18n(
+          "configure_a_project_level_callout_your_users_can_tri_ae2acca",
+        )}{" "}
         <a
           href="https://langfuse.com/docs/observability/features/web-callouts"
           target="_blank"
           rel="noreferrer"
           className="underline underline-offset-2"
         >
-          here
+          {tAuto("here_0154c0d")}{" "}
         </a>{" "}
-        for more info.
+        {tAutoI18n("for_more_info_d7f3b13")}{" "}
       </p>
 
       <div className="mb-4 flex justify-end">
@@ -212,11 +222,21 @@ export function WebCalloutSettingsPage(props: { projectId: string }) {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="text-primary">Name</TableHead>
-              <TableHead className="text-primary">Endpoint</TableHead>
-              <TableHead className="text-primary">Toast Message</TableHead>
-              <TableHead className="text-primary">Headers</TableHead>
-              <TableHead className="text-primary">Status</TableHead>
+              <TableHead className="text-primary">
+                {tAuto("name_709a232")}
+              </TableHead>
+              <TableHead className="text-primary">
+                {tAuto("endpoint_92ec635")}
+              </TableHead>
+              <TableHead className="text-primary">
+                {tAuto("toast_message_86e6a56")}
+              </TableHead>
+              <TableHead className="text-primary">
+                {tAuto("headers_520de74")}
+              </TableHead>
+              <TableHead className="text-primary">
+                {tAuto("status_bae7d5b")}
+              </TableHead>
               <TableHead />
             </TableRow>
           </TableHeader>
@@ -228,7 +248,7 @@ export function WebCalloutSettingsPage(props: { projectId: string }) {
                   colSpan={6}
                   className="text-muted-foreground text-center"
                 >
-                  No callout endpoint configured.
+                  {tAuto("no_callout_endpoint_configured_e0b115d")}{" "}
                 </TableCell>
               </TableRow>
             ) : (
@@ -266,7 +286,9 @@ export function WebCalloutSettingsPage(props: { projectId: string }) {
                             <Pencil className="h-4 w-4" />
                           </Button>
                         </TooltipTrigger>
-                        <TooltipContent>Edit endpoint</TooltipContent>
+                        <TooltipContent>
+                          {tAuto("edit_endpoint_97d697a")}
+                        </TooltipContent>
                       </Tooltip>
                       <DeleteEndpointButton
                         endpoint={endpoint}
@@ -294,6 +316,7 @@ function AddEndpointButton(props: {
   disabledReason?: string;
   onClick: () => void;
 }) {
+  const tAuto = useAutoTranslations();
   const button = (
     <Button
       disabled={Boolean(props.disabledReason)}
@@ -301,7 +324,7 @@ function AddEndpointButton(props: {
       onClick={props.onClick}
     >
       <Plus className="mr-1 h-4 w-4" />
-      Add endpoint
+      {tAuto("add_endpoint_bfc1935")}{" "}
     </Button>
   );
 
@@ -320,10 +343,13 @@ function AddEndpointButton(props: {
 }
 
 function HeaderList(props: { endpoint: WebCalloutEndpoint }) {
+  const tAuto = useAutoTranslations();
   const headers = props.endpoint.requestHeaderKeys;
 
   if (headers.length === 0) {
-    return <span className="text-muted-foreground">None</span>;
+    return (
+      <span className="text-muted-foreground">{tAuto("none_6eef664")}</span>
+    );
   }
 
   return (
@@ -349,20 +375,25 @@ function WebCalloutEndpointDialog(props: {
   onOpenChange: (open: boolean) => void;
   trigger: ReactNode;
 }) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const utils = api.useUtils();
   const upsertMutation = api.webCallouts.upsert.useMutation({
     onSuccess: async () => {
       await utils.webCallouts.invalidate();
       showSuccessToast({
         title: props.endpoint
-          ? "Callout endpoint updated"
-          : "Callout endpoint created",
-        description: "Web callout configuration was saved.",
+          ? tAuto("callout_endpoint_updated_ee4af48")
+          : tAuto("callout_endpoint_created_db091d1"),
+        description: tAuto("web_callout_configuration_was_saved_6f5eee0"),
       });
       props.onOpenChange(false);
     },
     onError: (error) => {
-      showErrorToast("Failed to save callout endpoint", error.message);
+      showErrorToast(
+        tAutoI18n("failed_to_save_callout_endpoint_1bc9a73"),
+        error.message,
+      );
     },
   });
 
@@ -400,18 +431,21 @@ function WebCalloutEndpointDialog(props: {
       <DialogContent size="lg">
         <DialogHeader>
           <DialogTitle>
-            {props.endpoint ? "Edit Callout Endpoint" : "Add Callout Endpoint"}
+            {props.endpoint
+              ? tAutoI18n("edit_callout_endpoint_38bc70b")
+              : tAutoI18n("add_callout_endpoint_f10df05")}
           </DialogTitle>
           <DialogDescription>
-            Langfuse sends a backend JSON POST when a user clicks a web callout
-            action.{" "}
+            {tAutoI18n(
+              "langfuse_sends_a_backend_json_post_when_a_user_click_75168c4",
+            )}{" "}
             <a
               href="https://langfuse.com/docs/observability/features/web-callouts"
               target="_blank"
               rel="noreferrer"
               className="underline underline-offset-2"
             >
-              View docs
+              {tAuto("view_docs_19abc6f")}{" "}
             </a>
             .
           </DialogDescription>
@@ -428,7 +462,7 @@ function WebCalloutEndpointDialog(props: {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Name</FormLabel>
+                    <FormLabel>{tAuto("name_709a232")}</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -442,7 +476,7 @@ function WebCalloutEndpointDialog(props: {
                 name="url"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Endpoint URL</FormLabel>
+                    <FormLabel>{tAuto("endpoint_url_65aaaa4")}</FormLabel>
                     <FormControl>
                       <Input
                         placeholder="https://example.com/langfuse/callout"
@@ -450,8 +484,9 @@ function WebCalloutEndpointDialog(props: {
                       />
                     </FormControl>
                     <FormDescription>
-                      HTTP or HTTPS URL. Custom ports are allowed. The endpoint
-                      is called from the Langfuse backend.
+                      {tAuto(
+                        "http_or_https_url_custom_ports_are_allowed_the_endpo_6e4ddff",
+                      )}{" "}
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -464,10 +499,11 @@ function WebCalloutEndpointDialog(props: {
                 render={({ field }) => (
                   <FormItem className="flex items-center justify-between rounded-md border p-3">
                     <div>
-                      <FormLabel>Enabled</FormLabel>
+                      <FormLabel>{tAuto("enabled_df174a3")}</FormLabel>
                       <FormDescription>
-                        Shows the callout action in trace, observation, and
-                        session detail headers.
+                        {tAuto(
+                          "shows_the_callout_action_in_trace_observation_and_se_99fd90f",
+                        )}{" "}
                       </FormDescription>
                     </div>
                     <FormControl>
@@ -485,12 +521,14 @@ function WebCalloutEndpointDialog(props: {
                 name="toastMessage"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Toast message</FormLabel>
+                    <FormLabel>{tAuto("toast_message_9ca2376")}</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
                     <FormDescription>
-                      Shown after the backend callout succeeds.
+                      {tAuto(
+                        "shown_after_the_backend_callout_succeeds_dee7dc2",
+                      )}{" "}
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -498,11 +536,11 @@ function WebCalloutEndpointDialog(props: {
               />
 
               <div>
-                <FormLabel>Headers</FormLabel>
+                <FormLabel>{tAuto("headers_520de74")}</FormLabel>
                 <FormDescription className="mb-2">
-                  Optional headers added to the backend POST. Content-Type is
-                  set automatically. Leave values empty for existing header
-                  names to keep encrypted values.
+                  {tAuto(
+                    "optional_headers_added_to_the_backend_post_content_t_4a53ca7",
+                  )}{" "}
                 </FormDescription>
                 <div className="space-y-2">
                   {fields.map((field, index) => {
@@ -525,7 +563,10 @@ function WebCalloutEndpointDialog(props: {
                           render={({ field }) => (
                             <FormItem>
                               <FormControl>
-                                <Input placeholder="Header name" {...field} />
+                                <Input
+                                  placeholder={tAuto("header_name_b46f85a")}
+                                  {...field}
+                                />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -541,7 +582,7 @@ function WebCalloutEndpointDialog(props: {
                                   placeholder={
                                     preservesExistingValue
                                       ? "***"
-                                      : "Header value"
+                                      : tAuto("header_value_418adf0")
                                   }
                                   type="password"
                                   {...field}
@@ -562,7 +603,9 @@ function WebCalloutEndpointDialog(props: {
                               <X className="h-4 w-4" />
                             </Button>
                           </TooltipTrigger>
-                          <TooltipContent>Remove header</TooltipContent>
+                          <TooltipContent>
+                            {tAuto("remove_header_3e19869")}
+                          </TooltipContent>
                         </Tooltip>
                       </div>
                     );
@@ -580,7 +623,7 @@ function WebCalloutEndpointDialog(props: {
                   }
                 >
                   <Plus className="mr-1 h-4 w-4" />
-                  Add header
+                  {tAuto("add_header_d5a110d")}{" "}
                 </Button>
               </div>
             </DialogBody>
@@ -591,10 +634,10 @@ function WebCalloutEndpointDialog(props: {
                 variant="ghost"
                 onClick={() => props.onOpenChange(false)}
               >
-                Cancel
+                {tAuto("cancel_77dfd21")}{" "}
               </Button>
               <Button type="submit" loading={upsertMutation.isPending}>
-                Save endpoint
+                {tAuto("save_endpoint_9c817f9")}{" "}
               </Button>
             </DialogFooter>
           </form>
@@ -609,6 +652,7 @@ function DeleteEndpointButton(props: {
   onDelete: (id: string) => void;
   loading: boolean;
 }) {
+  const tAuto = useAutoTranslations();
   const [open, setOpen] = useState(false);
 
   return (
@@ -621,19 +665,20 @@ function DeleteEndpointButton(props: {
             </Button>
           </DialogTrigger>
         </TooltipTrigger>
-        <TooltipContent>Delete endpoint</TooltipContent>
+        <TooltipContent>{tAuto("delete_endpoint_1240e4b")}</TooltipContent>
       </Tooltip>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Delete Callout Endpoint</DialogTitle>
+          <DialogTitle>{tAuto("delete_callout_endpoint_0230f58")}</DialogTitle>
           <DialogDescription>
-            This removes the configured endpoint and hides the web callout
-            action.
+            {tAuto(
+              "this_removes_the_configured_endpoint_and_hides_the_w_749ca70",
+            )}{" "}
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
           <Button variant="ghost" onClick={() => setOpen(false)}>
-            Cancel
+            {tAuto("cancel_77dfd21")}{" "}
           </Button>
           <Button
             variant="destructive"
@@ -643,7 +688,7 @@ function DeleteEndpointButton(props: {
               setOpen(false);
             }}
           >
-            Delete endpoint
+            {tAuto("delete_endpoint_1240e4b")}{" "}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -694,22 +739,24 @@ export function WebCalloutIntegrationCard(props: {
   projectId: string;
   hasAccess: boolean;
 }) {
+  const tAuto = useAutoTranslations();
   return (
     <Card className="p-3">
       <div className="mb-4 flex items-center gap-2">
         <Webhook className="text-foreground h-5 w-5" />
-        <span className="font-bold">Web Callouts</span>
+        <span className="font-bold">{tAuto("web_callouts_c78f412")}</span>
       </div>
       <p className="text-primary mb-4 text-sm">
-        Send backend callouts from trace, observation, and session detail views
-        to your own application.
+        {tAuto(
+          "send_backend_callouts_from_trace_observation_and_ses_e5cb7e7",
+        )}{" "}
       </p>
       <ActionButton
         variant="secondary"
         hasAccess={props.hasAccess}
         href={`/project/${props.projectId}/settings/integrations/web-callouts`}
       >
-        Configure
+        {tAuto("configure_792c81a")}{" "}
       </ActionButton>
     </Card>
   );

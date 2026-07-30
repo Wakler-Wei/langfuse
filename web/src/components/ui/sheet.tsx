@@ -7,6 +7,7 @@ import { X } from "lucide-react";
 
 import { cn } from "@/src/utils/tailwind";
 import { useLayerContainer } from "@/src/components/ui/layer";
+import { I18nText } from "@/src/features/i18n/I18nText";
 
 const Sheet = SheetPrimitive.Root;
 
@@ -80,7 +81,9 @@ const SheetContent = React.forwardRef<
       {children}
       <SheetPrimitive.Close className="ring-offset-background focus:ring-ring data-[state=open]:bg-secondary absolute top-4 right-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none">
         <X className="h-4 w-4" />
-        <span className="sr-only">Close</span>
+        <span className="sr-only">
+          <I18nText id="close_bbfa773" />
+        </span>
       </SheetPrimitive.Close>
     </SheetPrimitive.Content>
   </SheetPortal>

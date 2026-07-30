@@ -45,6 +45,7 @@ import {
 import { type TableAction } from "@/src/features/table/types";
 import { showSuccessToast } from "@/src/features/notifications/showSuccessToast";
 import { Pen, Trash } from "lucide-react";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type DatasetTableRow = {
   id: string;
@@ -106,6 +107,7 @@ function DatasetsMultiSelectActionMenu({
   searchQuery: string | null;
   store: DatasetsTableStore;
 }) {
+  const tAuto = useAutoTranslations();
   const selectAll = useStore(store, (state) => state.selectAll);
   const selectedCount = useStore(
     store,
@@ -124,9 +126,10 @@ function DatasetsMultiSelectActionMenu({
   const deleteManyMutation = api.datasets.deleteMany.useMutation({
     onSuccess: () => {
       showSuccessToast({
-        title: "Datasets deleted",
-        description:
-          "Selected datasets will be deleted. Associated run items and media links are cleaned up asynchronously.",
+        title: tAuto("datasets_deleted_6047b09"),
+        description: tAuto(
+          "selected_datasets_will_be_deleted_associated_run_ite_1e2d79a",
+        ),
       });
     },
     onSettled: () => {
@@ -140,9 +143,10 @@ function DatasetsMultiSelectActionMenu({
     {
       id: ActionId.DatasetDelete,
       type: BatchActionType.Delete,
-      label: "Delete",
-      description:
-        "This action cannot be undone. Selected folders delete all datasets contained in them.",
+      label: tAuto("delete_f6fdbe4"),
+      description: tAuto(
+        "this_action_cannot_be_undone_selected_folders_delete_d69ec95",
+      ),
       accessCheck: {
         scope: "datasets:CUD",
       },
@@ -257,6 +261,7 @@ function DatasetsTableToolbar({
 }
 
 export function DatasetsTable(props: { projectId: string }) {
+  const tAuto = useAutoTranslations();
   const { setDetailPageList } = useDetailPageLists();
   const [rowHeight, setRowHeight] = useRowHeightLocalStorage("datasets", "s");
   const [datasetsTableStore] = useState(() => createDatasetsTableStore());
@@ -320,7 +325,7 @@ export function DatasetsTable(props: { projectId: string }) {
     selectActionColumn,
     {
       accessorKey: "key",
-      header: "Name",
+      header: tAuto("name_709a232"),
       id: "key",
       size: 150,
       isFixedPosition: true,
@@ -347,7 +352,7 @@ export function DatasetsTable(props: { projectId: string }) {
     },
     {
       accessorKey: "description",
-      header: "Description",
+      header: tAuto("description_55f8ebc"),
       id: "description",
       enableHiding: true,
       size: 200,
@@ -359,21 +364,21 @@ export function DatasetsTable(props: { projectId: string }) {
     },
     {
       accessorKey: "countItems",
-      header: "Items",
+      header: tAuto("items_44d25b5"),
       id: "countItems",
       enableHiding: true,
       size: 60,
     },
     {
       accessorKey: "countRuns",
-      header: "Experiments",
+      header: tAuto("experiments_e8f296b"),
       id: "countRuns",
       enableHiding: true,
       size: 60,
     },
     {
       accessorKey: "createdAt",
-      header: "Created",
+      header: tAuto("created_accf40c"),
       id: "createdAt",
       enableHiding: true,
       size: 150,
@@ -384,7 +389,7 @@ export function DatasetsTable(props: { projectId: string }) {
     },
     {
       accessorKey: "lastRunAt",
-      header: "Last Run",
+      header: tAuto("last_run_71edaf7"),
       id: "lastRunAt",
       enableHiding: true,
       size: 150,
@@ -395,7 +400,7 @@ export function DatasetsTable(props: { projectId: string }) {
     },
     {
       accessorKey: "inputSchema",
-      header: "Input Schema",
+      header: tAuto("input_schema_f9a3872"),
       id: "inputSchema",
       enableHiding: true,
       size: 80,
@@ -412,7 +417,7 @@ export function DatasetsTable(props: { projectId: string }) {
     },
     {
       accessorKey: "expectedOutputSchema",
-      header: "Expected Output Schema",
+      header: tAuto("expected_output_schema_9bb31cc"),
       id: "expectedOutputSchema",
       enableHiding: true,
       size: 90,
@@ -432,7 +437,7 @@ export function DatasetsTable(props: { projectId: string }) {
     },
     {
       accessorKey: "metadata",
-      header: "Metadata",
+      header: tAuto("metadata_251edc0"),
       id: "metadata",
       enableHiding: true,
       size: 300,
@@ -446,7 +451,7 @@ export function DatasetsTable(props: { projectId: string }) {
     {
       id: "actions",
       accessorKey: "actions",
-      header: "Actions",
+      header: tAuto("actions_c3cd636"),
       size: 70,
       cell: ({ row }) => {
         const key: DatasetTableRow["key"] = row.getValue("key");
@@ -472,8 +477,8 @@ export function DatasetsTable(props: { projectId: string }) {
               {({ disabled, openDialog }) => (
                 <IconOnlyButton
                   icon={<Pen className="h-4 w-4" />}
-                  label="Edit"
-                  aria-label="edit"
+                  label={tAuto("edit_5301648")}
+                  aria-label={tAuto("edit_9ead47a")}
                   disabledReason={disabled?.reason}
                   variant="ghost"
                   size="icon-xs"
@@ -493,8 +498,8 @@ export function DatasetsTable(props: { projectId: string }) {
               {({ disabled, openDialog }) => (
                 <IconOnlyButton
                   icon={<Trash className="h-4 w-4" />}
-                  label="Delete"
-                  aria-label="delete"
+                  label={tAuto("delete_f6fdbe4")}
+                  aria-label={tAuto("delete_9485989")}
                   disabledReason={disabled?.reason}
                   variant="ghost"
                   size="icon-xs"

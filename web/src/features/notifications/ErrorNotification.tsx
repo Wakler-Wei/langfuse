@@ -3,10 +3,11 @@ import { usePostHogClientCapture } from "@/src/features/posthog-analytics/usePos
 import { useSupportDrawer } from "@/src/features/support-chat/SupportDrawerProvider";
 import { useV4MigrationPanel } from "@/src/features/v4-migration/V4MigrationPanelProvider";
 import { AlertTriangle, X } from "lucide-react";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 interface ErrorNotificationProps {
-  error: string;
-  description: string;
+  error: React.ReactNode;
+  description: React.ReactNode;
   type: "WARNING" | "ERROR";
   dismissToast: (t?: string | number | undefined) => void;
   toast: string | number;
@@ -21,6 +22,8 @@ export const ErrorNotification: React.FC<ErrorNotificationProps> = ({
   toast,
   path,
 }) => {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const { setOpen } = useSupportDrawer();
   const { setOpen: setMigrationPanelOpen } = useV4MigrationPanel();
   const capture = usePostHogClientCapture();
@@ -56,7 +59,7 @@ export const ErrorNotification: React.FC<ErrorNotificationProps> = ({
         )}
         {path && (
           <div className={`text-sm leading-tight ${textColor}`}>
-            Path: {path}
+            {tAutoI18n("path_df395b4")} {path}
           </div>
         )}
 
@@ -73,7 +76,7 @@ export const ErrorNotification: React.FC<ErrorNotificationProps> = ({
               setOpen(true);
             }}
           >
-            Report issue to Langfuse team
+            {tAuto("report_issue_to_langfuse_team_004f60f")}{" "}
           </Button>
         )}
       </div>
@@ -94,7 +97,7 @@ export const ErrorNotification: React.FC<ErrorNotificationProps> = ({
           e.stopPropagation();
           e.preventDefault();
         }}
-        aria-label="Close"
+        aria-label={tAuto("close_bbfa773")}
       >
         <X size={14} />
       </button>

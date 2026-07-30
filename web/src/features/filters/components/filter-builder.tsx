@@ -64,6 +64,7 @@ import {
 import { useQueryProject } from "@/src/features/projects/hooks";
 import { useLangfuseCloudRegion } from "@/src/features/organizations/hooks";
 import { openAIFeaturesSettings } from "@/src/features/organizations/components/AIFeaturesDisabledNotice";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 /**
  * Extended ColumnDefinition with optional alert for UI display.
@@ -85,7 +86,7 @@ export function PopoverFilterBuilder({
   columnsWithCustomSelect = [],
   filterWithAI = false,
   buttonType = "default",
-  label = "Filters",
+  label,
   tableName = "unknown",
   isV4 = false,
 }: {
@@ -106,6 +107,8 @@ export function PopoverFilterBuilder({
   /** Whether this builder sits on a v4 (fast-mode) surface — `isV4` dimension. */
   isV4?: boolean;
 }) {
+  const tAuto = useAutoTranslations();
+  const resolvedLabel = label ?? tAuto("filters_96e5782");
   const capture = usePostHogClientCapture();
   const [wipFilterState, _setWipFilterState] =
     useState<WipFilterState>(filterState);
@@ -239,7 +242,7 @@ export function PopoverFilterBuilder({
         <PopoverTrigger asChild>
           {buttonType === "default" ? (
             <Button variant="outline" type="button">
-              <span>{label}</span>
+              <span>{resolvedLabel}</span>
               {filterState.length > 0 && filterState.length < 3 ? (
                 <InlineFilterState
                   filterState={filterState}
@@ -303,7 +306,9 @@ export function PopoverFilterBuilder({
                 <X className="h-4 w-4" />
               </Button>
             </TooltipTrigger>
-            <TooltipContent>Clear all filters</TooltipContent>
+            <TooltipContent>
+              {tAuto("clear_all_filters_7dd6d19")}
+            </TooltipContent>
           </Tooltip>
         ) : (
           <Tooltip>
@@ -318,7 +323,9 @@ export function PopoverFilterBuilder({
                 <X className="h-3 w-3" />
               </Button>
             </TooltipTrigger>
-            <TooltipContent>Clear all filters</TooltipContent>
+            <TooltipContent>
+              {tAuto("clear_all_filters_7dd6d19")}
+            </TooltipContent>
           </Tooltip>
         )
       ) : null}
@@ -333,6 +340,7 @@ export function InlineFilterState({
   filterState: FilterState;
   className?: string;
 }) {
+  const tAuto = useAutoTranslations();
   return filterState.map((filter, i) => {
     return (
       <span
@@ -355,7 +363,9 @@ export function InlineFilterState({
             ? new Date(filter.value).toLocaleString()
             : filter.type === "stringOptions" || filter.type === "arrayOptions"
               ? filter.value.length > 2
-                ? `${filter.value.length} selected`
+                ? tAuto("value0_selected_d39eb62", {
+                    value0: String((filter.value.length as unknown) ?? ""),
+                  })
                 : filter.value.join(", ")
               : filter.type === "number" || filter.type === "numberObject"
                 ? filter.value
@@ -488,6 +498,7 @@ function FilterBuilderForm({
   columnsWithCustomSelect?: string[];
   filterWithAI?: boolean;
 }) {
+  const tAuto = useAutoTranslations();
   const { isLangfuseCloud } = useLangfuseCloudRegion();
   const [showAiFilter, setShowAiFilter] = useState(false);
   const [aiPrompt, setAiPrompt] = useState("");
@@ -579,7 +590,9 @@ function FilterBuilderForm({
             size="default"
             title={
               !organization?.aiFeaturesEnabled
-                ? "AI features are disabled for your organization. Click to enable them in organization settings."
+                ? tAuto(
+                    "ai_features_are_disabled_for_your_organization_click_7af754d",
+                  )
                 : undefined
             }
             className="text-muted-foreground w-full justify-start"
@@ -587,13 +600,15 @@ function FilterBuilderForm({
             <WandSparkles className="mr-2 h-4 w-4" />
             {!organization?.aiFeaturesEnabled ? (
               <>
-                AI Filters: Enable in Organization Settings (Admin Only)
+                {tAuto(
+                  "ai_filters_enable_in_organization_settings_admin_onl_81de09a",
+                )}{" "}
                 <ExternalLink className="ml-2 h-4 w-4" />
               </>
             ) : showAiFilter ? (
-              "Cancel"
+              tAuto("cancel_77dfd21")
             ) : (
-              "Create Filter with AI"
+              tAuto("create_filter_with_ai_7c965e8")
             )}
           </Button>
           {showAiFilter && (
@@ -604,7 +619,9 @@ function FilterBuilderForm({
                   setAiPrompt(e.target.value);
                   if (aiError) setAiError(null); // Clear error when user starts typing
                 }}
-                placeholder="Describe the filters you want to apply..."
+                placeholder={tAuto(
+                  "describe_the_filters_you_want_to_apply_8c49ca8",
+                )}
                 className="min-h-[80px] min-w-112 resize-none"
                 disabled={createFilterMutation.isPending}
                 onKeyDown={(e) => {
@@ -626,8 +643,8 @@ function FilterBuilderForm({
                   disabled={createFilterMutation.isPending || !aiPrompt.trim()}
                 >
                   {createFilterMutation.isPending
-                    ? "Loading..."
-                    : "Generate filters"}
+                    ? tAuto("loading_b04ba49")
+                    : tAuto("generate_filters_510ce25")}
                 </Button>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -635,8 +652,9 @@ function FilterBuilderForm({
                   </TooltipTrigger>
                   <TooltipContent>
                     <p className="text-xs">
-                      We convert natural language into deterministic filters
-                      which you can adjust afterwards
+                      {tAuto(
+                        "we_convert_natural_language_into_deterministic_filte_32f82c8",
+                      )}{" "}
                     </p>
                   </TooltipContent>
                 </Tooltip>
@@ -672,10 +690,14 @@ function FilterBuilderForm({
                         (o) => NonEmptyString.safeParse(o).success,
                       )
                     : undefined;
-                const columnLabel = column ? column.name : "Column";
+                const columnLabel = column
+                  ? column.name
+                  : tAuto("column_65ba00e");
                 return (
                   <tr key={i}>
-                    <td className="p-1 text-sm">{i === 0 ? "Where" : "And"}</td>
+                    <td className="p-1 text-sm">
+                      {i === 0 ? tAuto("where_525f61b") : tAuto("and_a01e33f")}
+                    </td>
                     <td className="flex gap-2 p-1">
                       {/* selector of the column to be filtered */}
                       <Popover>
@@ -704,12 +726,12 @@ function FilterBuilderForm({
                         >
                           <InputCommand>
                             <InputCommandInput
-                              placeholder="Search for column"
+                              placeholder={tAuto("search_for_column_f5724bd")}
                               variant="bottom"
                             />
                             <InputCommandList>
                               <InputCommandEmpty>
-                                No options found.
+                                {tAuto("no_options_found_c91bf3b")}{" "}
                               </InputCommandEmpty>
                               <InputCommandGroup>
                                 {columns.map((option) => {
@@ -818,7 +840,7 @@ function FilterBuilderForm({
                           // Case 2: object without keyOptions - text input
                           <Input
                             value={filter.key ?? ""}
-                            placeholder="key"
+                            placeholder={tAuto("key_a62f222")}
                             disabled={disabled}
                             onChange={(e) =>
                               handleFilterChange(
@@ -877,13 +899,17 @@ function FilterBuilderForm({
                             <SelectValue placeholder="" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="first">1st</SelectItem>
-                            <SelectItem value="last">last</SelectItem>
+                            <SelectItem value="first">
+                              {tAuto("1st_efc920c")}
+                            </SelectItem>
+                            <SelectItem value="last">
+                              {tAuto("last_213ed3e")}
+                            </SelectItem>
                             <SelectItem value="nthFromStart">
-                              nth from start
+                              {tAuto("nth_from_start_52ed6db")}{" "}
                             </SelectItem>
                             <SelectItem value="nthFromEnd">
-                              nth from end
+                              {tAuto("nth_from_end_dda3f75")}{" "}
                             </SelectItem>
                           </SelectContent>
                         </Select>
@@ -930,7 +956,7 @@ function FilterBuilderForm({
                         <Input
                           disabled={disabled}
                           value={filter.value ?? ""}
-                          placeholder="string"
+                          placeholder={tAuto("string_ecb2520")}
                           onChange={(e) =>
                             handleFilterChange(
                               { ...filter, value: e.target.value },
@@ -950,7 +976,7 @@ function FilterBuilderForm({
                           min={
                             column?.type === "number" ? column.min : undefined
                           }
-                          placeholder="number"
+                          placeholder={tAuto("number_53b0a1b")}
                           lang="en-US"
                           onChange={(e) =>
                             handleFilterChange(
@@ -985,7 +1011,7 @@ function FilterBuilderForm({
                       ) : filter.type === "stringOptions" ||
                         filter.type === "arrayOptions" ? (
                         <MultiSelect
-                          title="Value"
+                          title={tAuto("value_8dce170")}
                           className="min-w-[100px]"
                           options={
                             column?.type === filter.type ? column.options : []
@@ -1005,7 +1031,7 @@ function FilterBuilderForm({
                       ) : filter.type === "categoryOptions" &&
                         column?.type === "categoryOptions" ? (
                         <MultiSelect
-                          title="Value"
+                          title={tAuto("value_8dce170")}
                           className="min-w-[100px]"
                           options={
                             column?.options
@@ -1104,7 +1130,7 @@ function FilterBuilderForm({
               size="sm"
             >
               <Plus className="mr-2 h-4 w-4" />
-              Add filter
+              {tAuto("add_filter_85425f9")}{" "}
             </Button>
           ) : null}
         </>

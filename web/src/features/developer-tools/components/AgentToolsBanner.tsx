@@ -2,6 +2,7 @@ import { Callout } from "@/src/components/ui/callout";
 import { Button } from "@/src/components/ui/button";
 import Link from "next/link";
 import { Bot } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 const DOCS_HREF =
   "https://langfuse.com/docs/api-and-data-platform/features/agent-skill";
@@ -12,6 +13,9 @@ const DOCS_HREF =
  * organization overview page.
  */
 export function AgentToolsBanner() {
+  const t = useTranslations("AgentTools");
+  const commonT = useTranslations("Common");
+
   return (
     <Callout
       className="mb-4"
@@ -21,7 +25,7 @@ export function AgentToolsBanner() {
       actions={() => (
         <Button asChild size="sm" variant="secondary">
           <Link href={DOCS_HREF} target="_blank">
-            Learn more
+            {commonT("learnMore")}
           </Link>
         </Button>
       )}
@@ -29,11 +33,7 @@ export function AgentToolsBanner() {
       <div className="flex items-center gap-2">
         <Bot className="h-4 w-4 shrink-0" />
         <span>
-          <span className="font-bold">
-            Langfuse works great with your AI coding agents.
-          </span>{" "}
-          Connect Claude Code, Codex, and other agents to your data with the
-          Langfuse Agent Skill, MCP server, and CLI.
+          <span className="font-bold">{t("headline")}</span> {t("description")}
         </span>
       </div>
     </Callout>

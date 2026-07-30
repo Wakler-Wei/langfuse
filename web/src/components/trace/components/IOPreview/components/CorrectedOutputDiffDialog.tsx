@@ -10,6 +10,7 @@ import {
   DialogTitle,
 } from "@/src/components/ui/dialog";
 import DiffViewer from "@/src/components/DiffViewer";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type CorrectedOutputDiffDialogProps = {
   isOpen: boolean;
@@ -68,6 +69,7 @@ export const CorrectedOutputDiffDialog: React.FC<
   strictJsonMode,
   actualOutputTooLarge = false,
 }) => {
+  const tAuto = useAutoTranslations();
   // Format both outputs for comparison
   const formattedActualOutput = formatOutputForDiff(
     actualOutput,
@@ -89,9 +91,11 @@ export const CorrectedOutputDiffDialog: React.FC<
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent size="xl">
         <DialogHeader>
-          <DialogTitle>Output Correction Diff</DialogTitle>
+          <DialogTitle>{tAuto("output_correction_diff_d373e32")}</DialogTitle>
           <DialogDescription>
-            Compare the original output with the corrected version
+            {tAuto(
+              "compare_the_original_output_with_the_corrected_versi_279f31c",
+            )}{" "}
           </DialogDescription>
         </DialogHeader>
 
@@ -100,16 +104,18 @@ export const CorrectedOutputDiffDialog: React.FC<
             <div className="space-y-4">
               <div className="text-muted-foreground rounded-md border border-dashed p-4 text-sm">
                 <p className="text-foreground font-bold">
-                  Original output too large to diff
+                  {tAuto("original_output_too_large_to_diff_0ef19fb")}{" "}
                 </p>
                 <p className="mt-1">
-                  The original output is too large to load here, so it cannot be
-                  compared side by side. Your correction is shown below and will
-                  be saved as-is.
+                  {tAuto(
+                    "the_original_output_is_too_large_to_load_here_so_it__857024b",
+                  )}{" "}
                 </p>
               </div>
               <div>
-                <p className="mb-1 text-sm font-bold">Corrected Output</p>
+                <p className="mb-1 text-sm font-bold">
+                  {tAuto("corrected_output_281b898")}
+                </p>
                 <pre className="bg-muted/30 max-h-[50vh] overflow-auto rounded-md border p-3 text-xs break-words whitespace-pre-wrap">
                   {formattedCorrectedOutput}
                 </pre>
@@ -118,9 +124,13 @@ export const CorrectedOutputDiffDialog: React.FC<
           ) : hasNoOriginalOutput ? (
             <div className="flex flex-col items-center justify-center p-8 text-center">
               <div className="text-muted-foreground">
-                <p className="text-lg font-bold">No original output</p>
+                <p className="text-lg font-bold">
+                  {tAuto("no_original_output_5c46df5")}
+                </p>
                 <p className="mt-2 text-sm">
-                  There is no original output to compare with the correction.
+                  {tAuto(
+                    "there_is_no_original_output_to_compare_with_the_corr_4e7b5b9",
+                  )}{" "}
                 </p>
               </div>
             </div>
@@ -137,7 +147,9 @@ export const CorrectedOutputDiffDialog: React.FC<
         </DialogBody>
 
         <DialogFooter>
-          <Button onClick={() => setIsOpen(false)}>Close</Button>
+          <Button onClick={() => setIsOpen(false)}>
+            {tAuto("close_bbfa773")}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

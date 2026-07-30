@@ -14,8 +14,10 @@ import { Button } from "@/src/components/ui/button";
 import useSessionStorage from "@/src/components/useSessionStorage";
 import { History, PanelRightOpen } from "lucide-react";
 import { useState } from "react";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 function DatasetItemContent() {
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const projectId = router.query.projectId as string;
   const datasetId = router.query.datasetId as string;
@@ -103,19 +105,19 @@ function DatasetItemContent() {
               onClick={() => setIsVersionPanelOpen(!isVersionPanelOpen)}
               title={
                 isVersionPanelOpen
-                  ? "Hide version history"
-                  : "Show version history"
+                  ? tAuto("hide_version_history_7d4d010")
+                  : tAuto("show_version_history_55f3b72")
               }
             >
               {isVersionPanelOpen ? (
                 <>
                   <History className="mr-2 h-4 w-4" />
-                  Hide Version History
+                  {tAuto("hide_version_history_a0c5aa9")}{" "}
                 </>
               ) : (
                 <>
                   <PanelRightOpen className="mr-2 h-4 w-4" />
-                  Show Version History
+                  {tAuto("show_version_history_7f02c48")}{" "}
                 </>
               )}
             </Button>
@@ -133,7 +135,7 @@ function DatasetItemContent() {
                     onCheckedChange={setShowDiffMode}
                   />
                   <Label htmlFor="diff-mode" className="cursor-pointer text-sm">
-                    Show diff with latest version
+                    {tAuto("show_diff_with_latest_version_ba004d8")}{" "}
                   </Label>
                 </div>
               </div>
@@ -144,7 +146,7 @@ function DatasetItemContent() {
               selectedVersion &&
               !itemChangedAtVersion && (
                 <div className="text-muted-foreground mb-4 text-sm">
-                  Item unchanged in this version
+                  {tAuto("item_unchanged_in_this_version_55cc55e")}{" "}
                 </div>
               )}
 

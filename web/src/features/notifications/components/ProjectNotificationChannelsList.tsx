@@ -3,6 +3,7 @@ import { Webhook, Plus, Pencil, Trash2 } from "lucide-react";
 
 import { Button } from "@/src/components/ui/button";
 import { type AutomationDomain } from "@langfuse/shared";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const destinationLabel = (automation: AutomationDomain): string => {
   if (automation.action.type === "SLACK") {
@@ -38,10 +39,13 @@ export function ProjectNotificationChannelsList({
   onEdit,
   onDelete,
 }: ProjectNotificationChannelsListProps) {
+  const tAuto = useAutoTranslations();
   return (
     <div className="flex flex-col gap-4">
       {isLoading ? (
-        <p className="text-muted-foreground text-sm">Loading channels...</p>
+        <p className="text-muted-foreground text-sm">
+          {tAuto("loading_channels_3d3f339")}
+        </p>
       ) : !channels || channels.length === 0 ? null : (
         <div className="flex flex-col gap-3">
           {channels.map((channel) => (
@@ -67,7 +71,7 @@ export function ProjectNotificationChannelsList({
                   variant="ghost"
                   size="icon"
                   onClick={() => onEdit(channel)}
-                  title="Edit channel"
+                  title={tAuto("edit_channel_1976dee")}
                 >
                   <Pencil className="h-4 w-4" />
                 </Button>
@@ -76,7 +80,7 @@ export function ProjectNotificationChannelsList({
                   size="icon"
                   disabled={isDeleting}
                   onClick={() => onDelete(channel.id)}
-                  title="Delete channel"
+                  title={tAuto("delete_channel_adb3847")}
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>
@@ -91,7 +95,7 @@ export function ProjectNotificationChannelsList({
         <div>
           <Button variant="secondary" onClick={onAdd}>
             <Plus className="mr-2 h-4 w-4" />
-            Add channel
+            {tAuto("add_channel_901e486")}{" "}
           </Button>
         </div>
       )}

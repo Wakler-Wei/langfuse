@@ -12,6 +12,7 @@ import { type QueryType, type ViewVersion } from "@langfuse/shared/query";
 import { mapLegacyUiTableFilterToView } from "@/src/features/dashboard/lib/dashboardUiTableToViewMapping";
 import { useScheduledDashboardExecuteQuery } from "@/src/hooks/useDashboardQueryScheduler";
 import { cn } from "@/src/utils/tailwind";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export const ModelCostTable = ({
   className,
@@ -32,6 +33,7 @@ export const ModelCostTable = ({
   metricsVersion?: ViewVersion;
   schedulerId?: string;
 }) => {
+  const tAuto = useAutoTranslations();
   const modelCostQuery: QueryType = {
     view: "observations",
     dimensions: [{ field: "providedModelName" }],
@@ -108,13 +110,15 @@ export const ModelCostTable = ({
       // shrink so the row area scrolls internally. (LFE-11035)
       className={cn(className, "h-full")}
       cardContentClassName="min-h-0"
-      title="Model costs"
+      title={tAuto("model_costs_d4446dc")}
       isLoading={isLoading || metrics.isLoading}
     >
       <DashboardTable
         headers={[
           "Model",
-          <RightAlignedCell key="tokens">Tokens</RightAlignedCell>,
+          <RightAlignedCell key="tokens">
+            {tAuto("tokens_c38c6c1")}
+          </RightAlignedCell>,
           <RightAlignedCell key="cost">USD</RightAlignedCell>,
         ]}
         rows={metricsData}
@@ -123,10 +127,12 @@ export const ModelCostTable = ({
       >
         <TotalMetric
           metric={costFormatter(totalTokenCost)}
-          description="Total cost"
+          description={tAuto("total_cost_2f69970")}
         >
           <DocPopup
-            description="Calculated multiplying the number of tokens with cost per token for each model."
+            description={tAuto(
+              "calculated_multiplying_the_number_of_tokens_with_cos_3b54786",
+            )}
             href="https://langfuse.com/docs/model-usage-and-cost"
           />
         </TotalMetric>

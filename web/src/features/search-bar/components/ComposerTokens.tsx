@@ -18,6 +18,7 @@ import {
   type FilterSegment,
 } from "@/src/features/search-bar/lib/composer-segments";
 import { indexOfOutsideQuotes } from "@/src/features/search-bar/lib/langQ";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 // Word joiner around pills: gives the DOM caret boundaries between tokens
 // without changing the query text. Stripped before the text reaches the model
@@ -128,6 +129,7 @@ export function ComposerTokens({
    *  search), or null/undefined to leave it active. */
   freeTextReason?: string | null;
 }): React.ReactNode {
+  const tAuto = useAutoTranslations();
   const segments = deriveComposerSegments(draft, scoreTypes);
   const out: React.ReactNode[] = [];
   let cursor = 0;
@@ -161,7 +163,10 @@ export function ComposerTokens({
       : segment.kind === "invalid"
         ? undefined
         : segment.kind === "freeText"
-          ? `Full-text search — matches results containing "${segment.raw}". Searches ids, names, input and output by default; use input: or output: to search one payload, or name:/id: to narrow.`
+          ? tAuto(
+              "full_text_search_matches_results_containing_value0_s_b5521f9",
+              { value0: String((segment.raw as unknown) ?? "") },
+            )
           : segment.raw;
     out.push(
       <span

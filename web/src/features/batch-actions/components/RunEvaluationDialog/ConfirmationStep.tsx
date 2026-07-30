@@ -3,6 +3,7 @@ import { Badge } from "@/src/components/ui/badge";
 import { Separator } from "@/src/components/ui/separator";
 import { EstimatedCostRow } from "./EstimatedCostRow";
 import { BatchEvalSourceTable } from "@langfuse/shared";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type ConfirmationStepProps = {
   projectId: string;
@@ -42,6 +43,7 @@ function getEffectiveObservationCount(
 }
 
 export function ConfirmationStep(props: ConfirmationStepProps) {
+  const tAuto = useAutoTranslations();
   const {
     projectId,
     displayCount,
@@ -64,7 +66,9 @@ export function ConfirmationStep(props: ConfirmationStepProps) {
         <CardContent className="space-y-3 p-4 text-sm">
           {!hideCount && (
             <div className="flex gap-2">
-              <span className="text-muted-foreground">Observations:</span>
+              <span className="text-muted-foreground">
+                {tAuto("observations_580a776")}
+              </span>
               <span className="font-bold">{displayCount}</span>
             </div>
           )}
@@ -72,7 +76,7 @@ export function ConfirmationStep(props: ConfirmationStepProps) {
           {evaluators.length > 0 && (
             <div className="flex gap-2">
               <span className="text-muted-foreground shrink-0">
-                Evaluators:
+                {tAuto("evaluators_84f0c4e")}{" "}
               </span>
               <div className="flex flex-wrap gap-1">
                 {evaluators.map((e) => (
@@ -89,10 +93,12 @@ export function ConfirmationStep(props: ConfirmationStepProps) {
           {showCostDisclaimer ? (
             <div className="flex gap-2">
               <span className="text-muted-foreground shrink-0">
-                Est. LLM API Key Cost:
+                {tAuto("est_llm_api_key_cost_7e31e7e")}{" "}
               </span>
               <span className="text-muted-foreground text-xs">
-                Cost estimate unavailable for experiment-scoped evaluations
+                {tAuto(
+                  "cost_estimate_unavailable_for_experiment_scoped_eval_f32d04b",
+                )}{" "}
               </span>
             </div>
           ) : (
@@ -105,7 +111,7 @@ export function ConfirmationStep(props: ConfirmationStepProps) {
         </CardContent>
       </Card>
       <p className="text-muted-foreground text-xs">
-        Evaluations will run in the background.
+        {tAuto("evaluations_will_run_in_the_background_bd6be76")}{" "}
       </p>
     </div>
   );

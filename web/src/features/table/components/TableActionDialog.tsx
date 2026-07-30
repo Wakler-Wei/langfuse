@@ -31,6 +31,7 @@ import { type BatchExportTableName } from "@langfuse/shared";
 import { api } from "@/src/utils/api";
 import { targetOptionsQueryMap } from "@/src/features/table/components/targetOptionsQueryMap";
 import Spinner from "@/src/components/design-system/Spinner/Spinner";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type TableActionDialogProps = {
   isOpen: boolean;
@@ -49,6 +50,7 @@ export function TableActionDialog({
   projectId,
   tableName,
 }: TableActionDialogProps) {
+  const tAuto = useAutoTranslations();
   const hasAccess = useHasProjectAccess({
     projectId,
     scope: action.accessCheck.scope,
@@ -132,7 +134,9 @@ export function TableActionDialog({
                       >
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder="Select..." />
+                            <SelectValue
+                              placeholder={tAuto("select_b92e64f")}
+                            />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
@@ -152,7 +156,9 @@ export function TableActionDialog({
                   <div className="flex items-center gap-1">
                     <Spinner size="xxs" />
                     <p className="text-muted-foreground text-sm">
-                      Batch action is in progress, please wait.
+                      {tAuto(
+                        "batch_action_is_in_progress_please_wait_c327a8f",
+                      )}{" "}
                     </p>
                   </div>
                 )}
@@ -163,7 +169,7 @@ export function TableActionDialog({
                   loading={isInProgress.isLoading}
                   disabled={isInProgress.data || !form.watch("targetId")}
                 >
-                  Confirm
+                  {tAuto("confirm_04a2122")}{" "}
                 </ActionButton>
               </DialogFooter>
             </form>
@@ -180,7 +186,9 @@ export function TableActionDialog({
                 <div className="flex items-center gap-1">
                   <Spinner size="xxs" />
                   <p className="text-muted-foreground text-sm">
-                    Batch action is in progress, please wait.
+                    {tAuto(
+                      "batch_action_is_in_progress_please_wait_c327a8f",
+                    )}{" "}
                   </p>
                 </div>
               )}
@@ -192,7 +200,7 @@ export function TableActionDialog({
                 disabled={isInProgress.data}
                 onClick={handleConfirm}
               >
-                Confirm
+                {tAuto("confirm_04a2122")}{" "}
               </ActionButton>
             </DialogFooter>
           </>

@@ -16,6 +16,7 @@ import {
 import { useLazyEvaluatorExecutionCounts } from "@/src/features/evals/hooks/useLazyEvaluatorExecutionCounts";
 import { Alert, AlertDescription, AlertTitle } from "@/src/components/ui/alert";
 import { AlertTriangle } from "lucide-react";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const JobExecutionCounts = ({
   isLoading,
@@ -33,6 +34,8 @@ const JobExecutionCounts = ({
 };
 
 export const EvaluatorDetail = () => {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const projectId = router.query.projectId as string;
   const evaluatorId = router.query.evaluatorId as string;
@@ -76,11 +79,11 @@ export const EvaluatorDetail = () => {
     allTemplates.isLoading ||
     !allTemplates.data
   ) {
-    return <div className="p-3">Loading...</div>;
+    return <div className="p-3">{tAuto("loading_b04ba49")}</div>;
   }
 
   if (evaluator.data && evaluator.data.evalTemplate === null) {
-    return <div>Evaluator not found</div>;
+    return <div>{tAuto("evaluator_not_found_ca61151")}</div>;
   }
 
   const existingEvaluator =
@@ -100,8 +103,11 @@ export const EvaluatorDetail = () => {
     <Page
       headerProps={{
         title: evaluator.data
-          ? `${evaluator.data.scoreName}: ${evaluator.data.id}`
-          : "Loading...",
+          ? tAuto("value0_value1_0f13dbb", {
+              value0: evaluator.data.scoreName,
+              value1: evaluator.data.id,
+            })
+          : tAuto("loading_b04ba49"),
         itemType: "EVALUATOR",
         breadcrumb: [
           {
@@ -142,11 +148,11 @@ export const EvaluatorDetail = () => {
             <div className="mx-3 mt-3">
               <Alert variant="destructive">
                 <AlertTriangle className="h-4 w-4" />
-                <AlertTitle>Unsupported filters</AlertTitle>
+                <AlertTitle>{tAuto("unsupported_filters_7d7b988")}</AlertTitle>
                 <AlertDescription>
-                  This evaluator contains deprecated or unsupported filters. The
-                  filters must be removed. Until the filters are removed, the
-                  evaluator is paused and will not be run.{" "}
+                  {tAutoI18n(
+                    "this_evaluator_contains_deprecated_or_unsupported_fi_03c4921",
+                  )}{" "}
                 </AlertDescription>
               </Alert>
             </div>

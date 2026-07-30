@@ -17,6 +17,7 @@ import {
   DropdownMenuTrigger,
 } from "@/src/components/ui/dropdown-menu";
 import { Separator } from "@/src/components/ui/separator";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type MultiSelectOptions = {
   value: string;
@@ -76,6 +77,8 @@ export function MultiSelectKeyValues<
   variant = "secondary",
   showSelectedValueStrings = true,
 }: MultiSelectKeyValuesProps<T>) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const [isOpen, setIsOpen] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState("");
 
@@ -273,7 +276,7 @@ export function MultiSelectKeyValues<
                 (group) => filterOptions(group.options).length > 0,
               )) && (
               <div className="text-muted-foreground px-2 py-1.5 text-sm">
-                No results found.
+                {tAuto("no_results_found_e9cc6d0")}{" "}
               </div>
             )}
 
@@ -286,7 +289,7 @@ export function MultiSelectKeyValues<
                   onValueChange([]);
                 }}
               >
-                Clear {items}
+                {tAutoI18n("clear_719ea39")} {items}
               </DropdownMenuItem>
             </>
           )}

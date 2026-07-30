@@ -14,6 +14,7 @@ import {
   issueTextVariants,
   type IssueVariant,
 } from "@/src/features/batch-actions/components/AddObservationsToDatasetDialog/components/IssueBanner";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const STEP_FOR_FIELD: Record<string, DialogStep> = {
   input: "input-mapping",
@@ -31,6 +32,8 @@ export function FinalPreviewStep({
   totalCount,
   onEditStep,
 }: FinalPreviewStepProps) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const previewResult = useMemo(() => {
     if (!observationData) return null;
 
@@ -64,10 +67,13 @@ export function FinalPreviewStep({
   return (
     <div className="h-[62vh] space-y-6 p-6">
       <div>
-        <h3 className="text-lg font-bold">Review Configuration</h3>
+        <h3 className="text-lg font-bold">
+          {tAuto("review_configuration_0638981")}
+        </h3>
         <p className="text-muted-foreground text-sm">
-          Adding {totalCount} observation{totalCount !== 1 ? "s" : ""} to
-          dataset &quot;
+          {tAutoI18n("adding_48a693c")} {totalCount}{" "}
+          {tAutoI18n("observation_7c02c7e")}
+          {totalCount !== 1 ? "s" : ""} to dataset &quot;
           {dataset.name}&quot;
         </p>
       </div>
@@ -75,8 +81,10 @@ export function FinalPreviewStep({
       {errorFields.length > 0 && (
         <IssueBanner
           variant="error"
-          title="Some JSONPaths are invalid"
-          description="Items using these mappings will be skipped during processing."
+          title={tAuto("some_jsonpaths_are_invalid_6c63546")}
+          description={tAuto(
+            "items_using_these_mappings_will_be_skipped_during_pr_cc4ea1b",
+          )}
         >
           <EditMappingActions
             variant="error"
@@ -89,8 +97,12 @@ export function FinalPreviewStep({
       {missFields.length > 0 && (
         <IssueBanner
           variant="warning"
-          title="Some JSONPaths did not match the preview observation"
-          description="Observations with failed mappings will be skipped during processing."
+          title={tAuto(
+            "some_jsonpaths_did_not_match_the_preview_observation_0821a28",
+          )}
+          description={tAuto(
+            "observations_with_failed_mappings_will_be_skipped_du_7915113",
+          )}
         >
           <EditMappingActions
             variant="warning"
@@ -101,33 +113,35 @@ export function FinalPreviewStep({
       )}
 
       <div className="text-muted-foreground text-sm">
-        Sample dataset item preview (from first selected observation):
+        {tAuto(
+          "sample_dataset_item_preview_from_first_selected_obse_cbd20cc",
+        )}{" "}
       </div>
 
       {!observationData ? (
         <div className="bg-muted/30 flex h-64 items-center justify-center rounded-md border p-4">
           <p className="text-muted-foreground text-sm">
-            No observation data available for preview
+            {tAuto("no_observation_data_available_for_preview_2890737")}{" "}
           </p>
         </div>
       ) : (
         <div className="space-y-4">
           <PreviewCard
-            label="Input"
+            label={tAuto("input_b568d47")}
             data={previewResult?.input}
             onEdit={() => onEditStep("input-mapping")}
             pathErrors={errorsByField["input"]}
             pathMisses={missesByField["input"]}
           />
           <PreviewCard
-            label="Expected Output"
+            label={tAuto("expected_output_395c41e")}
             data={previewResult?.expectedOutput}
             onEdit={() => onEditStep("output-mapping")}
             pathErrors={errorsByField["expectedOutput"]}
             pathMisses={missesByField["expectedOutput"]}
           />
           <PreviewCard
-            label="Metadata"
+            label={tAuto("metadata_251edc0")}
             data={previewResult?.metadata}
             onEdit={() => onEditStep("metadata-mapping")}
             pathErrors={errorsByField["metadata"]}
@@ -148,6 +162,7 @@ function EditMappingActions({
   fields: string[];
   onEditStep: (step: DialogStep) => void;
 }) {
+  const tAuto = useAutoTranslations();
   return (
     <div className="flex flex-wrap gap-2 pt-1">
       {fields.map((field) => (
@@ -164,7 +179,8 @@ function EditMappingActions({
             if (step) onEditStep(step);
           }}
         >
-          Edit {fieldLabel(field)} mapping
+          {tAuto("edit_5301648")} {fieldLabel(field)}{" "}
+          {tAuto("mapping_821b7db")}{" "}
         </Button>
       ))}
     </div>
@@ -186,6 +202,7 @@ function PreviewCard({
   pathErrors = [],
   pathMisses = [],
 }: PreviewCardProps) {
+  const tAuto = useAutoTranslations();
   const variant: IssueVariant | null =
     pathErrors.length > 0 ? "error" : pathMisses.length > 0 ? "warning" : null;
   const Icon = variant ? issueIcons[variant] : null;
@@ -208,12 +225,14 @@ function PreviewCard({
           className="h-7 gap-1 text-xs"
         >
           <Pencil className="h-3 w-3" />
-          Edit
+          {tAuto("edit_5301648")}{" "}
         </Button>
       </div>
       <div className="max-h-62 overflow-auto">
         {data === null ? (
-          <div className="text-muted-foreground p-4 text-sm italic">null</div>
+          <div className="text-muted-foreground p-4 text-sm italic">
+            {tAuto("null_2be88ca")}
+          </div>
         ) : (
           <JSONView json={data} className="text-xs" />
         )}

@@ -5,17 +5,19 @@
 
 import { Badge } from "@/src/components/ui/badge";
 import { formatIntervalSeconds } from "@/src/utils/dates";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export function LatencyBadge({
   latencySeconds,
 }: {
   latencySeconds: number | null;
 }) {
+  const tAuto = useAutoTranslations();
   if (latencySeconds == null) return null;
 
   return (
     <Badge variant="tertiary">
-      Latency: {formatIntervalSeconds(latencySeconds)}
+      {tAuto("latency_4dea3dc")} {formatIntervalSeconds(latencySeconds)}
     </Badge>
   );
 }
@@ -25,11 +27,13 @@ export function TimeToFirstTokenBadge({
 }: {
   timeToFirstToken: number | null | undefined;
 }) {
+  const tAuto = useAutoTranslations();
   if (timeToFirstToken == null) return null;
 
   return (
     <Badge variant="tertiary">
-      Time to first token: {formatIntervalSeconds(timeToFirstToken)}
+      {tAuto("time_to_first_token_d93e946")}{" "}
+      {formatIntervalSeconds(timeToFirstToken)}
     </Badge>
   );
 }
@@ -39,9 +43,14 @@ export function EnvironmentBadge({
 }: {
   environment: string | null | undefined;
 }) {
+  const tAuto = useAutoTranslations();
   if (!environment) return null;
 
-  return <Badge variant="tertiary">Env: {environment}</Badge>;
+  return (
+    <Badge variant="tertiary">
+      {tAuto("env_9b9526d")} {environment}
+    </Badge>
+  );
 }
 
 export function VersionBadge({
@@ -49,9 +58,14 @@ export function VersionBadge({
 }: {
   version: string | null | undefined;
 }) {
+  const tAuto = useAutoTranslations();
   if (!version) return null;
 
-  return <Badge variant="tertiary">Version: {version}</Badge>;
+  return (
+    <Badge variant="tertiary">
+      {tAuto("version_9f49127")} {version}
+    </Badge>
+  );
 }
 
 export function LevelBadge({ level }: { level: string | null | undefined }) {

@@ -2,18 +2,20 @@ import { DropdownMenuItem } from "@/src/components/ui/dropdown-menu";
 import { RESOURCE_METRICS } from "@/src/features/dashboard/lib/score-analytics-utils";
 import { usePostHogClientCapture } from "@/src/features/posthog-analytics/usePostHogClientCapture";
 import { MultiSelectKeyValues } from "@/src/features/scores/components/multi-select-key-values";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export function DatasetAnalytics(props: {
   scoreOptions: { key: string; value: string }[];
   selectedMetrics: string[];
   setSelectedMetrics: (metrics: string[]) => void;
 }) {
+  const tAuto = useAutoTranslations();
   const capture = usePostHogClientCapture();
   return (
     <MultiSelectKeyValues
       className="max-w-fit focus:ring-0! focus:ring-offset-0!"
-      placeholder="Search..."
-      title="Charts"
+      placeholder={tAuto("search_6d7a30a")}
+      title={tAuto("charts_8610e3e")}
       variant="outline"
       hideClearButton
       showSelectedValueStrings={false}
@@ -34,14 +36,16 @@ export function DatasetAnalytics(props: {
       }}
       values={props.selectedMetrics}
       options={RESOURCE_METRICS}
-      groupedOptions={[{ label: "Scores", options: props.scoreOptions }]}
+      groupedOptions={[
+        { label: tAuto("scores_126cb93"), options: props.scoreOptions },
+      ]}
       controlButtons={
         <DropdownMenuItem
           onSelect={() => {
             props.setSelectedMetrics([]);
           }}
         >
-          Hide all charts
+          {tAuto("hide_all_charts_7805550")}{" "}
         </DropdownMenuItem>
       }
     />

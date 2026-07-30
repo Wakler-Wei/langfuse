@@ -15,6 +15,7 @@ import { compactNumberFormatter } from "@/src/utils/numbers";
 import { formatChartTimestamp } from "../../lib/chart-formatters";
 import { ScoreChartTooltip } from "../../lib/ScoreChartTooltip";
 import { ScoreChartLegendContent } from "./ScoreChartLegendContent";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export interface NumericTimeSeriesChartProps {
   data: Array<{
@@ -44,6 +45,7 @@ export function ScoreTimeSeriesNumericChart({
   timeRange,
   colors,
 }: NumericTimeSeriesChartProps) {
+  const tAuto = useAutoTranslations();
   const isComparisonMode = Boolean(score2Name);
 
   // Transform data for Recharts
@@ -123,7 +125,7 @@ export function ScoreTimeSeriesNumericChart({
   if (chartData.length === 0) {
     return (
       <div className="text-muted-foreground flex h-[200px] items-center justify-center text-sm">
-        No time series data available
+        {tAuto("no_time_series_data_available_164202e")}{" "}
       </div>
     );
   }
@@ -139,7 +141,9 @@ export function ScoreTimeSeriesNumericChart({
   if (!hasAnyData) {
     return (
       <div className="text-muted-foreground flex h-[200px] items-center justify-center text-sm">
-        No data points available for the selected time range
+        {tAuto(
+          "no_data_points_available_for_the_selected_time_range_16dafd2",
+        )}{" "}
       </div>
     );
   }

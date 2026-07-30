@@ -31,6 +31,7 @@ import { useTableDateRange } from "@/src/hooks/useTableDateRange";
 import { toAbsoluteTimeRange } from "@/src/utils/date-range-utils";
 import { useMemo } from "react";
 import { TableHeaderControls } from "@/src/components/table/table-header-controls";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export type PromptVersionTableRow = {
   version: number;
@@ -91,6 +92,7 @@ export default function PromptVersionTable({
   // a `Page` ancestor, to fall back to the toolbar.
   showControlsInPageHeader = true,
 }: { promptName?: string; showControlsInPageHeader?: boolean } = {}) {
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const projectId = useProjectIdFromURL() ?? "";
   const promptNameFromQuery = router.query.promptName;
@@ -173,7 +175,7 @@ export default function PromptVersionTable({
     {
       accessorKey: "version",
       id: "version",
-      header: "Version",
+      header: tAuto("version_2da600b"),
       isPinnedLeft: true,
       size: 80,
       cell: ({ row }) => {
@@ -189,7 +191,7 @@ export default function PromptVersionTable({
     {
       accessorKey: "labels",
       id: "labels",
-      header: "Labels",
+      header: tAuto("labels_2228985"),
       isPinnedLeft: true,
       size: 160,
       cell: ({ row }) => {
@@ -210,7 +212,7 @@ export default function PromptVersionTable({
     {
       accessorKey: "medianLatency",
       id: "medianLatency",
-      header: "Median latency",
+      header: tAuto("median_latency_73f5263"),
       size: 140,
       cell: ({ row }) => {
         const latency: number | undefined | null =
@@ -229,7 +231,7 @@ export default function PromptVersionTable({
     {
       accessorKey: "medianInputTokens",
       id: "medianInputTokens",
-      header: "Median input tokens",
+      header: tAuto("median_input_tokens_659c8fb"),
       size: 160,
       enableHiding: true,
       cell: ({ row }) => {
@@ -245,7 +247,7 @@ export default function PromptVersionTable({
     {
       accessorKey: "medianOutputTokens",
       id: "medianOutputTokens",
-      header: "Median output tokens",
+      header: tAuto("median_output_tokens_ec99e7b"),
       size: 170,
       enableHiding: true,
       cell: ({ row }) => {
@@ -260,7 +262,7 @@ export default function PromptVersionTable({
     {
       accessorKey: "medianCost",
       id: "medianCost",
-      header: "Median cost",
+      header: tAuto("median_cost_65ff243"),
       size: 120,
       cell: ({ row }) => {
         const value: number | undefined | null = row.getValue("medianCost");
@@ -275,7 +277,7 @@ export default function PromptVersionTable({
     {
       accessorKey: "generationCount",
       id: "generationCount",
-      header: "Generations count",
+      header: tAuto("generations_count_b38d254"),
       size: 150,
       enableHiding: true,
       cell: ({ row }) => {
@@ -291,7 +293,7 @@ export default function PromptVersionTable({
     },
     {
       accessorKey: "traceScores",
-      header: "Trace Scores",
+      header: tAuto("trace_scores_991110a"),
       id: "traceScores",
       enableHiding: true,
       columns: traceScoreColumns,
@@ -303,7 +305,7 @@ export default function PromptVersionTable({
     },
     {
       accessorKey: "generationScores",
-      header: "Generation Scores",
+      header: tAuto("generation_scores_a80c638"),
       id: "generationScores",
       enableHiding: true,
       columns: generationScoreColumns,
@@ -316,12 +318,13 @@ export default function PromptVersionTable({
     {
       accessorKey: "lastUsed",
       id: "lastUsed",
-      header: "Last used",
+      header: tAuto("last_used_f1109d3"),
       enableHiding: true,
       size: 150,
       headerTooltip: {
-        description:
-          "This is calculated based on the selected date range, not the full usage history.",
+        description: tAuto(
+          "this_is_calculated_based_on_the_selected_date_range__842c956",
+        ),
       },
       cell: ({ row }) => {
         const value: number | undefined | null = row.getValue("lastUsed");
@@ -334,12 +337,13 @@ export default function PromptVersionTable({
     {
       accessorKey: "firstUsed",
       id: "firstUsed",
-      header: "First used",
+      header: tAuto("first_used_0dfef4e"),
       size: 150,
       enableHiding: true,
       headerTooltip: {
-        description:
-          "This is calculated based on the selected date range, not the full usage history.",
+        description: tAuto(
+          "this_is_calculated_based_on_the_selected_date_range__842c956",
+        ),
       },
       cell: ({ row }) => {
         const value: number | undefined | null = row.getValue("firstUsed");
@@ -402,8 +406,9 @@ export default function PromptVersionTable({
         title: promptName,
         itemType: "PROMPT",
         help: {
-          description:
-            "You can use this prompt within your application through the Langfuse SDKs and integrations. Refer to the documentation for more information.",
+          description: tAuto(
+            "you_can_use_this_prompt_within_your_application_thro_6212732",
+          ),
           href: "https://langfuse.com/docs/prompt-management/get-started",
         },
         breadcrumb: [

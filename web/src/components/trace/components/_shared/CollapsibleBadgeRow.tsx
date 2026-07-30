@@ -13,6 +13,7 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import { cn } from "@/src/utils/tailwind";
 import { useIsMobile } from "@/src/hooks/use-mobile";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export function CollapsibleBadgeRow({
   children,
@@ -21,6 +22,7 @@ export function CollapsibleBadgeRow({
   children: React.ReactNode;
   className?: string;
 }) {
+  const tAuto = useAutoTranslations();
   const isMobile = useIsMobile();
   const [expanded, setExpanded] = useState(false);
 
@@ -52,7 +54,11 @@ export function CollapsibleBadgeRow({
         type="button"
         variant="ghost"
         size="icon-xs"
-        aria-label={expanded ? "Show fewer details" : "Show more details"}
+        aria-label={
+          expanded
+            ? tAuto("show_fewer_details_84b8a08")
+            : tAuto("show_more_details_6d79faa")
+        }
         aria-expanded={expanded}
         className="mt-0.5 shrink-0"
         onClick={() => setExpanded((prev) => !prev)}

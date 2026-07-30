@@ -1,6 +1,7 @@
 import { RotateCw, Sparkles, X } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import { cn } from "@/src/utils/tailwind";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export type VersionUpdateBannerViewProps = {
   /** Reload the tab to pick up the new build. */
@@ -31,6 +32,7 @@ export function VersionUpdateBannerView({
   onDismiss,
   className,
 }: VersionUpdateBannerViewProps) {
+  const tAuto = useAutoTranslations();
   return (
     <div
       role="status"
@@ -53,19 +55,19 @@ export function VersionUpdateBannerView({
     >
       <Sparkles className="text-primary h-4 w-4 shrink-0" />
       <span className="text-foreground text-sm whitespace-nowrap">
-        Langfuse just got an update
+        {tAuto("langfuse_just_got_an_update_9f4df06")}{" "}
       </span>
       <Button size="sm" className="rounded-full" onClick={onReload}>
         <RotateCw className="mr-1.5 h-3.5 w-3.5" />
-        Reload
+        {tAuto("reload_cce7155")}{" "}
       </Button>
       <Button
         size="icon-sm"
         variant="ghost"
         className="text-muted-foreground rounded-full"
         onClick={onDismiss}
-        aria-label="Dismiss"
-        title="Dismiss"
+        aria-label={tAuto("dismiss_70afe9e")}
+        title={tAuto("dismiss_70afe9e")}
       >
         <X className="h-4 w-4" />
       </Button>

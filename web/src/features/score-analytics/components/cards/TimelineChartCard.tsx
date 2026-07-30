@@ -15,6 +15,7 @@ import {
   getScoreBooleanColors,
 } from "@/src/features/score-analytics/lib/color-scales";
 import Spinner from "@/src/components/design-system/Spinner/Spinner";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type TimelineTab = "score1" | "score2" | "all" | "matched";
 
@@ -33,6 +34,8 @@ type TimelineTab = "score1" | "score2" | "all" | "matched";
  * - Numeric vs categorical data types
  */
 export function TimelineChartCard() {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const { data, isLoading, params, colorMappings, getColorForScore } =
     useScoreAnalytics();
   const [activeTab, setActiveTab] = useState<TimelineTab>("all");
@@ -208,8 +211,8 @@ export function TimelineChartCard() {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Trend Over Time</CardTitle>
-          <CardDescription>Loading chart...</CardDescription>
+          <CardTitle>{tAuto("trend_over_time_5862c43")}</CardTitle>
+          <CardDescription>{tAuto("loading_chart_f9755ad")}</CardDescription>
         </CardHeader>
         <CardContent className="flex h-[340px] grow items-center justify-center">
           <Spinner size="xl" variant="muted" />
@@ -223,11 +226,13 @@ export function TimelineChartCard() {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Trend Over Time</CardTitle>
-          <CardDescription>No data available</CardDescription>
+          <CardTitle>{tAuto("trend_over_time_5862c43")}</CardTitle>
+          <CardDescription>
+            {tAuto("no_data_available_0cfc430")}
+          </CardDescription>
         </CardHeader>
         <CardContent className="text-muted-foreground flex h-[340px] items-center justify-center text-sm">
-          Select a score to view trends
+          {tAuto("select_a_score_to_view_trends_10049fa")}{" "}
         </CardContent>
       </Card>
     );
@@ -262,7 +267,7 @@ export function TimelineChartCard() {
     ? score2.name === score1.name
       ? `${score2.source} · ${score2.name}`
       : score2.name
-    : "Score 2";
+    : tAutoI18n("score_2_cbcb6f9");
 
   return (
     <Card>
@@ -271,7 +276,7 @@ export function TimelineChartCard() {
           <div className="flex items-start justify-between">
             <div className="flex-1">
               <CardTitle className="flex items-center gap-2">
-                Trend Over Time
+                {tAutoI18n("trend_over_time_5862c43")}{" "}
                 {data.samplingMetadata.isSampled && (
                   <SamplingDetailsHoverCard
                     samplingMetadata={data.samplingMetadata}
@@ -303,10 +308,10 @@ export function TimelineChartCard() {
                   {truncateLabel(score2FullLabel)}
                 </TabsTrigger>
                 <TabsTrigger value="all" className="h-5 px-2 text-xs">
-                  all
+                  {tAuto("all_d87c448")}{" "}
                 </TabsTrigger>
                 <TabsTrigger value="matched" className="h-5 px-2 text-xs">
-                  matched
+                  {tAuto("matched_d010685")}{" "}
                 </TabsTrigger>
               </TabsList>
             </Tabs>
@@ -338,7 +343,9 @@ export function TimelineChartCard() {
           />
         ) : (
           <div className="text-muted-foreground flex h-full items-center justify-center text-sm">
-            No time series data available for the selected time range
+            {tAuto(
+              "no_time_series_data_available_for_the_selected_time__cbfb668",
+            )}{" "}
           </div>
         )}
       </CardContent>

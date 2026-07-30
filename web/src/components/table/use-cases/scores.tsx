@@ -68,6 +68,7 @@ import {
   scoreLevelFromScore,
   type ScoreLevel,
 } from "@/src/components/score-tag";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export type ScoresTableRow = {
   id: string;
@@ -140,6 +141,7 @@ export default function ScoresTable({
   disableUrlPersistence = false,
   showControlsInPageHeader = false,
 }: ScoresTableProps) {
+  const tAuto = useAutoTranslations();
   const peekContext = usePeekTableState();
 
   const scoresFilterConfig = useMemo(
@@ -220,9 +222,10 @@ export default function ScoresTable({
   const scoreDeleteMutation = api.scores.deleteMany.useMutation({
     onSuccess: () => {
       showSuccessToast({
-        title: "Scores deleted",
-        description:
-          "Selected scores will be deleted. Scores are removed asynchronously and may continue to be visible for up to 15 minutes.",
+        title: tAuto("scores_deleted_416bdc3"),
+        description: tAuto(
+          "selected_scores_will_be_deleted_scores_are_removed_a_004b554",
+        ),
       });
     },
     onSettled: () => {
@@ -464,7 +467,7 @@ export default function ScoresTable({
       accessorKey: "id",
       id: "id",
       enableColumnFilter: false,
-      header: "Score ID",
+      header: tAuto("score_id_5b2f56e"),
       size: 100,
       enableSorting: false,
       defaultHidden: true,
@@ -478,7 +481,7 @@ export default function ScoresTable({
     },
     {
       accessorKey: "traceName",
-      header: "Trace Name",
+      header: tAuto("trace_name_75b86b0"),
       id: "traceName",
       enableHiding: true,
       enableSorting: true,
@@ -503,7 +506,7 @@ export default function ScoresTable({
       accessorKey: "traceId",
       id: "traceId",
       enableColumnFilter: true,
-      header: "Trace",
+      header: tAuto("trace_2f38169"),
       enableSorting: true,
       size: 100,
       cell: ({ row }) => {
@@ -521,7 +524,7 @@ export default function ScoresTable({
     {
       accessorKey: "executionTraceId",
       id: "executionTraceId",
-      header: "Execution Trace",
+      header: tAuto("execution_trace_ff5c4b1"),
       enableSorting: false,
       enableHiding: true,
       defaultHidden: true,
@@ -539,7 +542,7 @@ export default function ScoresTable({
     {
       accessorKey: "observationId",
       id: "observationId",
-      header: "Observation",
+      header: tAuto("observation_bc763cd"),
       enableSorting: true,
       size: 100,
       cell: ({ row }) => {
@@ -557,7 +560,7 @@ export default function ScoresTable({
     },
     {
       accessorKey: "sessionId",
-      header: "Session",
+      header: tAuto("session_f7f1997"),
       id: "sessionId",
       enableHiding: true,
       enableSorting: true,
@@ -574,7 +577,7 @@ export default function ScoresTable({
     },
     {
       accessorKey: "environment",
-      header: "Environment",
+      header: tAuto("environment_d443a11"),
       id: "environment",
       size: 150,
       enableHiding: true,
@@ -594,10 +597,10 @@ export default function ScoresTable({
     },
     {
       accessorKey: "userId",
-      header: "User",
+      header: tAuto("user_9f8a238"),
       id: "userId",
       headerTooltip: {
-        description: "The user ID associated with the trace.",
+        description: tAuto("the_user_id_associated_with_the_trace_8dcf199"),
         href: "https://langfuse.com/docs/observability/features/users",
       },
       enableHiding: true,
@@ -620,7 +623,7 @@ export default function ScoresTable({
     },
     {
       accessorKey: "timestamp",
-      header: "Timestamp",
+      header: tAuto("timestamp_19eabc9"),
       id: "timestamp",
       enableHiding: true,
       enableSorting: true,
@@ -632,7 +635,7 @@ export default function ScoresTable({
     },
     {
       accessorKey: "source",
-      header: "Source",
+      header: tAuto("source_6da13ad"),
       id: "source",
       enableHiding: true,
       enableSorting: true,
@@ -640,7 +643,7 @@ export default function ScoresTable({
     },
     {
       accessorKey: "name",
-      header: "Name",
+      header: tAuto("name_709a232"),
       id: "name",
       enableHiding: true,
       enableSorting: true,
@@ -648,7 +651,7 @@ export default function ScoresTable({
     },
     {
       accessorKey: "level",
-      header: "Level",
+      header: tAuto("level_7c7f5d0"),
       id: "level",
       enableHiding: true,
       // Derived client-side from the score's context ids — not a sortable
@@ -664,7 +667,7 @@ export default function ScoresTable({
     },
     {
       accessorKey: "dataType",
-      header: "Data Type",
+      header: tAuto("data_type_ab7f244"),
       id: "dataType",
       enableHiding: true,
       enableSorting: true,
@@ -672,7 +675,7 @@ export default function ScoresTable({
     },
     {
       accessorKey: "value",
-      header: "Value",
+      header: tAuto("value_8dce170"),
       id: "value",
       enableHiding: true,
       enableSorting: true,
@@ -680,7 +683,7 @@ export default function ScoresTable({
     },
     {
       accessorKey: "metadata",
-      header: "Metadata",
+      header: tAuto("metadata_251edc0"),
       id: "metadata",
       size: 400,
       loadingCell: () => (
@@ -691,7 +694,9 @@ export default function ScoresTable({
         />
       ),
       headerTooltip: {
-        description: "Add metadata to scores to track additional information.",
+        description: tAuto(
+          "add_metadata_to_scores_to_track_additional_informati_09e9708",
+        ),
         // TODO: docs for metadata on scores
         href: "https://langfuse.com/docs/observability/features/metadata",
       },
@@ -709,7 +714,7 @@ export default function ScoresTable({
     },
     {
       accessorKey: "comment",
-      header: "Comment",
+      header: tAuto("comment_153d7a5"),
       id: "comment",
       enableHiding: true,
       size: 400,
@@ -730,7 +735,7 @@ export default function ScoresTable({
     {
       accessorKey: "author",
       id: "author",
-      header: "Author",
+      header: tAuto("author_5fda23d"),
       enableHiding: true,
       size: 150,
       cell: ({ row }) => {
@@ -742,7 +747,7 @@ export default function ScoresTable({
             <Avatar className="h-7 w-7">
               <AvatarImage
                 src={image ?? undefined}
-                alt={name ?? "User Avatar"}
+                alt={name ?? tAuto("user_avatar_32e4f25")}
               />
             </Avatar>
             <span>{name ?? userId}</span>
@@ -752,10 +757,12 @@ export default function ScoresTable({
     },
     {
       accessorKey: "jobConfigurationId",
-      header: "Eval Configuration ID",
+      header: tAuto("eval_configuration_id_6e6f37b"),
       id: "jobConfigurationId",
       headerTooltip: {
-        description: "The Job Configuration ID associated with the trace.",
+        description: tAuto(
+          "the_job_configuration_id_associated_with_the_trace_78ae213",
+        ),
         href: "https://langfuse.com/docs/evaluation/evaluation-methods/llm-as-a-judge",
       },
       enableHiding: true,
@@ -776,7 +783,7 @@ export default function ScoresTable({
     {
       accessorKey: "traceTags",
       id: "traceTags",
-      header: "Trace Tags",
+      header: tAuto("trace_tags_dbf3614"),
       size: 250,
       enableHiding: true,
       defaultHidden: true,
@@ -808,9 +815,10 @@ export default function ScoresTable({
           {
             id: "score-delete",
             type: BatchActionType.Delete,
-            label: "Delete Scores",
-            description:
-              "This action permanently deletes scores and cannot be undone. Score deletion happens asynchronously and may take up to 15 minutes.",
+            label: tAuto("delete_scores_bd8ce11"),
+            description: tAuto(
+              "this_action_permanently_deletes_scores_and_cannot_be_6b75f1b",
+            ),
             accessCheck: {
               scope: "traces:delete",
               entitlement: "trace-deletion",
@@ -1026,14 +1034,14 @@ export default function ScoresTable({
               columns={columns}
               noResultsMessage={
                 <div className="flex flex-col items-center">
-                  <span>No scores found.</span>
+                  <span>{tAuto("no_scores_found_6ad1841")}</span>
                   <a
                     href="https://langfuse.com/faq/all/what-are-scores"
                     className="text-primary pointer-events-auto italic underline"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    What are scores?
+                    {tAuto("what_are_scores_fc0a237")}{" "}
                   </a>
                 </div>
               }

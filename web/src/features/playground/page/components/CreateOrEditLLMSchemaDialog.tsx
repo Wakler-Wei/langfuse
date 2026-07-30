@@ -32,6 +32,7 @@ import { api } from "@/src/utils/api";
 import { JSONSchemaFormSchema, type LlmSchema } from "@langfuse/shared";
 import { CodeMirrorEditor } from "@/src/components/editor";
 import { showErrorToast } from "@/src/features/notifications/showErrorToast";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const formSchema = z.object({
   name: LLMSchemaNameSchema,
@@ -57,6 +58,8 @@ type CreateOrEditLLMSchemaDialog = {
 export const CreateOrEditLLMSchemaDialog: React.FC<
   CreateOrEditLLMSchemaDialog
 > = (props) => {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const { children, projectId, onSave, existingLlmSchema } = props;
 
   const utils = api.useUtils();
@@ -142,8 +145,8 @@ export const CreateOrEditLLMSchemaDialog: React.FC<
       form.setValue("schema", prettified);
     } catch {
       showErrorToast(
-        "Failed to prettify JSON",
-        "Please verify your input is valid JSON",
+        tAutoI18n("failed_to_prettify_json_074c7e8"),
+        tAutoI18n("please_verify_your_input_is_valid_json_fe436a3"),
         "WARNING",
       );
     }
@@ -155,10 +158,12 @@ export const CreateOrEditLLMSchemaDialog: React.FC<
       <DialogContent className="flex flex-col sm:min-w-128 md:min-w-160">
         <DialogHeader>
           <DialogTitle>
-            {existingLlmSchema ? "Edit LLM Schema" : "Create LLM Schema"}
+            {existingLlmSchema
+              ? tAutoI18n("edit_llm_schema_e549849")
+              : tAutoI18n("create_llm_schema_22c7e56")}
           </DialogTitle>
           <DialogDescription>
-            Define a JSON Schema for structured outputs
+            {tAuto("define_a_json_schema_for_structured_outputs_ff32f47")}{" "}
           </DialogDescription>
         </DialogHeader>
 
@@ -179,9 +184,12 @@ export const CreateOrEditLLMSchemaDialog: React.FC<
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Name</FormLabel>
+                      <FormLabel>{tAuto("name_709a232")}</FormLabel>
                       <FormControl>
-                        <Input placeholder="e.g., get_weather" {...field} />
+                        <Input
+                          placeholder={tAuto("e_g_get_weather_e40c6e4")}
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -193,10 +201,10 @@ export const CreateOrEditLLMSchemaDialog: React.FC<
                   name="description"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Description</FormLabel>
+                      <FormLabel>{tAuto("description_55f8ebc")}</FormLabel>
                       <FormControl>
                         <Textarea
-                          placeholder="Describe the schema"
+                          placeholder={tAuto("describe_the_schema_3f8d9b9")}
                           className="max-h-[120px] focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0"
                           {...field}
                           onKeyDown={(e) => {
@@ -214,17 +222,18 @@ export const CreateOrEditLLMSchemaDialog: React.FC<
                   name="schema"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>JSON Schema</FormLabel>
+                      <FormLabel>{tAuto("json_schema_1a5fdc0")}</FormLabel>
                       <FormDescription>
-                        Define the structure of your schema using JSON Schema
-                        format.{" "}
+                        {tAutoI18n(
+                          "define_the_structure_of_your_schema_using_json_schem_51f636d",
+                        )}{" "}
                         <a
                           href="https://json-schema.org/learn/miscellaneous-examples"
                           target="_blank"
                           rel="noopener noreferrer"
                           className="flex items-center"
                         >
-                          See JSON Schema examples here
+                          {tAuto("see_json_schema_examples_here_69bdb1d")}{" "}
                           <ArrowUpRight className="h-3 w-3" />
                         </a>
                       </FormDescription>
@@ -244,12 +253,14 @@ export const CreateOrEditLLMSchemaDialog: React.FC<
                             onClick={prettifyJson}
                             className="absolute top-3 right-3 text-xs"
                           >
-                            Prettify
+                            {tAuto("prettify_1a7e7a5")}{" "}
                           </Button>
                         </div>
                       </FormControl>
                       <p className="text-muted-foreground text-xs">
-                        Parameters must be a valid JSON Schema object
+                        {tAuto(
+                          "parameters_must_be_a_valid_json_schema_object_5291d5b",
+                        )}{" "}
                       </p>
                       <FormMessage />
                     </FormItem>
@@ -261,8 +272,9 @@ export const CreateOrEditLLMSchemaDialog: React.FC<
             <DialogFooter className="bg-modal sticky bottom-0 mt-4 flex flex-col gap-2 border-t pt-4">
               <div className="flex w-full flex-col gap-2">
                 <p className="text-muted-foreground text-xs">
-                  Note: Changes to schemas are reflected to all members of this
-                  project.
+                  {tAuto(
+                    "note_changes_to_schemas_are_reflected_to_all_members_4634eeb",
+                  )}{" "}
                 </p>
                 <div className="flex items-center justify-between gap-2">
                   {existingLlmSchema && (
@@ -272,7 +284,7 @@ export const CreateOrEditLLMSchemaDialog: React.FC<
                       onClick={handleDelete}
                       className="mr-auto"
                     >
-                      Delete
+                      {tAuto("delete_f6fdbe4")}{" "}
                     </Button>
                   )}
                   <Button
@@ -280,9 +292,9 @@ export const CreateOrEditLLMSchemaDialog: React.FC<
                     variant="outline"
                     onClick={() => setOpen(false)}
                   >
-                    Cancel
+                    {tAuto("cancel_77dfd21")}{" "}
                   </Button>
-                  <Button type="submit">Save</Button>
+                  <Button type="submit">{tAuto("save_efc007a")}</Button>
                 </div>
               </div>
             </DialogFooter>

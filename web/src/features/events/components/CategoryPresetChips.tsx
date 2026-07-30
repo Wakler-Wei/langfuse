@@ -17,6 +17,7 @@ import {
 import { cn } from "@/src/utils/tailwind";
 import { useViewData } from "@/src/components/table/table-view-presets/hooks/useViewData";
 import { usePostHogClientCapture } from "@/src/features/posthog-analytics/usePostHogClientCapture";
+import { I18nText, useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const CATEGORY_ICONS: Record<SystemTableViewPresetCategory, LucideIcon> = {
   [SystemTableViewPresetCategory.SlowCalls]: Timer,
@@ -27,7 +28,7 @@ const CATEGORY_ICONS: Record<SystemTableViewPresetCategory, LucideIcon> = {
 type PresetItem = {
   id: string;
   name: string;
-  description?: string;
+  description?: React.ReactNode;
   // The filters/orderBy this preset applies. Absent for the disabled
   // coming-soon placeholder.
   state?: TableViewPresetState;
@@ -52,8 +53,9 @@ const CLEARED_VIEW_STATE: TableViewPresetState = {
 const LOW_QUALITY_COMING_SOON: PresetItem = {
   id: "__coming_soon_low_quality",
   name: "Low quality",
-  description:
-    "Surface low eval scores & negative feedback — e.g. faithfulness < 0.7, CSAT ≤ 3",
+  description: (
+    <I18nText id="surface_low_eval_scores_negative_feedback_e_g_faithf_d2224f5" />
+  ),
   disabled: true,
 };
 
@@ -99,6 +101,7 @@ export function CategoryPresetChips({
   applyViewState,
   onPreviewView,
 }: CategoryPresetChipsProps) {
+  const tAuto = useAutoTranslations();
   const capture = usePostHogClientCapture();
   const { TableViewPresetsList } = useViewData({
     tableName: TableViewPresetTableName.ObservationsEvents,
@@ -332,7 +335,7 @@ export function CategoryPresetChips({
                           {preset.name}
                           {preset.disabled && (
                             <span className="text-muted-foreground rounded-sm border px-1 text-[10px] font-normal uppercase">
-                              Soon
+                              {tAuto("soon_32d3b26")}{" "}
                             </span>
                           )}
                         </span>

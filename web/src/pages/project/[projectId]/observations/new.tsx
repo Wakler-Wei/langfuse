@@ -9,8 +9,10 @@ import {
   TRACING_TABS,
 } from "@/src/features/navigation/utils/tracing-tabs";
 import { useQueryProject } from "@/src/features/projects/hooks";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export default function Events() {
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const projectId = router.query.projectId as string;
   const { project } = useQueryProject();
@@ -38,10 +40,11 @@ export default function Events() {
   return (
     <Page
       headerProps={{
-        title: "Tracing - Events Table (New)",
+        title: tAuto("tracing_events_table_new_38a192e"),
         help: {
-          description:
-            "An observation captures a single function call in an application. This view uses the new ClickHouse events table.",
+          description: tAuto(
+            "an_observation_captures_a_single_function_call_in_an_0c4bddb",
+          ),
           href: "https://langfuse.com/docs/observability/data-model",
         },
         tabsProps: {

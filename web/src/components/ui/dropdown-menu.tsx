@@ -16,6 +16,7 @@ import { cn } from "@/src/utils/tailwind";
 import { useLayerContainer } from "@/src/components/ui/layer";
 import { Skeleton } from "@/src/components/ui/skeleton";
 import { useScrollGradients } from "@/src/hooks/useScrollGradients";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const DropdownMenu = DropdownMenuPrimitive.Root;
 
@@ -450,11 +451,15 @@ const DropdownMenuItemWithSecondaryAction = (
   );
 };
 
-const DropdownMenuLoadingItem = () => (
-  <DropdownMenuItem disabled aria-label="Loading">
-    <Skeleton variant="contrast" className="h-4 w-24" />
-  </DropdownMenuItem>
-);
+const DropdownMenuLoadingItem = () => {
+  const tAuto = useAutoTranslations();
+
+  return (
+    <DropdownMenuItem disabled aria-label={tAuto("loading_c8f2ad5")}>
+      <Skeleton variant="contrast" className="h-4 w-24" />
+    </DropdownMenuItem>
+  );
+};
 
 const DropdownMenuCheckboxItem = React.forwardRef<
   React.ComponentRef<typeof DropdownMenuPrimitive.CheckboxItem>,

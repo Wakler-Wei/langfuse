@@ -8,6 +8,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/src/utils/tailwind";
 import { useLayerContainer } from "@/src/components/ui/layer";
 import motionStyles from "./dialog-motion.module.css";
+import { I18nText, useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const Dialog = DialogPrimitive.Root;
 
@@ -105,6 +106,7 @@ const DialogContent = React.forwardRef<
     },
     ref,
   ) => {
+    const tAuto = useAutoTranslations();
     const handleKeyDown = (e: React.KeyboardEvent) => {
       // Prevent Enter/Space key events from propagating to parent elements
       // This prevents triggering actions like row clicks when submitting forms in dialogs
@@ -160,7 +162,7 @@ const DialogContent = React.forwardRef<
           <div className="[&:has(.dialog-header)]:hidden [&:not(:has(.dialog-header))]:absolute [&:not(:has(.dialog-header))]:top-3 [&:not(:has(.dialog-header))]:right-3 [&:not(:has(.dialog-header))]:z-20">
             <DialogPrimitive.Close className="ring-offset-background focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none">
               <X className="h-4 w-4" />
-              <span className="sr-only">Close</span>
+              <span className="sr-only">{tAuto("close_bbfa773")}</span>
             </DialogPrimitive.Close>
           </div>
         </DialogPrimitive.Content>
@@ -208,7 +210,9 @@ const DialogHeader = ({
         tabIndex={-1}
       >
         <X className="h-4 w-4" />
-        <span className="sr-only">Close</span>
+        <span className="sr-only">
+          <I18nText id="close_bbfa773" />
+        </span>
       </DialogPrimitive.Close>
     </div>
   </div>

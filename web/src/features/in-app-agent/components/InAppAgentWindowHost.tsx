@@ -16,6 +16,7 @@ import {
   useInAppAiAgent,
 } from "@/src/features/in-app-agent/components/InAppAiAgentProvider";
 import { useWatchedPromiseCallback } from "@/src/hooks/useWatchedPromiseCallback";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 function DeleteConversationDialog({
   close,
@@ -26,6 +27,7 @@ function DeleteConversationDialog({
   conversation: InAppAgentWindowConversation | null;
   onDeleteConversation: (conversationId: string) => Promise<void>;
 }) {
+  const tAuto = useAutoTranslations();
   const [deleteConversation, isDeletingConversation] =
     useWatchedPromiseCallback(async () => {
       if (!conversation) {
@@ -48,8 +50,10 @@ function DeleteConversationDialog({
           close();
         }
       }}
-      title="Delete conversation"
-      description="This removes the conversation from your recent conversations. This action cannot be undone."
+      title={tAuto("delete_conversation_de43467")}
+      description={tAuto(
+        "this_removes_the_conversation_from_your_recent_conve_b6c2465",
+      )}
       confirmLabel="Delete conversation"
       loading={isDeletingConversation}
       onConfirm={deleteConversation}

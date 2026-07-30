@@ -16,6 +16,7 @@ import { cn } from "@/src/utils/tailwind";
 import { ArrowDown, ArrowUp } from "lucide-react";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const SHORTCUT_PULSE_MS = 160;
 
@@ -35,6 +36,7 @@ export const DetailPageNav = (props: {
    */
   compact?: boolean;
 }) => {
+  const tAuto = useAutoTranslations();
   const { currentId, path, listKey, onNavigate, size, compact } = props;
   const { detailPagelists } = useDetailPageLists();
   const entries = detailPagelists[listKey] ?? [];
@@ -164,7 +166,7 @@ export const DetailPageNav = (props: {
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <span>Navigate up</span>
+            <span>{tAuto("navigate_up_c8f852e")}</span>
             <InputCommandShortcut className="ml-2">K</InputCommandShortcut>
           </TooltipContent>
         </Tooltip>
@@ -188,7 +190,7 @@ export const DetailPageNav = (props: {
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <span>Navigate down</span>
+            <span>{tAuto("navigate_down_8076f0f")}</span>
             <InputCommandShortcut className="ml-2">J</InputCommandShortcut>
           </TooltipContent>
         </Tooltip>

@@ -2,16 +2,17 @@
 
 import { InAppAgentToolPayload } from "./InAppAgentToolPayload";
 import type { InAppAgentToolCallContent } from "./utils/utils";
+import { I18nText } from "@/src/features/i18n/I18nText";
 
 const TOOL_CALL_RESULT_PRESENTATION = {
-  running: { label: "Result", variant: "default" },
-  succeeded: { label: "Result", variant: "default" },
-  failed: { label: "Error", variant: "failed" },
-  denied: { label: "Denied", variant: "denied" },
+  running: { label: <I18nText id="result_5faa59d" />, variant: "default" },
+  succeeded: { label: <I18nText id="result_5faa59d" />, variant: "default" },
+  failed: { label: <I18nText id="error_7f2f6a1" />, variant: "failed" },
+  denied: { label: <I18nText id="denied_63b16bd" />, variant: "denied" },
 } as const satisfies Record<
   InAppAgentToolCallContent["status"],
   {
-    label: string;
+    label: React.ReactNode;
     variant: "default" | "failed" | "denied";
   }
 >;

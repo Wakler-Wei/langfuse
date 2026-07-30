@@ -16,6 +16,7 @@ import { stripBasePath } from "@/src/utils/redirect";
 import { Badge } from "@/src/components/ui/badge";
 import { showErrorToast } from "@/src/features/notifications/showErrorToast";
 import { useEffect } from "react";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export function TracePage({
   traceId,
@@ -24,6 +25,8 @@ export function TracePage({
   traceId: string;
   timestamp?: Date;
 }) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const session = useSession();
   const routeProjectId = (router.query.projectId as string) ?? "";
@@ -43,29 +46,37 @@ export function TracePage({
   useEffect(() => {
     if (trace.cutoffObservationsAfterMaxCount) {
       showErrorToast(
-        "Trace truncated",
-        "This trace has too many observations for the detail view. Only a subset is shown.",
+        tAutoI18n("trace_truncated_f33652e"),
+        tAutoI18n(
+          "this_trace_has_too_many_observations_for_the_detail__959f994",
+        ),
         "WARNING",
       );
     }
-  }, [trace.cutoffObservationsAfterMaxCount]);
+  }, [trace.cutoffObservationsAfterMaxCount, tAutoI18n]);
 
   if (trace.isUnauthorized)
-    return <ErrorPage message="You do not have access to this trace." />;
+    return (
+      <ErrorPage
+        message={tAutoI18n("you_do_not_have_access_to_this_trace_3c8706c")}
+      />
+    );
 
   if (trace.isNotFound)
     return (
       <ErrorPage
-        title="Trace not found"
-        message="The trace is either still being processed or has been deleted."
+        title={tAuto("trace_not_found_4b38ada")}
+        message={tAutoI18n(
+          "the_trace_is_either_still_being_processed_or_has_bee_7598104",
+        )}
         additionalButton={{
-          label: "Retry",
+          label: tAuto("retry_9f5cd8a"),
           onClick: () => window.location.reload(),
         }}
       />
     );
 
-  if (!trace.data) return <div className="p-3">Loading...</div>;
+  if (!trace.data) return <div className="p-3">{tAuto("loading_b04ba49")}</div>;
 
   const isSharedTrace = trace.data.public;
   const showPublicIndicators = isSharedTrace && !hasProjectAccess;
@@ -78,7 +89,7 @@ export function TracePage({
         asChild
         size="sm"
         variant="outline"
-        title="Back to Langfuse"
+        title={tAuto("back_to_langfuse_01bae47")}
         className="px-3"
       >
         <Link href="/">Langfuse</Link>
@@ -88,18 +99,18 @@ export function TracePage({
         asChild
         size="sm"
         variant="default"
-        title="Sign in to Langfuse"
+        title={tAuto("sign_in_to_langfuse_c522ec5")}
         className="px-3"
       >
         <Link href={`/auth/sign-in?targetPath=${encodedTargetPath}`}>
-          Sign in
+          {tAuto("sign_in_ada2e9e")}{" "}
         </Link>
       </Button>
     )
   ) : undefined;
   const sharedBadge = showPublicIndicators ? (
     <Badge variant="outline" className="text-xs font-bold">
-      Public
+      {tAuto("public_dc5eb70")}{" "}
     </Badge>
   ) : undefined;
 

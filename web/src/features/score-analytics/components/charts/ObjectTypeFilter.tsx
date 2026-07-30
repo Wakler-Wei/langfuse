@@ -6,13 +6,20 @@ import {
   SelectValue,
 } from "@/src/components/ui/select";
 import { type ObjectType } from "@/src/features/score-analytics/lib/analytics-url-state";
+import {
+  type AutoMessageKey,
+  useAutoTranslations,
+} from "@/src/features/i18n/I18nText";
 
-const OBJECT_TYPE_OPTIONS: Array<{ value: ObjectType; label: string }> = [
-  { value: "all", label: "All Objects" },
-  { value: "trace", label: "Traces" },
-  { value: "session", label: "Sessions" },
-  { value: "observation", label: "Observations" },
-  { value: "dataset_run", label: "Dataset Runs" },
+const OBJECT_TYPE_OPTIONS: Array<{
+  value: ObjectType;
+  labelKey: AutoMessageKey;
+}> = [
+  { value: "all", labelKey: "all_objects_c6a6b81" },
+  { value: "trace", labelKey: "traces_194e807" },
+  { value: "session", labelKey: "sessions_e11e37a" },
+  { value: "observation", labelKey: "observations_461ebaa" },
+  { value: "dataset_run", labelKey: "dataset_runs_378ebb5" },
 ];
 
 interface ObjectTypeFilterProps {
@@ -26,15 +33,19 @@ export function ObjectTypeFilter({
   onChange,
   className,
 }: ObjectTypeFilterProps) {
+  const tAuto = useAutoTranslations();
   return (
     <Select value={value} onValueChange={onChange}>
-      <SelectTrigger className={className} aria-label="Object type">
-        <SelectValue placeholder="Object type" />
+      <SelectTrigger
+        className={className}
+        aria-label={tAuto("object_type_b19ba49")}
+      >
+        <SelectValue placeholder={tAuto("object_type_b19ba49")} />
       </SelectTrigger>
       <SelectContent>
         {OBJECT_TYPE_OPTIONS.map((option) => (
           <SelectItem key={option.value} value={option.value}>
-            {option.label}
+            {tAuto(option.labelKey)}
           </SelectItem>
         ))}
       </SelectContent>

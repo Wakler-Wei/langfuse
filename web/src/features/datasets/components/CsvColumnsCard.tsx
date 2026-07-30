@@ -8,6 +8,7 @@ import { cn } from "@/src/utils/tailwind";
 import { useDraggable } from "@dnd-kit/core";
 import { GripVertical } from "lucide-react";
 import type { CsvColumnPreview } from "@/src/features/datasets/lib/csv/types";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 function DraggableColumn({ column }: { column: CsvColumnPreview }) {
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
@@ -48,13 +49,19 @@ export function CsvColumnsCard({
   columns: CsvColumnPreview[];
   columnCount: number;
 }) {
+  const tAuto = useAutoTranslations();
   return (
     <Card className="flex h-full flex-col overflow-hidden">
       <CardHeader className="shrink-0 p-4 pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-base font-bold">CSV Columns</CardTitle>
+          <CardTitle className="text-base font-bold">
+            {tAuto("csv_columns_d96e37b")}
+          </CardTitle>
           <span className="bg-muted text-muted-foreground rounded-full px-2.5 py-0.5 text-xs font-bold">
-            {columnCount} {columnCount === 1 ? "column" : "columns"}
+            {columnCount}{" "}
+            {columnCount === 1
+              ? tAuto("column_aa60230")
+              : tAuto("columns_4f1b1db")}
           </span>
         </div>
       </CardHeader>
@@ -65,8 +72,10 @@ export function CsvColumnsCard({
           ))}
         </div>
         <div className="bg-light-blue/40 text-accent-dark-blue shrink-0 rounded-lg p-3 text-xs leading-relaxed">
-          <strong className="font-bold">Tip:</strong> Drag columns from this
-          list to the mapping fields on the right.
+          <strong className="font-bold">{tAuto("tip_2ee750e")}</strong>{" "}
+          {tAuto(
+            "drag_columns_from_this_list_to_the_mapping_fields_on_3d4c2f0",
+          )}{" "}
         </div>
       </CardContent>
     </Card>

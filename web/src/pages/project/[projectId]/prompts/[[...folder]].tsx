@@ -12,8 +12,10 @@ import PromptMetrics from "./metrics";
 import { useQueryParams, StringParam } from "use-query-params";
 import React from "react";
 import { AutomationButton } from "@/src/features/automations/components/AutomationButton";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export default function PromptsWithFolder() {
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const projectId = router.query.projectId as string;
   const routeSegments = router.query.folder;
@@ -80,10 +82,11 @@ export default function PromptsWithFolder() {
   return (
     <Page
       headerProps={{
-        title: "Prompts",
+        title: tAuto("prompts_eea5311"),
         help: {
-          description:
-            "Manage and version your prompts in Langfuse. Edit and update them via the UI and SDK. Retrieve the production version via the SDKs. Learn more in the docs.",
+          description: tAuto(
+            "manage_and_version_your_prompts_in_langfuse_edit_and_5583509",
+          ),
           href: "https://langfuse.com/docs/prompt-management/get-started",
         },
         actionButtonsRight: (
@@ -104,7 +107,7 @@ export default function PromptsWithFolder() {
                   : undefined
               }
             >
-              New prompt
+              {tAuto("new_prompt_65fbfed")}{" "}
             </ActionButton>
           </>
         ),

@@ -27,6 +27,7 @@ import {
 import { HOME_PRESET_METADATA } from "@/src/features/dashboard/components/home-preset-registry";
 import { type DashboardWidgetChartType } from "@langfuse/shared/src/db";
 import { InAppAgentWidgetComposer } from "@/src/features/in-app-agent/components/InAppAgentWidgetComposer";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export type WidgetItem = {
   id: string;
@@ -103,6 +104,8 @@ export function SelectWidgetDialog({
   onSelectPreset,
   dashboardId,
 }: SelectWidgetDialogProps) {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const capture = usePostHogClientCapture();
 
@@ -148,15 +151,17 @@ export function SelectWidgetDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[640px]">
         <DialogHeader>
-          <DialogTitle>Add widget</DialogTitle>
+          <DialogTitle>{tAuto("add_widget_dd4416e")}</DialogTitle>
         </DialogHeader>
 
         <DialogBody>
           {widgets.isPending ? (
-            <div className="py-8 text-center">Loading widgets...</div>
+            <div className="py-8 text-center">
+              {tAuto("loading_widgets_af1a925")}
+            </div>
           ) : widgets.isError ? (
             <div className="text-destructive py-8 text-center">
-              Error: {widgets.error.message}
+              {tAutoI18n("error_787aa16")} {widgets.error.message}
             </div>
           ) : (
             <div className="flex flex-col gap-3 p-1">
@@ -178,9 +183,13 @@ export function SelectWidgetDialog({
               >
                 <RowIllustration type="CUSTOM" />
                 <div className="min-w-0 flex-1">
-                  <div className="font-bold">Custom Chart</div>
+                  <div className="font-bold">
+                    {tAuto("custom_chart_a554080")}
+                  </div>
                   <div className="text-muted-foreground text-xs">
-                    Pick a data view, metrics, and chart type from scratch
+                    {tAuto(
+                      "pick_a_data_view_metrics_and_chart_type_from_scratch_dc40a6f",
+                    )}{" "}
                   </div>
                 </div>
               </button>
@@ -195,11 +204,13 @@ export function SelectWidgetDialog({
               >
                 <TabsList>
                   <TabsTrigger value="project">
-                    Your widgets ({projectWidgets.length})
+                    {tAutoI18n("your_widgets_3f43118")}
+                    {projectWidgets.length})
                   </TabsTrigger>
                   {onSelectPreset && (
                     <TabsTrigger value="home-cards">
-                      Home cards ({HOME_DASHBOARD_PRESET_IDS.length})
+                      {tAutoI18n("home_cards_6983a9e")}
+                      {HOME_DASHBOARD_PRESET_IDS.length})
                     </TabsTrigger>
                   )}
                 </TabsList>
@@ -207,8 +218,9 @@ export function SelectWidgetDialog({
                   <div className="flex max-h-[360px] flex-col gap-2 overflow-y-auto p-1">
                     {projectWidgets.length === 0 ? (
                       <div className="text-muted-foreground py-8 text-center text-sm">
-                        No saved widgets in this project yet — build one with
-                        Custom Chart.
+                        {tAuto(
+                          "no_saved_widgets_in_this_project_yet_build_one_with__7d8df8a",
+                        )}{" "}
                       </div>
                     ) : (
                       projectWidgets.map((widget) => (
@@ -246,12 +258,14 @@ export function SelectWidgetDialog({
                               </div>
                               <div
                                 className="text-muted-foreground truncate text-xs"
-                                title={meta.description}
+                                title={meta.name}
                               >
                                 {meta.description}
                               </div>
                               <div className="text-muted-foreground/80 mt-0.5 text-xs">
-                                Home card · fixed configuration
+                                {tAuto(
+                                  "home_card_fixed_configuration_3271fb7",
+                                )}{" "}
                               </div>
                             </div>
                           </button>
@@ -267,7 +281,7 @@ export function SelectWidgetDialog({
 
         <DialogFooter className="mt-4">
           <Button onClick={() => onOpenChange(false)} variant="outline">
-            Cancel
+            {tAuto("cancel_77dfd21")}{" "}
           </Button>
         </DialogFooter>
       </DialogContent>

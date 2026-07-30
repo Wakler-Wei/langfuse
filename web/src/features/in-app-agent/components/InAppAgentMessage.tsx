@@ -50,6 +50,7 @@ import styles from "./InAppAgentMessage.module.css";
 import { InAppAgentToolPayload } from "./InAppAgentToolPayload";
 import { InAppAgentToolResultPayload } from "./InAppAgentToolResultPayload";
 import { type InAppAgentToolCallContent } from "@/src/features/in-app-agent/components/utils/utils";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export type InAppAgentMessageRole = "assistant" | "user";
 
@@ -304,6 +305,7 @@ function InAppAgentReasoningBlock({
   content: Extract<InAppAgentMessageContent, { type: "reasoning" }>;
   isCompact: boolean;
 }) {
+  const tAuto = useAutoTranslations();
   // null until the user toggles manually; until then the disclosure follows
   // the streaming state (open while streaming, collapsed when done).
   const [userToggled, setUserToggled] = useState<boolean | null>(null);
@@ -331,7 +333,9 @@ function InAppAgentReasoningBlock({
             content.isStreaming && styles.thinkingShimmer,
           )}
         >
-          {content.isStreaming ? "Thinking" : "Thought"}
+          {content.isStreaming
+            ? tAuto("thinking_d08d8da")
+            : tAuto("thought_bfac963")}
         </span>
         <ChevronDown
           className={cn(
@@ -345,7 +349,7 @@ function InAppAgentReasoningBlock({
         // the drawer's auto-follow keeps the newest text visible while
         // streaming, and the block collapses when streaming ends.
         <div
-          aria-label="Assistant reasoning"
+          aria-label={tAuto("assistant_reasoning_a0bd3c4")}
           data-testid="in-app-agent-reasoning-content"
           className={cn(
             // Vertical spacing is margin, not padding, so the left border
@@ -375,6 +379,7 @@ function MessageFeedbackControls({
     comment?: string | null;
   }) => Promise<void>;
 }) {
+  const tAuto = useAutoTranslations();
   const [committedComment, setCommittedComment] = useState(
     feedback?.comment?.trim() ?? "",
   );
@@ -458,7 +463,7 @@ function MessageFeedbackControls({
     >
       <PopoverAnchor className="inline-flex">
         <FeedbackButton
-          label="Good response"
+          label={tAuto("good_response_b2feb2b")}
           isSelected={selectedValue === "thumbs_up"}
           disabled={isDisabled}
           onClick={() => {
@@ -474,7 +479,7 @@ function MessageFeedbackControls({
         </FeedbackButton>
       </PopoverAnchor>
       <FeedbackButton
-        label="Bad response"
+        label={tAuto("bad_response_00544f7")}
         isSelected={selectedValue === "thumbs_down"}
         disabled={isDisabled}
         onClick={() => {
@@ -514,7 +519,7 @@ function MessageFeedbackControls({
                 setComment(event.target.value);
               }}
               disabled={isDisabled}
-              placeholder="Optional feedback comment"
+              placeholder={tAuto("optional_feedback_comment_0206640")}
               rows={3}
               maxLength={500}
               className={cn(
@@ -529,7 +534,9 @@ function MessageFeedbackControls({
                 handleSubmitComment().catch(() => undefined);
               }}
             >
-              {isSubmittingComment ? "Saving..." : "Save comment"}
+              {isSubmittingComment
+                ? tAuto("saving_ae7e887")
+                : tAuto("save_comment_4921a2f")}
             </CommentButton>
           </div>
         </PopoverContent>
@@ -545,6 +552,7 @@ function SourcesPopover({
   sources: InAppAgentMessageSource[];
   isCompact: boolean;
 }) {
+  const tAuto = useAutoTranslations();
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -556,7 +564,7 @@ function SourcesPopover({
           )}
         >
           <BookOpenText className={cn(isCompact ? "size-3" : "size-3.5")} />
-          Sources
+          {tAuto("sources_2eb56be")}{" "}
         </button>
       </PopoverTrigger>
       <PopoverContent align="start" side="top" className="w-72 p-1.5">
@@ -716,12 +724,16 @@ function ToolCallDisclosure({
   tool: InAppAgentToolCallContent;
   isCompact: boolean;
 }) {
+  const tAuto = useAutoTranslations();
   const status = tool.status;
 
   return (
     <details className="group/tool min-w-0">
       <summary
-        aria-label={`${tool.name}: ${status}`}
+        aria-label={tAuto("value0_value1_0f13dbb", {
+          value0: tool.name,
+          value1: status,
+        })}
         className={cn(
           "hover:text-foreground focus-visible:ring-ring flex cursor-pointer list-none items-center gap-1.5 rounded-md px-1 py-0.5 text-xs leading-4 font-bold outline-none focus-visible:ring-2 focus-visible:ring-offset-2 [&::-webkit-details-marker]:hidden",
           isCompact && "px-0.5",
@@ -742,7 +754,7 @@ function ToolCallDisclosure({
       <div className={cn("mt-1.5 mb-1 ml-3 px-3", isCompact && "px-2.5")}>
         <div className="flex flex-col gap-2">
           <InAppAgentToolPayload
-            label="Arguments"
+            label={tAuto("arguments_cbb9fa2")}
             value={tool.args}
             variant="default"
           />
@@ -968,6 +980,7 @@ function trimTrailingFenceNewline(
 }
 
 function CodeBlock({ children }: { children: ReactNode }) {
+  const tAuto = useAutoTranslations();
   const { copy, isCopied } = useCopyToClipboard({ successDuration: 1_500 });
 
   // This is ugly but streamdown doesn't provide an easy way to get the raw text content of a code block
@@ -990,8 +1003,10 @@ function CodeBlock({ children }: { children: ReactNode }) {
       <button
         type="button"
         data-in-app-agent-code-copy-button="true"
-        aria-label={isCopied ? "Copied code" : "Copy code"}
-        title={isCopied ? "Copied" : "Copy code"}
+        aria-label={
+          isCopied ? tAuto("copied_code_f90d7f3") : tAuto("copy_code_6c10692")
+        }
+        title={isCopied ? tAuto("copied_8e3df45") : tAuto("copy_code_6c10692")}
         contentEditable={false}
         disabled={!code}
         onClick={() => {

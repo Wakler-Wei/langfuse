@@ -9,6 +9,7 @@ import { Badge } from "@/src/components/ui/badge";
 import { Button } from "@/src/components/ui/button";
 import { cn } from "@/src/utils/tailwind";
 import { FileCode } from "lucide-react";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const PROMPT_REFERENCE_MARKDOWN_PREFIX = "/__langfuse_prompt_reference__?";
 const PromptReferenceContext = createContext<string | undefined>(undefined);
@@ -148,6 +149,7 @@ export const PromptReferenceButton = ({
   promptRef: ParsedPromptDependencyTag;
   fallbackText: string;
 }) => {
+  const tAuto = useAutoTranslations();
   const projectId = usePromptReferenceProjectId();
 
   if (!projectId) {
@@ -180,7 +182,7 @@ export const PromptReferenceButton = ({
       onClick={() =>
         window.open(getPromptReferenceUrl(projectId, promptRef), "_blank")
       }
-      title={`Open prompt: ${promptRefTitle}`}
+      title={tAuto("open_prompt_value0_362da1d", { value0: promptRefTitle })}
     >
       <FileCode className="text-muted-foreground h-3 w-3 shrink-0" />
       <span className="truncate font-bold" title={promptRefTitle}>

@@ -4,6 +4,7 @@ import { SendHorizontal, Sparkles } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import { Textarea } from "@/src/components/ui/textarea";
 import { useInAppAiAgent } from "@/src/features/in-app-agent/components/InAppAiAgentProvider";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const MAX_TEXTAREA_HEIGHT_PX = 160;
 
@@ -26,6 +27,7 @@ export function InAppAgentWidgetComposer({
 }: {
   onSubmitted: () => void;
 }) {
+  const tAuto = useAutoTranslations();
   const { isAvailable, isRunning, isSubmitting, openAssistant, submit } =
     useInAppAiAgent();
   const [request, setRequest] = useState("");
@@ -75,19 +77,22 @@ export function InAppAgentWidgetComposer({
     >
       <div className="flex items-center gap-2 font-bold">
         <Sparkles className="h-4 w-4" />
-        Add with Langfuse Assistant
+        {tAuto("add_with_langfuse_assistant_ad99be4")}{" "}
       </div>
       <p className="text-muted-foreground text-xs">
-        Describe the chart you need. The Assistant will create it as a widget
-        and add it to this dashboard.
+        {tAuto(
+          "describe_the_chart_you_need_the_assistant_will_creat_a6f2694",
+        )}{" "}
       </p>
       <div className="flex items-end gap-2">
         <Textarea
-          aria-label="Describe the widget you want"
+          aria-label={tAuto("describe_the_widget_you_want_d661d5f")}
           autoComplete="off"
           maxLength={2000}
           rows={1}
-          placeholder="e.g. Show p95 latency by model over the last 7 days"
+          placeholder={tAuto(
+            "e_g_show_p95_latency_by_model_over_the_last_7_days_9b0420e",
+          )}
           value={request}
           onChange={(event) => {
             setRequest(event.target.value);
@@ -101,7 +106,7 @@ export function InAppAgentWidgetComposer({
           size="icon"
           className="h-8 w-8 shrink-0 rounded-md border"
           variant="outline"
-          aria-label="Add with Langfuse Assistant"
+          aria-label={tAuto("add_with_langfuse_assistant_ad99be4")}
           disabled={!request.trim() || isRunning || isSubmitting}
         >
           <SendHorizontal className="h-4 w-4" />

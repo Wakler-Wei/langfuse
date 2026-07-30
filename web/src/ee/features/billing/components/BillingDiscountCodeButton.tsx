@@ -14,12 +14,14 @@ import { Input } from "@/src/components/ui/input";
 import { api } from "@/src/utils/api";
 import { toast } from "sonner";
 import { nanoid } from "nanoid";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export const BillingDiscountCodeButton = ({
   orgId,
 }: {
   orgId: string | undefined;
 }) => {
+  const tAuto = useAutoTranslations();
   const [code, setCode] = useState("");
   const [open, setOpen] = useState(false);
   const [processing, setProcessing] = useState(false);
@@ -29,7 +31,7 @@ export const BillingDiscountCodeButton = ({
 
   const mutation = api.cloudBilling.applyPromotionCode.useMutation({
     onSuccess: async () => {
-      toast.success("Promotion code applied");
+      toast.success(tAuto("promotion_code_applied_8839e86"));
       setProcessing(false);
       setOpen(false);
       setCode("");
@@ -41,7 +43,9 @@ export const BillingDiscountCodeButton = ({
     },
     onError: (err) => {
       setProcessing(false);
-      toast.error(err.message || "Failed to apply promotion code");
+      toast.error(
+        err.message || tAuto("failed_to_apply_promotion_code_4039674"),
+      );
     },
   });
 
@@ -51,15 +55,21 @@ export const BillingDiscountCodeButton = ({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="ghost" size="sm">
-          Add Promotion Code
+          {tAuto("add_promotion_code_0737112")}{" "}
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="text-lg">Add Promotion Code</DialogTitle>
+          <DialogTitle className="text-lg">
+            {tAuto("add_promotion_code_0737112")}
+          </DialogTitle>
         </DialogHeader>
         <DialogBody className="space-y-3 text-sm">
-          <p>Enter a valid promotion code to apply it to your subscription.</p>
+          <p>
+            {tAuto(
+              "enter_a_valid_promotion_code_to_apply_it_to_your_sub_a5f4168",
+            )}
+          </p>
           <Input
             value={code}
             onChange={(e) => setCode(e.target.value)}
@@ -70,7 +80,7 @@ export const BillingDiscountCodeButton = ({
         <DialogFooter>
           <DialogClose asChild>
             <Button variant="secondary" disabled={processing}>
-              Cancel
+              {tAuto("cancel_77dfd21")}{" "}
             </Button>
           </DialogClose>
           <Button
@@ -86,7 +96,7 @@ export const BillingDiscountCodeButton = ({
               mutation.mutate({ orgId, code: code.trim(), opId: id });
             }}
           >
-            {processing ? "Applying…" : "Apply"}
+            {processing ? tAuto("applying_e578c27") : tAuto("apply_cfea419")}
           </Button>
         </DialogFooter>
       </DialogContent>

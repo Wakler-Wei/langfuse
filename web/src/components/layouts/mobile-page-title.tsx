@@ -17,6 +17,7 @@ import {
   TooltipTrigger,
 } from "@/src/components/ui/tooltip";
 import { MoreHorizontal } from "lucide-react";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 /**
  * The page-specific block for the minimal-chrome mobile shell. Rendered between
@@ -35,6 +36,7 @@ export const MobilePageTitle = ({
 }: {
   headerProps: Omit<PageHeaderProps, "container">;
 }) => {
+  const tAuto = useAutoTranslations();
   const {
     title,
     titleContent,
@@ -127,7 +129,7 @@ export const MobilePageTitle = ({
               <Button
                 variant="outline"
                 size="icon"
-                aria-label="More actions"
+                aria-label={tAuto("more_actions_a1e34f9")}
                 className="ml-auto shrink-0"
               >
                 <MoreHorizontal className="h-4 w-4" />

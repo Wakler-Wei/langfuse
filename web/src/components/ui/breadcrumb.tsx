@@ -3,13 +3,18 @@ import { Slot } from "@radix-ui/react-slot";
 import { ChevronRight, MoreHorizontal } from "lucide-react";
 
 import { cn } from "@/src/utils/tailwind";
+import { I18nText, useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const Breadcrumb = React.forwardRef<
   HTMLElement,
   React.ComponentPropsWithoutRef<"nav"> & {
     separator?: React.ReactNode;
   }
->(({ ...props }, ref) => <nav ref={ref} aria-label="breadcrumb" {...props} />);
+>(({ ...props }, ref) => {
+  const tAuto = useAutoTranslations();
+
+  return <nav ref={ref} aria-label={tAuto("breadcrumb_5ccf298")} {...props} />;
+});
 Breadcrumb.displayName = "Breadcrumb";
 
 const BreadcrumbList = React.forwardRef<
@@ -99,7 +104,9 @@ const BreadcrumbEllipsis = ({
     {...props}
   >
     <MoreHorizontal className="h-4 w-4" />
-    <span className="sr-only">More</span>
+    <span className="sr-only">
+      <I18nText id="more_4bab2d8" />
+    </span>
   </span>
 );
 BreadcrumbEllipsis.displayName = "BreadcrumbElipssis";

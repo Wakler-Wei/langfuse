@@ -3,8 +3,10 @@ import { NewPromptForm } from "@/src/features/prompts/components/NewPromptForm";
 import useProjectIdFromURL from "@/src/hooks/useProjectIdFromURL";
 import { api } from "@/src/utils/api";
 import Page from "@/src/components/layouts/page";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export const NewPrompt = () => {
+  const tAuto = useAutoTranslations();
   const projectId = useProjectIdFromURL();
   const [initialPromptId] = useQueryParam("promptId", StringParam);
 
@@ -21,7 +23,7 @@ export const NewPrompt = () => {
   );
 
   if (isLoading) {
-    return <div className="p-3">Loading...</div>;
+    return <div className="p-3">{tAuto("loading_b04ba49")}</div>;
   }
 
   const breadcrumb: { name: string; href?: string }[] = [
@@ -51,11 +53,12 @@ export const NewPrompt = () => {
       scrollable
       headerProps={{
         title: initialPrompt
-          ? `${initialPrompt.name} \u2014 New version`
-          : "Create new prompt",
+          ? tAuto("value0_new_version_3f819e4", { value0: initialPrompt.name })
+          : tAuto("create_new_prompt_1252bce"),
         help: {
-          description:
-            "Manage and version your prompts in Langfuse. Edit and update them via the UI and SDK. Retrieve the production version via the SDKs. Learn more in the docs.",
+          description: tAuto(
+            "manage_and_version_your_prompts_in_langfuse_edit_and_5583509",
+          ),
           href: "https://langfuse.com/docs/prompts",
         },
         breadcrumb: breadcrumb,
@@ -63,8 +66,9 @@ export const NewPrompt = () => {
     >
       {initialPrompt ? (
         <p className="text-muted-foreground text-sm">
-          Prompts are immutable in Langfuse. To update a prompt, create a new
-          version.
+          {tAuto(
+            "prompts_are_immutable_in_langfuse_to_update_a_prompt_f2e2a19",
+          )}{" "}
         </p>
       ) : null}
       <div className="my-8">

@@ -17,6 +17,7 @@ import Link from "next/link";
 import useProjectIdFromURL from "@/src/hooks/useProjectIdFromURL";
 import { type WithStringifiedMetadata } from "@/src/utils/clientSideDomainTypes";
 import { ScoreTag, scoreLevelFromScore } from "@/src/components/score-tag";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const partitionScores = <
   T extends WithStringifiedMetadata<ScoreDomain> | LastUserScore,
@@ -66,6 +67,7 @@ const ScoreGroupBadge = <
    *  the whole selection mixes levels (LFE-10596). */
   showLevels?: boolean;
 }) => {
+  const tAuto = useAutoTranslations();
   const projectId = useProjectIdFromURL();
 
   // Score-level color coding (LFE-10596): one full tag per distinct level in
@@ -118,7 +120,7 @@ const ScoreGroupBadge = <
                           target="_blank"
                         >
                           <ExternalLinkIcon className="h-3 w-3" />
-                          View execution trace
+                          {tAuto("view_execution_trace_1c97c81")}{" "}
                         </Link>
                       )}
                   </HoverCardContent>
@@ -156,6 +158,7 @@ export const GroupedScoreBadges = <
   compact?: boolean;
   badgeClassName?: string;
 }) => {
+  const tAuto = useAutoTranslations();
   const groupedScores = scores.reduce<Record<string, T[]>>((acc, score) => {
     if (!acc[score.name] || !Array.isArray(acc[score.name])) {
       acc[score.name] = [score];
@@ -211,7 +214,10 @@ export const GroupedScoreBadges = <
               type="button"
               // aria-label, not title: a native tooltip would stack on top of
               // the hover-card preview.
-              aria-label={`Show ${hiddenScores.length} more score${hiddenScores.length === 1 ? "" : "s"}`}
+              aria-label={tAuto("show_value0_more_score_value1_0546ea0", {
+                value0: hiddenScores.length,
+                value1: hiddenScores.length === 1 ? "" : "s",
+              })}
               // Chips render inside clickable rows (tree nodes, table rows) —
               // expanding must not also select/navigate the row.
               onClick={(event) => {
@@ -244,8 +250,8 @@ export const GroupedScoreBadges = <
       {expanded && overflows && (
         <button
           type="button"
-          title="Show fewer scores"
-          aria-label="Show fewer scores"
+          title={tAuto("show_fewer_scores_0f3cdd6")}
+          aria-label={tAuto("show_fewer_scores_0f3cdd6")}
           onClick={(event) => {
             event.stopPropagation();
             setExpanded(false);

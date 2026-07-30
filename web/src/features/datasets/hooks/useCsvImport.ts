@@ -13,6 +13,7 @@ import type {
   CsvColumnPreview,
   FieldMapping,
 } from "@/src/features/datasets/lib/csv/types";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 const MIN_CHUNK_SIZE = 1;
 const CHUNK_START_SIZE = 50;
@@ -66,6 +67,7 @@ type UseCsvImportOptions = {
 };
 
 export function useCsvImport(options: UseCsvImportOptions) {
+  const tAuto = useAutoTranslations();
   const [progress, setProgress] = useState<ImportProgress>({
     totalItems: 0,
     processedItems: 0,
@@ -85,7 +87,10 @@ export function useCsvImport(options: UseCsvImportOptions) {
 
     if (!csvFile) return false;
     if (csvFile.size > MAX_FILE_SIZE_BYTES) {
-      showErrorToast("File too large", "Maximum file size is 10MB");
+      showErrorToast(
+        tAuto("file_too_large_a0704a4"),
+        tAuto("maximum_file_size_is_10mb_569e902"),
+      );
       return false;
     }
 
@@ -241,11 +246,16 @@ export function useCsvImport(options: UseCsvImportOptions) {
         status: "not-started",
       });
       if (error instanceof Error && processedCount === 0) {
-        showErrorToast("Failed to import all dataset items", error.message);
+        showErrorToast(
+          tAuto("failed_to_import_all_dataset_items_68f5be2"),
+          error.message,
+        );
       } else {
         showErrorToast(
-          "Failed to import all dataset items",
-          `Please try again starting from row ${processedCount + 1}.`,
+          tAuto("failed_to_import_all_dataset_items_68f5be2"),
+          tAuto("please_try_again_starting_from_row_value0_19aa741", {
+            value0: String(processedCount + 1),
+          }),
         );
       }
       return false;

@@ -38,6 +38,7 @@ import {
   TabsBarTrigger,
 } from "@/src/components/ui/tabs-bar";
 import { useSelection } from "../../contexts/SelectionContext";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export type MobileTraceTab = "tree" | "timeline" | "graph" | "info";
 const VALID_TABS: MobileTraceTab[] = ["tree", "timeline", "graph", "info"];
@@ -81,6 +82,7 @@ export function TraceLayoutMobile({
   /** Reused from TraceContent; hides the Graph tab when the trace has no graph. */
   showGraph: boolean;
 }) {
+  const tAuto = useAutoTranslations();
   const [tabParam, setTabParam] = useQueryParam("mobileTab", StringParam);
   const { selectedNodeId } = useSelection();
 
@@ -129,10 +131,16 @@ export function TraceLayoutMobile({
         className="h-full w-full"
       >
         <TabsBarList className="shrink-0 px-2">
-          <TabsBarTrigger value="tree">Tree</TabsBarTrigger>
-          <TabsBarTrigger value="timeline">Timeline</TabsBarTrigger>
-          {showGraph && <TabsBarTrigger value="graph">Graph</TabsBarTrigger>}
-          <TabsBarTrigger value="info">Data</TabsBarTrigger>
+          <TabsBarTrigger value="tree">{tAuto("tree_99f5ff6")}</TabsBarTrigger>
+          <TabsBarTrigger value="timeline">
+            {tAuto("timeline_018514a")}
+          </TabsBarTrigger>
+          {showGraph && (
+            <TabsBarTrigger value="graph">
+              {tAuto("graph_9a7405e")}
+            </TabsBarTrigger>
+          )}
+          <TabsBarTrigger value="info">{tAuto("data_e5e429b")}</TabsBarTrigger>
         </TabsBarList>
 
         {/* Inactive tabs unmount (Radix default). On memory-constrained mobile

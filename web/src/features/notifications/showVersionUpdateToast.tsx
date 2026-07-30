@@ -1,5 +1,6 @@
 import { Button } from "@/src/components/ui/button";
 import { toast } from "sonner";
+import { I18nText } from "@/src/features/i18n/I18nText";
 
 export const showVersionUpdateToast = () => {
   toast.custom(
@@ -8,8 +9,7 @@ export const showVersionUpdateToast = () => {
         <div className="flex min-w-[300px] flex-1 flex-col gap-2">
           <div className="flex items-center gap-2">
             <div className="text-foreground/70 m-0 text-sm leading-tight font-bold">
-              We have released a new version of Langfuse. Please refresh your
-              browser to get the latest update.
+              <I18nText id="we_have_released_a_new_version_of_langfuse_please_re_372ceca" />{" "}
             </div>
           </div>
           <Button
@@ -20,7 +20,7 @@ export const showVersionUpdateToast = () => {
               window.location.reload();
             }}
           >
-            Refresh page
+            <I18nText id="refresh_page_4651e84" />{" "}
           </Button>
         </div>
       </div>

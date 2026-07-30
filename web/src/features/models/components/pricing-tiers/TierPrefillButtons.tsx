@@ -2,6 +2,7 @@ import { Button } from "@/src/components/ui/button";
 import { FormDescription } from "@/src/components/ui/form";
 import type { UseFormReturn } from "react-hook-form";
 import type { FormUpsertModel } from "../../validation";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type TierPrefillButtonsProps = {
   tierIndex: number;
@@ -14,11 +15,14 @@ export function TierPrefillButtons({
   tierIndex,
   form,
 }: TierPrefillButtonsProps) {
+  const tAuto = useAutoTranslations();
   const prices = form.watch(`pricingTiers.${tierIndex}.prices`) || {};
 
   return (
     <div className="space-y-2">
-      <FormDescription>Prefill usage types from template:</FormDescription>
+      <FormDescription>
+        {tAuto("prefill_usage_types_from_template_5b4dc06")}
+      </FormDescription>
       <div className="flex gap-2">
         <Button
           type="button"
@@ -54,7 +58,7 @@ export function TierPrefillButtons({
             });
           }}
         >
-          Anthropic
+          {tAuto("anthropic_b780a23")}{" "}
         </Button>
       </div>
     </div>

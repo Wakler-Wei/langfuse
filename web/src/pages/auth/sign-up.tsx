@@ -34,6 +34,7 @@ import { usePostHogClientCapture } from "@/src/features/posthog-analytics/usePos
 import useLocalStorage from "@/src/components/useLocalStorage";
 import { noUrlCheck, StringNoHTMLNonEmpty } from "@langfuse/shared";
 import { useTranslations } from "next-intl";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 // Use the same getServerSideProps function as src/pages/auth/sign-in.tsx
 export { getServerSideProps } from "@/src/pages/auth/sign-in";
@@ -69,6 +70,7 @@ export default function SignUp({
 function StandardSignupFlow({
   authProviders,
 }: Pick<PageProps, "authProviders" | "emailVerificationRequired">) {
+  const tAuto = useAutoTranslations();
   const { isLangfuseCloud } = useLangfuseCloudRegion();
   const router = useRouter();
   const capture = usePostHogClientCapture();
@@ -236,7 +238,7 @@ function StandardSignupFlow({
                 <FormItem>
                   <FormLabel>{t("name")}</FormLabel>
                   <FormControl>
-                    <Input placeholder="Jane Doe" {...field} />
+                    <Input placeholder={tAuto("jane_doe_cac7bbb")} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -308,6 +310,7 @@ function StandardSignupFlow({
 function VerifiedSignupFlow({
   authProviders,
 }: Pick<PageProps, "authProviders" | "emailVerificationRequired">) {
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const capture = usePostHogClientCapture();
   const t = useTranslations("Auth");
@@ -490,7 +493,7 @@ function VerifiedSignupFlow({
               <FormItem>
                 <FormLabel>{t("name")}</FormLabel>
                 <FormControl>
-                  <Input placeholder="Jane Doe" {...field} />
+                  <Input placeholder={tAuto("jane_doe_cac7bbb")} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

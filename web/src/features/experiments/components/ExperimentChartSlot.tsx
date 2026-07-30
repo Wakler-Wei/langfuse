@@ -16,6 +16,7 @@ import type { MetricOption } from "../types/charts";
 import { Skeleton } from "@/src/components/ui/skeleton";
 import { buildWidgetConfigFromId } from "@/src/features/experiments/utils/charts";
 import { NoDataOrLoading } from "@/src/components/NoDataOrLoading";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type ExperimentChartSlotProps = {
   chartIndex: number;
@@ -47,6 +48,7 @@ export function ExperimentChartSlot({
   toTimestamp,
   isExternalLoading = false,
 }: ExperimentChartSlotProps) {
+  const tAuto = useAutoTranslations();
   const { selectedMetricOption, widgetConfig } = useMemo(
     () => ({
       selectedMetricOption: availableMetricOptions.find(
@@ -175,7 +177,7 @@ export function ExperimentChartSlot({
       <div className="flex items-center">
         <Select value={selectedMetricId} onValueChange={onMetricChange}>
           <SelectTrigger className="h-7 w-44 text-xs">
-            <SelectValue placeholder="Select metric...">
+            <SelectValue placeholder={tAuto("select_metric_46a7b18")}>
               {selectedLabel}
             </SelectValue>
           </SelectTrigger>
@@ -222,7 +224,7 @@ export function ExperimentChartSlot({
         ) : (
           <div className="flex h-full items-center justify-center rounded-lg border-2 border-dashed">
             <span className="text-muted-foreground text-sm">
-              Select a metric
+              {tAuto("select_a_metric_724149d")}{" "}
             </span>
           </div>
         )}

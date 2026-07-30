@@ -14,6 +14,7 @@ import {
   HoverCardTrigger,
 } from "@/src/components/ui/hover-card";
 import { decodeUnicodeEscapesOnly } from "@/src/utils/unicode";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type IOTableCellPadding = "default" | "compact";
 
@@ -80,6 +81,7 @@ const IOTableCellContent = ({
   padding: IOTableCellPadding;
   suppressTitle?: boolean;
 }) => {
+  const tAuto = useAutoTranslations();
   const stringifiedJson =
     data !== null && data !== undefined ? stringifyJsonNode(data) : undefined;
   const paddingClassName = ioTableCellPaddingClassNames[padding];
@@ -138,7 +140,7 @@ const IOTableCellContent = ({
         borderless
       />
       <div className="text-muted-foreground text-xs">
-        Content was truncated.
+        {tAuto("content_was_truncated_c0ced60")}{" "}
       </div>
     </div>
   ) : (

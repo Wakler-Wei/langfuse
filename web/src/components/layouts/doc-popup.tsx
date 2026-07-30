@@ -8,6 +8,7 @@ import {
 import { usePostHogClientCapture } from "@/src/features/posthog-analytics/usePostHogClientCapture";
 import { cn } from "@/src/utils/tailwind";
 import { ExternalLink, Info } from "lucide-react";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export type DocPopupProps = {
   description: React.ReactNode;
@@ -20,6 +21,7 @@ export default function DocPopup({
   href,
   className,
 }: DocPopupProps) {
+  const tAuto = useAutoTranslations();
   const capture = usePostHogClientCapture();
   // Controlled so a CLICK/TAP on the icon also opens the card: HoverCard
   // never opens on touch by itself, and the old click-to-navigate behavior
@@ -79,8 +81,7 @@ export default function DocPopup({
               }}
               className="text-muted-foreground hover:text-primary mt-2 inline-flex items-center gap-1 text-xs underline underline-offset-2"
             >
-              Read docs
-              <ExternalLink className="h-3 w-3" />
+              {tAuto("read_docs_71074ab")} <ExternalLink className="h-3 w-3" />
             </a>
           )}
         </HoverCardContent>

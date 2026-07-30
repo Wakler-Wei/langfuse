@@ -28,6 +28,7 @@ import {
   GRANULARITIES,
   METRICS,
 } from "../vocab";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 /**
  * View-only config pickers shared by the production chart view and the
@@ -44,9 +45,13 @@ export const MetricSelect = React.memo(function MetricSelect({
   value: MetricKey;
   onChange: (value: MetricKey) => void;
 }) {
+  const tAuto = useAutoTranslations();
   return (
     <Select value={value} onValueChange={(v) => onChange(v as MetricKey)}>
-      <SelectTrigger className={TRIGGER_CLASS} aria-label="Metric">
+      <SelectTrigger
+        className={TRIGGER_CLASS}
+        aria-label={tAuto("metric_b2bb760")}
+      >
         <SelectValue />
       </SelectTrigger>
       <SelectContent>
@@ -69,6 +74,7 @@ export const AggregationSelect = React.memo(function AggregationSelect({
   value: AggregationFn;
   onChange: (value: AggregationFn) => void;
 }) {
+  const tAuto = useAutoTranslations();
   const options = getMetric(metric).aggregations;
   return (
     <Select
@@ -76,7 +82,10 @@ export const AggregationSelect = React.memo(function AggregationSelect({
       onValueChange={(v) => onChange(v as AggregationFn)}
       disabled={options.length <= 1}
     >
-      <SelectTrigger className={TRIGGER_CLASS} aria-label="Aggregation">
+      <SelectTrigger
+        className={TRIGGER_CLASS}
+        aria-label={tAuto("aggregation_b9ba037")}
+      >
         <SelectValue />
       </SelectTrigger>
       <SelectContent>
@@ -97,9 +106,13 @@ export const BreakdownSelect = React.memo(function BreakdownSelect({
   value: DimensionKey;
   onChange: (value: DimensionKey) => void;
 }) {
+  const tAuto = useAutoTranslations();
   return (
     <Select value={value} onValueChange={(v) => onChange(v as DimensionKey)}>
-      <SelectTrigger className={TRIGGER_CLASS} aria-label="Breakdown dimension">
+      <SelectTrigger
+        className={TRIGGER_CLASS}
+        aria-label={tAuto("breakdown_dimension_7411460")}
+      >
         <SelectValue />
       </SelectTrigger>
       <SelectContent>
@@ -122,13 +135,17 @@ export const GranularitySelect = React.memo(function GranularitySelect({
   onChange: (value: TimeGranularity) => void;
   disabled?: boolean;
 }) {
+  const tAuto = useAutoTranslations();
   return (
     <Select
       value={value}
       onValueChange={(v) => onChange(v as TimeGranularity)}
       disabled={disabled}
     >
-      <SelectTrigger className={TRIGGER_CLASS} aria-label="Time granularity">
+      <SelectTrigger
+        className={TRIGGER_CLASS}
+        aria-label={tAuto("time_granularity_d13b1eb")}
+      >
         <SelectValue />
       </SelectTrigger>
       <SelectContent>

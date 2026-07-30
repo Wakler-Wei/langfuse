@@ -36,8 +36,11 @@ import {
 } from "@/src/components/ui/hover-card";
 import { CodeMirrorEditor } from "@/src/components/editor";
 import { useEffect } from "react";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export default function ModelDetailPage() {
+  const tAutoI18n = useAutoTranslations();
+  const tAuto = useAutoTranslations();
   const router = useRouter();
   const { priceUnit, priceUnitMultiplier } = usePriceUnitMultiplier();
   const projectId = router.query.projectId as string;
@@ -99,10 +102,12 @@ export default function ModelDetailPage() {
   if (!isLoading && !model) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center">
-        <div className="mb-4 text-xl font-bold">Model not found</div>
+        <div className="mb-4 text-xl font-bold">
+          {tAuto("model_not_found_b736635")}
+        </div>
         <Button variant="outline" asChild>
           <Link href={`/project/${projectId}/settings/models`}>
-            Return to Models page
+            {tAuto("return_to_models_page_666804b")}{" "}
           </Link>
         </Button>
       </div>
@@ -112,7 +117,7 @@ export default function ModelDetailPage() {
   const isLangfuseModel = !Boolean(model?.projectId);
 
   if (isLoading || !model) {
-    return <div className="p-3">Loading...</div>;
+    return <div className="p-3">{tAuto("loading_b04ba49")}</div>;
   }
 
   return (
@@ -121,7 +126,7 @@ export default function ModelDetailPage() {
       headerProps={{
         title: model.modelName,
         help: {
-          description: "Model configuration and pricing details",
+          description: tAuto("model_configuration_and_pricing_details_f057044"),
           href: "https://langfuse.com/docs/model-usage-and-cost",
         },
         breadcrumb: [
@@ -163,28 +168,28 @@ export default function ModelDetailPage() {
       <div className="grid grid-cols-2 gap-6 p-2">
         <Card>
           <CardHeader>
-            <CardTitle>Model configuration</CardTitle>
+            <CardTitle>{tAuto("model_configuration_3596c7a")}</CardTitle>
           </CardHeader>
           <CardContent className="grid gap-4">
             <div>
               <div className="text-muted-foreground text-sm font-bold">
-                Match Pattern
+                {tAuto("match_pattern_152036e")}{" "}
               </div>
               <div className="mt-1 font-mono text-sm">{model.matchPattern}</div>
             </div>
 
             <div>
               <div className="text-muted-foreground text-sm font-bold">
-                Maintained by
+                {tAuto("maintained_by_ff00416")}{" "}
               </div>
               <div className="mt-1 text-sm">
-                {isLangfuseModel ? "Langfuse" : "User"}
+                {isLangfuseModel ? "Langfuse" : tAutoI18n("user_9f8a238")}
               </div>
             </div>
 
             <div>
               <div className="text-muted-foreground text-sm font-bold">
-                Tokenizer
+                {tAuto("tokenizer_0c8bdf6")}{" "}
               </div>
               <div className="mt-1 text-sm">{model.tokenizerId || "None"}</div>
             </div>
@@ -192,7 +197,7 @@ export default function ModelDetailPage() {
             {model.tokenizerId && (
               <div>
                 <div className="text-muted-foreground text-sm font-bold">
-                  Tokenizer Config
+                  {tAuto("tokenizer_config_b376441")}{" "}
                 </div>
                 <pre className="bg-muted mt-1 rounded p-2 text-sm">
                   <JSONView json={model.tokenizerConfig} />
@@ -205,18 +210,18 @@ export default function ModelDetailPage() {
         <Card id="pricing-section">
           <CardHeader>
             <div className="flex flex-col gap-2">
-              <CardTitle>Pricing</CardTitle>
+              <CardTitle>{tAuto("pricing_a0d9bba")}</CardTitle>
               {model.pricingTiers.length > 1 && (
                 <div className="flex items-center gap-4">
                   <label className="text-muted-foreground text-sm font-bold">
-                    Pricing Tier
+                    {tAuto("pricing_tier_66c537f")}{" "}
                   </label>
                   <Select
                     value={activeTier?.id ?? ""}
                     onValueChange={setSelectedTierId}
                   >
                     <SelectTrigger className="w-[200px]">
-                      <SelectValue placeholder="Select tier" />
+                      <SelectValue placeholder={tAuto("select_tier_b8f21d1")} />
                     </SelectTrigger>
                     <SelectContent>
                       {model.pricingTiers.map((tier) => (
@@ -235,7 +240,7 @@ export default function ModelDetailPage() {
                           size="sm"
                         >
                           <InfoIcon className="h-3 w-3" />
-                          <span>Conditions</span>
+                          <span>{tAuto("conditions_5506eb6")}</span>
                         </Button>
                       </HoverCardTrigger>
                       <HoverCardContent
@@ -243,11 +248,12 @@ export default function ModelDetailPage() {
                         collisionPadding={20}
                       >
                         <p className="text-sm font-bold">
-                          Pricing Tier Conditions
+                          {tAuto("pricing_tier_conditions_6b24bc9")}{" "}
                         </p>
                         <p className="text-muted-foreground pt-2 text-sm">
-                          This tier is applied when the following conditions are
-                          met:
+                          {tAuto(
+                            "this_tier_is_applied_when_the_following_conditions_a_57cfb00",
+                          )}{" "}
                         </p>
                         <div className="mt-2">
                           <CodeMirrorEditor
@@ -272,9 +278,11 @@ export default function ModelDetailPage() {
           <CardContent>
             <div className="flex flex-col gap-2">
               <div className="border-border text-muted-foreground grid grid-cols-2 gap-2 border-b text-sm font-bold">
-                <span>Usage Type</span>
+                <span>{tAuto("usage_type_0dba2d0")}</span>
                 <span className="flex items-center gap-2">
-                  <span>Price {priceUnit}</span>
+                  <span>
+                    {tAutoI18n("price_3e8248e")} {priceUnit}
+                  </span>
                   <PriceUnitSelector />
                 </span>
               </div>
@@ -303,13 +311,13 @@ export default function ModelDetailPage() {
         <Card className="col-span-2">
           <CardHeader>
             <CardTitle className="flex items-center justify-between">
-              <span>Model observations</span>
+              <span>{tAuto("model_observations_5c45451")}</span>
               <Button variant="ghost" asChild>
                 <Link
                   href={`/project/${projectId}/observations`}
                   className="flex items-center gap-1"
                 >
-                  <span className="text-sm">View all</span>
+                  <span className="text-sm">{tAuto("view_all_931e1a4")}</span>
                   <SquareArrowOutUpRight className="h-4 w-4" />
                 </Link>
               </Button>

@@ -7,6 +7,7 @@ import { lightTheme } from "@/src/components/editor/light-theme";
 import { darkTheme } from "@/src/components/editor/dark-theme";
 import { cn } from "@/src/utils/tailwind";
 import { evaluateJsonPath } from "@langfuse/shared";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 // JSONPath language mode for syntax highlighting
 const jsonPathLanguage = StreamLanguage.define({
@@ -75,6 +76,7 @@ export function JsonPathInput({
   error,
   className,
 }: JsonPathInputProps) {
+  const tAuto = useAutoTranslations();
   const { resolvedTheme } = useTheme();
   const codeMirrorTheme = resolvedTheme === "dark" ? darkTheme : lightTheme;
 
@@ -166,7 +168,7 @@ export function JsonPathInput({
       )}
       {showWarning && (
         <p className="text-xs text-amber-600 dark:text-amber-500">
-          No match found in source data
+          {tAuto("no_match_found_in_source_data_478f502")}{" "}
         </p>
       )}
     </div>
