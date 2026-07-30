@@ -477,7 +477,7 @@ export function TimeRangePicker({
   };
 
   const onPresetSelection = (value: string) => {
-    if (timeRangePresets.includes(value as keyof typeof TIME_RANGES)) {
+    if (timeRangePresets.includes(value)) {
       onTimeRangeChange({ range: value });
     }
   };

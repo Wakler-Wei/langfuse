@@ -86,6 +86,7 @@ import { useLangfuseCloudRegion } from "@/src/features/organizations/hooks";
 import { ScoreCacheProvider } from "@/src/features/scores/contexts/ScoreCacheContext";
 import { CorrectionCacheProvider } from "@/src/features/corrections/contexts/CorrectionCacheContext";
 import { V4_BETA_ENABLED_POSTHOG_PROPERTY } from "@/src/features/posthog-analytics/usePostHogClientCapture";
+import { I18nProvider } from "@/src/features/i18n/I18nProvider";
 
 // Check that PostHog is client-side (used to handle Next.js SSR) and that env vars are set
 if (
@@ -144,49 +145,51 @@ const MyApp: AppType<{ session: Session | null }> = ({
   );
 
   return (
-    <QueryParamProvider
-      adapter={NextAdapterPages}
-      options={{ enableBatching: true }}
-    >
-      <TooltipProvider>
-        <CommandMenuProvider>
-          <PostHogProvider client={posthog}>
-            <SessionProvider
-              session={session}
-              refetchOnWindowFocus={true}
-              refetchInterval={5 * 60} // 5 minutes
-              basePath={`${env.NEXT_PUBLIC_BASE_PATH ?? ""}/api/auth`}
-            >
-              <DetailPageListsProvider>
-                <MarkdownContextProvider>
-                  <ThemeProvider
-                    attribute="class"
-                    enableSystem
-                    disableTransitionOnChange
-                  >
-                    <ScoreCacheProvider>
-                      <CorrectionCacheProvider>
-                        <SupportDrawerProvider defaultOpen={false}>
-                          <V4MigrationPanelProvider defaultOpen={false}>
-                            <InAppAiAgentProvider defaultOpen={false}>
-                              {skipAppLayout ? (
-                                page
-                              ) : (
-                                <AppLayout>{page}</AppLayout>
-                              )}
-                            </InAppAiAgentProvider>
-                          </V4MigrationPanelProvider>
-                        </SupportDrawerProvider>
-                      </CorrectionCacheProvider>
-                    </ScoreCacheProvider>
-                  </ThemeProvider>
-                </MarkdownContextProvider>
-              </DetailPageListsProvider>
-            </SessionProvider>
-          </PostHogProvider>
-        </CommandMenuProvider>
-      </TooltipProvider>
-    </QueryParamProvider>
+    <I18nProvider>
+      <QueryParamProvider
+        adapter={NextAdapterPages}
+        options={{ enableBatching: true }}
+      >
+        <TooltipProvider>
+          <CommandMenuProvider>
+            <PostHogProvider client={posthog}>
+              <SessionProvider
+                session={session}
+                refetchOnWindowFocus={true}
+                refetchInterval={5 * 60} // 5 minutes
+                basePath={`${env.NEXT_PUBLIC_BASE_PATH ?? ""}/api/auth`}
+              >
+                <DetailPageListsProvider>
+                  <MarkdownContextProvider>
+                    <ThemeProvider
+                      attribute="class"
+                      enableSystem
+                      disableTransitionOnChange
+                    >
+                      <ScoreCacheProvider>
+                        <CorrectionCacheProvider>
+                          <SupportDrawerProvider defaultOpen={false}>
+                            <V4MigrationPanelProvider defaultOpen={false}>
+                              <InAppAiAgentProvider defaultOpen={false}>
+                                {skipAppLayout ? (
+                                  page
+                                ) : (
+                                  <AppLayout>{page}</AppLayout>
+                                )}
+                              </InAppAiAgentProvider>
+                            </V4MigrationPanelProvider>
+                          </SupportDrawerProvider>
+                        </CorrectionCacheProvider>
+                      </ScoreCacheProvider>
+                    </ThemeProvider>
+                  </MarkdownContextProvider>
+                </DetailPageListsProvider>
+              </SessionProvider>
+            </PostHogProvider>
+          </CommandMenuProvider>
+        </TooltipProvider>
+      </QueryParamProvider>
+    </I18nProvider>
   );
 };
 

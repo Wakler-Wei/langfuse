@@ -46,6 +46,10 @@ import { usePostHogClientCapture } from "@/src/features/posthog-analytics/usePos
 import { useSession } from "next-auth/react";
 import { useQueryProjectOrOrganization } from "@/src/features/projects/hooks";
 import { useHasOrganizationAccess } from "@/src/features/rbac/utils/checkOrganizationAccess";
+import { Check } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { APP_LOCALES } from "@/src/features/i18n/config";
+import { useLocaleSwitcher } from "@/src/features/i18n/useLocaleSwitcher";
 
 const DISMISSED_SIDEBAR_NOTIFICATIONS_KEY = "dismissed-sidebar-notifications";
 
@@ -111,6 +115,9 @@ export function AuthenticatedLayout({
   const { isLangfuseCloud, region: currentRegion } = useLangfuseCloudRegion();
   const [featurePreviewOpen, setFeaturePreviewOpen] = useState(false);
   const router = useRouter();
+  const tUserMenu = useTranslations("UserMenu");
+  const tLanguage = useTranslations("Language");
+  const { locale, changeLocale } = useLocaleSwitcher();
   useProjectCookie(router);
 
   // Safe assertion: AuthenticatedLayout is only rendered after auth checks pass
@@ -148,20 +155,39 @@ export function AuthenticatedLayout({
   const userMenuItems = [
     {
       type: "link" as const,
-      name: "Account Settings",
+      name: tUserMenu("accountSettings"),
       href: "/account/settings",
     },
     {
       type: "action" as const,
-      name: "Theme",
+      name: tUserMenu("theme"),
       onClick: () => {},
       content: <ThemeToggle />,
+    },
+    {
+      type: "submenu" as const,
+      name: tLanguage("label"),
+      subItems: APP_LOCALES.map((availableLocale) => ({
+        type: "action" as const,
+        name: availableLocale,
+        onClick: () => changeLocale(availableLocale),
+        content: (
+          <span className="flex w-full items-center justify-between gap-4">
+            <span>
+              {availableLocale === "en"
+                ? tLanguage("english")
+                : tLanguage("simplifiedChinese")}
+            </span>
+            {locale === availableLocale ? <Check className="h-4 w-4" /> : null}
+          </span>
+        ),
+      })),
     },
     ...(hasFeaturePreviews
       ? [
           {
             type: "action" as const,
-            name: "Feature Preview",
+            name: tUserMenu("featurePreview"),
             onClick: () => setFeaturePreviewOpen(true),
           },
         ]
@@ -170,20 +196,24 @@ export function AuthenticatedLayout({
       ? [
           {
             type: "submenu" as const,
-            name: "Regions",
+            name: tUserMenu("regions"),
             subItems: regionMenuItems,
             content: (
               <>
-                Regions
+                {tUserMenu("regions")}
                 <div className="ml-2 inline-flex rounded bg-black/5 p-1 text-xs dark:bg-white/10">
-                  Current: {currentRegion}
+                  {tUserMenu("currentRegion", { region: currentRegion })}
                 </div>
               </>
             ),
           },
         ]
       : []),
-    { type: "action" as const, name: "Sign out", onClick: onSignOut },
+    {
+      type: "action" as const,
+      name: tUserMenu("signOut"),
+      onClick: onSignOut,
+    },
   ];
 
   return (

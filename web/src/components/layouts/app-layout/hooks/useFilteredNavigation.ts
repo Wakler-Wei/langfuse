@@ -19,6 +19,7 @@ import type { NavigationItem } from "@/src/components/layouts/utilities/routes";
 import { applyNavigationFilters } from "../utils/navigationFilters";
 import type { NavigationFilterContext } from "../utils/navigationFilters.types";
 import { isPathActive } from "../utils/pathClassification";
+import { useTranslations } from "next-intl";
 
 /** Organization type from user session (can be null when not in project/org context) */
 type Organization =
@@ -84,6 +85,7 @@ export function useFilteredNavigation(
   organization: Organization,
 ) {
   const router = useRouter();
+  const t = useTranslations("Navigation");
   const entitlements = useEntitlements();
   const uiCustomization = useUiCustomization();
   const { isLangfuseCloud } = useLangfuseCloudRegion();
@@ -138,6 +140,7 @@ export function useFilteredNavigation(
 
       return {
         ...route,
+        title: t(route.translationKey),
         url,
         isActive: isPathActive(route.pathname, router.pathname),
         items: items && items.length > 0 ? items : undefined,
@@ -166,5 +169,11 @@ export function useFilteredNavigation(
         ...secondaryNavigation.flattened,
       ],
     };
-  }, [filteredRoutes, routerProjectId, routerOrganizationId, router.pathname]);
+  }, [
+    filteredRoutes,
+    routerProjectId,
+    routerOrganizationId,
+    router.pathname,
+    t,
+  ]);
 }

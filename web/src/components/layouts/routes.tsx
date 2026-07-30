@@ -35,6 +35,7 @@ import { useCommandMenu } from "@/src/features/command-k-menu/CommandMenuProvide
 import { usePostHogClientCapture } from "@/src/features/posthog-analytics/usePostHogClientCapture";
 import { CloudStatusMenu } from "@/src/features/cloud-status-notification/components/CloudStatusMenu";
 import { type ProductModule } from "@/src/ee/features/ui-customization/productModuleSchema";
+import { useTranslations } from "next-intl";
 
 export enum RouteSection {
   Main = "main",
@@ -47,8 +48,34 @@ export enum RouteGroup {
   Evaluation = "Evaluation",
 }
 
+export type NavigationMessageKey =
+  | "goTo"
+  | "organizations"
+  | "projects"
+  | "home"
+  | "dashboards"
+  | "tracing"
+  | "sessions"
+  | "users"
+  | "monitors"
+  | "prompts"
+  | "playground"
+  | "scores"
+  | "evaluators"
+  | "humanAnnotation"
+  | "datasets"
+  | "experiments"
+  | "upgrade"
+  | "cloudStatus"
+  | "update"
+  | "v4Preview"
+  | "settings"
+  | "bookACall"
+  | "support";
+
 export type Route = {
   title: string;
+  translationKey: NavigationMessageKey;
   menuNode?: ReactNode;
   featureFlag?: Flag;
   label?: string | ReactNode;
@@ -75,6 +102,7 @@ export type Route = {
 export const ROUTES: Route[] = [
   {
     title: "Go to...",
+    translationKey: "goTo",
     pathname: "", // Empty pathname since this is a dropdown
     icon: Search,
     menuNode: <CommandMenuTrigger />,
@@ -82,6 +110,7 @@ export const ROUTES: Route[] = [
   },
   {
     title: "Organizations",
+    translationKey: "organizations",
     pathname: "/",
     icon: Grid2X2,
     show: ({ organization }) => organization === undefined,
@@ -89,18 +118,21 @@ export const ROUTES: Route[] = [
   },
   {
     title: "Projects",
+    translationKey: "projects",
     pathname: "/organization/[organizationId]",
     icon: Grid2X2,
     section: RouteSection.Main,
   },
   {
     title: "Home",
+    translationKey: "home",
     pathname: `/project/[projectId]`,
     icon: Home,
     section: RouteSection.Main,
   },
   {
     title: "Dashboards",
+    translationKey: "dashboards",
     pathname: `/project/[projectId]/dashboards`,
     icon: LayoutDashboard,
     productModule: "dashboards",
@@ -108,6 +140,7 @@ export const ROUTES: Route[] = [
   },
   {
     title: "Tracing",
+    translationKey: "tracing",
     icon: ListTree,
     productModule: "tracing",
     group: RouteGroup.Observability,
@@ -116,6 +149,7 @@ export const ROUTES: Route[] = [
   },
   {
     title: "Sessions",
+    translationKey: "sessions",
     icon: Clock,
     productModule: "tracing",
     group: RouteGroup.Observability,
@@ -124,6 +158,7 @@ export const ROUTES: Route[] = [
   },
   {
     title: "Users",
+    translationKey: "users",
     pathname: `/project/[projectId]/users`,
     icon: UsersIcon,
     productModule: "tracing",
@@ -132,6 +167,7 @@ export const ROUTES: Route[] = [
   },
   {
     title: "Monitors",
+    translationKey: "monitors",
     pathname: "/project/[projectId]/monitors",
     icon: BellRing,
     projectRbacScopes: ["monitors:read"],
@@ -141,6 +177,7 @@ export const ROUTES: Route[] = [
   },
   {
     title: "Prompts",
+    translationKey: "prompts",
     pathname: "/project/[projectId]/prompts",
     icon: FileJson,
     projectRbacScopes: ["prompts:read"],
@@ -150,6 +187,7 @@ export const ROUTES: Route[] = [
   },
   {
     title: "Playground",
+    translationKey: "playground",
     pathname: "/project/[projectId]/playground",
     icon: TerminalIcon,
     productModule: "playground",
@@ -158,6 +196,7 @@ export const ROUTES: Route[] = [
   },
   {
     title: "Scores",
+    translationKey: "scores",
     pathname: `/project/[projectId]/scores`,
     group: RouteGroup.Evaluation,
     section: RouteSection.Main,
@@ -165,6 +204,7 @@ export const ROUTES: Route[] = [
   },
   {
     title: "Evaluators",
+    translationKey: "evaluators",
     icon: Lightbulb,
     productModule: "evaluation",
     projectRbacScopes: ["evalJob:read"],
@@ -174,6 +214,7 @@ export const ROUTES: Route[] = [
   },
   {
     title: "Human Annotation",
+    translationKey: "humanAnnotation",
     pathname: `/project/[projectId]/annotation-queues`,
     projectRbacScopes: ["annotationQueues:read"],
     group: RouteGroup.Evaluation,
@@ -182,6 +223,7 @@ export const ROUTES: Route[] = [
   },
   {
     title: "Datasets",
+    translationKey: "datasets",
     pathname: `/project/[projectId]/datasets`,
     icon: Database,
     productModule: "datasets",
@@ -191,6 +233,7 @@ export const ROUTES: Route[] = [
   },
   {
     title: "Experiments",
+    translationKey: "experiments",
     pathname: `/project/[projectId]/experiments`,
     icon: Beaker,
     featureFlag: "experimentsV4Enabled",
@@ -199,6 +242,7 @@ export const ROUTES: Route[] = [
   },
   {
     title: "Upgrade",
+    translationKey: "upgrade",
     icon: Sparkle,
     pathname: "/project/[projectId]/settings/billing",
     section: RouteSection.Secondary,
@@ -208,6 +252,7 @@ export const ROUTES: Route[] = [
   },
   {
     title: "Upgrade",
+    translationKey: "upgrade",
     icon: Sparkle,
     pathname: "/organization/[organizationId]/settings/billing",
     section: RouteSection.Secondary,
@@ -217,12 +262,14 @@ export const ROUTES: Route[] = [
   },
   {
     title: "Cloud Status",
+    translationKey: "cloudStatus",
     section: RouteSection.Secondary,
     pathname: "",
     menuNode: <CloudStatusMenu />,
   },
   {
     title: "Update",
+    translationKey: "update",
     pathname: "",
     section: RouteSection.Secondary,
     featureFlag: "v4UpgradeUi",
@@ -231,6 +278,7 @@ export const ROUTES: Route[] = [
   },
   {
     title: "V4 Preview",
+    translationKey: "v4Preview",
     pathname: "",
     section: RouteSection.Secondary,
     featureFlag: "v4BetaToggleVisible",
@@ -238,24 +286,28 @@ export const ROUTES: Route[] = [
   },
   {
     title: "Settings",
+    translationKey: "settings",
     pathname: "/project/[projectId]/settings",
     icon: Settings,
     section: RouteSection.Secondary,
   },
   {
     title: "Settings",
+    translationKey: "settings",
     pathname: "/organization/[organizationId]/settings",
     icon: Settings,
     section: RouteSection.Secondary,
   },
   {
     title: "Book a call",
+    translationKey: "bookACall",
     section: RouteSection.Secondary,
     pathname: "",
     menuNode: <BookACallButton />,
   },
   {
     title: "Support",
+    translationKey: "support",
     icon: LifeBuoy,
     section: RouteSection.Secondary,
     pathname: "", // Empty pathname since this is a dropdown
@@ -266,6 +318,7 @@ export const ROUTES: Route[] = [
 function CommandMenuTrigger() {
   const { setOpen } = useCommandMenu();
   const capture = usePostHogClientCapture();
+  const t = useTranslations("Navigation");
 
   return (
     <SidebarMenuButton
@@ -278,7 +331,7 @@ function CommandMenuTrigger() {
       className="whitespace-nowrap"
     >
       <Search className="h-4 w-4" />
-      Go to...
+      {t("goTo")}
       <KeyboardShortcut
         className="ml-auto"
         keys={[navigator.userAgent.includes("Mac") ? "⌘" : "Ctrl", "K"]}
