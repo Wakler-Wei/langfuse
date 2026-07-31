@@ -178,7 +178,10 @@ COPY --from=builder --chown=nextjs:nodejs /app/packages/shared/clickhouse ./pack
 
 COPY --chown=nextjs:nodejs ./web/entrypoint.sh ./web/entrypoint.sh
 COPY --chown=nextjs:nodejs ./packages/shared/scripts/cleanup.sql ./packages/shared/scripts/cleanup.sql
-RUN sed -i 's/\r$//' ./web/entrypoint.sh && chmod +x ./web/entrypoint.sh
+RUN find ./packages/shared/clickhouse/scripts -type f -name '*.sh' -exec sed -i 's/\r$//' {} + \
+    && find ./packages/shared/clickhouse/scripts -type f -name '*.sh' -exec /bin/sh -n {} + \
+    && sed -i 's/\r$//' ./web/entrypoint.sh \
+    && chmod +x ./web/entrypoint.sh
 
 USER nextjs
 
