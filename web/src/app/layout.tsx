@@ -1,7 +1,6 @@
-import { I18nText } from "@/src/features/i18n/I18nText";
 export const metadata = {
-  title: "Next.js",
-  description: <I18nText id="generated_by_next_js_f701538" />,
+  title: "Langfuse",
+  description: "Open source LLM engineering platform",
 };
 
 export default function RootLayout({

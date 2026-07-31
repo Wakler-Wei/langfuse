@@ -117,6 +117,9 @@ const nextConfig = {
     browserToTerminal: true,
   },
   experimental: {
+    // Docker builds often run on hosts with many CPUs but limited memory.
+    // Keep page-data workers aligned with the 4-core release builders.
+    cpus: process.env.DOCKER_BUILD === "1" ? 4 : undefined,
     turbopackFileSystemCacheForBuild: true,
   },
 
