@@ -9,6 +9,7 @@
 
 import { useState, useCallback } from "react";
 import { toast } from "sonner";
+import { stringify } from "@langfuse/shared";
 import { copyTextToClipboard } from "@/src/utils/clipboard";
 import { type ObservationIOData } from "./useLogViewAllObservationsIO";
 import { useAutoTranslations } from "@/src/features/i18n/I18nText";
@@ -45,10 +46,13 @@ export function useLogViewDownload({
   const tAuto = useAutoTranslations();
   const [isActionLoading, setIsActionLoading] = useState(false);
 
-  // Helper to download JSON data
+  // Helper to download JSON data. Serializes through the shared stringify
+  // helper (not the raw JSON.stringify) so \uXXXX escapes in string fields
+  // (e.g. Japanese ingested with Python ensure_ascii=True) are decoded to
+  // real characters, matching the server-side trace download route.
   const downloadJsonData = useCallback(
     (data: unknown) => {
-      const blob = new Blob([JSON.stringify(data, null, 2)], {
+      const blob = new Blob([stringify(data, undefined, 2)], {
         type: "application/json",
       });
       const url = URL.createObjectURL(blob);
@@ -69,7 +73,7 @@ export function useLogViewDownload({
       setTimeout(() => {
         try {
           const data = buildDataFromCache();
-          copyTextToClipboard(JSON.stringify(data, null, 2));
+          copyTextToClipboard(stringify(data, undefined, 2));
           toast.success(tAuto("copied_to_clipboard_cache_only_28011b0"));
         } finally {
           setIsActionLoading(false);
@@ -78,7 +82,7 @@ export function useLogViewDownload({
     } else {
       // Load all mode: fetch all data if needed
       if (allObservationsData) {
-        copyTextToClipboard(JSON.stringify(allObservationsData, null, 2));
+        copyTextToClipboard(stringify(allObservationsData, undefined, 2));
         // Show warning if some observations failed to load
         if (failedObservationIds.length > 0) {
           toast.warning(
@@ -86,8 +90,10 @@ export function useLogViewDownload({
               "copied_to_clipboard_value0_observation_value1_failed_14226e2",
               {
                 value0: String(failedObservationIds.length),
-                value1: failedObservationIds.length === 1 ? "" : "s",
-                value2: failedObservationIds.length === 1 ? "is" : "are",
+                value1: String(failedObservationIds.length === 1 ? "" : "s"),
+                value2: String(
+                  failedObservationIds.length === 1 ? "is" : "are",
+                ),
               },
             ),
           );
@@ -98,7 +104,7 @@ export function useLogViewDownload({
         setIsActionLoading(true);
         try {
           const data = await loadAllData();
-          copyTextToClipboard(JSON.stringify(data, null, 2));
+          copyTextToClipboard(stringify(data, undefined, 2));
           // Check for failures after loading
           if (failedObservationIds.length > 0) {
             toast.warning(
@@ -106,8 +112,10 @@ export function useLogViewDownload({
                 "copied_to_clipboard_value0_observation_value1_failed_14226e2",
                 {
                   value0: String(failedObservationIds.length),
-                  value1: failedObservationIds.length === 1 ? "" : "s",
-                  value2: failedObservationIds.length === 1 ? "is" : "are",
+                  value1: String(failedObservationIds.length === 1 ? "" : "s"),
+                  value2: String(
+                    failedObservationIds.length === 1 ? "is" : "are",
+                  ),
                 },
               ),
             );
@@ -125,7 +133,6 @@ export function useLogViewDownload({
     loadAllData,
     buildDataFromCache,
     failedObservationIds,
-    ,
     tAuto,
   ]);
 
@@ -155,8 +162,10 @@ export function useLogViewDownload({
               "downloaded_trace_data_value0_observation_value1_fail_2926cff",
               {
                 value0: String(failedObservationIds.length),
-                value1: failedObservationIds.length === 1 ? "" : "s",
-                value2: failedObservationIds.length === 1 ? "is" : "are",
+                value1: String(failedObservationIds.length === 1 ? "" : "s"),
+                value2: String(
+                  failedObservationIds.length === 1 ? "is" : "are",
+                ),
               },
             ),
           );
@@ -175,8 +184,10 @@ export function useLogViewDownload({
                 "downloaded_trace_data_value0_observation_value1_fail_2926cff",
                 {
                   value0: String(failedObservationIds.length),
-                  value1: failedObservationIds.length === 1 ? "" : "s",
-                  value2: failedObservationIds.length === 1 ? "is" : "are",
+                  value1: String(failedObservationIds.length === 1 ? "" : "s"),
+                  value2: String(
+                    failedObservationIds.length === 1 ? "is" : "are",
+                  ),
                 },
               ),
             );
@@ -195,7 +206,6 @@ export function useLogViewDownload({
     buildDataFromCache,
     downloadJsonData,
     failedObservationIds,
-    ,
     tAuto,
   ]);
 

@@ -16,7 +16,7 @@ import {
   DialogBody,
   DialogFooter,
 } from "@/src/components/ui/dialog";
-import { Check, ChevronLeft, ChevronRight } from "lucide-react";
+import { Check, ChevronLeft, ChevronRight, CircleX } from "lucide-react";
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, type UseFormReturn } from "react-hook-form";
@@ -109,6 +109,7 @@ export const MultiStepExperimentForm = ({
   const tAuto = useAutoTranslations();
   const capture = usePostHogClientCapture();
   const [activeStep, setActiveStep] = useState("prompt");
+  const [hasAttemptedReview, setHasAttemptedReview] = useState(false);
   const [selectedPromptName, setSelectedPromptName] = useState<string>(
     promptDefault?.name ?? "",
   );
@@ -330,7 +331,7 @@ export const MultiStepExperimentForm = ({
       selectedPromptVersion,
       selectedDataset.name,
     );
-    form.setValue("name", defaultName);
+    form.setValue("name", defaultName, { shouldValidate: true });
 
     const defaultDescription = generateDefaultExperimentDescription(
       selectedPromptName,
@@ -370,6 +371,8 @@ export const MultiStepExperimentForm = ({
     selectedPromptToolConfig,
     structuredOutputEnabled,
   );
+  const isDatasetValidationPending =
+    Boolean(promptIdFromHook && datasetId) && validationResult.isPending;
 
   // Step validation function
   const isStepValid = (stepId: string): boolean => {
@@ -404,6 +407,61 @@ export const MultiStepExperimentForm = ({
     }
   };
 
+  const handleStepChange = (stepId: string) => {
+    if (stepId === "review") {
+      setHasAttemptedReview(true);
+    }
+    setActiveStep(stepId);
+  };
+
+  const renderStepStatusIcon = (stepId: string, stepLabel: string) => {
+    if (stepId === "dataset" && isDatasetValidationPending) {
+      return null;
+    }
+
+    if (isStepValid(stepId)) {
+      return <Check className="mr-1.5 h-3.5 w-3.5 text-green-600" />;
+    }
+
+    if (
+      hasAttemptedReview &&
+      ["prompt", "dataset", "details"].includes(stepId)
+    ) {
+      return (
+        <CircleX
+          aria-label={tAutoI18n("value0_has_errors_e8c89e2", {
+            value0: String((stepLabel as unknown) ?? ""),
+          })}
+          className="mr-1.5 h-3.5 w-3.5 text-red-500"
+        />
+      );
+    }
+
+    return null;
+  };
+
+  const invalidRequiredStepLabels = steps
+    .filter((step) => ["prompt", "dataset", "details"].includes(step.id))
+    .filter((step) => step.id !== "dataset" || !isDatasetValidationPending)
+    .filter((step) => !isStepValid(step.id))
+    .map((step) => step.label);
+  const reviewErrorMessage =
+    invalidRequiredStepLabels.length === 0
+      ? undefined
+      : invalidRequiredStepLabels.length === 1
+        ? tAutoI18n(
+            "complete_the_value0_step_before_running_the_experime_7bd4c5c",
+            { value0: String((invalidRequiredStepLabels[0] as unknown) ?? "") },
+          )
+        : tAutoI18n(
+            "complete_the_following_steps_before_running_the_expe_6823fc7",
+            {
+              value0: String(
+                (invalidRequiredStepLabels.join(", ") as unknown) ?? "",
+              ),
+            },
+          );
+
   if (
     !promptsByName ||
     !datasets.data ||
@@ -414,7 +472,7 @@ export const MultiStepExperimentForm = ({
 
   // Prepare grouped props
   const formState = { form: form as UseFormReturn<CreateExperiment> };
-  const navigationState = { setActiveStep };
+  const navigationState = { setActiveStep: handleStepChange };
   const promptModelState = {
     selectedPromptName,
     setSelectedPromptName,
@@ -507,19 +565,15 @@ export const MultiStepExperimentForm = ({
                     <BreadcrumbItem>
                       {step.id === activeStep ? (
                         <BreadcrumbPage className="flex items-center">
-                          {isStepValid(step.id) && (
-                            <Check className="mr-1.5 h-3.5 w-3.5 text-green-600" />
-                          )}
+                          {renderStepStatusIcon(step.id, step.label)}
                           {step.label}
                         </BreadcrumbPage>
                       ) : (
                         <BreadcrumbLink
-                          onClick={() => setActiveStep(step.id)}
+                          onClick={() => handleStepChange(step.id)}
                           className="flex cursor-pointer items-center"
                         >
-                          {isStepValid(step.id) && (
-                            <Check className="mr-1.5 h-3.5 w-3.5 text-green-600" />
-                          )}
+                          {renderStepStatusIcon(step.id, step.label)}
                           {step.label}
                         </BreadcrumbLink>
                       )}
@@ -570,6 +624,7 @@ export const MultiStepExperimentForm = ({
                 <ReviewStep
                   formState={formState}
                   navigationState={navigationState}
+                  errorMessage={reviewErrorMessage}
                   summary={reviewSummary}
                 />
               )}
@@ -586,7 +641,7 @@ export const MultiStepExperimentForm = ({
                   const stepIds = steps.map((s) => s.id);
                   const currentIndex = stepIds.indexOf(activeStep);
                   if (currentIndex > 0) {
-                    setActiveStep(stepIds[currentIndex - 1]);
+                    handleStepChange(stepIds[currentIndex - 1]);
                   }
                 }}
                 disabled={activeStep === "prompt"}
@@ -604,7 +659,7 @@ export const MultiStepExperimentForm = ({
                       const stepIds = steps.map((s) => s.id);
                       const currentIndex = stepIds.indexOf(activeStep);
                       if (currentIndex < steps.length - 1) {
-                        setActiveStep(stepIds[currentIndex + 1]);
+                        handleStepChange(stepIds[currentIndex + 1]);
                       }
                     }}
                   >
@@ -614,12 +669,7 @@ export const MultiStepExperimentForm = ({
                 ) : (
                   <Button
                     type="submit"
-                    disabled={
-                      (Boolean(promptIdFromHook && datasetId) &&
-                        !validationResult.data?.isValid) ||
-                      hasToolStructuredOutputConflict ||
-                      !!form.formState.errors.name
-                    }
+                    disabled={!isStepValid("review")}
                     loading={form.formState.isSubmitting}
                   >
                     {tAuto("run_experiment_f8f3222")}{" "}

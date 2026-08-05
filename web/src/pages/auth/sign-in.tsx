@@ -25,10 +25,10 @@ import {
   SiWordpress,
 } from "react-icons/si";
 import { TbBrandAzure, TbBrandOauth } from "react-icons/tb";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { CloudPrivacyNotice } from "@/src/features/auth/components/AuthCloudPrivacyNotice";
@@ -46,8 +46,22 @@ import { AuthProviderButton } from "@/src/features/auth/components/AuthProviderB
 import { cn } from "@/src/utils/tailwind";
 import { useLangfuseCloudRegion } from "@/src/features/organizations/hooks";
 import { getSafeRedirectPath } from "@/src/utils/redirect";
-import { useTranslations } from "next-intl";
+import { Spinner } from "@/src/components/layouts/spinner";
 import { useAutoTranslations } from "@/src/features/i18n/I18nText";
+
+// The shared, intentionally-public demo identity created by the seed script
+// (packages/shared/scripts/seeder/seed-postgres.ts) and posted in every
+// preview PR comment (.github/workflows/preview-build.yml). Only used when
+// NEXT_PUBLIC_PREVIEW_DEMO_AUTO_SIGN_IN is baked into the build.
+const PREVIEW_DEMO_USER_EMAIL = "demo@langfuse.com";
+const PREVIEW_DEMO_USER_PASSWORD = "password";
+
+const credentialAuthForm = z.object({
+  email: z.email(),
+  password: z.string().min(8, {
+    message: "Password must be at least 8 characters long",
+  }),
+});
 
 // Also used in src/pages/auth/sign-up.tsx
 export type PageProps = {
@@ -196,7 +210,6 @@ export function SSOButtons({
 }) {
   const tAuto = useAutoTranslations();
   const capture = usePostHogClientCapture();
-  const t = useTranslations("Auth");
   const [providerSigningIn, setProviderSigningIn] =
     useState<NextAuthProvider | null>(null);
 
@@ -237,7 +250,7 @@ export function SSOButtons({
             <div className="border-border my-6 border-t"></div>
           ) : (
             <div className="text-muted-foreground my-6 text-center text-xs">
-              {action === "sign in" ? t("orSignInWith") : t("orSignUpWith")}
+              or {action} with
             </div>
           )
         ) : null}
@@ -245,7 +258,7 @@ export function SSOButtons({
           {authProviders.google && (
             <AuthProviderButton
               icon={<SiGoogle className="mr-3" size={18} />}
-              label={tAuto("google_2b681c0")}
+              label="Google"
               onClick={() => handleSignIn("google")}
               loading={providerSigningIn === "google"}
               showLastUsedBadge={
@@ -267,7 +280,7 @@ export function SSOButtons({
           {authProviders.githubEnterprise && (
             <AuthProviderButton
               icon={<SiGithub className="mr-3" size={18} />}
-              label={tAuto("github_enterprise_337bb8d")}
+              label="GitHub Enterprise"
               onClick={() => handleSignIn("github-enterprise")}
               loading={providerSigningIn === "github-enterprise"}
               showLastUsedBadge={
@@ -300,7 +313,7 @@ export function SSOButtons({
           {authProviders.okta && (
             <AuthProviderButton
               icon={<SiOkta className="mr-3" size={18} />}
-              label={tAuto("okta_f27eda0")}
+              label="Okta"
               onClick={() => handleSignIn("okta")}
               loading={providerSigningIn === "okta"}
               showLastUsedBadge={
@@ -311,7 +324,7 @@ export function SSOButtons({
           {authProviders.authentik && (
             <AuthProviderButton
               icon={<SiAuthentik className="mr-3" size={18} />}
-              label={tAuto("authentik_e1ab894")}
+              label="Authentik"
               onClick={() => handleSignIn("authentik")}
               loading={providerSigningIn === "authentik"}
               showLastUsedBadge={
@@ -322,7 +335,7 @@ export function SSOButtons({
           {authProviders.onelogin && (
             <AuthProviderButton
               icon={<Key className="mr-3" size={18} />}
-              label={tAuto("onelogin_95eb4c2")}
+              label="OneLogin"
               onClick={() => handleSignIn("onelogin")}
               loading={providerSigningIn === "onelogin"}
               showLastUsedBadge={
@@ -333,7 +346,7 @@ export function SSOButtons({
           {authProviders.auth0 && (
             <AuthProviderButton
               icon={<SiAuth0 className="mr-3" size={18} />}
-              label={tAuto("auth0_7b9b186")}
+              label="Auth0"
               onClick={() => handleSignIn("auth0")}
               loading={providerSigningIn === "auth0"}
               showLastUsedBadge={
@@ -369,7 +382,7 @@ export function SSOButtons({
               label={
                 typeof authProviders.keycloak === "object"
                   ? authProviders.keycloak.name
-                  : tAuto("keycloak_10f3d52")
+                  : "Keycloak"
               }
               onClick={() => {
                 capture("sign_in:button_click", { provider: "keycloak" });
@@ -429,7 +442,7 @@ export function SSOButtons({
                 label={tAuto("workos_organization_5d3722c")}
                 onClick={() => {
                   const organization = window.prompt(
-                    t("workosOrganizationPrompt"),
+                    "Please enter your organization ID",
                   );
                   if (organization) {
                     capture("sign_in:button_click", { provider: "workos" });
@@ -448,7 +461,9 @@ export function SSOButtons({
                 icon={<Code className="mr-3" size={18} />}
                 label={tAuto("workos_connection_c8b0106")}
                 onClick={() => {
-                  const connection = window.prompt(t("workosConnectionPrompt"));
+                  const connection = window.prompt(
+                    "Please enter your connection ID",
+                  );
                   if (connection) {
                     capture("sign_in:button_click", { provider: "workos" });
                     onProviderSelect?.("workos");
@@ -519,20 +534,24 @@ export function useHuggingFaceRedirect(runningOnHuggingFaceSpaces: boolean) {
   }, [router, runningOnHuggingFaceSpaces]);
 }
 
+const signInErrors = [
+  {
+    code: "OAuthAccountNotLinked",
+    translationKey:
+      "please_sign_in_with_the_same_provider_e_g_google_git_7e0301c" as const,
+    description:
+      "Please sign in with the same provider (e.g. Google, GitHub, Azure AD, etc.) that you used to create this account.",
+  },
+];
+
 export default function SignIn({
   authProviders,
   signUpDisabled,
   runningOnHuggingFaceSpaces,
 }: PageProps) {
+  const tAuto = useAutoTranslations();
   const router = useRouter();
-  const t = useTranslations("Auth");
   useHuggingFaceRedirect(runningOnHuggingFaceSpaces);
-  const credentialAuthForm = z.object({
-    email: z.email(),
-    password: z.string().min(8, {
-      message: t("passwordMinLength"),
-    }),
-  });
 
   // handle NextAuth error codes: https://next-auth.js.org/configuration/pages#sign-in-page
   const nextAuthError =
@@ -545,10 +564,13 @@ export default function SignIn({
       : null;
 
   // Use error_description from IdP if available, otherwise use mapped error or error code
+  const mappedSignInError = signInErrors.find(
+    (error) => error.code === nextAuthError,
+  );
   const errorMessage = nextAuthErrorDescription
     ? nextAuthErrorDescription
-    : nextAuthError === "OAuthAccountNotLinked"
-      ? t("sameProvider")
+    : mappedSignInError
+      ? tAuto(mappedSignInError.translationKey)
       : nextAuthError;
 
   useEffect(() => {
@@ -557,7 +579,7 @@ export default function SignIn({
     if (
       nextAuthError &&
       !nextAuthErrorDescription &&
-      nextAuthError !== "OAuthAccountNotLinked"
+      !signInErrors.find((e) => e.code === nextAuthError)
     ) {
       captureException(new Error(`Sign in error: ${nextAuthError}`));
     }
@@ -621,7 +643,7 @@ export default function SignIn({
         redirect: false,
       });
       if (result === undefined) {
-        setCredentialsFormError(t("unexpectedError"));
+        setCredentialsFormError("An unexpected error occurred.");
         captureException(new Error("Sign in result is undefined"));
       } else if (!result.ok) {
         if (!result.error) {
@@ -631,13 +653,69 @@ export default function SignIn({
             ),
           );
         }
-        setCredentialsFormError(result?.error ?? t("unexpectedError"));
+        setCredentialsFormError(
+          result?.error ?? "An unexpected error occurred.",
+        );
       }
     } catch (error) {
       captureUnknownError("auth.signIn.credentials", error);
-      setCredentialsFormError(t("unexpectedError"));
+      setCredentialsFormError("An unexpected error occurred.");
     }
   }
+
+  // Auto sign-in for disposable preview deployments: the flag is baked only
+  // into preview images (.github/workflows/preview-build.yml) whose seeded
+  // demo login is shared and public anyway. `?autoSignIn=false` opts out,
+  // e.g. to exercise the regular auth flows on a preview. NextAuth error
+  // redirects land on this page, so an error in the query keeps the form
+  // visible instead of silently signing in over it.
+  const autoSignInParam = router.query.autoSignIn;
+  const autoSignInOptedOut = Array.isArray(autoSignInParam)
+    ? autoSignInParam.includes("false")
+    : autoSignInParam === "false";
+  const previewAutoSignInEnabled =
+    env.NEXT_PUBLIC_PREVIEW_DEMO_AUTO_SIGN_IN === "true" &&
+    authProviders.credentials &&
+    !autoSignInOptedOut &&
+    !nextAuthError;
+  const [previewAutoSignInPending, setPreviewAutoSignInPending] = useState(
+    previewAutoSignInEnabled,
+  );
+  const previewAutoSignInAttempted = useRef(false);
+  const sessionStatus = useSession().status;
+  useEffect(() => {
+    if (
+      !previewAutoSignInEnabled ||
+      previewAutoSignInAttempted.current ||
+      sessionStatus === "loading"
+    )
+      return;
+    previewAutoSignInAttempted.current = true;
+    if (sessionStatus === "authenticated") {
+      // already signed in — useAuthGuard navigates away from this page
+      return;
+    }
+    // re-arm in case the flag flipped enabled after mount (query-only nav)
+    setPreviewAutoSignInPending(true);
+    signIn("credentials", {
+      email: PREVIEW_DEMO_USER_EMAIL,
+      password: PREVIEW_DEMO_USER_PASSWORD,
+      callbackUrl: targetPath ?? "/",
+      redirect: false,
+    })
+      .then((result) => {
+        if (result?.ok) return; // session updates and useAuthGuard navigates
+        setPreviewAutoSignInPending(false);
+        setCredentialsFormError(
+          result?.error ?? "Automatic preview sign-in failed.",
+        );
+      })
+      .catch((error) => {
+        captureUnknownError("auth.signIn.previewAutoSignIn", error);
+        setPreviewAutoSignInPending(false);
+        setCredentialsFormError("Automatic preview sign-in failed.");
+      });
+  }, [previewAutoSignInEnabled, sessionStatus, targetPath]);
 
   /**
    * First-step handler ("Continue" button).
@@ -657,7 +735,7 @@ export default function SignIn({
     const email = emailSchema.safeParse(credentialsForm.getValues("email"));
     if (!email.success) {
       credentialsForm.setError("email", {
-        message: t("invalidEmail"),
+        message: "Invalid email address",
       });
       setContinueLoading(false);
       return;
@@ -704,16 +782,33 @@ export default function SignIn({
       }, 100);
     } catch (error) {
       captureUnknownError("auth.signIn.checkSso", error);
-      setCredentialsFormError(t("ssoCheckFailed"));
+      setCredentialsFormError(
+        "Unable to check SSO configuration. Please try again.",
+      );
     } finally {
       setContinueLoading(false);
     }
   }
 
+  if (previewAutoSignInEnabled && previewAutoSignInPending) {
+    return (
+      <>
+        <Head>
+          <title>{tAuto("sign_in_langfuse_c64e8d2")}</title>
+        </Head>
+        <Spinner
+          message={tAuto("signing_in_as_value0_891e7f5", {
+            value0: String((PREVIEW_DEMO_USER_EMAIL as unknown) ?? ""),
+          })}
+        />
+      </>
+    );
+  }
+
   return (
     <>
       <Head>
-        <title>{t("signInTitle")}</title>
+        <title>{tAuto("sign_in_langfuse_c64e8d2")}</title>
       </Head>
       <div className="flex flex-1 flex-col py-6 sm:min-h-full sm:justify-center sm:px-6 sm:py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -721,18 +816,20 @@ export default function SignIn({
             <LangfuseIcon />
           </div>
           <h2 className="text-primary mt-4 text-center text-2xl leading-9 font-bold tracking-tight">
-            {t("signInHeading")}
+            {tAuto("sign_in_to_your_account_c466a51")}{" "}
           </h2>
         </div>
 
         {isLangfuseCloud && (
           <div className="bg-card mt-4 -mb-4 rounded-lg p-3 text-center text-sm sm:mx-auto sm:w-full sm:max-w-[480px] sm:rounded-lg sm:px-6">
-            {t("refreshHelp")}{" "}
+            {tAuto(
+              "if_you_are_experiencing_issues_signing_in_please_for_c46eebc",
+            )}{" "}
             <a
               href="mailto:support@langfuse.com"
               className="text-link hover:text-link-hover cursor-pointer text-xs font-bold whitespace-nowrap"
             >
-              ({t("contactUs")})
+              {tAuto("contact_us_00db6cf")}{" "}
             </a>
           </div>
         )}
@@ -762,7 +859,7 @@ export default function SignIn({
                       name="email"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>{t("email")}</FormLabel>
+                          <FormLabel>{tAuto("email_84add5b")}</FormLabel>
                           <FormControl>
                             <Input
                               placeholder="jsdoe@example.com"
@@ -784,14 +881,14 @@ export default function SignIn({
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>
-                              {t("password")}{" "}
+                              {tAuto("password_8be3c94")}{" "}
                               <Link
                                 href="/auth/reset-password"
                                 className="text-link hover:text-link-hover ml-1 text-xs"
                                 tabIndex={-1}
-                                title={t("forgotPasswordHelp")}
+                                title={tAuto("what_is_this_dd8082b")}
                               >
-                                ({t("forgotPassword")})
+                                {tAuto("forgot_password_beeeb4d")}{" "}
                               </Link>
                             </FormLabel>
                             <FormControl>
@@ -819,7 +916,9 @@ export default function SignIn({
                       }
                       data-testid="submit-email-password-sign-in-form"
                     >
-                      {showPasswordStep ? t("signIn") : t("continue")}
+                      {showPasswordStep
+                        ? tAuto("sign_in_ada2e9e")
+                        : tAuto("continue_2e02623")}
                     </Button>
                   </form>
                 </Form>
@@ -832,7 +931,7 @@ export default function SignIn({
                       : "hidden",
                   )}
                 >
-                  {t("lastUsed")}
+                  {tAuto("last_used_f1109d3")}{" "}
                 </div>
               </div>
             )}
@@ -840,8 +939,9 @@ export default function SignIn({
               <div className="text-destructive text-center text-sm font-bold">
                 {credentialsFormError}
                 <br />
-                {t("contactSupport")}{" "}
-                {isLangfuseCloud && t("correctCloudRegion")}
+                Contact support if this error is unexpected.{" "}
+                {isLangfuseCloud &&
+                  "Make sure you are using the correct cloud data region."}
               </div>
             ) : null}
             <SSOButtons
@@ -855,12 +955,12 @@ export default function SignIn({
           env.NEXT_PUBLIC_SIGN_UP_DISABLED !== "true" &&
           authProviders.credentials ? (
             <p className="text-muted-foreground mt-10 text-center text-sm">
-              {t("noAccount")}{" "}
+              No account yet?{" "}
               <Link
                 href={`/auth/sign-up${router.asPath.includes("?") ? router.asPath.substring(router.asPath.indexOf("?")) : ""}`}
                 className="text-link hover:text-link-hover leading-6 font-bold"
               >
-                {t("signUp")}
+                Sign up
               </Link>
             </p>
           ) : null}

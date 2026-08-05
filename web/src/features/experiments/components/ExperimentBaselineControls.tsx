@@ -2,6 +2,7 @@ import { Button } from "@/src/components/ui/button";
 import { Combobox } from "@/src/components/ui/combobox";
 import { X } from "lucide-react";
 import { useExperimentNames } from "@/src/features/experiments/hooks/useExperimentNames";
+import { cn } from "@/src/utils/tailwind";
 import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type ExperimentBaselineControlsProps = {
@@ -10,7 +11,6 @@ type ExperimentBaselineControlsProps = {
   baselineName?: string;
   onBaselineChange: (id: string) => void;
   onBaselineClear: () => void;
-  canClearBaseline?: boolean;
 };
 
 export function ExperimentBaselineControls({
@@ -19,7 +19,6 @@ export function ExperimentBaselineControls({
   baselineName,
   onBaselineChange,
   onBaselineClear,
-  canClearBaseline = true,
 }: ExperimentBaselineControlsProps) {
   const tAuto = useAutoTranslations();
   const { experimentNames, isLoading } = useExperimentNames({
@@ -31,8 +30,8 @@ export function ExperimentBaselineControls({
   }));
 
   return (
-    <div className="flex items-center gap-2">
-      <div className="w-full">
+    <div className="flex min-w-0 items-center">
+      <div className="min-w-0 flex-1">
         <Combobox
           options={baselineOptions}
           value={baselineId}
@@ -43,17 +42,22 @@ export function ExperimentBaselineControls({
           emptyText="No experiments found"
           searchPlaceholder={tAuto("search_experiments_437f238")}
           disabled={isLoading}
-          className="h-9"
+          className={cn(
+            "rounded-l-none border-l-0",
+            baselineId && "rounded-r-none",
+          )}
         />
       </div>
 
-      {baselineId && canClearBaseline && (
+      {baselineId && (
         <Button
-          variant="ghost"
-          size="sm"
+          variant="outline"
+          size="icon"
+          className="-ml-px shrink-0 rounded-l-none"
           onClick={onBaselineClear}
           disabled={isLoading}
           title={tAuto("clear_baseline_31a196e")}
+          aria-label={tAuto("clear_baseline_31a196e")}
         >
           <X className="h-4 w-4" />
         </Button>

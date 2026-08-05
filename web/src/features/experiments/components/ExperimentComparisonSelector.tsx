@@ -3,6 +3,7 @@ import { Check, X } from "lucide-react";
 import { MultiSelectCombobox } from "@/src/components/ui/multi-select-combobox";
 import { Badge } from "@/src/components/ui/badge";
 import { useExperimentSearch } from "@/src/features/experiments/hooks/useExperimentSearch";
+import { MAX_SELECTED_EXPERIMENTS } from "@/src/features/experiments/constants/comparison";
 import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export type ExperimentOption = {
@@ -14,18 +15,17 @@ type ExperimentComparisonSelectorProps = {
   projectId: string;
   baselineExperimentId?: string;
   selectedIds: string[];
+  selectedExperimentCount: number;
   onSelectedIdsChange: (ids: string[]) => void;
-  maxSelections?: number;
 };
 
 export function ExperimentComparisonSelector({
   projectId,
   baselineExperimentId,
   selectedIds,
+  selectedExperimentCount,
   onSelectedIdsChange,
-  maxSelections = 4,
 }: ExperimentComparisonSelectorProps) {
-  const tAutoI18n = useAutoTranslations();
   const tAuto = useAutoTranslations();
   const {
     searchResults,
@@ -61,15 +61,23 @@ export function ExperimentComparisonSelector({
   const handleItemsChange = (items: ExperimentOption[]) => {
     const newIds = items
       .map((item) => item.experimentId)
-      .slice(0, maxSelections);
+      .slice(
+        0,
+        Math.max(
+          0,
+          MAX_SELECTED_EXPERIMENTS -
+            (selectedExperimentCount - selectedIds.length),
+        ),
+      );
     onSelectedIdsChange(newIds);
   };
 
-  const isMaxReached = selectedIds.length >= maxSelections;
+  const isMaxReached = selectedExperimentCount >= MAX_SELECTED_EXPERIMENTS;
 
   return (
     <div className="space-y-2">
       <MultiSelectCombobox<ExperimentOption>
+        labelLeft="Experiment selection"
         selectedItems={selectedExperiments}
         onItemsChange={handleItemsChange}
         searchQuery={searchQuery}
@@ -78,16 +86,21 @@ export function ExperimentComparisonSelector({
         isLoading={isLoading}
         placeholder={
           isMaxReached
-            ? tAuto("max_value0_comparisons_27b362c", { value0: maxSelections })
+            ? tAuto("max_value0_experiments_d25acbe", {
+                value0: String((MAX_SELECTED_EXPERIMENTS as unknown) ?? ""),
+              })
             : tAuto("search_experiments_437f238")
         }
-        disabled={isMaxReached}
+        disabled={isLoading}
+        showSearchIcon={false}
         getItemKey={(item) => item.experimentId}
         renderItem={(item, isSelected, onToggle) => (
           <button
             type="button"
             onClick={onToggle}
-            disabled={!isSelected && isMaxReached}
+            disabled={
+              !isSelected && selectedExperimentCount >= MAX_SELECTED_EXPERIMENTS
+            }
             className="hover:bg-muted/50 flex w-full items-center gap-3 px-3 py-2 text-left disabled:cursor-not-allowed disabled:opacity-50"
           >
             <div className="flex h-4 w-4 items-center justify-center">
@@ -127,12 +140,6 @@ export function ExperimentComparisonSelector({
           </Badge>
         )}
       />
-      {selectedIds.length > 0 && (
-        <p className="text-muted-foreground text-xs">
-          {selectedIds.length} {tAutoI18n("of_de04fa0")} {maxSelections}{" "}
-          {tAutoI18n("comparisons_selected_df86faa")}{" "}
-        </p>
-      )}
     </div>
   );
 }

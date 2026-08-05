@@ -1,3 +1,4 @@
+/* eslint-disable @repo/no-style-props */
 import { cn } from "@/src/utils/tailwind";
 import { useMemo } from "react";
 import { useAutoTranslations } from "@/src/features/i18n/I18nText";

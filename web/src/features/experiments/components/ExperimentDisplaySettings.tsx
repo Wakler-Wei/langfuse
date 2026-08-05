@@ -8,6 +8,7 @@ import {
 } from "@/src/components/ui/dropdown-menu";
 import { Button } from "@/src/components/ui/button";
 import { Settings2, Check } from "lucide-react";
+import { type IoRenderMode } from "@/src/components/table/data-table-io-render-mode-switch";
 import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 type ExperimentDisplaySettingsProps = {
@@ -17,6 +18,8 @@ type ExperimentDisplaySettingsProps = {
   onItemVisibilityChange: (visibility: "baseline-only" | "all") => void;
   hasComparisons: boolean;
   hasBaseline: boolean;
+  ioRenderMode: IoRenderMode;
+  onIoRenderModeChange: (mode: IoRenderMode) => void;
 };
 
 export function ExperimentDisplaySettings({
@@ -26,8 +29,9 @@ export function ExperimentDisplaySettings({
   onItemVisibilityChange,
   hasComparisons,
   hasBaseline,
+  ioRenderMode,
+  onIoRenderModeChange,
 }: ExperimentDisplaySettingsProps) {
-  const tAutoI18n = useAutoTranslations();
   const tAuto = useAutoTranslations();
   const isItemVisibilityDisabled = !hasComparisons || !hasBaseline;
 
@@ -46,12 +50,12 @@ export function ExperimentDisplaySettings({
         <DropdownMenuItem onClick={() => onLayoutChange("grid")}>
           {layout === "grid" && <Check className="mr-2 h-4 w-4" />}
           {layout !== "grid" && <span className="mr-2 h-4 w-4" />}
-          {tAutoI18n("grid_701c483")}{" "}
+          {tAuto("grid_701c483")}{" "}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => onLayoutChange("list")}>
           {layout === "list" && <Check className="mr-2 h-4 w-4" />}
           {layout !== "list" && <span className="mr-2 h-4 w-4" />}
-          {tAutoI18n("list_a1fffaa")}{" "}
+          {tAuto("list_a1fffaa")}{" "}
         </DropdownMenuItem>
 
         <DropdownMenuSeparator />
@@ -69,7 +73,7 @@ export function ExperimentDisplaySettings({
           {itemVisibility !== "baseline-only" && (
             <span className="mr-2 h-4 w-4" />
           )}
-          {tAutoI18n("show_only_items_in_baseline_b507985")}{" "}
+          {tAuto("show_only_items_in_baseline_b507985")}{" "}
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => onItemVisibilityChange("all")}
@@ -77,7 +81,21 @@ export function ExperimentDisplaySettings({
         >
           {itemVisibility === "all" && <Check className="mr-2 h-4 w-4" />}
           {itemVisibility !== "all" && <span className="mr-2 h-4 w-4" />}
-          {tAutoI18n("show_all_items_737b95f")}{" "}
+          {tAuto("show_all_items_737b95f")}{" "}
+        </DropdownMenuItem>
+
+        <DropdownMenuSeparator />
+
+        <DropdownMenuLabel>{tAuto("format_041a5de")}</DropdownMenuLabel>
+        <DropdownMenuItem onClick={() => onIoRenderModeChange("json")}>
+          {ioRenderMode === "json" && <Check className="mr-2 h-4 w-4" />}
+          {ioRenderMode !== "json" && <span className="mr-2 h-4 w-4" />}
+          JSON
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => onIoRenderModeChange("text")}>
+          {ioRenderMode === "text" && <Check className="mr-2 h-4 w-4" />}
+          {ioRenderMode !== "text" && <span className="mr-2 h-4 w-4" />}
+          {tAuto("formatted_f26356d")}{" "}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

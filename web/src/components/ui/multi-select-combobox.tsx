@@ -1,8 +1,8 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, type ReactNode } from "react";
 import { Input } from "@/src/components/ui/input";
 import { Button } from "@/src/components/ui/button";
 import { Search, X, MoreHorizontal } from "lucide-react";
-import { useAutoTranslations } from "@/src/features/i18n/I18nText";
+import { cn } from "@/src/utils/tailwind";
 
 interface MultiSelectComboboxProps<T> {
   selectedItems: T[];
@@ -23,7 +23,10 @@ interface MultiSelectComboboxProps<T> {
   disabled?: boolean;
   onOpenChange?: (open: boolean) => void;
   showSelectedItemsInInput?: boolean;
+  showSearchIcon?: boolean;
   dropdownClassName?: string;
+  /** Optional label rendered as a chip flush against the left edge of the control. */
+  labelLeft?: ReactNode;
 }
 
 export function MultiSelectCombobox<T>({
@@ -41,9 +44,10 @@ export function MultiSelectCombobox<T>({
   disabled = false,
   onOpenChange,
   showSelectedItemsInInput = true,
+  showSearchIcon = true,
   dropdownClassName,
+  labelLeft,
 }: MultiSelectComboboxProps<T>) {
-  const tAuto = useAutoTranslations();
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [previousResults, setPreviousResults] = useState<T[]>([]);
@@ -135,13 +139,29 @@ export function MultiSelectCombobox<T>({
   return (
     <div className="space-y-2">
       {/* Custom Input with Embedded Pills */}
-      <div className="relative">
+      <div className="relative flex items-center">
+        {labelLeft && (
+          <div className="border-input bg-muted/30 flex h-8 w-auto shrink-0 items-center rounded-l-md border px-3 text-xs">
+            {labelLeft}
+          </div>
+        )}
         <div
           ref={containerRef}
-          className="border-input bg-background flex max-h-14 min-h-9 w-full overflow-y-auto rounded-md border text-xs"
+          className={cn(
+            "border-input bg-background flex h-8 min-h-8 min-w-0 flex-1 overflow-hidden rounded-md border text-xs",
+            labelLeft && "rounded-l-none",
+          )}
+          style={{ overflowAnchor: "none" }}
         >
-          <Search className="text-muted-foreground absolute top-2.5 left-2 z-10 h-4 w-4" />
-          <div className="flex max-h-full flex-1 flex-wrap items-center gap-1 pl-8">
+          {showSearchIcon && (
+            <Search className="text-muted-foreground absolute top-2.5 left-2 z-10 h-4 w-4" />
+          )}
+          <div
+            className={cn(
+              "flex min-w-0 flex-1 flex-nowrap items-center gap-1 overflow-x-auto pr-8",
+              showSearchIcon ? "pl-8" : "pl-2",
+            )}
+          >
             {/* Selected Items Pills */}
             {showSelectedItemsInInput
               ? selectedItems.map((item) => (
@@ -217,9 +237,7 @@ export function MultiSelectCombobox<T>({
                   <MoreHorizontal className="h-4 w-4" />
                   <div className="min-w-0 flex-1">
                     <p className="text-xs italic">
-                      {tAuto(
-                        "more_results_available_refine_your_search_764d47d",
-                      )}{" "}
+                      More results available, refine your search
                     </p>
                   </div>
                 </div>
@@ -228,10 +246,8 @@ export function MultiSelectCombobox<T>({
           ) : (
             <div className="bg-background text-muted-foreground absolute top-0 z-10 w-full rounded-md border py-6 text-center text-xs shadow-md">
               {searchQuery
-                ? tAuto("no_results_found_for_value0_2b8d7ec", {
-                    value0: String((searchQuery as unknown) ?? ""),
-                  })
-                : tAuto("no_results_available_1502f02")}
+                ? `No results found for "${searchQuery}"`
+                : "No results available"}
             </div>
           )}
         </div>

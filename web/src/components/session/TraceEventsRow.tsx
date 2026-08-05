@@ -97,6 +97,7 @@ const ModernSessionObservation = ({
 
   return (
     <div
+      data-session-observation-id={observation.id}
       className={
         isConversation
           ? "flex flex-col gap-2"
@@ -222,7 +223,6 @@ type LazyTraceEventsRowProps = {
   surface?: TraceEventsSurface;
   contentMode?: IOPreviewContentMode;
   showSystemPrompt?: boolean;
-  isActive?: boolean;
 };
 
 const areLazyTraceEventsRowPropsEqual = (
@@ -241,8 +241,7 @@ const areLazyTraceEventsRowPropsEqual = (
   previous.hideTracePanel === next.hideTracePanel &&
   previous.surface === next.surface &&
   previous.contentMode === next.contentMode &&
-  previous.showSystemPrompt === next.showSystemPrompt &&
-  previous.isActive === next.isActive;
+  previous.showSystemPrompt === next.showSystemPrompt;
 
 export const TraceEventsRow = React.memo(
   ({
@@ -258,7 +257,6 @@ export const TraceEventsRow = React.memo(
     surface = "card",
     contentMode = "all",
     showSystemPrompt,
-    isActive = false,
   }: {
     trace: RouterOutputs["sessions"]["tracesFromEvents"][number];
     projectId: string;
@@ -272,7 +270,6 @@ export const TraceEventsRow = React.memo(
     surface?: TraceEventsSurface;
     contentMode?: IOPreviewContentMode;
     showSystemPrompt?: boolean;
-    isActive?: boolean;
   }) => {
     const tAutoI18n = useAutoTranslations();
     const tAuto = useAutoTranslations();
@@ -393,13 +390,8 @@ export const TraceEventsRow = React.memo(
     return (
       <Frame
         className={
-          surface === "card"
-            ? "border-border shadow-none"
-            : isActive
-              ? "bg-background border-l-primary border-l-2"
-              : "bg-background border-l-2 border-l-transparent"
+          surface === "card" ? "border-border shadow-none" : "bg-background"
         }
-        data-modern-session-active={surface === "modern" && isActive}
       >
         <div
           className={

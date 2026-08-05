@@ -6,6 +6,7 @@ import { Button } from "@/src/components/ui/button";
 import { ImageOff } from "lucide-react";
 import {
   MediaReferenceStringSchema,
+  OBSERVATION_FIELD_SIZE_LIMIT_MEDIA_SOURCE,
   type ParsedMediaReferenceType,
 } from "@langfuse/shared";
 import {
@@ -24,6 +25,7 @@ import {
   Video,
   Volume2,
 } from "lucide-react";
+import { MediaReferenceTag } from "@/src/components/ui/media/MediaReferenceTag";
 import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 // Above this, "preview" media falls back to the click-to-open icon instead of
@@ -46,7 +48,12 @@ export const LangfuseMediaView = ({
   // Non-previewable types (e.g. PDF) are always a click-to-open icon.
   variant?: "inline" | "icon" | "preview";
 }) => {
-  let mediaData: { id: string; type: MediaContentType } | null = null;
+  let mediaData: {
+    id: string;
+    type: MediaContentType;
+    referenceString?: string;
+    source?: string;
+  } | null = null;
 
   const projectId = useProjectIdFromURL();
 
@@ -57,11 +64,15 @@ export const LangfuseMediaView = ({
       mediaData = {
         id: parsedTag.id,
         type: parsedTag.type as MediaContentType,
+        referenceString: parsedTag.referenceString,
+        source: parsedTag.source,
       };
   } else if (mediaReferenceString && typeof mediaReferenceString !== "string") {
     mediaData = {
       id: mediaReferenceString.id,
       type: mediaReferenceString.type as MediaContentType,
+      referenceString: mediaReferenceString.referenceString,
+      source: mediaReferenceString.source,
     };
   } else if (mediaAPIReturnValue) {
     mediaData = {
@@ -85,19 +96,36 @@ export const LangfuseMediaView = ({
     );
   }
 
+  const isOversizedField =
+    mediaData.source === OBSERVATION_FIELD_SIZE_LIMIT_MEDIA_SOURCE;
+
   const { data } = api.media.getById.useQuery(
     {
       mediaId: mediaData.id,
       projectId: projectId as string,
     },
     {
-      enabled: Boolean(projectId),
+      enabled: Boolean(projectId) && !isOversizedField,
       refetchOnWindowFocus: false,
       refetchOnMount: false,
       refetchOnReconnect: false,
       staleTime: 55 * 60 * 1000, // 55 minutes, s3 links expire after 1 hour
     },
   );
+
+  if (isOversizedField && mediaData.referenceString) {
+    return (
+      <MediaReferenceTag
+        descriptor={{
+          kind: "langfuseRef",
+          contentType: mediaData.type,
+          mediaId: mediaData.id,
+          referenceString: mediaData.referenceString,
+          source: OBSERVATION_FIELD_SIZE_LIMIT_MEDIA_SOURCE,
+        }}
+      />
+    );
+  }
 
   const mediaUrl = data?.url;
 
@@ -141,7 +169,6 @@ function FileViewer({
   contentType: MediaContentType;
   defaultExpanded?: boolean;
 }) {
-  const tAuto = useAutoTranslations();
   const mimeType = String(contentType);
   const fileType = mimeType.split("/")[0];
   const isImage = fileType === "image";
@@ -240,12 +267,8 @@ function FileViewer({
             variant="outline"
             size="icon"
             onClick={openInNewTab}
-            aria-label={tAuto("open_value0_in_new_tab_4b86f31", {
-              value0: fileName,
-            })}
-            title={tAuto("open_value0_in_new_tab_4b86f31", {
-              value0: fileName,
-            })}
+            aria-label={`Open ${fileName} in new tab`}
+            title={`Open ${fileName} in new tab`}
             className="shrink-0"
           >
             <ExternalLink className="h-4 w-4" />
@@ -257,8 +280,8 @@ function FileViewer({
           onClick={() => (isPreviewable ? expandPreview() : openInNewTab())}
           aria-label={
             isPreviewable
-              ? tAuto("show_value0_inline_ab9998f", { value0: fileName })
-              : tAuto("open_value0_in_new_tab_4b86f31", { value0: fileName })
+              ? `Show ${fileName} inline`
+              : `Open ${fileName} in new tab`
           }
           aria-expanded={isPreviewable ? isExpanded : undefined}
           title={fileName}

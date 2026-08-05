@@ -1,10 +1,10 @@
 import { useRouter } from "next/router";
 import Page from "@/src/components/layouts/page";
 import { api } from "@/src/utils/api";
-import { type WidgetChartConfig, WidgetForm } from "@/src/features/widgets";
+import { WidgetForm } from "@/src/features/widgets";
+import { type WidgetSavePayload } from "@/src/features/widgets/components/widgetFormSchema";
 import { showSuccessToast } from "@/src/features/notifications/showSuccessToast";
 import { showErrorToast } from "@/src/features/notifications/showErrorToast";
-import { type DashboardWidgetChartType } from "@langfuse/shared/src/db";
 import { type metricAggregations, type views } from "@langfuse/shared/query";
 import { type z } from "zod";
 import { SelectDashboardDialog } from "@/src/features/dashboard/components/SelectDashboardDialog";
@@ -44,17 +44,7 @@ export default function NewWidget() {
     },
   });
 
-  const handleSaveWidget = (widgetData: {
-    name: string;
-    description: string;
-    view: string;
-    dimensions: { field: string }[];
-    metrics: { measure: string; agg: string }[];
-    filters: any[];
-    chartType: DashboardWidgetChartType;
-    chartConfig: WidgetChartConfig;
-    minVersion: number;
-  }) => {
+  const handleSaveWidget = (widgetData: WidgetSavePayload) => {
     if (!widgetData.name.trim()) {
       showErrorToast(
         tAutoI18n("error_7f2f6a1"),
@@ -77,7 +67,6 @@ export default function NewWidget() {
       filters: widgetData.filters,
       chartType: widgetData.chartType,
       chartConfig: widgetData.chartConfig,
-      minVersion: widgetData.minVersion,
     });
   };
 

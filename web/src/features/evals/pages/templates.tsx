@@ -11,10 +11,10 @@ import {
   EVALS_TABS,
 } from "@/src/features/navigation/utils/evals-tabs";
 import { ManageDefaultEvalModel } from "@/src/features/evals/components/manage-default-eval-model";
+import { V4MigrationUpdateRequiredBadge } from "@/src/features/v4-migration/V4MigrationDelayBadge";
 import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export default function TemplatesPage() {
-  const tAutoI18n = useAutoTranslations();
   const tAuto = useAutoTranslations();
   const router = useRouter();
   const projectId = router.query.projectId as string;
@@ -37,6 +37,7 @@ export default function TemplatesPage() {
     <Page
       headerProps={{
         title: tAuto("evaluators_03488ee"),
+        titleBadges: <V4MigrationUpdateRequiredBadge />,
         help: {
           description: tAuto(
             "view_all_langfuse_managed_and_custom_evaluators_ee73610",
@@ -68,11 +69,12 @@ export default function TemplatesPage() {
                 ) : (
                   <Lock className="mr-2 h-4 w-4" />
                 )}
-                {tAutoI18n("custom_evaluator_a362169")}{" "}
+                {tAuto("custom_evaluator_a362169")}{" "}
               </Link>
             </Button>
           </>
         ),
+        actionButtonsRightClassName: "justify-end",
       }}
     >
       <EvalsTemplateTable projectId={projectId} />

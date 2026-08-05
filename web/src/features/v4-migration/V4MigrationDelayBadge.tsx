@@ -1,4 +1,3 @@
-import { ChevronRight } from "lucide-react";
 import { useV4UpgradeUiEnabled } from "@/src/features/v4-migration/useV4UpgradeUiEnabled";
 import { usePostHogClientCapture } from "@/src/features/posthog-analytics/usePostHogClientCapture";
 import { useQueryProject } from "@/src/features/projects/hooks";
@@ -12,37 +11,8 @@ import {
   useInAppAiAgent,
 } from "@/src/features/in-app-agent/components/InAppAiAgentProvider";
 import { useEvalUpgradeAssistantPlan } from "@/src/features/v4-migration/useV4UpgradeAssistantSupport";
+import { V4MigrationBadgeContent } from "@/src/features/v4-migration/V4MigrationBadgeContent";
 import { useAutoTranslations } from "@/src/features/i18n/I18nText";
-
-function BadgeContent({
-  handleClick,
-  title,
-  description,
-}: {
-  handleClick: () => void;
-  title: string;
-  description: string;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={handleClick}
-      className="group ring-input hover:bg-muted/50 hover:text-foreground inline-flex w-fit flex-none shrink-0 items-center gap-1.5 rounded-full bg-transparent px-2 py-0.5 text-xs font-bold whitespace-nowrap ring"
-    >
-      <span
-        aria-hidden
-        className="size-1.75 shrink-0 rounded-full bg-orange-400 dark:bg-orange-400"
-      ></span>
-      <span className="flex items-center">
-        {title}
-        <span className="flex max-w-0 items-center overflow-hidden transition-[max-width] duration-300 ease-out group-hover:max-w-96">
-          <span className="whitespace-nowrap">.&nbsp;{description}.</span>
-        </span>
-        <ChevronRight className="ml-1 h-3 w-3 shrink-0" />
-      </span>
-    </button>
-  );
-}
 
 export function V4MigrationDelayBadge() {
   const tAuto = useAutoTranslations();
@@ -66,8 +36,8 @@ export function V4MigrationDelayBadge() {
   };
 
   return (
-    <BadgeContent
-      handleClick={handleClick}
+    <V4MigrationBadgeContent
+      onClick={handleClick}
       title={tAuto("new_data_in_15_min_eec9663")}
       description={tAuto("update_your_sdk_for_real_time_data_b504739")}
     />
@@ -128,8 +98,8 @@ export function V4MigrationUpdateRequiredBadge() {
   };
 
   return (
-    <BadgeContent
-      handleClick={handleClick}
+    <V4MigrationBadgeContent
+      onClick={handleClick}
       title={tAuto("action_required_a5f995a")}
       description={tAuto("start_the_upgrade_now_9a3e697")}
     />

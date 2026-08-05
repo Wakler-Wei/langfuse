@@ -1,10 +1,10 @@
+/* eslint-disable @repo/no-style-props */
 import { Button } from "@/src/components/ui/button";
 import { useHasProjectAccess } from "@/src/features/rbac/utils/checkProjectAccess";
 import { api } from "@/src/utils/api";
 import { cn } from "@/src/utils/tailwind";
 import { Check, Pencil, TriangleAlert } from "lucide-react";
 import Link from "next/link";
-import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export function ManageDefaultEvalModel({
   projectId,
@@ -19,7 +19,6 @@ export function ManageDefaultEvalModel({
   showEditButton?: boolean;
   className?: string;
 }) {
-  const tAuto = useAutoTranslations();
   const hasDefaultModelReadAccess = useHasProjectAccess({
     projectId,
     scope: "evalDefaultModel:read",
@@ -45,13 +44,13 @@ export function ManageDefaultEvalModel({
       {defaultModel ? (
         <span
           className={cn(
-            "text-sm font-bold",
+            "text-sm font-bold text-nowrap",
             variant === "color-coded" && "text-dark-green",
             className,
           )}
         >
-          {tAuto("current_default_model_01")} {defaultModel.provider} /{" "}
-          {defaultModel.model}
+          {"Default model: "}
+          {defaultModel.provider} / {defaultModel.model}
         </span>
       ) : (
         <span
@@ -61,7 +60,7 @@ export function ManageDefaultEvalModel({
             className,
           )}
         >
-          {setUpMessage ?? tAuto("no_default_model_set_01")}
+          {setUpMessage ?? "No default model set"}
         </span>
       )}
       {showEditButton && (

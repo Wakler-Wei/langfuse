@@ -53,6 +53,21 @@ export function EnvironmentBadge({
   );
 }
 
+export function ReleaseBadge({
+  release,
+}: {
+  release: string | null | undefined;
+}) {
+  const tAuto = useAutoTranslations();
+  if (!release) return null;
+
+  return (
+    <Badge variant="tertiary">
+      {tAuto("release_c720e68")} {release}
+    </Badge>
+  );
+}
+
 export function VersionBadge({
   version,
 }: {

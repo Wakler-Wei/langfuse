@@ -1,4 +1,4 @@
-import { useAutoTranslations } from "@/src/features/i18n/I18nText";
+import { useAutoTranslations } from "@/src/features/i18n/I18nText"; /* eslint-disable @repo/no-style-props */
 type Accuracy = "day" | "hour" | "minute" | "second" | "millisecond";
 
 export const formatLocalIsoDate = (
@@ -53,7 +53,9 @@ export const LocalIsoDate = ({
 
   return (
     <span
-      title={tAuto("utc_value0_efb8680", { value0: utcDateString })}
+      title={tAuto("utc_value0_efb8680", {
+        value0: String((utcDateString as unknown) ?? ""),
+      })}
       className={className}
     >
       {localDateString}

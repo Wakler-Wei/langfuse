@@ -24,7 +24,7 @@ export default function ExperimentAnalytics() {
   );
 
   const handleResultsClick = () => {
-    const fallbackUrl = `/project/${projectId}/experiments/results`;
+    const fallbackUrl = `/project/${projectId}/experiments`;
     router.push(lastResultsUrl ?? fallbackUrl);
   };
 

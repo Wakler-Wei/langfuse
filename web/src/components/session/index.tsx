@@ -32,7 +32,6 @@ import { usePostHogClientCapture } from "@/src/features/posthog-analytics/usePos
 import Page from "@/src/components/layouts/page";
 import {
   Popover,
-  PopoverClose,
   PopoverContent,
   PopoverTrigger,
 } from "@/src/components/ui/popover";
@@ -75,7 +74,6 @@ import {
   type ColumnOrderState,
 } from "@tanstack/react-table";
 import {
-  SESSION_DETAIL_LLM_CALL_PRESETS,
   SESSION_DETAIL_SYSTEM_PRESETS,
   type SessionDetailSystemPreset,
   getSessionDetailPresetToApply,
@@ -87,6 +85,7 @@ import { SessionDetailStoreProvider } from "@/src/components/session/SessionDeta
 import { SessionVirtualizedRow } from "@/src/components/session/SessionVirtualizedRow";
 import { createSessionDetailStore } from "@/src/components/session/sessionDetailStore";
 import { ModernSession } from "@/src/components/session/ModernSession";
+import { ModernSessionFilterControls } from "@/src/components/session/ModernSessionFilterControls";
 import useIsFeatureEnabled from "@/src/features/feature-flags/hooks/useIsFeatureEnabled";
 import { useIsMobile } from "@/src/hooks/use-mobile";
 import { useStore } from "zustand";
@@ -117,7 +116,6 @@ export function SessionUsers({
   projectId: string;
   users?: string[];
 }) {
-  const tAutoI18n = useAutoTranslations();
   const tAuto = useAutoTranslations();
   const [page, setPage] = useState(0);
 
@@ -152,7 +150,7 @@ export function SessionUsers({
         <Popover modal>
           <PopoverTrigger asChild>
             <Button variant="outline" size="sm" className="mt-0.5">
-              +{remainingUsers.length} {tAutoI18n("more_users_2a395c0")}{" "}
+              +{remainingUsers.length} {tAuto("more_users_2a395c0")}{" "}
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-[300px]">
@@ -199,8 +197,7 @@ export function SessionUsers({
                   {tAuto("previous_50f9428")}{" "}
                 </Button>
                 <span className="text-muted-foreground text-sm">
-                  {tAutoI18n("page_fb06270")} {page + 1}{" "}
-                  {tAutoI18n("of_de04fa0")}{" "}
+                  {tAuto("page_fb06270")} {page + 1} {tAuto("of_de04fa0")}{" "}
                   {Math.ceil(remainingUsers.length / USERS_PER_PAGE_IN_POPOVER)}
                 </span>
                 <Button
@@ -352,7 +349,6 @@ export const SessionPage: React.FC<{
   sessionId: string;
   projectId: string;
 }> = ({ sessionId, projectId }) => {
-  const tAutoI18n = useAutoTranslations();
   const tAuto = useAutoTranslations();
   const router = useRouter();
   const { setDetailPageList, detailPagelists } = useDetailPageLists();
@@ -484,7 +480,7 @@ export const SessionPage: React.FC<{
   if (session.error?.data?.code === "UNAUTHORIZED")
     return (
       <ErrorPage
-        message={tAutoI18n("you_do_not_have_access_to_this_session_b470e17")}
+        message={tAuto("you_do_not_have_access_to_this_session_b470e17")}
       />
     );
 
@@ -492,7 +488,7 @@ export const SessionPage: React.FC<{
     return (
       <ErrorPage
         title={tAuto("session_not_found_4c2e72c")}
-        message={tAutoI18n(
+        message={tAuto(
           "the_session_is_either_still_being_processed_or_has_b_6f35ebb",
         )}
         additionalButton={{
@@ -693,12 +689,13 @@ export const SessionPage: React.FC<{
                 <span
                   className="text-muted-foreground min-w-0 truncate text-xs"
                   title={tAuto("value0_traces_value1_9c9b3d3", {
-                    value0: session.data?.traces.length ?? 0,
-                    value1: usdFormatter(session.data?.totalCost ?? 0, 2),
+                    value0: String(session.data?.traces.length ?? 0),
+                    value1: String(
+                      usdFormatter(session.data?.totalCost ?? 0, 2),
+                    ),
                   })}
                 >
-                  {session.data?.traces.length ?? 0}{" "}
-                  {tAutoI18n("traces_9e85cd5")}{" "}
+                  {session.data?.traces.length ?? 0} {tAuto("traces_9e85cd5")}{" "}
                   {usdFormatter(session.data?.totalCost ?? 0, 2)}
                 </span>
               </>
@@ -708,11 +705,11 @@ export const SessionPage: React.FC<{
               <SessionUsers projectId={projectId} users={session.data.users} />
             ) : null}
             <Badge variant="outline">
-              {tAutoI18n("total_traces_d0fba9f")} {session.data?.traces.length}
+              {tAuto("total_traces_d0fba9f")} {session.data?.traces.length}
             </Badge>
             {session.data && (
               <Badge variant="outline">
-                {tAutoI18n("total_cost_a87e839")}{" "}
+                {tAuto("total_cost_a87e839")}{" "}
                 {usdFormatter(session.data.totalCost, 2)}
               </Badge>
             )}
@@ -865,7 +862,6 @@ const LoadedSessionEventsPage: React.FC<{
   traces: EventSessionTrace[] | undefined;
   isTracesSuccess: boolean;
 }> = ({ sessionId, projectId, session, traces, isTracesSuccess }) => {
-  const tAutoI18n = useAutoTranslations();
   const tAuto = useAutoTranslations();
   const router = useRouter();
   const { setDetailPageList, detailPagelists } = useDetailPageLists();
@@ -876,12 +872,7 @@ const LoadedSessionEventsPage: React.FC<{
   });
   const isMobile = useIsMobile();
   const parentRef = useRef<HTMLDivElement>(null);
-  const defaultPresetAppliedRef = useRef(false);
-
-  // Reset default preset flag when session changes (e.g., navigating between sessions)
-  useEffect(() => {
-    defaultPresetAppliedRef.current = false;
-  }, [sessionId]);
+  const defaultPresetResolvedSessionRef = useRef<string | null>(null);
 
   const [showCorrections, setShowCorrections] = useLocalStorage(
     "showCorrections",
@@ -1276,7 +1267,7 @@ const LoadedSessionEventsPage: React.FC<{
   // useRef initializer wouldn't re-run, leaving a stale viewId that blocks the
   // default-view effect on the new session. Re-read the URL during render (not
   // an effect, which would race the view manager's strip on reload) whenever the
-  // sessionId changes, mirroring the defaultPresetAppliedRef reset above.
+  // sessionId changes, mirroring the per-session default-preset decision above.
   const initialViewIdSessionRef = useRef(sessionId);
   if (initialViewIdSessionRef.current !== sessionId) {
     initialViewIdSessionRef.current = sessionId;
@@ -1299,27 +1290,49 @@ const LoadedSessionEventsPage: React.FC<{
       ? filterMatchedView
       : null;
   const viewLabel = matchedView?.name ?? null;
-  const isLlmCallPresetActive = SESSION_DETAIL_LLM_CALL_PRESETS.some(
-    (preset) => matchedView?.id === preset.id,
-  );
+  const hasSessionControls =
+    !isModernSessionEnabled ||
+    Boolean(session.users?.length || session.scores.length);
+  const excludeObservationsByName = useCallback(
+    (name: string) => {
+      const existingFilter = queryFilter.filterState.find(
+        (
+          filter,
+        ): filter is Extract<FilterState[number], { type: "stringOptions" }> =>
+          filter.column === "name" &&
+          filter.type === "stringOptions" &&
+          filter.operator === "none of",
+      );
+      if (existingFilter?.value.includes(name)) return;
 
-  const applyLlmCallPreset = (preset: SessionDetailSystemPreset) => {
-    capture("saved_views:system_preset_selected", {
-      tableName: TableViewPresetTableName.SessionDetail,
-      presetId: preset.id,
-    });
-    viewControllers.handleSetViewId(preset.id);
-    viewControllers.applyViewState(
-      {
-        filters: preset.filters,
-        columnOrder: [],
-        columnVisibility: {},
-        orderBy: null,
-        searchQuery: "",
-      },
-      { trigger: "system_preset", viewId: preset.id },
-    );
-  };
+      const nextFilters = existingFilter
+        ? queryFilter.filterState.map((filter) =>
+            filter === existingFilter
+              ? { ...existingFilter, value: [...existingFilter.value, name] }
+              : filter,
+          )
+        : queryFilter.filterState.concat({
+            column: "name",
+            type: "stringOptions",
+            operator: "none of",
+            value: [name],
+          });
+
+      queryFilter.setFilterState(nextFilters);
+      capture("filters:applied", {
+        surface: "filter_builder",
+        tableName: "session-detail",
+        column: "name",
+        filterType: "stringOptions",
+        operator: "none of",
+        valueCount: 1,
+        conditionCount: nextFilters.length,
+        columnConditionCount: 1,
+        isV4: true,
+      });
+    },
+    [capture, queryFilter],
+  );
 
   // Recover the system-preset viewId the view manager strips from the URL on
   // reload/shared-link (frontend presets aren't backend-fetchable). Idempotent
@@ -1352,7 +1365,11 @@ const LoadedSessionEventsPage: React.FC<{
   // prev/next session navigation re-decides, mirroring initialViewIdRef.
   const arrivedOnVisitedHistoryEntry = useHistoryEntryRevisit(sessionId);
 
-  // Fresh load with nothing in the URL → apply the default view. Skipped on
+  // On each session's first resolved view state, apply the default view when
+  // nothing else is selected. The decision is consumed even when existing
+  // filters make us skip it, so clearing those filters later remains a user
+  // clear action instead of unexpectedly applying the default preset.
+  // Skipped on
   // reload/shared-link (a viewId was in the URL) so the recovery effect above,
   // not the default, decides the view — otherwise "All observations" would be
   // silently replaced by the default on every reload. Also skipped when the
@@ -1361,8 +1378,9 @@ const LoadedSessionEventsPage: React.FC<{
   // default would overwrite what the user deliberately left there
   // (LFE-10715).
   useEffect(() => {
-    if (defaultPresetAppliedRef.current) return;
+    if (defaultPresetResolvedSessionRef.current === sessionId) return;
     if (isViewLoading) return; // Wait for view manager to initialize
+    defaultPresetResolvedSessionRef.current = sessionId;
     if (selectedViewId) return;
     if (initialViewIdRef.current) return;
     if (arrivedOnVisitedHistoryEntry) return;
@@ -1371,13 +1389,13 @@ const LoadedSessionEventsPage: React.FC<{
       hasFilters: visibleFilterState.length > 0,
     });
     if (!presetToApply) return;
-    defaultPresetAppliedRef.current = true;
     applySystemPreset(presetToApply);
   }, [
     applySystemPreset,
     arrivedOnVisitedHistoryEntry,
     isViewLoading,
     selectedViewId,
+    sessionId,
     visibleFilterState,
   ]);
 
@@ -1432,9 +1450,7 @@ const LoadedSessionEventsPage: React.FC<{
               {isModernSessionEnabled ? (
                 <>
                   <div className="hidden items-center gap-3 pr-2 min-[1900px]:flex">
-                    <span className="text-muted-foreground text-xs">
-                      {tAuto("show_18163d4")}
-                    </span>
+                    <span className="text-muted-foreground text-xs">Show:</span>
                     {displayOptions.map(
                       ({ label, checked, onCheckedChange }) => (
                         <label
@@ -1454,9 +1470,7 @@ const LoadedSessionEventsPage: React.FC<{
                     )}
                   </div>
                   <div className="flex items-center gap-1.5 pr-2 min-[1900px]:hidden">
-                    <span className="text-muted-foreground text-xs">
-                      {tAuto("show_18163d4")}
-                    </span>
+                    <span className="text-muted-foreground text-xs">Show:</span>
                     <Popover>
                       <PopoverTrigger asChild>
                         <Button
@@ -1464,7 +1478,7 @@ const LoadedSessionEventsPage: React.FC<{
                           size="sm"
                           className="h-8 gap-1 px-2"
                         >
-                          {tAuto("options_6bf5da9")}{" "}
+                          Options
                           <ChevronDown className="h-3.5 w-3.5" />
                         </Button>
                       </PopoverTrigger>
@@ -1540,7 +1554,7 @@ const LoadedSessionEventsPage: React.FC<{
                     size="sm"
                   />
                   <span className="text-muted-foreground text-xs">
-                    {tAuto("show_corrections_7c0eab4")}{" "}
+                    Show corrections
                   </span>
                 </label>
               ) : null}
@@ -1616,9 +1630,7 @@ const LoadedSessionEventsPage: React.FC<{
                 ))
               ) : (
                 <label className="hover:bg-accent flex w-full items-center justify-between gap-4 rounded-md px-2 py-1.5">
-                  <span className="text-sm">
-                    {tAuto("show_corrections_7c0eab4")}
-                  </span>
+                  <span className="text-sm">Show corrections</span>
                   <Switch
                     checked={showCorrections}
                     onCheckedChange={setShowCorrectionsForSession}
@@ -1637,136 +1649,90 @@ const LoadedSessionEventsPage: React.FC<{
               : "flex h-full flex-col overflow-auto"
           }
         >
-          <SessionControlsBar
-            isMobile={isMobile && !isModernSessionEnabled}
-            desktopClassName="bg-background sticky top-0 z-40 flex flex-wrap items-center gap-2 border-b p-4"
-            summary={
-              <>
-                <span className="text-sm font-bold">
-                  {tAuto("session_controls_85fcb88")}
-                </span>
-                <span
-                  className="text-muted-foreground min-w-0 truncate text-xs"
-                  title={tAuto("value0_traces_value1_9c9b3d3", {
-                    value0: session.countTraces,
-                    value1: usdFormatter(session.totalCost ?? 0, 2),
-                  })}
-                >
-                  {session.countTraces} {tAutoI18n("traces_9e85cd5")}{" "}
-                  {usdFormatter(session.totalCost ?? 0, 2)}
-                </span>
-              </>
-            }
-          >
-            {isModernSessionEnabled ? (
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    aria-pressed={isLlmCallPresetActive}
-                    className={
-                      isLlmCallPresetActive ? "bg-primary/5" : undefined
-                    }
+          {hasSessionControls ? (
+            <SessionControlsBar
+              isMobile={isMobile && !isModernSessionEnabled}
+              desktopClassName="bg-background sticky top-0 z-40 flex flex-wrap items-center gap-2 border-b p-4"
+              summary={
+                <>
+                  <span className="text-sm font-bold">Session controls</span>
+                  <span
+                    className="text-muted-foreground min-w-0 truncate text-xs"
+                    title={`${session.countTraces} traces · ${usdFormatter(
+                      session.totalCost ?? 0,
+                      2,
+                    )}`}
                   >
-                    {tAuto("llm_calls_per_trace_307c1d1")}{" "}
-                    <ChevronDown className="ml-1 h-4 w-4" aria-hidden />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent align="start" className="w-72 p-1">
-                  <div className="text-muted-foreground px-2 py-1.5 text-xs font-bold">
-                    {tAuto("llm_calls_per_trace_307c1d1")}{" "}
-                  </div>
-                  {SESSION_DETAIL_LLM_CALL_PRESETS.map((preset) => {
-                    const isActive = matchedView?.id === preset.id;
-                    return (
-                      <PopoverClose asChild key={preset.id}>
-                        <button
-                          type="button"
-                          aria-current={isActive ? "true" : undefined}
-                          className="hover:bg-accent flex w-full items-start justify-between gap-2 rounded-sm px-2 py-1.5 text-left text-sm"
-                          onClick={() => applyLlmCallPreset(preset)}
-                        >
-                          <span className="flex flex-col">
-                            <span className="font-bold">{preset.name}</span>
-                            {preset.description ? (
-                              <span className="text-muted-foreground text-xs">
-                                {preset.description}
-                              </span>
-                            ) : null}
-                          </span>
-                          {isActive ? (
-                            <CheckIcon
-                              className="mt-0.5 h-4 w-4 shrink-0"
-                              aria-hidden
-                            />
-                          ) : null}
-                        </button>
-                      </PopoverClose>
-                    );
-                  })}
-                </PopoverContent>
-              </Popover>
-            ) : null}
+                    {session.countTraces} traces ·{" "}
+                    {usdFormatter(session.totalCost ?? 0, 2)}
+                  </span>
+                </>
+              }
+            >
+              {/* Saved Views */}
+              {!isModernSessionEnabled ? (
+                <TableViewPresetsDrawer
+                  viewConfig={{
+                    tableName: TableViewPresetTableName.SessionDetail,
+                    projectId,
+                    controllers: viewControllers,
+                  }}
+                  currentState={{
+                    orderBy: null,
+                    filters: queryFilter.filterState,
+                    columnOrder,
+                    columnVisibility,
+                    searchQuery: "",
+                  }}
+                  systemFilterPresets={SESSION_DETAIL_SYSTEM_PRESETS}
+                  triggerId={SESSION_DETAIL_VIEW_TRIGGER_ID}
+                />
+              ) : null}
 
-            {/* Saved Views */}
-            <TableViewPresetsDrawer
-              viewConfig={{
-                tableName: TableViewPresetTableName.SessionDetail,
-                projectId,
-                controllers: viewControllers,
-              }}
-              currentState={{
-                orderBy: null,
-                filters: queryFilter.filterState,
-                columnOrder,
-                columnVisibility,
-                searchQuery: "",
-              }}
-              systemFilterPresets={SESSION_DETAIL_SYSTEM_PRESETS}
-              triggerId={SESSION_DETAIL_VIEW_TRIGGER_ID}
-            />
-
-            {/* Refines the selected view by filtering observations within each
+              {/* Refines the selected view by filtering observations within each
                 trace (it does not filter the list of traces) — labelled to say
                 so (LFE-10520). */}
-            <PopoverFilterBuilder
-              columns={filterColumns}
-              filterState={visibleFilterState}
-              onChange={queryFilter.setFilterState}
-              columnsWithCustomSelect={filterColumnsWithCustomSelect}
-              label={tAuto("filter_observations_c0816fb")}
-              // Analytics (LFE-10781): session-detail observation refinement is a
-              // v3/legacy surface (the v4 events table filters via the grammar bar).
-              tableName="session-detail"
-              isV4={false}
-            />
+              {!isModernSessionEnabled ? (
+                <PopoverFilterBuilder
+                  columns={filterColumns}
+                  filterState={visibleFilterState}
+                  onChange={queryFilter.setFilterState}
+                  columnsWithCustomSelect={filterColumnsWithCustomSelect}
+                  label="Filter observations"
+                  // Analytics (LFE-10781): session-detail observation refinement is a
+                  // v3/legacy surface (the v4 events table filters via the grammar bar).
+                  tableName="session-detail"
+                  isV4={false}
+                />
+              ) : null}
 
-            {/* Separator */}
-            <Separator orientation="vertical" className="h-6" />
+              {/* Separator */}
+              {!isModernSessionEnabled ? (
+                <Separator orientation="vertical" className="h-6" />
+              ) : null}
 
-            {/* Stats stay in the toolbar for the existing card layout. Modern
+              {/* Stats stay in the toolbar for the existing card layout. Modern
                 Session shows trace count and cost in its minimap header. */}
-            {!isModernSessionEnabled ? (
-              <>
-                <Badge variant="outline">
-                  {tAutoI18n("total_traces_d0fba9f")} {session.countTraces}
-                </Badge>
-                <Badge variant="outline">
-                  {tAutoI18n("total_cost_a87e839")}{" "}
-                  {usdFormatter(session.totalCost ?? 0, 2)}
-                </Badge>
-              </>
-            ) : null}
+              {!isModernSessionEnabled ? (
+                <>
+                  <Badge variant="outline">
+                    Total traces: {session.countTraces}
+                  </Badge>
+                  <Badge variant="outline">
+                    Total cost: {usdFormatter(session.totalCost ?? 0, 2)}
+                  </Badge>
+                </>
+              ) : null}
 
-            {/* Users */}
-            {session.users?.length ? (
-              <SessionUsers projectId={projectId} users={session.users} />
-            ) : null}
+              {/* Users */}
+              {session.users?.length ? (
+                <SessionUsers projectId={projectId} users={session.users} />
+              ) : null}
 
-            {/* Scores */}
-            <SessionScores scores={session.scores} />
-          </SessionControlsBar>
+              {/* Scores */}
+              <SessionScores scores={session.scores} />
+            </SessionControlsBar>
+          ) : null}
           {!isModernSessionEnabled ? (
             <div ref={parentRef} className="flex-1 overflow-auto p-4">
               <div
@@ -1807,19 +1773,44 @@ const LoadedSessionEventsPage: React.FC<{
               </div>
             </div>
           ) : (
-            <ModernSession
-              traces={traces ?? []}
+            <ModernSessionFilterControls
               projectId={projectId}
-              sessionId={sessionId}
-              openPeek={openPeek}
-              traceCommentCounts={asCommentCounts(traceCommentCounts.data)}
               filterState={visibleFilterState}
-              filterMeasurementKey={visibleFilterMeasurementKey}
-              viewLabel={viewLabel}
-              totalCost={session.totalCost ?? 0}
-              showInlineToolCalls={showInlineToolCalls}
-              showSystemPrompt={showSystemPrompt}
-            />
+              filterColumns={filterColumns}
+              filterColumnsWithCustomSelect={filterColumnsWithCustomSelect}
+              onChange={queryFilter.setFilterState}
+              viewControllers={viewControllers}
+              currentViewState={{
+                orderBy: null,
+                filters: queryFilter.filterState,
+                columnOrder,
+                columnVisibility,
+                searchQuery: "",
+              }}
+            >
+              {(sidebarFilterControls) => (
+                <ModernSession
+                  tracesState={
+                    isTracesSuccess
+                      ? { type: "loaded", traces: traces ?? [] }
+                      : { type: "loading" }
+                  }
+                  projectId={projectId}
+                  sessionId={sessionId}
+                  sessionMinTimestamp={session.minTimestamp}
+                  sessionMaxTimestamp={session.maxTimestamp}
+                  openPeek={openPeek}
+                  traceCommentCounts={asCommentCounts(traceCommentCounts.data)}
+                  filterState={visibleFilterState}
+                  filterMeasurementKey={visibleFilterMeasurementKey}
+                  viewLabel={viewLabel}
+                  showInlineToolCalls={showInlineToolCalls}
+                  showSystemPrompt={showSystemPrompt}
+                  sidebarFilterControls={sidebarFilterControls}
+                  onExcludeObservation={excludeObservationsByName}
+                />
+              )}
+            </ModernSessionFilterControls>
           )}
         </div>
         <TablePeekViewTraceDetail
@@ -1848,7 +1839,6 @@ export const SessionIO = ({
   environment?: string | null;
   showCorrections: boolean;
 }) => {
-  const tAuto = useAutoTranslations();
   const trace = api.traces.byId.useQuery(
     { traceId, projectId, timestamp },
     {
@@ -1895,7 +1885,7 @@ export const SessionIO = ({
         />
       ) : (
         <div className="text-muted-foreground p-2 text-xs">
-          {tAuto("this_trace_has_no_input_or_output_00bd770")}{" "}
+          This trace has no input or output.
         </div>
       )}
     </div>

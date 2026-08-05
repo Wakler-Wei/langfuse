@@ -11,14 +11,14 @@ import useSessionStorage from "@/src/components/useSessionStorage";
 import { useExperimentResultsState } from "@/src/features/experiments/hooks/useExperimentResultsState";
 import { useEffect } from "react";
 import { ExperimentDisplaySettings } from "@/src/features/experiments/components/ExperimentDisplaySettings";
-import { Button } from "@/src/components/ui/button";
-import { X } from "lucide-react";
 import { useExperimentAccess } from "@/src/features/experiments/hooks/useExperimentAccess";
 import {
   EXPERIMENT_RUN_TABS,
   getExperimentRunTabs,
 } from "@/src/features/navigation/utils/experiment-run-tabs";
 import Spinner from "@/src/components/design-system/Spinner/Spinner";
+import { ExperimentSelectionControls } from "@/src/features/experiments/components/ExperimentSelectionControls";
+import { useIoRenderModeLocalStorage } from "@/src/components/table/data-table-io-render-mode-switch";
 import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export default function ExperimentResults() {
@@ -37,11 +37,16 @@ export default function ExperimentResults() {
     setLayout,
     itemVisibility,
     setItemVisibility,
+    allExperimentIds,
   } = useExperimentResultsState();
+  const [ioRenderMode, setIoRenderMode] = useIoRenderModeLocalStorage(
+    "experiment-items",
+    "json",
+  );
 
   const [isOverviewOpen, setIsOverviewOpen] = useSessionStorage(
     "overview-panel-experiment-detail",
-    true,
+    false,
   );
 
   const [, setLastResultsUrl] = useSessionStorage<string | null>(
@@ -87,9 +92,7 @@ export default function ExperimentResults() {
   return (
     <Page
       headerProps={{
-        title: hasBaseline
-          ? (experiment?.name ?? baselineId ?? tAuto("results_612e12d"))
-          : tAuto("results_612e12d"),
+        title: "",
         itemType: "EXPERIMENT",
         breadcrumb: [
           { name: "Experiments", href: `/project/${projectId}/experiments` },
@@ -98,17 +101,20 @@ export default function ExperimentResults() {
           tabs: getExperimentRunTabs(projectId),
           activeTab: EXPERIMENT_RUN_TABS.RESULTS,
         },
+        actionButtonsLeft: (
+          <ExperimentSelectionControls
+            projectId={projectId}
+            baselineId={baselineId}
+            baselineName={experiment?.name}
+            comparisonIds={comparisonIds}
+            selectedExperimentCount={allExperimentIds.length}
+            onBaselineChange={setBaseline}
+            onBaselineClear={clearBaseline}
+            onComparisonIdsChange={setComparisonIds}
+          />
+        ),
         actionButtonsRight: (
           <>
-            {hasBaseline && comparisonIds.length > 0 && (
-              <Button variant="outline" onClick={clearBaseline}>
-                <X className="h-4 w-4" />
-                <span className="ml-2 hidden md:inline">
-                  {tAuto("clear_baseline_31a196e")}
-                </span>
-              </Button>
-            )}
-
             <ExperimentDisplaySettings
               layout={layout}
               onLayoutChange={setLayout}
@@ -116,6 +122,8 @@ export default function ExperimentResults() {
               onItemVisibilityChange={setItemVisibility}
               hasComparisons={comparisonIds.length > 0}
               hasBaseline={hasBaseline}
+              ioRenderMode={ioRenderMode}
+              onIoRenderModeChange={setIoRenderMode}
             />
 
             <OverviewPanelToggle
@@ -129,16 +137,18 @@ export default function ExperimentResults() {
       <OverviewPanelLayout
         open={isOverviewOpen}
         persistId={`experiment-detail-${baselineId ?? "none"}`}
-        mainContent={<ExperimentItemsTable projectId={projectId} />}
+        mainContent={
+          <ExperimentItemsTable
+            key={ioRenderMode}
+            projectId={projectId}
+            ioRenderMode={ioRenderMode}
+          />
+        }
         overviewContent={
           <ExperimentOverviewPanel
+            key={baselineId ?? "no-baseline"}
             projectId={projectId}
-            hasBaseline={hasBaseline}
             experiment={experiment ?? undefined}
-            comparisonIds={comparisonIds}
-            onComparisonIdsChange={setComparisonIds}
-            onBaselineChange={setBaseline}
-            onBaselineClear={clearBaseline}
           />
         }
         defaultPrimarySize={75}

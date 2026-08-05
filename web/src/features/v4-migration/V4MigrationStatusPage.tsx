@@ -26,6 +26,7 @@ import {
 } from "@/src/features/v4-migration/hooks/useV4MigrationData";
 import {
   getProjectMigrationReadiness,
+  type MigrationActionState,
   type MigrationCountState,
   type ProjectMigrationReadiness,
   type ProjectMigrationStatus,
@@ -75,6 +76,33 @@ function AffectedCell({ count }: { count: MigrationCountState }) {
   return <span>{count.count}</span>;
 }
 
+function MigrationActionCell({ state }: { state: MigrationActionState }) {
+  const tAuto = useAutoTranslations();
+  if (state.status === "loading") {
+    return (
+      <span className="text-foreground-tertiary">
+        {tAuto("checking_820d600")}
+      </span>
+    );
+  }
+  if (state.status === "error") {
+    return (
+      <span className="text-foreground-tertiary">
+        {tAuto("unavailable_2c9c1f7")}
+      </span>
+    );
+  }
+  return state.result === "required" ? (
+    <span>{tAuto("update_required_f440d88")}</span>
+  ) : state.result === "sdk_usage_inconclusive" ? (
+    <span>{tAuto("needs_review_33a506c")}</span>
+  ) : (
+    <span className="text-foreground-tertiary">
+      {tAuto("up_to_date_82fb1d5")}
+    </span>
+  );
+}
+
 function StatusPill({ readiness }: { readiness: ProjectMigrationReadiness }) {
   const tAuto = useAutoTranslations();
   const label =
@@ -107,6 +135,7 @@ type SortKey =
   | "status"
   | "sdk"
   | "evals"
+  | "experiments"
   | "apis"
   | "exports"
   | "lastTrace";
@@ -152,7 +181,6 @@ function OrgStatusSection({
   org: V4MigrationOrganization;
   statusByProjectId: Map<string, ProjectMigrationStatus>;
 }) {
-  const tAutoI18n = useAutoTranslations();
   const tAuto = useAutoTranslations();
   const router = useRouter();
   const capture = usePostHogClientCapture();
@@ -238,6 +266,12 @@ function OrgStatusSection({
                       : 0;
       case "evals":
         return row.status?.evals.count ?? 0;
+      case "experiments":
+        return row.status?.experiments.result === "required"
+          ? 2
+          : row.status?.experiments.result === "sdk_usage_inconclusive"
+            ? 1
+            : 0;
       case "apis":
         return row.status?.apis.count ?? 0;
       case "exports":
@@ -296,6 +330,12 @@ function OrgStatusSection({
                   onSort={handleSort}
                 />
                 <SortableHead
+                  label={tAuto("affected_experiments_ead3d54")}
+                  column="experiments"
+                  orderBy={orderBy}
+                  onSort={handleSort}
+                />
+                <SortableHead
                   label={tAuto("affected_apis_f9598f3")}
                   column="apis"
                   orderBy={orderBy}
@@ -347,46 +387,45 @@ function OrgStatusSection({
                     </TableCell>
                     <TableCell density="comfortable">
                       {row.status.sdk.status === "latest" ? (
-                        <span className="text-foreground-tertiary">
-                          {tAuto("latest_decd7ca")}
-                        </span>
+                        <span className="text-foreground-tertiary">Latest</span>
                       ) : row.status.sdk.status === "otel_realtime" ? (
                         <span className="text-foreground-tertiary">
-                          {tAuto("otel_real_time_c9d51a9")}{" "}
+                          OTel real-time
                         </span>
                       ) : row.status.sdk.status === "no_data" ? (
                         <span className="text-foreground-tertiary">
-                          {tAuto("no_data_detected_05ecc63")}{" "}
+                          No data detected
                         </span>
                       ) : row.status.sdk.status === "checking" ? (
                         <span className="text-foreground-tertiary">
-                          {tAuto("checking_820d600")}{" "}
+                          Checking…
                         </span>
                       ) : row.status.sdk.status === "unknown" ? (
                         <span className="text-foreground-tertiary">
-                          {tAuto("unknown_bc7819b")}{" "}
+                          Unknown
                         </span>
                       ) : row.status.sdk.status === "otel_header_required" ? (
                         <span>
-                          {row.status.sdk.delayedOtelIngestionCount}{" "}
-                          {tAutoI18n("otel_header_90f6083")}{" "}
+                          {row.status.sdk.delayedOtelIngestionCount} OTel header{" "}
                           {row.status.sdk.delayedOtelIngestionCount === 1
-                            ? tAutoI18n("required_1a77d41")
-                            : tAutoI18n("issues_890c540")}
+                            ? "required"
+                            : "issues"}
                         </span>
                       ) : row.status.sdk.status === "error" ? (
                         <span className="text-foreground-tertiary">
-                          {tAuto("unavailable_2c9c1f7")}{" "}
+                          Unavailable
                         </span>
                       ) : (
                         <span>
-                          {row.status.sdk.upgradeRequiredCount}{" "}
-                          {tAutoI18n("outdated_b85a517")}{" "}
+                          {row.status.sdk.upgradeRequiredCount} outdated
                         </span>
                       )}
                     </TableCell>
                     <TableCell density="comfortable">
                       <AffectedCell count={row.status.evals} />
+                    </TableCell>
+                    <TableCell density="comfortable">
+                      <MigrationActionCell state={row.status.experiments} />
                     </TableCell>
                     <TableCell density="comfortable">
                       <AffectedCell count={row.status.apis} />
@@ -429,7 +468,6 @@ export default function V4MigrationStatusPage() {
 }
 
 function V4MigrationStatusPageContent() {
-  const tAutoI18n = useAutoTranslations();
   const tAuto = useAutoTranslations();
   const session = useSession();
   const handleCopyPrompt = useCopyMigrationPrompt();
@@ -559,11 +597,11 @@ function V4MigrationStatusPageContent() {
             <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
               {isChecking ? (
                 <span className="text-muted-foreground text-sm">
-                  {tAuto("checking_project_status_fe86966")}{" "}
+                  Checking project status…
                 </span>
               ) : totalProjects === 0 ? (
                 <span className="text-muted-foreground text-sm">
-                  {tAuto("no_active_projects_e6823ec")}{" "}
+                  No active projects
                 </span>
               ) : (
                 <>
@@ -571,8 +609,7 @@ function V4MigrationStatusPageContent() {
                     {readyProjects}
                   </span>
                   <span className="text-muted-foreground text-sm">
-                    {tAutoI18n("of_de04fa0")} {totalProjects}{" "}
-                    {tAutoI18n("projects_migrated_ea238f6")}{" "}
+                    of {totalProjects} projects migrated
                   </span>
                 </>
               )}

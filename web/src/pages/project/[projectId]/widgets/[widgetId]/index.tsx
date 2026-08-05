@@ -2,16 +2,14 @@ import { useRouter } from "next/router";
 import Page from "@/src/components/layouts/page";
 import { api } from "@/src/utils/api";
 import { WidgetForm } from "@/src/features/widgets/components/WidgetForm";
+import { type WidgetSavePayload } from "@/src/features/widgets/components/widgetFormSchema";
 import { showErrorToast } from "@/src/features/notifications/showErrorToast";
 import { showSuccessToast } from "@/src/features/notifications/showSuccessToast";
-import { type DashboardWidgetChartType } from "@langfuse/shared";
 import { type metricAggregations, type views } from "@langfuse/shared/query";
 import { type z } from "zod";
-import { type WidgetChartConfig } from "@/src/features/widgets/utils";
 import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 
 export default function EditWidget() {
-  const tAutoI18n = useAutoTranslations();
   const tAuto = useAutoTranslations();
   const router = useRouter();
   const { projectId, widgetId, dashboardId } = router.query as {
@@ -53,25 +51,12 @@ export default function EditWidget() {
       }
     },
     onError: (error) => {
-      showErrorToast(
-        tAutoI18n("failed_to_update_widget_25ac1b4"),
-        error.message,
-      );
+      showErrorToast(tAuto("failed_to_update_widget_25ac1b4"), error.message);
     },
   });
 
   // Handle update widget
-  const handleUpdateWidget = (widgetFormData: {
-    name: string;
-    description: string;
-    view: string;
-    dimensions: { field: string }[];
-    metrics: { measure: string; agg: string }[];
-    filters: any[];
-    chartType: DashboardWidgetChartType;
-    chartConfig: WidgetChartConfig;
-    minVersion: number;
-  }) => {
+  const handleUpdateWidget = (widgetFormData: WidgetSavePayload) => {
     if (!widgetId) return;
 
     updateWidgetMutation.mutate({
@@ -88,7 +73,6 @@ export default function EditWidget() {
       filters: widgetFormData.filters,
       chartType: widgetFormData.chartType,
       chartConfig: widgetFormData.chartConfig,
-      minVersion: widgetFormData.minVersion,
     });
   };
 
@@ -132,7 +116,7 @@ export default function EditWidget() {
         />
       ) : (
         <div className="flex h-[300px] items-center justify-center">
-          <p className="text-muted-foreground">{tAuto("loading_b04ba49")}</p>
+          <p className="text-muted-foreground">Loading...</p>
         </div>
       )}
     </Page>

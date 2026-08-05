@@ -19,9 +19,9 @@ import { useAutoTranslations } from "@/src/features/i18n/I18nText";
 export const ReviewStep: React.FC<ReviewStepProps> = ({
   formState,
   navigationState,
+  errorMessage,
   summary,
 }) => {
-  const tAutoI18n = useAutoTranslations();
   const tAuto = useAutoTranslations();
   const { form } = formState;
   const { setActiveStep } = navigationState;
@@ -44,6 +44,7 @@ export const ReviewStep: React.FC<ReviewStepProps> = ({
         description={tAuto(
           "review_your_experiment_configuration_before_running__34b4f6a",
         )}
+        errorMessage={errorMessage}
       />
 
       {/* Two-column grid layout */}
@@ -160,7 +161,7 @@ export const ReviewStep: React.FC<ReviewStepProps> = ({
           >
             <CardHeader className="pb-3">
               <CardTitle className="text-base">
-                {tAutoI18n("evaluators_5fd76d7")}
+                {tAuto("evaluators_5fd76d7")}
                 {activeEvaluatorNames.length})
               </CardTitle>
             </CardHeader>
