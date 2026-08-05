@@ -154,7 +154,7 @@ export default function RemapEvaluatorPage() {
         title: tAuto("upgrade_evaluator_298c69b"),
         breadcrumb: [
           {
-            name: "Running Evaluators",
+            name: tAuto("running_evaluators_nav_b651d5f"),
             href: `/project/${projectId}/evals`,
           },
         ],

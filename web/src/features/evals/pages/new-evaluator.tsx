@@ -164,7 +164,7 @@ export default function NewEvaluatorPage() {
         title: tAuto("set_up_evaluator_12086ef"),
         breadcrumb: [
           {
-            name: "Running Evaluators",
+            name: tAuto("running_evaluators_nav_b651d5f"),
             href: `/project/${projectId}/evals`,
           },
         ],

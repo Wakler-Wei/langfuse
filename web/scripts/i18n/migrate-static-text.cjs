@@ -29,6 +29,10 @@ const excludedPathParts = [
   `${path.sep}features${path.sep}chart-view-prototype${path.sep}`,
   `${path.sep}pages${path.sep}api${path.sep}`,
   `${path.sep}server${path.sep}`,
+  // App Router server files (root layout metadata export, route handlers)
+  // render server-side and cannot use client translation hooks, so their
+  // static strings are intentionally not migrated.
+  `${path.sep}app${path.sep}`,
 ];
 const excludedFilePatterns = [
   /\.stories\.tsx$/,
@@ -158,8 +162,8 @@ const exactTranslationOverrides = {
   Active: "启用",
   Added: "已添加",
   Adapter: "适配器",
-  Dashboard: "仪表板",
-  Dashboards: "仪表板",
+  Dashboard: "仪表盘",
+  Dashboards: "仪表盘",
   Dataset: "数据集",
   Datasets: "数据集",
   Error: "错误",
@@ -428,9 +432,15 @@ function normalizeProductTerms(text) {
   return text
     .replace(/痕迹/g, "追踪")
     .replace(/跟踪/g, "追踪")
+    .replace(/轨迹/g, "追踪")
     .replace(/型号/g, "模型")
     .replace(/代币/g, "Token")
+    .replace(/仪表板/g, "仪表盘")
+    .replace(/法学硕士/g, "LLM")
+    .replace(/游乐场/g, "调试台")
+    .replace(/乐谱/g, "分数")
     .replace(/观察结果/g, "观测")
+    .replace(/评估者/g, "评估器")
     .replace(/提示词语/g, "提示词")
     .replace(/提示参考/g, "提示词引用")
     .replace(/数据集合/g, "数据集")

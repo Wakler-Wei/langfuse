@@ -23,6 +23,11 @@ export function I18nProvider({ children }: PropsWithChildren) {
       key={locale}
       locale={locale}
       messages={messagesByLocale[locale]}
+      // Fixed UTC keeps next-intl formatters deterministic across SSR and the
+      // client (a browser-derived zone would cause hydration mismatches). Date
+      // display in the app runs through date-fns / formatLocalIsoDate in local
+      // time, so this does not affect user-visible timestamps today. Revisit
+      // with a server-known user timezone before adopting next-intl formatters.
       timeZone="UTC"
     >
       {children}
