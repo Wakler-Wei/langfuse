@@ -48,6 +48,7 @@ import { useLangfuseCloudRegion } from "@/src/features/organizations/hooks";
 import { getSafeRedirectPath } from "@/src/utils/redirect";
 import { Spinner } from "@/src/components/layouts/spinner";
 import { useAutoTranslations } from "@/src/features/i18n/I18nText";
+import { useTranslations } from "next-intl";
 
 // The shared, intentionally-public demo identity created by the seed script
 // (packages/shared/scripts/seeder/seed-postgres.ts) and posted in every
@@ -550,6 +551,7 @@ export default function SignIn({
   runningOnHuggingFaceSpaces,
 }: PageProps) {
   const tAuto = useAutoTranslations();
+  const tAuth = useTranslations("Auth");
   const router = useRouter();
   useHuggingFaceRedirect(runningOnHuggingFaceSpaces);
 
@@ -955,12 +957,12 @@ export default function SignIn({
           env.NEXT_PUBLIC_SIGN_UP_DISABLED !== "true" &&
           authProviders.credentials ? (
             <p className="text-muted-foreground mt-10 text-center text-sm">
-              No account yet?{" "}
+              {tAuth("noAccount")}{" "}
               <Link
                 href={`/auth/sign-up${router.asPath.includes("?") ? router.asPath.substring(router.asPath.indexOf("?")) : ""}`}
                 className="text-link hover:text-link-hover leading-6 font-bold"
               >
-                Sign up
+                {tAuth("signUp")}
               </Link>
             </p>
           ) : null}
